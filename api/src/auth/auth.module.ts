@@ -1,18 +1,12 @@
 import { Logger, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ReservationsStrategy } from './strategies/reservations.jwt';
 import { AuthController } from './auth.controller';
+import { JwtAuthModule } from 'src/modules.config';
 
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: 'My random secret key never let others see',
-      signOptions: { expiresIn: '1h' },
-    }),
-    PassportModule,
-  ],
+  imports: [JwtAuthModule, PassportModule],
   controllers: [AuthController],
   providers: [AuthService, ReservationsStrategy],
   exports: [],

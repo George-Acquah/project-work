@@ -7,7 +7,7 @@ interface _ICustomer {
   readonly password: string;
   profile: _ICustomerProfile;
   vehicles: _IVehicle[];
-  location: _ICustomerLocation;
+  location_details: _ICustomerLocation;
   rankings: _ICustomerRankings;
 }
 
@@ -16,7 +16,7 @@ interface _ISanitizedCustomer {
   email: string;
   profile: _ICustomerProfile;
   vehicles: _IVehicle[];
-  location: _ICustomerLocation;
+  location_details: _ICustomerLocation;
   rankings: _ICustomerRankings;
 }
 

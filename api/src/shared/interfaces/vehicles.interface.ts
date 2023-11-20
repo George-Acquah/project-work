@@ -3,6 +3,6 @@ export interface _IVehicle {
   vehicle_no: string;
   isVerified: boolean;
   hasSlot: boolean;
-  slot: any;
-  image: string[];
+  // slot: any;
+  images: string[];
 }
