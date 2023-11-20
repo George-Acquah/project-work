@@ -4,9 +4,19 @@ import { AppService } from './app.service';
 import { ArduinoModule } from './arduino/arduino.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { ParkingModule } from './parking/parking.module';
+import { RootMongooseModule } from './database/database.config';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({}), ArduinoModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({}),
+    RootMongooseModule,
+    ArduinoModule,
+    AuthModule,
+    ParkingModule,
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
