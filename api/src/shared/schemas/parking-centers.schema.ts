@@ -1,6 +1,7 @@
 import { Prop, Schema } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { Slot } from './slot.schema';
+import { User } from './user.schema';
 
 export type ParkingCenterDocument = HydratedDocument<ParkingCenter>;
 
@@ -32,4 +33,7 @@ export class ParkingCenter {
 
   @Prop({ type: SlotInfo })
   slots_info: SlotInfo;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  owner: MongooseSchema.Types.ObjectId;
 }

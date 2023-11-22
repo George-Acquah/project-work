@@ -20,7 +20,10 @@ export class ReservationsAuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: _TRequestWithAuth = context.switchToHttp().getRequest();
-    const reservationAccessToken = extractToken(request.headers.authorization);
+    const reservationAccessToken = extractToken(
+      'Reservation',
+      request.headers.authorization,
+    );
 
     this.logger.log(reservationAccessToken);
     try {

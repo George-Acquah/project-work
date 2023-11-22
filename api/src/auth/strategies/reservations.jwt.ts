@@ -1,32 +1,37 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
-import { Request } from 'express';
-// import { _IReservationsPayload } from 'src/shared/interfaces/jwt_payload.interface';
+import { _TRequestWithAuth } from 'src/shared/interfaces/custom-request.interface';
+import { extractToken } from 'src/shared/utils/global.utils';
+import { _IReservationPayload } from 'src/shared/interfaces/jwt_payload.interface';
+import { AuthService } from '../auth.service';
 
 @Injectable()
-export class ReservationsStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor() {
+export class ReservationsStrategy extends PassportStrategy(
+  Strategy,
+  'reservation',
+) {
+  constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
       secretOrKey: 'random-secret',
-      jwtFromRequest: (request: Request) => {
-        const authHeader = request.headers.reservation as string;
-        console.log(authHeader);
-        // if (authHeader && authHeader.split(' ')[0] === 'Reservation') {
-        //   console.log('passed');
-        //   return authHeader.split(' ')[1];
-        // }
-        if (authHeader) {
-          console.log('passed');
-          return authHeader;
+      jwtFromRequest: (request: _TRequestWithAuth) => {
+        if (request.headers.authorization) {
+          return extractToken('Reservation', request.headers.authorization);
         }
-        console.log('unauthorized');
+
         return undefined;
       },
     });
   }
 
-  async validate() {}
+  async validate(payload: _IReservationPayload) {
+    const reservation = await this.authService.verifyUser(payload as any);
+
+    if (!reservation) {
+      throw new Error('User not found');
+    }
+
+    return reservation;
+  }
 }

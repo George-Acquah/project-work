@@ -1,25 +1,20 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
+import { _TSanitizedUser } from 'src/shared/interfaces/users.interface';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class LocalJwtStrategy extends PassportStrategy(Strategy, 'local') {
-  constructor(private authService: any) {
-    super({ usernameField: 'username' });
+  constructor(private authService: AuthService) {
+    super({ usernameField: 'email' });
   }
 
-  async validate(
-    username: string,
-    password: string,
-  ): Promise<_ISanitizedCustomer> {
-    const user = await this.authService.validateUserCredentialsByUsername(
-      username,
-      password,
-    );
+  async validate(email: string, password: string): Promise<_TSanitizedUser> {
+    console.log({ email, password });
+    const user = await this.authService.validateUser(email, password);
 
     if (!user) {
-      console.log('I wont aunthenticate you!!!');
       throw new UnauthorizedException();
     }
 

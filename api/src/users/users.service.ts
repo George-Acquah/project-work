@@ -1,4 +1,351 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
+import { Model, Types } from 'mongoose';
+import { CreateUserDto } from './dtos/create-users.dto';
+import { Customer } from 'src/shared/schemas/customer.schema';
+import { ParkOwner } from 'src/shared/schemas/owner.schema';
+import { sanitizeUser } from 'src/shared/utils/users.utils';
+import {
+  _ICustomer,
+  _ICustomerProfile,
+  _IParkOwner,
+  _ISanitizedCustomer,
+  _ISanitizedParkOwner,
+  _TSanitizedUser,
+  _TUser,
+} from 'src/shared/interfaces/users.interface';
+import { LoginUserDto } from './dtos/login-users.dtos';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  private logger = new Logger(UsersService.name);
+  constructor(
+    @InjectModel('User') private userModel: Model<_TUser>,
+    @InjectModel(Customer.name) private customerModel: Model<_ICustomer>,
+    @InjectModel(ParkOwner.name)
+    private parkOwnerModel: Model<_IParkOwner>,
+    @InjectModel('Profile') private profileModel: Model<_ICustomerProfile>,
+  ) {}
+
+  async populateUserProfiles(users: any[]): Promise<any[]> {
+    // Use Promise.all to concurrently populate each user's profile
+    const populatedUsers = await Promise.all(
+      users.map(async (user) => {
+        const populatedUser = await this.userModel.populate(user, {
+          path: 'profile',
+        });
+        return populatedUser;
+      }),
+    );
+
+    return populatedUsers;
+  }
+
+  async newCustomer(userDetails: CreateUserDto): Promise<_ICustomer> {
+    const profile = new this.profileModel();
+    const newUser = new this.customerModel(userDetails);
+
+    await profile.save();
+    newUser.profile = profile;
+
+    return newUser;
+  }
+
+  async newOwner(userDetails: CreateUserDto): Promise<_IParkOwner> {
+    const profile = new this.profileModel();
+    const newUser = new this.parkOwnerModel(userDetails);
+
+    await profile.save();
+    newUser.profile = profile;
+
+    return newUser;
+  }
+
+  async createCustomer(
+    userDetails: CreateUserDto,
+  ): Promise<_ISanitizedCustomer> {
+    const { email } = userDetails;
+    this.logger.log('email: ', email);
+    const existingCustomer = await this.userModel.findOne({ email });
+    this.logger.log('user: ', existingCustomer);
+
+    if (existingCustomer) {
+      throw new ConflictException('Email is already used');
+    }
+
+    const newCustomer = await this.newCustomer(userDetails);
+
+    // Save the new user to the database
+    await newCustomer.save();
+
+    // Sanitize and return the user
+    return sanitizeUser(newCustomer) as _ISanitizedCustomer;
+  }
+
+  async createOwner(userDetails: CreateUserDto): Promise<_ISanitizedParkOwner> {
+    const { email } = userDetails;
+    this.logger.log('email: ', email);
+    const existingOwner = await this.userModel.findOne({ email });
+    this.logger.log('user: ', existingOwner);
+
+    if (existingOwner) {
+      throw new ConflictException('Email is already used');
+    }
+
+    const newOwner = await this.newOwner(userDetails);
+
+    // Save the new user to the database
+    await newOwner.save();
+
+    // Sanitize and return the user
+    return sanitizeUser(newOwner) as _ISanitizedParkOwner;
+  }
+
+  async findByLogin(loginData: LoginUserDto) {
+    const { email, password } = loginData;
+    try {
+      const user = await this.userModel.findOne({ email });
+
+      if (await bcrypt.compare(password, user.password)) {
+        return sanitizeUser(user);
+      } else {
+        // Passwords don't match, throw UnauthorizedException
+        throw new UnauthorizedException('Incorrect username or password');
+      }
+    } catch (error) {
+      // Entity not found or other error occurred, throw appropriate error
+      throw new UnauthorizedException('Incorrect username or password');
+    }
+  }
+
+  /* used by  modules to search user by email */
+  async findUser(email: string): Promise<_TUser> {
+    this.logger.debug(email);
+    const user: _TUser = await this.userModel.findOne({ email }).exec();
+
+    if (!user) {
+      // Handle the case where no user is found
+      throw new Error(`User with email ${email} does not exist.`);
+    } else {
+      this.logger.log('Found user:', user);
+      return user;
+    }
+  }
+
+  /* used by  modules to search user by email */
+  async findUserById(userId: string) {
+    const user: _TUser = await this.userModel.findOne({ _id: userId }).exec();
+
+    if (!user) {
+      // Handle the case where no user is found
+      throw new Error(`User does not exist.`);
+    } else {
+      this.logger.log('Found user:', user);
+      return user;
+    }
+  }
+
+  async findAll(): Promise<_TSanitizedUser[]> {
+    try {
+      const users = await this.userModel.find().exec();
+      this.logger.log(users);
+
+      const populatedUsers = await this.populateUserProfiles(users);
+
+      return populatedUsers.map((user) => sanitizeUser(user));
+    } catch (error) {
+      console.error('Error fetching and populating users:', error);
+      throw error;
+    }
+  }
+
+  async findOne(userId: string): Promise<_TSanitizedUser> {
+    const foundUser = await this.userModel
+      .findById(new Types.ObjectId(userId))
+      .populate('profile')
+      .exec();
+    if (!foundUser) {
+      throw new NotFoundException();
+    }
+    this.logger.log(foundUser);
+    // return foundUser.populate('profile');
+    return sanitizeUser(foundUser);
+  }
+
+  async updateApplicant(
+    id: string,
+    data: any,
+    isAdmin: boolean,
+  ): Promise<_TSanitizedUser | null> {
+    const user = await this.userModel.findOne({ _id: id });
+
+    if (!user) {
+      throw new NotFoundException(`User with this ID does not exist`);
+    }
+
+    const profile = await this.profileModel.findOne({ _id: user.profile.id });
+
+    console.log(user);
+    console.log(profile);
+
+    if (isAdmin) {
+      // Admin can update role and isActive
+      if (data.userType) {
+        user.userType = data.userType;
+      }
+      // if (data.isActive !== undefined) {
+      //   user. = data.isActive;
+      // }
+    } else {
+      // if (
+      //   data.username &&
+      //   (data.username !== '' || data.username !== applicant.username)
+      // ) {
+      //   applicant.username = data.username;
+      // }
+      if (data.email && (data.email !== '' || data.email !== user.email)) {
+        user.email = data.email;
+      }
+      if (data.first_name && data.first_name !== '') {
+        profile.first_name = data.first_name;
+      }
+      if (data.last_name && data.last_name !== '') {
+        profile.last_name = data.last_name;
+      }
+      if (data.contact_no && data.contact_no !== '') {
+        profile.contact_no = data.contact_no;
+      }
+      if (data.area && data.username !== '') {
+        profile.area = data.area;
+      }
+      if (data.city && data.city !== '') {
+        profile.city = data.city;
+      }
+      if (data.state && data.state !== '') {
+        profile.state = data.state;
+      }
+      if (data.pinCode && data.pinCode !== '') {
+        profile.pinCode = data.pinCode;
+      }
+    }
+
+    // user.updatedAt = new Date();
+
+    // Save changes to the database
+    await profile.save();
+    await user.save();
+
+    return sanitizeUser(user);
+  }
+
+  async updateUser(email: string, userDetails: any): Promise<_TSanitizedUser> {
+    this.logger.log(userDetails);
+    const user = await this.findUser(email);
+    this.logger.log('user: ', user);
+
+    // user.profile.username = `${userDetails.first_name.toLocaleLowerCase()} ${userDetails.last_name.toLocaleLowerCase()}`;
+
+    if (userDetails.contact_no) {
+      user.profile.contact_no = userDetails.contact_no;
+    }
+    if (userDetails.first_name) {
+      user.profile.first_name = userDetails.first_name;
+    }
+    if (userDetails.last_name) {
+      user.profile.last_name = userDetails.last_name;
+    }
+    if (userDetails.area) {
+      user.profile.area = userDetails.area;
+    }
+    if (userDetails.city) {
+      user.profile.city = userDetails.city;
+    }
+    if (userDetails.state) {
+      user.profile.state = userDetails.state;
+    }
+    if (userDetails.pincode) {
+      user.profile.pinCode = userDetails.pincode;
+    }
+
+    user.save();
+    this.logger.log('saved user: ', user);
+    return sanitizeUser(user);
+  }
+
+  async remove(userId: string): Promise<void> {
+    return await this.userModel.findByIdAndDelete(userId);
+  }
+
+  async fetchLatestUsers(size: number): Promise<_TSanitizedUser[]> {
+    try {
+      const latestUsers = await this.userModel
+        .find()
+        // .sort({ applicationDate: 'desc' })
+        .limit(size)
+        .exec();
+
+      return latestUsers.map((user) => sanitizeUser(user));
+    } catch (error) {
+      console.error('Database Error:', error);
+      throw new Error('Failed to fetch the latest applicants.');
+    }
+  }
+
+  async fetchFilteredUsers(
+    query = '',
+    currentPage: number,
+    items: number,
+  ): Promise<_TSanitizedUser[]> {
+    const offset = (currentPage - 1) * items;
+
+    try {
+      const users = await this.userModel
+        .find({
+          $or: [
+            // { username: { $regex: query, $options: 'i' } },
+            { email: { $regex: query, $options: 'i' } },
+            { userType: { $regex: query, $options: 'i' } },
+          ],
+        })
+        // .sort({ updatedAt: 'desc' })
+        .skip(offset)
+        .limit(items)
+        .exec();
+
+      const populatedUsers = await this.populateUserProfiles(users);
+
+      return populatedUsers.map((user) => sanitizeUser(user));
+    } catch (error) {
+      console.error('Database Error:', error);
+      throw new Error('Failed to fetch users.');
+    }
+  }
+
+  async fetchUsersPage(query: string, items: number): Promise<number> {
+    try {
+      const usersCount = await this.userModel
+        .countDocuments({
+          $or: [
+            // { username: { $regex: query, $options: 'i' } },
+            { email: { $regex: query, $options: 'i' } },
+            { userType: { $regex: query, $options: 'i' } },
+          ],
+        })
+        .exec();
+
+      const totalPages = Math.ceil(usersCount / items);
+
+      return totalPages;
+    } catch (error) {
+      console.error('Database Error:', error);
+      throw new Error('Failed to fetch applicants.');
+    }
+  }
+}

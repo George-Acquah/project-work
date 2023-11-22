@@ -1,28 +1,29 @@
+import { Document, Types } from 'mongoose';
 import { _IParkingCenter } from './slot.interface';
-import { _IVehicle } from './vehicles.interface';
+import { _IPlainVehicle } from './vehicles.interface';
+import { UserType } from '../enums/users.enum';
 
-interface _ICustomer {
-  id: string;
+interface _ICustomer extends Document<Types.ObjectId> {
   email: string;
+  userType: UserType;
   readonly password: string;
   profile: _ICustomerProfile;
-  vehicles: _IVehicle[];
-  location_details: _ICustomerLocation;
+  vehicles: _IPlainVehicle[];
   rankings: _ICustomerRankings;
 }
 
 interface _ISanitizedCustomer {
-  id: string;
+  _id: string;
   email: string;
+  userType: UserType;
   profile: _ICustomerProfile;
-  vehicles: _IVehicle[];
-  location_details: _ICustomerLocation;
+  vehicles: _IPlainVehicle[];
   rankings: _ICustomerRankings;
 }
 
-interface _IParkOwner {
-  id: string;
+interface _IParkOwner extends Document<Types.ObjectId> {
   email: string;
+  userType: UserType;
   readonly password: string;
   profile: _ICustomerProfile;
   centers: _IParkingCenter[]; // to be changed to parking center interface
@@ -30,15 +31,15 @@ interface _IParkOwner {
 }
 
 interface _ISanitizedParkOwner {
-  id: string;
+  _id: string;
   email: string;
+  userType: UserType;
   profile: _ICustomerProfile;
   centers: _IParkingCenter[]; // to be changed to parking center interface
   rankings: _IOwnerRankings;
 }
 
-interface _ICustomerProfile {
-  id: string;
+export interface _ICustomerProfile extends Document {
   first_name: string | null;
   last_name: string | null;
   contact_no: string | null;
@@ -62,4 +63,40 @@ interface _IOwnerRankings {
   id: string;
 }
 
-export { _ICustomer, _IParkOwner, _ISanitizedCustomer, _ISanitizedParkOwner };
+interface CustomerHelpUser {
+  rankings: _ICustomerRankings;
+  vehicles: _IPlainVehicle[];
+}
+
+interface OwnerHelpUser {
+  centers?: _IParkingCenter[]; // to be changed to parking center interface
+  rankings: _IOwnerRankings;
+}
+interface _ICommonUser extends Document<Types.ObjectId> {
+  email: string;
+  userType: UserType;
+  readonly password: string;
+  profile: _ICustomerProfile;
+}
+
+interface _ISanitizedCommonUser {
+  _id: string;
+  userType: UserType;
+  email: string;
+  profile: _ICustomerProfile;
+}
+
+// Create a generic interface for all users by combining the specific interfaces
+type _TUser = (OwnerHelpUser | CustomerHelpUser) & _ICommonUser;
+type _TSanitizedUser = (OwnerHelpUser | CustomerHelpUser) &
+  _ISanitizedCommonUser;
+
+export {
+  _ICustomer,
+  _IParkOwner,
+  _ISanitizedCustomer,
+  _ISanitizedParkOwner,
+  _ICustomerLocation,
+  _TUser,
+  _TSanitizedUser,
+};

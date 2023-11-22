@@ -3,10 +3,12 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { _IPayload } from 'src/shared/interfaces/jwt_payload.interface';
+import { AuthService } from '../auth.service';
+import { ApiResponse } from 'src/shared/services/api-responses';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private authService: any) {
+  constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
       secretOrKey: process.env.SECRET_KEY,
@@ -15,7 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         if (authHeader && authHeader.split(' ')[0] === 'Bearer') {
           return authHeader.split(' ')[1];
         }
-        console.log('unauthorized');
         return undefined;
       },
     });
@@ -26,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const user = await this.authService.verifyUser(payload);
 
     if (!user) {
-      throw new Error('User not found');
+      throw new ApiResponse(402, 'User does not exist', {});
     }
 
     return user;

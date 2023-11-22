@@ -1,17 +1,16 @@
 import { Prop, Schema } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import { Slot } from './slot.schema';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { Vehicle } from './vehicle.schema';
 
 export type SlotReservationDocument = HydratedDocument<SlotReservation>;
 
 @Schema()
 export class SlotReservation {
-  @Prop({ required: true })
-  slot_id: Slot; // can contain details of parking center
+  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Slot' })
+  slot_id: MongooseSchema.Types.ObjectId; // can contain details of parking center
 
-  @Prop({ required: true })
-  vehicle_id: Vehicle; // can contain details of customer
+  @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Vehicle' })
+  vehicle_id: MongooseSchema.Types.ObjectId; // can contain details of customer
 
   @Prop({ type: Boolean, default: false })
   isValid: boolean;
