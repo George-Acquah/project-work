@@ -1,5 +1,5 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 export type VehicleDocument = HydratedDocument<Vehicle>;
 
@@ -14,6 +14,11 @@ export class Vehicle {
   @Prop({ type: Boolean, default: false })
   hasSlot: boolean;
 
-  @Prop({ type: String, required: false, default: null })
-  images: string[];
+  @Prop([{ type: Array, required: false, default: null }])
+  images: Array<string>;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  driver: MongooseSchema.Types.ObjectId;
 }
+
+export const VehicleSchema = SchemaFactory.createForClass(Vehicle);

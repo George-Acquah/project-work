@@ -1,9 +1,15 @@
+import { UserType } from '../enums/users.enum';
+import { JwtPayload } from 'jsonwebtoken';
+
 interface _IPayload {
-  username: string;
+  user_id: string;
+  userType: UserType;
   sub: {
-    name: string;
+    email: string;
   };
 }
+
+type _TJwtPayload = JwtPayload & _IPayload;
 
 interface _IReservationPayload {
   slot_id: string;
@@ -31,4 +37,5 @@ export {
   _IReservationPayload,
   _ITokens,
   _IReservationsPayloadRequest,
+  _TJwtPayload,
 };

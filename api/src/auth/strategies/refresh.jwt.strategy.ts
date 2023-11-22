@@ -3,10 +3,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { _IPayload } from 'src/shared/interfaces/jwt_payload.interface';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
-  constructor(private authService: any) {
+  constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_KEY,
@@ -24,7 +25,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     const user = await this.authService.verifyUser(payload);
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error('Reservation with ID not found');
     }
 
     return user;

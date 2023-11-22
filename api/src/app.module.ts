@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ParkingModule } from './parking/parking.module';
 import { RootMongooseModule } from './database/database.config';
 import { UsersModule } from './users/users.module';
+import { VehiclesModule } from './vehicles/vehicles.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     ParkingModule,
     UsersModule,
+    VehiclesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

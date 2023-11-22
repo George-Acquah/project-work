@@ -1,5 +1,5 @@
 import { Prop, Schema } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 export type SlotDocument = HydratedDocument<Slot>;
 
@@ -38,6 +38,6 @@ export class Slot {
   @Prop({ type: Boolean, default: false })
   isAvailable: boolean;
 
-  @Prop({ type: SlotData })
-  data: SlotData;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'SlotData' })
+  data: MongooseSchema.Types.ObjectId;
 }
