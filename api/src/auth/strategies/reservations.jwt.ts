@@ -5,11 +5,12 @@ import { _TRequestWithAuth } from 'src/shared/interfaces/custom-request.interfac
 import { extractToken } from 'src/shared/utils/global.utils';
 import { _IReservationPayload } from 'src/shared/interfaces/jwt_payload.interface';
 import { AuthService } from '../auth.service';
+import { strategies } from 'src/shared/constants/auth.constants';
 
 @Injectable()
 export class ReservationsStrategy extends PassportStrategy(
   Strategy,
-  'reservation',
+  strategies.RESERVATION,
 ) {
   constructor(private authService: AuthService) {
     super({

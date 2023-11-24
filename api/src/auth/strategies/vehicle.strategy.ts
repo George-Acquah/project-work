@@ -6,9 +6,13 @@ import { _IPayload } from 'src/shared/interfaces/jwt_payload.interface';
 import { AuthService } from '../auth.service';
 import { ApiResponse } from 'src/shared/services/api-responses';
 import { UserType } from 'src/shared/enums/users.enum';
+import { strategies } from 'src/shared/constants/auth.constants';
 
 @Injectable()
-export class VehicleStrategy extends PassportStrategy(Strategy, 'vehicle') {
+export class VehicleStrategy extends PassportStrategy(
+  Strategy,
+  strategies.VEHICLE,
+) {
   constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
