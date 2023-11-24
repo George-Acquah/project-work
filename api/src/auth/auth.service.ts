@@ -86,7 +86,6 @@ export class AuthService {
 
   async login(dto: LoginUserDto) {
     const { email, password } = dto;
-    this.logger.log(dto);
     const user = await this.validateUser(email, password);
 
     const payload: _IPayload = {
@@ -100,7 +99,7 @@ export class AuthService {
     const access_token = await this.signPayload(
       payload,
       process.env.SECRET_KEY,
-      '1h',
+      '1d',
     );
 
     const u_id = appendRandomTextAndLength(user._id);
