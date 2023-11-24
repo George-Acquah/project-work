@@ -58,12 +58,13 @@ export class StorageService {
     mimetype: string,
     buffer: Buffer,
     filename: string,
+    bucket: string,
   ): Promise<_ICloudRes> {
     try {
       const options: SaveOptions = {
         contentType: mimetype,
       };
-      const file = this.storage.bucket(this.bucket).file(name);
+      const file = this.storage.bucket(bucket).file(name);
       // Check if a file with the same name already exists
       const [exists] = await file.exists();
 

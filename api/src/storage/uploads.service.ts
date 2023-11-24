@@ -8,14 +8,12 @@ export class UploadService {
   constructor(private readonly googleStorageService: StorageService) {}
   async uploadFilesToDrive(
     files: { originalname: string; mimetype: string; buffer: Buffer }[],
+    bucket: string,
   ): Promise<Array<_ICloudRes>> {
     const uploadedFiles: Array<_ICloudRes> = [];
 
     for (const file of files) {
       const filename = getUniqueFilename(file.originalname);
-      console.log(filename);
-      console.log(file.mimetype);
-      console.log(file.originalname);
 
       if (file.mimetype === 'application/pdf') {
         uploadedFiles.push(
@@ -24,6 +22,7 @@ export class UploadService {
             file.mimetype,
             file.buffer,
             filename,
+            bucket,
           ),
         );
       } else {
@@ -33,6 +32,7 @@ export class UploadService {
             file.mimetype,
             file.buffer,
             filename,
+            bucket,
           ),
         );
       }

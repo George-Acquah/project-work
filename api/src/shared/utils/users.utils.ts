@@ -47,7 +47,7 @@ export function sanitizeUser(user: _TUser): _TSanitizedUser {
       email,
       userType,
       profile: sanitizeProfile(profile),
-      vehicles: sanitizeVehicles(vehicles),
+      vehicles: sanitizeVehicles(vehicles) || [],
       rankings,
       image: image ? sanitizeUserImage(image) : null,
     };
