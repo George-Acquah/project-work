@@ -5,9 +5,10 @@ import { Request } from 'express';
 import { _IPayload } from 'src/shared/interfaces/jwt_payload.interface';
 import { AuthService } from '../auth.service';
 import { ApiResponse } from 'src/shared/services/api-responses';
+import { strategies } from 'src/shared/constants/auth.constants';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtStrategy extends PassportStrategy(Strategy, strategies.JWT) {
   constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,

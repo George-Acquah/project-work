@@ -4,9 +4,13 @@ import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { _IPayload } from 'src/shared/interfaces/jwt_payload.interface';
 import { AuthService } from '../auth.service';
+import { strategies } from 'src/shared/constants/auth.constants';
 
 @Injectable()
-export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
+export class RefreshStrategy extends PassportStrategy(
+  Strategy,
+  strategies.REFRESH,
+) {
   constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
