@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ConflictException,
   Injectable,
@@ -6,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { _IDbVehicleImage } from 'src/shared/interfaces/images.interface';
+import {
+  _ICloudRes,
+  _IDbVehicleImage,
+} from 'src/shared/interfaces/images.interface';
 import {
   _IAddVehicle,
   _IDbVehicle,
@@ -24,9 +28,26 @@ export class VehiclesService {
   constructor(
     @InjectModel(Vehicle.name) private vehicleModel: Model<_IDbVehicle>,
     @InjectModel(VehicleImage.name)
-    private vehicleImage: Model<_IDbVehicleImage>,
-    private userService: UsersService,
+    private vehicleImageModel: Model<_IDbVehicleImage[]>,
+    private userService: UsersService, //might be used in verifying vehicle no
   ) {}
+
+  async addVehicleImages(images: _ICloudRes[]): Promise<_IDbVehicleImage[]> {
+    try {
+      const dbImages = images.map((image) => {
+        const { publicUrl, ...res } = image;
+        return res;
+      });
+
+      const savedImages = new this.vehicleImageModel({
+        dbImages,
+      });
+
+      return await savedImages.save();
+    } catch (error) {
+      throw new Error('An Error Ocuured while saving Images');
+    }
+  }
 
   async newVehicle(data: _INewVehicle) {
     try {
@@ -39,12 +60,12 @@ export class VehiclesService {
   async addVehicle(
     driver: string,
     data: _IAddVehicle,
-    image: string,
+    img: any[],
   ): Promise<_IVehicle> {
     const { vehicle_no } = data;
-    const images = []; // Image will be handled in the controller
-    images.push(image);
-    //TODO some mechanism to verify vehicle_no
+    // TODO: Some mechanism to verify vehicle_no
+
+    const images = await this.addVehicleImages(img);
 
     const existingVehicle = await this.vehicleModel.findOne({ vehicle_no });
 
