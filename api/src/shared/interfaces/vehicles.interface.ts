@@ -1,28 +1,20 @@
 import { Document } from 'mongoose';
-
-export interface _IVehicle extends Document {
+import { _IDbVehicleImage, _IVehicleImage } from './images.interface';
+export interface _IDbVehicle extends Document {
   vehicle_no: string;
   isVerified: boolean;
   hasSlot: boolean;
-  images: string[];
+  images: Array<_IDbVehicleImage>;
   driver: string;
 }
 
-export interface _IDbVehicle {
+export interface _IVehicle {
   _id: string;
   vehicle_no: string;
   isVerified: boolean;
   hasSlot: boolean;
-  images: string[];
-}
-
-export interface _IPlainVehicle {
-  _id: string;
-  vehicle_no: string;
-  isVerified: boolean;
-  hasSlot: boolean;
-  images: string[];
-  // driver: string;
+  images: Array<_IVehicleImage>;
+  driver: string;
 }
 
 interface _IAddVehicle {
@@ -32,7 +24,7 @@ interface _IAddVehicle {
 interface _INewVehicle extends _IAddVehicle {
   isVerified: boolean;
   hasSlot: boolean;
-  images: Array<string>;
+  images: Array<_IVehicleImage>;
   driver: string;
 }
 
