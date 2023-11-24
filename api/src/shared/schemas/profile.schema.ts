@@ -31,9 +31,6 @@ export class Profile {
     ];
   };
 
-  @Prop({ required: false, type: String, default: null })
-  image: string;
-
   @Prop({ required: false, type: String, default: null, lowercase: true })
   area: {
     maxlength: [
