@@ -1,14 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UserType } from '../enums/users.enum';
 import { OwnerRankings } from './rankings.schema';
-import { Profile } from './profile.schema';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { DbUserType } from '../enums/users.enum';
 
 export type ParkOwnerDocument = HydratedDocument<ParkOwner>;
 
 @Schema({ _id: false })
 export class ParkOwner {
-  userType: UserType;
+  userType: DbUserType;
 
   password: string;
 

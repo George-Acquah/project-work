@@ -1,14 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Document, Types } from 'mongoose';
+import { HydratedDocument, Document, Schema as MongooseSchema } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { UserType } from '../enums/users.enum';
+import { DbUserType } from '../enums/users.enum';
 import { ParkOwner } from './owner.schema';
 import { Customer } from './customer.schema';
-import { Profile } from './profile.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({ discriminatorKey: 'userType' })
+@Schema({
+  discriminatorKey: 'userType',
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
 export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
@@ -17,16 +20,23 @@ export class User extends Document {
   password: string;
 
   @Prop({ type: String, required: true, enum: [Customer.name, ParkOwner.name] })
-  userType: UserType;
+  userType: DbUserType;
 
   @Prop({
-    type: Types.ObjectId,
+    type: MongooseSchema.Types.ObjectId,
     ref: 'Profile',
   })
-  profile: Profile;
+  profile: MongooseSchema.Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.virtual('image', {
+  ref: 'UserImage',
+  localField: '_id',
+  foreignField: 'userId',
+  justOne: true,
+});
 
 UserSchema.pre('save', async function (next: (err?: Error) => void) {
   try {

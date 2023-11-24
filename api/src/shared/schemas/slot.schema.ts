@@ -1,26 +1,7 @@
-import { Prop, Schema } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type SlotDocument = HydratedDocument<Slot>;
-
-@Schema()
-export class SlotData {
-  @Prop({ type: Number, required: true, default: 0 })
-  total_daily_bookings: number;
-
-  @Prop({ type: Number, required: true, default: 0 })
-  total_weekly_bookings: number;
-
-  @Prop({ type: Number, required: true, default: 0 })
-  total_monthly_bookings: number;
-
-  @Prop({ type: Number, required: true, default: 0 })
-  total_yearly_bookings: number;
-
-  @Prop({ type: Number, required: true, default: 0 })
-  total_bookings: number;
-}
-
 @Schema()
 export class Slot {
   @Prop({ type: String, required: true })
@@ -37,7 +18,13 @@ export class Slot {
 
   @Prop({ type: Boolean, default: false })
   isAvailable: boolean;
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'SlotData' })
-  data: MongooseSchema.Types.ObjectId;
 }
+
+const SlotSchema = SchemaFactory.createForClass(Slot);
+
+SlotSchema.virtual('slot_data', {
+  ref: 'SlotData',
+  localField: '_id',
+  foreignField: 'slot_id',
+  justOne: true,
+});

@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { Customer } from './customer.schema';
 
 export type VehicleDocument = HydratedDocument<Vehicle>;
 
@@ -14,11 +15,21 @@ export class Vehicle {
   @Prop({ type: Boolean, default: false })
   hasSlot: boolean;
 
-  @Prop([{ type: Array, required: false, default: null }])
-  images: Array<string>;
+  @Prop([
+    {
+      type: MongooseSchema.Types.ObjectId,
+      ref: 'VehicleImage',
+      required: true,
+    },
+  ])
+  images: Array<Vehicle>;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
-  driver: MongooseSchema.Types.ObjectId;
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Customer',
+    required: true,
+  })
+  driver: Customer;
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);
