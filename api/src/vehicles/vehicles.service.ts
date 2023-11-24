@@ -1,39 +1,46 @@
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotAcceptableException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
+import { _IDbVehicleImage } from 'src/shared/interfaces/images.interface';
 import {
   _IAddVehicle,
+  _IDbVehicle,
   _INewVehicle,
   _IVehicle,
 } from 'src/shared/interfaces/vehicles.interface';
+import { VehicleImage } from 'src/shared/schemas/vehicle-image.schema';
 import { Vehicle } from 'src/shared/schemas/vehicle.schema';
+import { sanitizevehicle } from 'src/shared/utils/vehicles.utils';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class VehiclesService {
   private logger = new Logger();
   constructor(
-    @InjectModel(Vehicle.name) private vehicleModel: Model<_IVehicle>,
+    @InjectModel(Vehicle.name) private vehicleModel: Model<_IDbVehicle>,
+    @InjectModel(VehicleImage.name)
+    private vehicleImage: Model<_IDbVehicleImage>,
     private userService: UsersService,
   ) {}
 
   async newVehicle(data: _INewVehicle) {
-    // const { vehicle_no, isVerified, images, hasSlot } = data;
-    // const vehicle = this.vehicleModel.create({
-    //   vehicle_no,
-    //   isVerified,
-    //   images,
-    //   hasSlot,
-    // });
-    return await this.vehicleModel.create(data);
+    try {
+      return await this.vehicleModel.create(data);
+    } catch (error) {
+      throw new NotAcceptableException(error.message);
+    }
   }
 
   async addVehicle(
-    customer: _ISanitizedCustomer,
+    driver: string,
     data: _IAddVehicle,
     image: string,
-  ) {
+  ): Promise<_IVehicle> {
     const { vehicle_no } = data;
     const images = []; // Image will be handled in the controller
     images.push(image);
@@ -45,14 +52,16 @@ export class VehiclesService {
       throw new ConflictException('This vehicle is already added');
     }
 
-    const user = await this.userService.findUserById(customer._id);
-
     const vehicle = await this.newVehicle({
       vehicle_no,
       isVerified: false, // boolean value returned after verification
       hasSlot: false, // Will always be false during creation
       images,
-      driver: customer._id,
+      driver,
     });
+
+    await vehicle.save();
+
+    return sanitizevehicle(vehicle);
   }
 }
