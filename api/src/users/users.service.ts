@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ConflictException,
   Injectable,
@@ -11,10 +12,10 @@ import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './dtos/create-users.dto';
 import { Customer } from 'src/shared/schemas/customer.schema';
 import { ParkOwner } from 'src/shared/schemas/owner.schema';
-import { sanitizeUser } from 'src/shared/utils/users.utils';
+import { sanitizeUser, sanitizeUserImage } from 'src/shared/utils/users.utils';
 import {
   _ICustomer,
-  _ICustomerProfile,
+  _IDbProfile,
   _IParkOwner,
   _ISanitizedCustomer,
   _ISanitizedParkOwner,
@@ -22,6 +23,11 @@ import {
   _TUser,
 } from 'src/shared/interfaces/users.interface';
 import { LoginUserDto } from './dtos/login-users.dtos';
+import {
+  _ICloudRes,
+  _IDbUserImage,
+  _IUserImage,
+} from 'src/shared/interfaces/images.interface';
 
 @Injectable()
 export class UsersService {
@@ -31,21 +37,41 @@ export class UsersService {
     @InjectModel(Customer.name) private customerModel: Model<_ICustomer>,
     @InjectModel(ParkOwner.name)
     private parkOwnerModel: Model<_IParkOwner>,
-    @InjectModel('Profile') private profileModel: Model<_ICustomerProfile>,
+    @InjectModel('Profile') private profileModel: Model<_IDbProfile>,
+    @InjectModel('UserImage') private userImageModel: Model<_IDbUserImage>,
   ) {}
 
-  async populateUserProfiles(users: any[]): Promise<any[]> {
-    // Use Promise.all to concurrently populate each user's profile
+  async populateUserFields<T>(
+    users: _TUser[],
+    field: string,
+  ): Promise<T | any> {
     const populatedUsers = await Promise.all(
       users.map(async (user) => {
         const populatedUser = await this.userModel.populate(user, {
-          path: 'profile',
+          path: field,
         });
         return populatedUser;
       }),
     );
 
     return populatedUsers;
+  }
+
+  async addUserImage(userImage: _ICloudRes, id: string): Promise<_IUserImage> {
+    try {
+      const { publicUrl, ...image } = userImage;
+
+      const savedImage = new this.userImageModel({
+        userId: id,
+        ...image,
+      });
+
+      await savedImage.save();
+
+      return sanitizeUserImage(savedImage);
+    } catch (error) {
+      throw new Error('An Error Ocuured while saving Image');
+    }
   }
 
   async newCustomer(userDetails: CreateUserDto): Promise<_ICustomer> {
@@ -72,9 +98,7 @@ export class UsersService {
     userDetails: CreateUserDto,
   ): Promise<_ISanitizedCustomer> {
     const { email } = userDetails;
-    this.logger.log('email: ', email);
     const existingCustomer = await this.userModel.findOne({ email });
-    this.logger.log('user: ', existingCustomer);
 
     if (existingCustomer) {
       throw new ConflictException('Email is already used');
@@ -127,14 +151,14 @@ export class UsersService {
 
   /* used by  modules to search user by email */
   async findUser(email: string): Promise<_TUser> {
-    this.logger.debug(email);
-    const user: _TUser = await this.userModel.findOne({ email }).exec();
+    const user = await this.userModel
+      .findOne({ email })
+      .populate('image profile vehicles')
+      .exec();
 
     if (!user) {
-      // Handle the case where no user is found
       throw new Error(`User with email ${email} does not exist.`);
     } else {
-      this.logger.log('Found user:', user);
       return user;
     }
   }
@@ -144,39 +168,27 @@ export class UsersService {
     const user: _TUser = await this.userModel.findOne({ _id: userId }).exec();
 
     if (!user) {
-      // Handle the case where no user is found
       throw new Error(`User does not exist.`);
     } else {
-      this.logger.log('Found user:', user);
       return user;
     }
   }
 
-  async findAll(): Promise<_TSanitizedUser[]> {
-    try {
-      const users = await this.userModel.find().exec();
-      this.logger.log(users);
-
-      const populatedUsers = await this.populateUserProfiles(users);
-
-      return populatedUsers.map((user) => sanitizeUser(user));
-    } catch (error) {
-      console.error('Error fetching and populating users:', error);
-      throw error;
-    }
-  }
-
   async findOne(userId: string): Promise<_TSanitizedUser> {
-    const foundUser = await this.userModel
-      .findById(new Types.ObjectId(userId))
-      .populate('profile')
-      .exec();
-    if (!foundUser) {
-      throw new NotFoundException();
+    try {
+      const foundUser = await this.userModel
+        .findById(new Types.ObjectId(userId))
+        .populate('image profile vehicles')
+        .exec();
+
+      if (!foundUser) {
+        throw new NotFoundException('User with this ID does not exist');
+      }
+
+      return sanitizeUser(foundUser);
+    } catch (error) {
+      throw new NotFoundException('Invalid user ID');
     }
-    this.logger.log(foundUser);
-    // return foundUser.populate('profile');
-    return sanitizeUser(foundUser);
   }
 
   async updateApplicant(
@@ -238,7 +250,6 @@ export class UsersService {
 
     // user.updatedAt = new Date();
 
-    // Save changes to the database
     await profile.save();
     await user.save();
 
@@ -291,7 +302,12 @@ export class UsersService {
         .limit(size)
         .exec();
 
-      return latestUsers.map((user) => sanitizeUser(user));
+      const populatedUsers = await this.populateUserFields<_TUser>(
+        latestUsers,
+        'profile image',
+      );
+
+      return populatedUsers.map((user) => sanitizeUser(user));
     } catch (error) {
       console.error('Database Error:', error);
       throw new Error('Failed to fetch the latest applicants.');
@@ -319,11 +335,13 @@ export class UsersService {
         .limit(items)
         .exec();
 
-      const populatedUsers = await this.populateUserProfiles(users);
+      const populatedUsers = (await this.populateUserFields<_TUser[]>(
+        users,
+        'profile image',
+      )) as _TUser[];
 
       return populatedUsers.map((user) => sanitizeUser(user));
     } catch (error) {
-      console.error('Database Error:', error);
       throw new Error('Failed to fetch users.');
     }
   }
