@@ -20,6 +20,13 @@ function readJsonFile(fileName: string) {
   }
 }
 
+function getPath(filename: string) {
+  const rootPath = process.cwd(); // Current working directory (root directory)
+  const filePath = path.join(rootPath, filename);
+
+  return filePath;
+}
+
 function extractToken(prefix: string, authHeader: string | undefined) {
   if (authHeader && authHeader.split(' ')[0] === prefix) {
     console.log('passed');
@@ -29,4 +36,4 @@ function extractToken(prefix: string, authHeader: string | undefined) {
   return 'invalid-token';
 }
 
-export { extractToken, readJsonFile };
+export { extractToken, readJsonFile, getPath };

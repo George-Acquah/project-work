@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { _IDbUserImage, _IUserImage } from '../interfaces/images.interface';
 
 export const MAX_IMAGE_SIZE_IN_BYTES = 2000000;
 
