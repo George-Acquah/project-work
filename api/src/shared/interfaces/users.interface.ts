@@ -1,53 +1,65 @@
 import { Document, Types } from 'mongoose';
 import { _IParkingCenter } from './slot.interface';
-import { _IPlainVehicle } from './vehicles.interface';
 import { UserType } from '../enums/users.enum';
+import { _IDbUserImage, _IUserImage } from './images.interface';
+import { _IDbVehicle, _IVehicle } from './vehicles.interface';
 
+interface _IDbProfile extends Document {
+  first_name: string | null;
+  last_name: string | null;
+  contact_no: string | null;
+  area: string | null;
+  city: string | null;
+  state: string | null;
+  pinCode: string | null;
+}
 interface _ICustomer extends Document<Types.ObjectId> {
   email: string;
   userType: UserType;
   readonly password: string;
-  profile: _ICustomerProfile;
-  vehicles: _IPlainVehicle[];
+  profile: _IDbProfile;
+  image: _IDbUserImage;
+  vehicles: _IDbVehicle[];
   rankings: _ICustomerRankings;
 }
+interface _IParkOwner extends Document<Types.ObjectId> {
+  email: string;
+  userType: UserType;
+  image: _IDbUserImage;
+  readonly password: string;
+  profile: _IDbProfile;
+  centers: _IParkingCenter[]; // to be changed to parking center interface
+  rankings: _IOwnerRankings;
+}
 
+interface _ISanitizedProfile {
+  _id: string;
+  first_name: string | null;
+  last_name: string | null;
+  contact_no: string | null;
+  area: string | null;
+  city: string | null;
+  state: string | null;
+  pinCode: string | null;
+}
 interface _ISanitizedCustomer {
   _id: string;
   email: string;
   userType: UserType;
-  profile: _ICustomerProfile;
-  vehicles: _IPlainVehicle[];
+  image?: _IUserImage;
+  profile: _ISanitizedProfile;
+  vehicles: _IVehicle[];
   rankings: _ICustomerRankings;
-}
-
-interface _IParkOwner extends Document<Types.ObjectId> {
-  email: string;
-  userType: UserType;
-  readonly password: string;
-  profile: _ICustomerProfile;
-  centers: _IParkingCenter[]; // to be changed to parking center interface
-  rankings: _IOwnerRankings;
 }
 
 interface _ISanitizedParkOwner {
   _id: string;
   email: string;
   userType: UserType;
-  profile: _ICustomerProfile;
+  image?: _IUserImage;
+  profile: _ISanitizedProfile;
   centers: _IParkingCenter[]; // to be changed to parking center interface
   rankings: _IOwnerRankings;
-}
-
-export interface _ICustomerProfile extends Document {
-  first_name: string | null;
-  last_name: string | null;
-  contact_no: string | null;
-  image: string | null;
-  area: string | null;
-  city: string | null;
-  state: string | null;
-  pinCode: string | null;
 }
 
 interface _ICustomerLocation {
@@ -65,7 +77,7 @@ interface _IOwnerRankings {
 
 interface CustomerHelpUser {
   rankings: _ICustomerRankings;
-  vehicles: _IPlainVehicle[];
+  vehicles: _IDbVehicle[];
 }
 
 interface OwnerHelpUser {
@@ -76,14 +88,16 @@ interface _ICommonUser extends Document<Types.ObjectId> {
   email: string;
   userType: UserType;
   readonly password: string;
-  profile: _ICustomerProfile;
+  profile: _IDbProfile;
+  image: _IDbUserImage;
 }
 
 interface _ISanitizedCommonUser {
   _id: string;
   userType: UserType;
   email: string;
-  profile: _ICustomerProfile;
+  profile: _ISanitizedProfile;
+  image?: _IUserImage;
 }
 
 // Create a generic interface for all users by combining the specific interfaces
@@ -99,4 +113,6 @@ export {
   _ICustomerLocation,
   _TUser,
   _TSanitizedUser,
+  _IDbProfile,
+  _ISanitizedProfile,
 };
