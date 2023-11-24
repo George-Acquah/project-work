@@ -1,6 +1,11 @@
-enum UserType {
+enum DbUserType {
   CUSTOMER = 'customers',
   PARK_OWNER = 'parkowners',
+}
+
+enum UserType {
+  CUSTOMER = 'Customer',
+  PARK_OWNER = 'ParkOwner',
 }
 
 enum UserConstraints {
@@ -18,4 +23,4 @@ enum UserConstraints {
   LASTNAME_MAXVALUE = 50,
 }
 
-export { UserConstraints, UserType };
+export { UserConstraints, DbUserType, UserType };

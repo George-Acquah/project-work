@@ -11,6 +11,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 import { LocalJwtStrategy } from './strategies/local.jwt.strategy';
 import { LocalJwtAuthGuard } from 'src/shared/guards/localJwt.guard';
+import { VehicleStrategy } from './strategies/vehicle.strategy';
+import { VehicleAuthGuard } from 'src/shared/guards/vehicles.guard';
 
 @Module({
   imports: [JwtAuthModule, PassportModule, UsersModule],
@@ -24,6 +26,8 @@ import { LocalJwtAuthGuard } from 'src/shared/guards/localJwt.guard';
     JwtAuthGuard,
     LocalJwtStrategy,
     LocalJwtAuthGuard,
+    VehicleStrategy,
+    VehicleAuthGuard,
   ],
   exports: [],
 })

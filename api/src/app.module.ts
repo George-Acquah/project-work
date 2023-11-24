@@ -8,6 +8,7 @@ import { ParkingModule } from './parking/parking.module';
 import { RootMongooseModule } from './database/database.config';
 import { UsersModule } from './users/users.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
+import { StorageService } from './storage/storage.service';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { VehiclesModule } from './vehicles/vehicles.module';
     VehiclesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, StorageService],
 })
 export class AppModule {
   constructor() {
