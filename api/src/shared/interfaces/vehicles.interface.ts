@@ -24,7 +24,7 @@ interface _IAddVehicle {
 interface _INewVehicle extends _IAddVehicle {
   isVerified: boolean;
   hasSlot: boolean;
-  images: Array<_IVehicleImage>;
+  images: Array<_IDbVehicleImage>;
   driver: string;
 }
 

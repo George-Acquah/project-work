@@ -27,20 +27,21 @@ function sanitizevehicle(vehicle: _IDbVehicle): _IVehicle {
     isVerified,
     hasSlot,
     driver,
-    images: sanitizeVehicleImage(images) || null,
+    images: sanitizeVehicleImage(images) || [],
   };
 }
 
 function sanitizeVehicles(vehicles: _IDbVehicle[]): _IVehicle[] {
   return vehicles.map((vehicle) => {
-    const { _id, vehicle_no, isVerified, hasSlot, driver, images } = vehicle;
+    const { _id, vehicle_no, isVerified, hasSlot, driver } = vehicle;
+    const images = vehicle?.images || [];
     return {
       _id: _id.toString(),
       vehicle_no,
       isVerified,
       hasSlot,
       driver,
-      images: sanitizeVehicleImage(images) || null,
+      images: sanitizeVehicleImage(images) || [],
     };
   });
 }
