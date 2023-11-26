@@ -9,6 +9,9 @@ import {
 } from '@nestjs/common';
 import { ParkingCenterService } from './parking-center.service';
 import { SlotService } from './slots.service';
+import { ApiResponse } from 'src/shared/services/api-responses';
+import { User } from 'src/shared/decorators/user.decorator';
+import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
 
 @Controller('owner/parking-center')
 export class ParkingCenterController {
@@ -20,14 +23,16 @@ export class ParkingCenterController {
   ) {}
 
   @Post()
-  async addCenter(@Body() data: any) {
+  async addCenter(@Body() data: any, @User() owner: _ISanitizedCustomer) {
     try {
-      // const centerId = await this.parkingService.addCenter(data);
-      this.logger.log(`Add Center: ${data}`);
-      // return { centerId };
+      const centerId = await this.parkingService.addCenter(
+        owner._id.toString(),
+        data,
+      );
+      return new ApiResponse(200, 'Center Added Successfully', centerId);
     } catch (error) {
       this.logger.error(`Error adding parking center: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -35,8 +40,8 @@ export class ParkingCenterController {
   async getAllParkingCenters() {
     try {
       this.logger.log(`All Parking Centers`);
-      // const centers = await this.parkingService.getAllParkingCenters();
-      // return { centers };
+      const centers = await this.parkingService.getAllParkingCenters();
+      return new ApiResponse(200, 'Fetched Parking Centers', centers);
     } catch (error) {
       this.logger.error(`Error getting all parking centers: ${error.message}`);
       throw error;
@@ -128,12 +133,24 @@ export class ParkingCenterController {
   @Get(':center_id')
   async getParkingCenter(@Param('center_id') centerId: string) {
     try {
-      // const center = await this.parkingService.getParkingCenter(centerId);
+      const center = await this.parkingService.getSingleParkingCenter(centerId);
       this.logger.error(`Get A Parking Center: ${centerId}`);
-      // return { center };
+      return new ApiResponse(200, 'Fetched Center Successfully', center);
     } catch (error) {
       this.logger.error(`Error getting parking center: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
+
+  @Get(':center_id/images')
+  async getCenterImages(@Param('center_id') centerId: string) {
+    try {
+      // const images = await this.parkingService.getCenterImages(centerId);
+      this.logger.error(`Get Center Images: ${centerId}`);
+      // return { images };
+    } catch (error) {
+      this.logger.error(`Error getting center images: ${error.message}`);
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -141,11 +158,10 @@ export class ParkingCenterController {
   async getSlotsForCenter(@Param('center_id') centerId: string) {
     try {
       const slots = await this.slotService.getSlotsForCenter(centerId);
-      // this.logger.error(`Get Slots for Center: ${centerId}`);
-      return { slots };
+      return new ApiResponse(200, 'Fetched Slots Successfully', slots);
     } catch (error) {
       this.logger.error(`Error getting slots for center: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -156,11 +172,11 @@ export class ParkingCenterController {
   ) {
     try {
       this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
-      // const slot = await this.slotService.getSlotDetails(centerId, slotId);
-      // return { slot };
+      const slot = await this.slotService.getSlotDetails(centerId, slotId);
+      return new ApiResponse(200, 'Fetched Slot Successfully', slot);
     } catch (error) {
       this.logger.error(`Error getting slot details: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -175,7 +191,7 @@ export class ParkingCenterController {
       // return { bookings };
     } catch (error) {
       this.logger.error(`Error getting slot bookings: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -186,11 +202,11 @@ export class ParkingCenterController {
   ) {
     try {
       this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
-      // const slotData = await this.slotService.getSlotData(centerId, slotId);
-      // return { slotData };
+      const slotData = await this.slotService.getSlotData(centerId, slotId);
+      return new ApiResponse(200, 'Fetched Data Successfully', slotData);
     } catch (error) {
       this.logger.error(`Error getting slot data: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -205,19 +221,7 @@ export class ParkingCenterController {
       // return { images };
     } catch (error) {
       this.logger.error(`Error getting slot images: ${error.message}`);
-      throw error;
-    }
-  }
-
-  @Get(':center_id/images')
-  async getCenterImages(@Param('center_id') centerId: string) {
-    try {
-      // const images = await this.parkingService.getCenterImages(centerId);
-      this.logger.error(`Get Center Images: ${centerId}`);
-      // return { images };
-    } catch (error) {
-      this.logger.error(`Error getting center images: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 }

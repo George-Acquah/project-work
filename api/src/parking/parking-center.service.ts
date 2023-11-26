@@ -21,6 +21,7 @@ import {
   _ICenterData,
   _IDbCenterData,
   _IDbParkingCenter,
+  _IDbReservationData,
   _INewParkingCenter,
   _IParkingCenter,
   _ISlotData,
@@ -34,6 +35,7 @@ import {
 import { CentertData } from 'src/shared/schemas/center-data.schema';
 import { CenterImage } from 'src/shared/schemas/center-image.schema';
 import { ParkingCenter } from 'src/shared/schemas/parking-centers.schema';
+import { ParkingReservationData } from 'src/shared/schemas/slot-reservation.schema';
 import {
   determineCenterType,
   sanitizeCenterData,
@@ -49,24 +51,36 @@ export class ParkingCenterService {
     private centerDataModel: Model<_IDbCenterData>,
     @InjectModel(CenterImage.name)
     private centerImagesModel: Model<_IDbCenterImage[]>,
+    @InjectModel(ParkingReservationData.name)
+    private reservationDataSchema: Model<_IDbReservationData>,
   ) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  handleDailyReset() {
-    // Assuming you have a method in ParkingCenterService to reset daily bookings
-    this.resetDailyBookings();
-  }
-
-  async resetDailyBookings(): Promise<void> {
+  async handleDailyReset() {
     try {
-      // Reset total_daily_bookings to 0 for all centers
-      await this.parkingCenterModel.updateMany(
-        {},
-        { $set: { total_daily_bookings: 0 } },
+      // Find all documents in the CentertData collection
+      const allCenterData = await this.centerDataModel.find();
+
+      // Use Promise.all to execute the updates concurrently
+      await Promise.all(
+        allCenterData.map(async (centerData) => {
+          // Store the daily bookings in the ReservationData collection
+          await this.reservationDataSchema.create({
+            center_id: centerData.center_id,
+            date: new Date(),
+            total_daily_bookings: centerData.total_daily_bookings,
+          });
+
+          // Reset total_daily_bookings to zero and save the updated CentertData document
+          await this.centerDataModel.findByIdAndUpdate(centerData._id, {
+            $set: { total_daily_bookings: 0 },
+          });
+        }),
       );
+
+      this.logger.log('Daily reset completed successfully.');
     } catch (error) {
-      // Handle the error appropriately (log it, throw a custom exception, etc.)
-      throw new Error(`Error resetting daily bookings: ${error.message}`);
+      this.logger.error(`Error during daily reset: ${error.message}`);
     }
   }
 
@@ -132,20 +146,20 @@ export class ParkingCenterService {
 
   //GET METHODS
   async getAllParkingCenters(): Promise<_IParkingCenter[]> {
-    const parkingCenters = await this.parkingCenterModel
+    const parkingCenters = (await this.parkingCenterModel
       .find()
       .populate('images')
-      .exec();
-    return parkingCenters as unknown as _IParkingCenter[];
+      .lean()) as _IParkingCenter[];
+    return parkingCenters;
   }
 
   async getCentersByOwners(owner: string): Promise<_IParkingCenter[]> {
     try {
-      const parkingCenters = await this.parkingCenterModel
+      const parkingCenters = (await this.parkingCenterModel
         .find({ owner })
         .populate('images')
-        .exec();
-      return parkingCenters as unknown as _IParkingCenter[];
+        .lean()) as _IParkingCenter[];
+      return parkingCenters;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -153,11 +167,11 @@ export class ParkingCenterService {
 
   async getSingleParkingCenter(id: string): Promise<_IParkingCenter> {
     try {
-      const parkingCenter = await this.parkingCenterModel
+      const parkingCenter = (await this.parkingCenterModel
         .findById(new Types.ObjectId(id))
         .populate('images')
-        .exec();
-      return parkingCenter as unknown as _IParkingCenter;
+        .lean()) as _IParkingCenter;
+      return parkingCenter;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -186,61 +200,27 @@ export class ParkingCenterService {
   }
   //END OF GET METHODS
 
-  // async addVehicle(
-  //   driver: string,
-  //   data: _IAddVehicle,
-  //   img: any[],
-  // ): Promise<_IVehicle> {
-  //   const { vehicle_no } = data;
-
-  //   const images = await this.addVehicleImages(img);
-  //   // Check if the vehicle already exists
-  //   const existingVehicle = await this.parkingCenterModel.findOne({
-  //     vehicle_no,
-  //   });
-
-  //   if (existingVehicle) {
-  //     existingVehicle.images.push(...images);
-  //     await existingVehicle.save();
-  //     return sanitizevehicle(existingVehicle);
-  //   }
-
-  //   // Vehicle doesn't exist, create a new one
-  //   const newVehicle = await this.newVehicle({
-  //     vehicle_no,
-  //     isVerified: false,
-  //     hasSlot: false,
-  //     images,
-  //     driver,
-  //   });
-
-  //   await newVehicle.save();
-  //   return sanitizevehicle(newVehicle);
-  // }
-
   //ADD METHODS
   async addCenterImages(images: _ICloudRes[]): Promise<_IDbCenterImage[]> {
     try {
-      const dbImages = images.map((image) => {
-        console.log(image);
-        const { publicUrl, ...res } = image;
-        console.log(res);
-        return res;
-      });
+      // Extracting relevant fields from each image
+      const dbImages = images.map(({ publicUrl, ...res }) => res);
 
+      // Save the images in the database
       const savedImages = await this.centerImagesModel.create(dbImages);
 
       return savedImages as unknown as _IDbCenterImage[];
     } catch (error) {
-      throw new Error('An Error Occurred while saving Images');
+      throw new Error('An error occurred while saving images');
     }
   }
 
   async addCenterData(data: _IAddCenterData): Promise<_ICenterData> {
     try {
-      const center_data = await this.centerDataModel.create(data);
+      // Create center data in the database
+      const centerData = await this.centerDataModel.create(data);
 
-      return sanitizeCenterData(center_data);
+      return sanitizeCenterData(centerData);
     } catch (error) {
       throw new Error(error.message || 'Could not add data');
     }
@@ -250,6 +230,7 @@ export class ParkingCenterService {
     try {
       const { center_name, description } = data;
 
+      // Check if the center already exists
       const existingCenter = await this.parkingCenterModel.findOne({
         center_name,
       });
@@ -258,6 +239,7 @@ export class ParkingCenterService {
         throw new NotAcceptableException('This center already exists');
       }
 
+      // Create a new parking center
       const newCenter = await this.newParkingCenter({
         center_name,
         description,
@@ -265,30 +247,37 @@ export class ParkingCenterService {
         owner,
       });
 
+      // Save the new parking center
       await newCenter.save();
+      this.logger.debug(newCenter);
 
-      const center_data = await this.centerDataModel.findOne({
+      // Fetch data for the created center
+      const centerData = await this.centerDataModel.findOne({
         center_id: newCenter._id,
       });
 
-      // If slot data is not found, dont make any change and then return the id
-      if (!center_data) {
+      // If center data is not found, return the id
+      if (!centerData) {
+        this.logger.log('returned short');
         return newCenter._id.toString();
       }
 
-      // Determine the type based on fetched slot data
-      const type = determineCenterType(center_data);
+      // Determine the type based on fetched center data
+      const type = determineCenterType(centerData);
 
-      // Update the new slot with the determined type
+      // Update the new center with the determined type
       newCenter.type = type;
 
-      // Save the slot again with the determined type
+      // Save the center again with the determined type
       await newCenter.save();
 
       return newCenter._id.toString();
     } catch (error) {
-      throw new Error(error.message || 'Failed to add slot. Please try again.');
+      throw new Error(
+        `Failed to add center. ${error.message || 'Please try again.'}`,
+      );
     }
   }
+
   //END OF ADD METHODS
 }

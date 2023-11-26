@@ -96,6 +96,18 @@ interface _IDbSlotReservation extends Document {
   duration_of_reservation: number; // in minutes, will probably be formatted to the client
   cost_of_reservation: number;
 }
+interface _IDbReservationData extends Document {
+  center_id: string;
+  date: Date;
+  total_daily_bookings: number;
+}
+
+interface _IReservationData {
+  _id: string;
+  center_id: string;
+  date: Date;
+  total_daily_bookings: number;
+}
 interface _ISlotReservation {
   _id: string;
   slot: _ISlot; // can contain details of parking center
@@ -159,4 +171,6 @@ export {
   _ICenterData,
   _IAddCenterData,
   _IAddSlotData,
+  _IReservationData,
+  _IDbReservationData,
 };

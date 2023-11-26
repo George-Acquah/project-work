@@ -36,7 +36,7 @@ export class VehiclesService {
   ) {}
 
   async getAllVehicles(): Promise<_IVehicle[]> {
-    const vehicles = await this.vehicleModel.find().populate('images').exec();
+    const vehicles = await this.vehicleModel.find().populate('images');
     return sanitizeVehicles(vehicles);
   }
 
@@ -44,8 +44,7 @@ export class VehiclesService {
     try {
       const vehicles = await this.vehicleModel
         .find({ driver })
-        .populate('images')
-        .exec();
+        .populate('images');
       return sanitizeVehicles(vehicles);
     } catch (error) {
       throw new Error(error.message);
@@ -56,8 +55,7 @@ export class VehiclesService {
     try {
       const vehicle = await this.vehicleModel
         .findById(new Types.ObjectId(id))
-        .populate('images')
-        .exec();
+        .populate('images');
       return sanitizevehicle(vehicle);
     } catch (error) {
       throw new Error(error.message);
@@ -101,8 +99,11 @@ export class VehiclesService {
     const existingVehicle = await this.vehicleModel.findOne({ vehicle_no });
 
     if (existingVehicle) {
-      existingVehicle.images.push(...images);
-      await existingVehicle.save();
+      await this.vehicleModel.updateOne(
+        { _id: existingVehicle._id },
+        { $push: { images: { $each: images } } },
+      );
+
       return sanitizevehicle(existingVehicle);
     }
 
