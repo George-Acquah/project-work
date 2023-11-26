@@ -3,12 +3,15 @@ import {
   Injectable,
   Logger,
   NotAcceptableException,
+  NotFoundException,
 } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SlotTypes } from 'src/shared/enums/slots.enum';
 import {
   _ICloudRes,
   _IDbSlotImage,
+  _ISlotImage,
 } from 'src/shared/interfaces/images.interface';
 import {
   _IAddSlot,
@@ -16,15 +19,21 @@ import {
   _IDbSlotData,
   _INewSlot,
 } from 'src/shared/interfaces/slot.interface';
-import { determineSlotType } from 'src/shared/utils/slots.utils';
+import { SlotData } from 'src/shared/schemas/slot-data.schema';
+import { SlotImage } from 'src/shared/schemas/slot-image.schema';
+import { Slot } from 'src/shared/schemas/slot.schema';
+import {
+  determineSlotType,
+  sanitizeSlotImages,
+} from 'src/shared/utils/slots.utils';
 
 @Injectable()
 export class SlotService {
   private logger = new Logger(SlotService.name);
   constructor(
-    private slotModel: Model<_IDbSlot>,
-    private slotImageModel: Model<_IDbSlotImage>,
-    private slotDataModel: Model<_IDbSlotData>,
+    @InjectModel(Slot.name) private slotModel: Model<_IDbSlot>,
+    @InjectModel(SlotImage.name) private slotImageModel: Model<_IDbSlotImage>,
+    @InjectModel(SlotData.name) private slotDataModel: Model<_IDbSlotData>,
   ) {}
 
   async populateSlotsFields<T>(
@@ -49,6 +58,14 @@ export class SlotService {
     return populatedSlots;
   }
 
+  async findSlots(center_id: string) {
+    try {
+      return await this.slotModel.find({ center_id });
+    } catch (error) {
+      throw new Error(error.message || 'Could not find slots');
+    }
+  }
+
   async newSlot(data: _INewSlot): Promise<_IDbSlot> {
     try {
       return await this.slotModel.create(data);
@@ -60,7 +77,7 @@ export class SlotService {
   async addSlotImages(
     images: _ICloudRes[],
     slot_id: string,
-  ): Promise<_IDbSlotImage[]> {
+  ): Promise<_ISlotImage[]> {
     try {
       if (!slot_id || slot_id === null || slot_id === '') {
         throw new BadRequestException('Slot Id was not provided');
@@ -76,7 +93,7 @@ export class SlotService {
 
       const savedImages = await this.slotImageModel.create(dbImages);
 
-      return savedImages as unknown as _IDbSlotImage[];
+      return sanitizeSlotImages(savedImages) as unknown as _ISlotImage[];
     } catch (error) {
       throw new Error('An Error Occurred while saving Images');
     }
@@ -110,7 +127,7 @@ export class SlotService {
 
       // If slot data is not found, dont make any change and then return the id
       if (!slot_data) {
-        return newSlot._id;
+        return newSlot._id.toString();
       }
 
       // Determine the type based on fetched slot data
@@ -122,9 +139,45 @@ export class SlotService {
       // Save the slot again with the determined type
       await newSlot.save();
 
-      return newSlot._id;
+      return newSlot._id.toString();
     } catch (error) {
       throw new Error(error.message || 'Failed to add slot. Please try again.');
+    }
+  }
+
+  //GET METHODS BEGIN
+  async getSlotsForCenter(center_id: string) {
+    return await this.findSlots(center_id);
+  }
+
+  async getSlotDetails(centerId: string, slotId: string): Promise<_IDbSlot> {
+    try {
+      return await this.slotModel
+        .findOne({ _id: slotId, center_id: centerId })
+        .exec();
+    } catch (error) {
+      throw new NotFoundException(error.message || 'Slot not found');
+    }
+  }
+
+  async getSlotBookings(centerId: string, slotId: string): Promise<any[]> {
+    try {
+      // Implement logic to fetch bookings for the specified slot
+      // Example: return await this.bookingModel.find({ center_id: centerId, slot_id: slotId }).exec();
+      this.logger.log(centerId, slotId);
+      return [];
+    } catch (error) {
+      throw new Error(error.message || 'Error getting slot bookings');
+    }
+  }
+
+  async getSlotData(centerId: string, slotId: string): Promise<_IDbSlotData> {
+    try {
+      return await this.slotDataModel
+        .findOne({ slot_id: slotId, center_id: centerId })
+        .exec();
+    } catch (error) {
+      throw new NotFoundException(error.message || 'Slot data not found');
     }
   }
 }
