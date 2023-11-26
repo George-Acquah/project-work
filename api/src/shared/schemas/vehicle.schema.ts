@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { Customer } from './customer.schema';
+import { VehicleImage } from './vehicle-image.schema';
 
 export type VehicleDocument = HydratedDocument<Vehicle>;
 
@@ -22,7 +23,7 @@ export class Vehicle {
       required: true,
     },
   ])
-  images: Array<Vehicle>;
+  images: Array<VehicleImage>;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
