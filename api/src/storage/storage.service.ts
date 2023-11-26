@@ -30,9 +30,9 @@ export class StorageService {
     return this.setDestination(destination) + this.setFilename(uploadedFile);
   }
 
-  private getPublicUrl(fileName: string): string {
+  private getPublicUrl(fileName: string, bucket: string): string {
     return `https://storage.googleapis.com/${this.storage.bucket(
-      this.bucket,
+      bucket,
     )}/${fileName}`;
   }
 
@@ -74,7 +74,7 @@ export class StorageService {
 
       await file.save(buffer, options);
 
-      const publicUrl = this.getPublicUrl(file.name);
+      const publicUrl = this.getPublicUrl(file.name, bucket);
 
       // Optionally, you can store metadata in a database
       const fileInfo: _ICloudRes = {
@@ -87,7 +87,9 @@ export class StorageService {
       return fileInfo;
     } catch (error) {
       console.error('Error uploading file:', error);
-      throw new BadRequestException('File upload failed. Please try again.');
+      throw new BadRequestException(
+        error.message || 'File upload failed. Please try again.',
+      );
     }
   }
 
