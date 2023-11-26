@@ -23,6 +23,10 @@ import {
   CentertDataSchema,
 } from 'src/shared/schemas/center-data.schema';
 import { ScheduleModule } from '@nestjs/schedule';
+import {
+  ParkingReservationData,
+  ParkingReservationDataSchema,
+} from 'src/shared/schemas/slot-reservation.schema';
 
 @Module({
   imports: [
@@ -34,6 +38,10 @@ import { ScheduleModule } from '@nestjs/schedule';
       { name: Slot.name, schema: SlotSchema },
       { name: SlotImage.name, schema: SlotImageSchema },
       { name: SlotData.name, schema: SlotDataSchema },
+      {
+        name: ParkingReservationData.name,
+        schema: ParkingReservationDataSchema,
+      },
     ]),
   ],
   providers: [ParkingsGateway, ParkingCenterService, SlotService],
