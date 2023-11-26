@@ -27,7 +27,7 @@ export class Slot {
   center_id: ParkingCenter;
 }
 
-const SlotSchema = SchemaFactory.createForClass(Slot);
+export const SlotSchema = SchemaFactory.createForClass(Slot);
 
 SlotSchema.virtual('slot_data', {
   ref: 'SlotData',
