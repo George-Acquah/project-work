@@ -8,8 +8,8 @@ import {
   _ISanitizedParkOwner,
   _ISanitizedProfile,
   _TSanitizedUser,
-  _TUser,
 } from '../interfaces/users.interface';
+import { _IDbVehicle } from '../interfaces/vehicles.interface';
 import { sanitizeVehicles } from './vehicles.utils';
 
 export function sanitizeUserImage(image: _IDbUserImage): _IUserImage {
@@ -37,17 +37,17 @@ function sanitizeProfile(profile: _IDbProfile): _ISanitizedProfile {
   };
 }
 
-export function sanitizeUser(user: _TUser): _TSanitizedUser {
+export function sanitizeUser(user: any): _TSanitizedUser {
   if (user.userType === UserType.CUSTOMER) {
-    const { _id, email, profile, userType, vehicles, rankings } =
-      user as _ICustomer;
-    const image = user?.image;
+    const { _id, email, profile, userType, rankings } = user as _ICustomer;
+    const image = user?.image as _IDbUserImage;
+    const vehicles = user?.vehicles as _IDbVehicle[];
     const sanitizedUser: _ISanitizedCustomer = {
       _id: _id.toString(),
       email,
       userType,
       profile: sanitizeProfile(profile),
-      vehicles: sanitizeVehicles(vehicles) || [],
+      vehicles: vehicles ? sanitizeVehicles(vehicles) : [],
       rankings,
       image: image ? sanitizeUserImage(image) : null,
     };
