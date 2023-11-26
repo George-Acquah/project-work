@@ -43,12 +43,18 @@ export class UsersService {
 
   async populateUserFields<T>(
     users: _TUser[],
-    field: string,
+    fields: string,
+    deepFields = '',
   ): Promise<T | any> {
     const populatedUsers = await Promise.all(
       users.map(async (user) => {
         const populatedUser = await this.userModel.populate(user, {
-          path: field,
+          path: fields,
+          strictPopulate: false,
+          populate: {
+            path: deepFields,
+            strictPopulate: false,
+          },
         });
         return populatedUser;
       }),
@@ -153,7 +159,14 @@ export class UsersService {
   async findUser(email: string): Promise<_TUser> {
     const user = await this.userModel
       .findOne({ email })
-      .populate('image profile vehicles')
+      .populate({
+        path: 'image profile vehicles',
+        strictPopulate: false,
+        populate: {
+          path: 'images',
+          strictPopulate: false,
+        },
+      })
       .exec();
 
     if (!user) {
@@ -178,7 +191,14 @@ export class UsersService {
     try {
       const foundUser = await this.userModel
         .findById(new Types.ObjectId(userId))
-        .populate('image profile vehicles')
+        .populate({
+          path: 'image profile vehicles',
+          strictPopulate: false,
+          populate: {
+            path: 'images',
+            strictPopulate: false,
+          },
+        })
         .exec();
 
       if (!foundUser) {
@@ -203,9 +223,6 @@ export class UsersService {
     }
 
     const profile = await this.profileModel.findOne({ _id: user.profile.id });
-
-    console.log(user);
-    console.log(profile);
 
     if (isAdmin) {
       // Admin can update role and isActive
@@ -302,10 +319,11 @@ export class UsersService {
         .limit(size)
         .exec();
 
-      const populatedUsers = await this.populateUserFields<_TUser>(
+      const populatedUsers = (await this.populateUserFields<_TUser[]>(
         latestUsers,
-        'profile image',
-      );
+        'profile image vehicles',
+        'images',
+      )) as _TUser[];
 
       return populatedUsers.map((user) => sanitizeUser(user));
     } catch (error) {
@@ -320,7 +338,6 @@ export class UsersService {
     items: number,
   ): Promise<_TSanitizedUser[]> {
     const offset = (currentPage - 1) * items;
-
     try {
       const users = await this.userModel
         .find({
@@ -337,7 +354,8 @@ export class UsersService {
 
       const populatedUsers = (await this.populateUserFields<_TUser[]>(
         users,
-        'profile image',
+        'profile image vehicles',
+        'images',
       )) as _TUser[];
 
       return populatedUsers.map((user) => sanitizeUser(user));

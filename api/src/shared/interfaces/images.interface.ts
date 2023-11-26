@@ -24,14 +24,17 @@ interface _IDbUserImage extends _IDbImage {
 }
 
 type _IDbVehicleImage = _IDbImage;
+interface _IDbCenterImage extends _IDbImage {
+  center_id: string;
+}
+
+interface _IDbSlotImage extends _IDbImage {
+  slot_id: string;
+}
 
 interface _IUserImage extends _Image {
   userId: string;
 }
-
-type _IVehicleImage = _Image;
-
-type _IAddVehicleImage = _IAddImage;
 
 interface _IAddUserImage extends _IAddImage {
   userId: string;
@@ -44,6 +47,14 @@ interface _ICloudRes {
   publicUrl: string;
 }
 
+type _IVehicleImage = _Image;
+type _IParkingCenterImage = _Image;
+type _IAddVehicleImage = _IAddImage;
+
+interface _ISlotImage extends _Image {
+  slot_id: string;
+}
+
 export {
   _IUserImage,
   _IDbUserImage,
@@ -52,4 +63,8 @@ export {
   _IAddVehicleImage,
   _IDbVehicleImage,
   _IVehicleImage,
+  _IParkingCenterImage,
+  _ISlotImage,
+  _IDbCenterImage,
+  _IDbSlotImage,
 };

@@ -13,6 +13,8 @@ import { LocalJwtStrategy } from './strategies/local.jwt.strategy';
 import { LocalJwtAuthGuard } from 'src/shared/guards/localJwt.guard';
 import { VehicleStrategy } from './strategies/vehicle.strategy';
 import { VehicleAuthGuard } from 'src/shared/guards/vehicles.guard';
+import { ParkingCenterGuard } from 'src/shared/guards/centers.guard';
+import { ParkingCenterStrategy } from './strategies/parking-center.strategy';
 
 @Module({
   imports: [JwtAuthModule, PassportModule, UsersModule],
@@ -28,6 +30,8 @@ import { VehicleAuthGuard } from 'src/shared/guards/vehicles.guard';
     LocalJwtAuthGuard,
     VehicleStrategy,
     VehicleAuthGuard,
+    ParkingCenterGuard,
+    ParkingCenterStrategy,
   ],
   exports: [],
 })

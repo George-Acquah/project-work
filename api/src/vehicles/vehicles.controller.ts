@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Get,
   MaxFileSizeValidator,
+  Param,
   ParseFilePipe,
   Post,
   UploadedFiles,
@@ -23,6 +25,35 @@ export class VehiclesController {
     private readonly uploadsService: UploadService,
     private configService: ConfigService,
   ) {}
+
+  @UseGuards(VehicleAuthGuard)
+  @Get()
+  async getAllVehicles() {
+    const vehicles = await this.vehicleService.getAllVehicles();
+    return new ApiResponse(200, 'Fetched vehicles Successfully', vehicles);
+  }
+
+  @UseGuards(VehicleAuthGuard)
+  @Get('driver')
+  async getVehiclesOfDriver(@User() driver: _ISanitizedCustomer) {
+    try {
+      const vehicles = await this.vehicleService.getDriverVehicles(driver._id);
+      return new ApiResponse(200, 'Fetched vehicles Successfully', vehicles);
+    } catch (error) {
+      return new ApiResponse(error.statusCode, error.message, {});
+    }
+  }
+
+  @UseGuards(VehicleAuthGuard)
+  @Get(':id')
+  async getSinglevehicle(@Param() id: string) {
+    try {
+      const vehicles = await this.vehicleService.getSingleVehicle(id);
+      return new ApiResponse(200, 'Fetched vehicles Successfully', vehicles);
+    } catch (error) {
+      return new ApiResponse(error.statusCode, error.message, {});
+    }
+  }
 
   @UseGuards(VehicleAuthGuard)
   @Post('add')

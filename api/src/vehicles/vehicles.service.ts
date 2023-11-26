@@ -6,7 +6,7 @@ import {
   NotAcceptableException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import {
   _ICloudRes,
   _IDbVehicleImage,
@@ -19,7 +19,10 @@ import {
 } from 'src/shared/interfaces/vehicles.interface';
 import { VehicleImage } from 'src/shared/schemas/vehicle-image.schema';
 import { Vehicle } from 'src/shared/schemas/vehicle.schema';
-import { sanitizevehicle } from 'src/shared/utils/vehicles.utils';
+import {
+  sanitizeVehicles,
+  sanitizevehicle,
+} from 'src/shared/utils/vehicles.utils';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -32,20 +35,49 @@ export class VehiclesService {
     private userService: UsersService, //might be used in verifying vehicle no
   ) {}
 
+  async getAllVehicles(): Promise<_IVehicle[]> {
+    const vehicles = await this.vehicleModel.find().populate('images').exec();
+    return sanitizeVehicles(vehicles);
+  }
+
+  async getDriverVehicles(driver: string): Promise<_IVehicle[]> {
+    try {
+      const vehicles = await this.vehicleModel
+        .find({ driver })
+        .populate('images')
+        .exec();
+      return sanitizeVehicles(vehicles);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async getSingleVehicle(id: string): Promise<_IVehicle> {
+    try {
+      const vehicle = await this.vehicleModel
+        .findById(new Types.ObjectId(id))
+        .populate('images')
+        .exec();
+      return sanitizevehicle(vehicle);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   async addVehicleImages(images: _ICloudRes[]): Promise<_IDbVehicleImage[]> {
     try {
       const dbImages = images.map((image) => {
+        console.log(image);
         const { publicUrl, ...res } = image;
+        console.log(res);
         return res;
       });
 
-      const savedImages = new this.vehicleImageModel({
-        dbImages,
-      });
+      const savedImages = await this.vehicleImageModel.create(dbImages);
 
-      return await savedImages.save();
+      return savedImages as unknown as _IDbVehicleImage[];
     } catch (error) {
-      throw new Error('An Error Ocuured while saving Images');
+      throw new Error('An Error Occurred while saving Images');
     }
   }
 
@@ -63,26 +95,27 @@ export class VehiclesService {
     img: any[],
   ): Promise<_IVehicle> {
     const { vehicle_no } = data;
-    // TODO: Some mechanism to verify vehicle_no
 
     const images = await this.addVehicleImages(img);
-
+    // Check if the vehicle already exists
     const existingVehicle = await this.vehicleModel.findOne({ vehicle_no });
 
     if (existingVehicle) {
-      throw new ConflictException('This vehicle is already added');
+      existingVehicle.images.push(...images);
+      await existingVehicle.save();
+      return sanitizevehicle(existingVehicle);
     }
 
-    const vehicle = await this.newVehicle({
+    // Vehicle doesn't exist, create a new one
+    const newVehicle = await this.newVehicle({
       vehicle_no,
-      isVerified: false, // boolean value returned after verification
-      hasSlot: false, // Will always be false during creation
+      isVerified: false,
+      hasSlot: false,
       images,
       driver,
     });
 
-    await vehicle.save();
-
-    return sanitizevehicle(vehicle);
+    await newVehicle.save();
+    return sanitizevehicle(newVehicle);
   }
 }
