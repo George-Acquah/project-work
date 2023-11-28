@@ -68,6 +68,9 @@ typings/
 creds.json
 *creds.json
 
+next-auth.d.ts
+*next-auth.d.ts
+
 # Yarn
 .yarn/*
 
