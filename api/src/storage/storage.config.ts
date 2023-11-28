@@ -2,8 +2,7 @@ import { registerAs } from '@nestjs/config';
 
 const StorageConfig = {
   path: process.env.TOKEN_PATH,
-  userImageBucket: process.env.USER_IMAGES_BUCKET,
-  vehicleImageBucket: process.env.USER_IMAGES_BUCKET,
+  mediaBucket: process.env.IMAGES_BUCKET,
 };
 
 export const GCPStorageConfig = registerAs(

@@ -30,9 +30,9 @@ export class StorageService {
     return this.setDestination(destination) + this.setFilename(uploadedFile);
   }
 
-  private getPublicUrl(fileName: string, bucket: string): string {
+  private getPublicUrl(fileName: string): string {
     return `https://storage.googleapis.com/${this.storage.bucket(
-      bucket,
+      this.bucket,
     )}/${fileName}`;
   }
 
@@ -58,13 +58,12 @@ export class StorageService {
     mimetype: string,
     buffer: Buffer,
     filename: string,
-    bucket: string,
   ): Promise<_ICloudRes> {
     try {
       const options: SaveOptions = {
         contentType: mimetype,
       };
-      const file = this.storage.bucket(bucket).file(name);
+      const file = this.storage.bucket(this.bucket).file(name);
       // Check if a file with the same name already exists
       const [exists] = await file.exists();
 
@@ -74,7 +73,7 @@ export class StorageService {
 
       await file.save(buffer, options);
 
-      const publicUrl = this.getPublicUrl(file.name, bucket);
+      const publicUrl = this.getPublicUrl(file.name);
 
       // Optionally, you can store metadata in a database
       const fileInfo: _ICloudRes = {
