@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  ConflictException,
+  BadRequestException,
   Injectable,
   Logger,
   NotAcceptableException,
@@ -9,6 +9,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Model, Types } from 'mongoose';
+import { AggregationService } from 'src/aggregation.service';
 import { CenterTypes } from 'src/shared/enums/slots.enum';
 import {
   _ICloudRes,
@@ -32,13 +33,14 @@ import {
   _INewVehicle,
   _IVehicle,
 } from 'src/shared/interfaces/vehicles.interface';
-import { CentertData } from 'src/shared/schemas/center-data.schema';
+import { CenterData } from 'src/shared/schemas/center-data.schema';
 import { CenterImage } from 'src/shared/schemas/center-image.schema';
 import { ParkingCenter } from 'src/shared/schemas/parking-centers.schema';
 import { ParkingReservationData } from 'src/shared/schemas/slot-reservation.schema';
 import {
   determineCenterType,
   sanitizeCenterData,
+  sanitizeCenters,
 } from 'src/shared/utils/slots.utils';
 
 @Injectable()
@@ -47,12 +49,13 @@ export class ParkingCenterService {
   constructor(
     @InjectModel(ParkingCenter.name)
     private parkingCenterModel: Model<_IDbParkingCenter>,
-    @InjectModel(CentertData.name)
+    @InjectModel(CenterData.name)
     private centerDataModel: Model<_IDbCenterData>,
     @InjectModel(CenterImage.name)
     private centerImagesModel: Model<_IDbCenterImage[]>,
     @InjectModel(ParkingReservationData.name)
     private reservationDataSchema: Model<_IDbReservationData>,
+    private readonly aggregationService: AggregationService,
   ) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -145,12 +148,47 @@ export class ParkingCenterService {
   }
 
   //GET METHODS
-  async getAllParkingCenters(): Promise<_IParkingCenter[]> {
-    const parkingCenters = (await this.parkingCenterModel
-      .find()
-      .populate('images')
-      .lean()) as _IParkingCenter[];
-    return parkingCenters;
+  async getAllParkingCenters(
+    query = '',
+    currentPage: number,
+    items: number,
+  ): Promise<_IParkingCenter[]> {
+    const fieldNames = ['center_name', 'type'];
+    const parkingCenters = await this.aggregationService.fetchFilteredDocuments(
+      this.parkingCenterModel,
+      fieldNames,
+      query,
+      currentPage,
+      items,
+    );
+    const populatedCenters = await this.populateCentersFields<
+      _IDbParkingCenter[]
+    >(
+      parkingCenters,
+      'center_images center_data slots',
+      'slot_images slot_data',
+    );
+    return sanitizeCenters(populatedCenters);
+  }
+
+  async getAvailableParkingCenters(
+    currentPage = 1,
+    items = 3,
+  ): Promise<_IParkingCenter[]> {
+    const centers = await this.aggregationService.aggregate(
+      this.parkingCenterModel,
+      'slots',
+      'center_id',
+      {
+        'slots.isAvailable': false,
+      },
+      currentPage,
+      items,
+    );
+    const populatedCenters = await this.populateCentersFields<
+      _IDbParkingCenter[]
+    >(centers, 'center_images center_data slots', 'slot_images slot_data');
+    return sanitizeCenters(populatedCenters);
   }
 
   async getCentersByOwners(owner: string): Promise<_IParkingCenter[]> {
@@ -201,10 +239,19 @@ export class ParkingCenterService {
   //END OF GET METHODS
 
   //ADD METHODS
-  async addCenterImages(images: _ICloudRes[]): Promise<_IDbCenterImage[]> {
+  async addCenterImages(
+    images: _ICloudRes[],
+    center_id: string,
+  ): Promise<_IDbCenterImage[]> {
     try {
+      if (!center_id || center_id === null || center_id === '') {
+        throw new BadRequestException('Center Id was not provided');
+      }
       // Extracting relevant fields from each image
-      const dbImages = images.map(({ publicUrl, ...res }) => res);
+      const dbImages = images.map(({ publicUrl, ...res }) => {
+        const imageReq = { ...res, center_id };
+        return imageReq;
+      });
 
       // Save the images in the database
       const savedImages = await this.centerImagesModel.create(dbImages);
