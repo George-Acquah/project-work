@@ -17,13 +17,11 @@ export class Slot {
   @Prop({ type: Boolean, default: false })
   isAvailable: boolean;
 
-  @Prop([
-    {
-      type: MongooseSchema.Types.ObjectId,
-      ref: 'ParkingCenter',
-      required: true,
-    },
-  ])
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'ParkingCenter',
+    required: true,
+  })
   center_id: ParkingCenter;
 }
 
@@ -40,5 +38,5 @@ SlotSchema.virtual('slot_images', {
   ref: 'SlotImage',
   localField: '_id',
   foreignField: 'slot_id',
-  justOne: true,
+  justOne: false,
 });
