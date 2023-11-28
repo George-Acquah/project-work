@@ -1,51 +1,50 @@
-// 'use server'
+'use server'
 
-// import { signIn, signOut } from "@/auth";
-// import { JWT } from "@auth/core/jwt";
-// import { API, fetcher } from "./data";
-// import { endpoints } from "./endpoints";
-// import { revalidatePath } from "next/cache";
-// import { dashboardRoutes } from "./routes";
-// import { redirect } from "next/navigation";
-// import { AdminSchema, ApplicantSchema } from "./z-validations";
+import { signIn, signOut } from "@/auth";
+import { JWT } from "@auth/core/jwt";
+import { API, fetcher } from "./data";
+import { endpoints } from "./endpoints";
+import { revalidatePath } from "next/cache";
+import { dashboardRoutes } from "./routes";
+import { redirect } from "next/navigation";
+import { AdminSchema, ApplicantSchema } from "./z-validations";
 
 
-// const UpdateApplicant = ApplicantSchema.omit({ id: true });
+const UpdateApplicant = ApplicantSchema.omit({ id: true });
 
-// const UpdateAdmin = AdminSchema.omit({ id: true})
+const UpdateAdmin = AdminSchema.omit({ id: true})
 
-// async function refreshToken(token: JWT): Promise<JWT> {
-//   const response = await fetch(`${API}/auth/refresh`, {
-//     method: "POST",
-//     headers: {
-//       authorization: `Refresh ${token.tokens.refresh_token}`,
-//     },
-//     credentials: "include",
-//   });
+async function refreshToken(token: JWT): Promise<JWT> {
+  const response = await fetch(`${API}/auth/refresh`, {
+    method: "POST",
+    headers: {
+      authorization: `Refresh ${token.tokens.refresh_token}`,
+    },
+    credentials: "include",
+  });
 
-//   if (!response.ok) {
-//     console.log("error is occuring right here");
-//     throw new Error("Your Session has Expired. Sign in again to continue.");
-//   }
+  if (!response.ok) {
+    throw new Error("Your Session has Expired. Sign in again to continue.");
+  }
 
-//   const res: _ITokens = (await response.json());
+  const res: _ITokens = (await response.json());
  
-//   return {
-//     ...token,
-//     ...res,
-//   };
-// }
+  return {
+    ...token,
+    ...res,
+  };
+}
 
-// async function authenticate(prevState: string | undefined, formData: FormData) {
-//   try {
-//     await signIn("credentials", Object.fromEntries(formData));
-//   } catch (error) {
-//     if ((error as Error).message.includes("CredentialsSignin")) {
-//       return "CredentialSignin";
-//     }
-//     throw error;
-//   }
-// }
+async function authenticate(prevState: string | undefined, formData: FormData) {
+  try {
+    await signIn("credentials", Object.fromEntries(formData));
+  } catch (error) {
+    if ((error as Error).message.includes("CredentialsSignin")) {
+      return "CredentialSignin";
+    }
+    throw error;
+  }
+}
 
 // async function deleteApplicant(id: string) {
 //   const url = `${endpoints.USERS.APPLICANTS.BASE}/${id}`;
@@ -133,15 +132,15 @@
 //   redirect(dashboardRoutes.ADMIN.BASE);
 // }
 
-// async function signOutHelper() {
-//   await signOut();
-// }
+async function signOutHelper() {
+  await signOut();
+}
 
-// export {
-//   authenticate,
-//   refreshToken,
-//   deleteApplicant,
-//   updateApplicant,
-//   signOutHelper,
-//   updateAdmin,
-// }
+export {
+  authenticate,
+  refreshToken,
+  signOutHelper,
+  // deleteApplicant,
+  // updateApplicant,
+  // updateAdmin,
+}
