@@ -81,6 +81,9 @@ creds.json
 *.env
 *.env.test
 
+creds.json
+*creds.json
+
 # private files
 */private
 */private/
