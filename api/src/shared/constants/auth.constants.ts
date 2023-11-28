@@ -5,6 +5,7 @@ const strategies = {
   RESERVATION: process.env.JWT_RESERVATION,
   VEHICLE: process.env.JWT_VEHICLE,
   PARKING_CENTER: process.env.JWT_CENTER,
+  OWNER: process.env.JWT_CENTER,
 };
 
 export { strategies };
