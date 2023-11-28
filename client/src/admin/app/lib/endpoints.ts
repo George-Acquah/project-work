@@ -2,6 +2,7 @@ const endpoints = {
   AUTH: {
     REGISTER_CUSTOMER: "auth/users/customer",
     REGISTER_OWNER: "auth/users/owner",
+    REGISTER_ADMIN: "auth/users/admin",
     LOGIN: "auth/login",
     REFRESH: "auth/refresh",
   },
