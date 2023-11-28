@@ -28,6 +28,7 @@ import {
   _IDbUserImage,
   _IUserImage,
 } from 'src/shared/interfaces/images.interface';
+import { AggregationService } from 'src/aggregation.service';
 
 @Injectable()
 export class UsersService {
@@ -39,6 +40,7 @@ export class UsersService {
     private parkOwnerModel: Model<_IParkOwner>,
     @InjectModel('Profile') private profileModel: Model<_IDbProfile>,
     @InjectModel('UserImage') private userImageModel: Model<_IDbUserImage>,
+    private readonly aggregationService: AggregationService,
   ) {}
 
   async populateUserFields<T>(
@@ -160,10 +162,10 @@ export class UsersService {
     const user = await this.userModel
       .findOne({ email })
       .populate({
-        path: 'image profile vehicles',
+        path: 'image profile vehicles centers',
         strictPopulate: false,
         populate: {
-          path: 'images',
+          path: 'images center_images',
           strictPopulate: false,
         },
       })
@@ -325,6 +327,8 @@ export class UsersService {
         'images',
       )) as _TUser[];
 
+      console.log(populatedUsers);
+
       return populatedUsers.map((user) => sanitizeUser(user));
     } catch (error) {
       console.error('Database Error:', error);
@@ -337,30 +341,25 @@ export class UsersService {
     currentPage: number,
     items: number,
   ): Promise<_TSanitizedUser[]> {
-    const offset = (currentPage - 1) * items;
+    const fieldNames = ['email', 'userType']; // Add more fields as needed
     try {
-      const users = await this.userModel
-        .find({
-          $or: [
-            // { username: { $regex: query, $options: 'i' } },
-            { email: { $regex: query, $options: 'i' } },
-            { userType: { $regex: query, $options: 'i' } },
-          ],
-        })
-        // .sort({ updatedAt: 'desc' })
-        .skip(offset)
-        .limit(items)
-        .exec();
+      const users = await this.aggregationService.fetchFilteredDocuments(
+        this.userModel,
+        fieldNames,
+        query,
+        currentPage,
+        items,
+      );
 
       const populatedUsers = (await this.populateUserFields<_TUser[]>(
         users,
-        'profile image vehicles',
+        'profile image vehicles centers',
         'images',
       )) as _TUser[];
 
       return populatedUsers.map((user) => sanitizeUser(user));
     } catch (error) {
-      throw new Error('Failed to fetch users.');
+      throw new Error(error.message || 'Failed to fetch users.');
     }
   }
 
