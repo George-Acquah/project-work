@@ -16,14 +16,12 @@ import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
 import { VehicleAuthGuard } from 'src/shared/guards/vehicles.guard';
 import { UploadService } from 'src/storage/uploads.service';
 import { ApiResponse } from 'src/shared/services/api-responses';
-import { ConfigService } from '@nestjs/config';
 
 @Controller('customer/vehicle')
 export class VehiclesController {
   constructor(
     private vehicleService: VehiclesService,
     private readonly uploadsService: UploadService,
-    private configService: ConfigService,
   ) {}
 
   @UseGuards(VehicleAuthGuard)
@@ -71,11 +69,7 @@ export class VehiclesController {
     @User() customer: _ISanitizedCustomer,
   ) {
     try {
-      const { vehicleImageBucket } = this.configService.get('GCPStorageConfig');
-      const images = await this.uploadsService.uploadFilesToDrive(
-        files,
-        vehicleImageBucket,
-      );
+      const images = await this.uploadsService.uploadFilesToDrive(files);
       if (images.length < 1) {
         return new ApiResponse(400, 'No images were uploaded.', {});
       }

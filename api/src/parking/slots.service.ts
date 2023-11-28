@@ -18,13 +18,18 @@ import {
   _IDbSlot,
   _IDbSlotData,
   _INewSlot,
+  _ISlot,
+  _ISlotData,
 } from 'src/shared/interfaces/slot.interface';
 import { SlotData } from 'src/shared/schemas/slot-data.schema';
 import { SlotImage } from 'src/shared/schemas/slot-image.schema';
 import { Slot } from 'src/shared/schemas/slot.schema';
 import {
   determineSlotType,
+  sanitizeSlot,
+  sanitizeSlotData,
   sanitizeSlotImages,
+  sanitizeSlots,
 } from 'src/shared/utils/slots.utils';
 
 @Injectable()
@@ -58,6 +63,22 @@ export class SlotService {
     return populatedSlots;
   }
 
+  async populateSlotFields<T>(
+    slot: _IDbSlot,
+    fields: string,
+    deepFields = '',
+  ): Promise<T | any> {
+    const populatedSlot = await this.slotModel.populate(slot, {
+      path: fields,
+      strictPopulate: false,
+      populate: {
+        path: deepFields,
+        strictPopulate: false,
+      },
+    });
+    return populatedSlot;
+  }
+
   async findSlots(center_id: string) {
     try {
       return await this.slotModel.find({ center_id });
@@ -83,7 +104,6 @@ export class SlotService {
         throw new BadRequestException('Slot Id was not provided');
       }
       const dbImages = images.map((image) => {
-        console.log(image);
         const { publicUrl, ...res } = image;
         const imageData = { ...res, slot_id };
 
@@ -95,7 +115,7 @@ export class SlotService {
 
       return sanitizeSlotImages(savedImages) as unknown as _ISlotImage[];
     } catch (error) {
-      throw new Error('An Error Occurred while saving Images');
+      throw new Error(error.message || 'An Error Occurred while saving Images');
     }
   }
 
@@ -147,14 +167,27 @@ export class SlotService {
 
   //GET METHODS BEGIN
   async getSlotsForCenter(center_id: string) {
-    return await this.findSlots(center_id);
+    const slots = await this.findSlots(center_id);
+
+    const populatesSlots = await this.populateSlotsFields(
+      slots,
+      'slot_data slot_images',
+    );
+
+    return sanitizeSlots(populatesSlots);
   }
 
-  async getSlotDetails(centerId: string, slotId: string): Promise<_IDbSlot> {
+  async getSlotDetails(centerId: string, slotId: string): Promise<_ISlot> {
     try {
-      return await this.slotModel
+      const slot = await this.slotModel
         .findOne({ _id: slotId, center_id: centerId })
         .exec();
+      const populatedSlot = await this.populateSlotFields(
+        slot,
+        'slot_images slot_data',
+      );
+
+      return sanitizeSlot(populatedSlot);
     } catch (error) {
       throw new NotFoundException(error.message || 'Slot not found');
     }
@@ -171,11 +204,13 @@ export class SlotService {
     }
   }
 
-  async getSlotData(centerId: string, slotId: string): Promise<_IDbSlotData> {
+  async getSlotData(centerId: string, slotId: string): Promise<_ISlotData> {
     try {
-      return await this.slotDataModel
+      const data = await this.slotDataModel
         .findOne({ slot_id: slotId, center_id: centerId })
         .exec();
+      if (!data) throw new NotFoundException('Slot data not found');
+      return sanitizeSlotData(data);
     } catch (error) {
       throw new NotFoundException(error.message || 'Slot data not found');
     }

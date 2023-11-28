@@ -19,22 +19,27 @@ import {
 } from 'src/shared/schemas/slot-image.schema';
 import { SlotData, SlotDataSchema } from 'src/shared/schemas/slot-data.schema';
 import {
-  CentertData,
-  CentertDataSchema,
+  CenterData,
+  CenterDataSchema,
 } from 'src/shared/schemas/center-data.schema';
 import { ScheduleModule } from '@nestjs/schedule';
 import {
   ParkingReservationData,
   ParkingReservationDataSchema,
 } from 'src/shared/schemas/slot-reservation.schema';
+import { UploadService } from 'src/storage/uploads.service';
+import { ConfigModule } from '@nestjs/config';
+import { StorageService } from 'src/storage/storage.service';
+import { AggregationService } from 'src/aggregation.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ScheduleModule.forRoot(),
     MongooseModule.forFeature([
       { name: ParkingCenter.name, schema: ParkingCenterSchema },
       { name: CenterImage.name, schema: CenterImageSchema },
-      { name: CentertData.name, schema: CentertDataSchema },
+      { name: CenterData.name, schema: CenterDataSchema },
       { name: Slot.name, schema: SlotSchema },
       { name: SlotImage.name, schema: SlotImageSchema },
       { name: SlotData.name, schema: SlotDataSchema },
@@ -44,7 +49,14 @@ import {
       },
     ]),
   ],
-  providers: [ParkingsGateway, ParkingCenterService, SlotService],
+  providers: [
+    ParkingsGateway,
+    ParkingCenterService,
+    SlotService,
+    UploadService,
+    StorageService,
+    AggregationService,
+  ],
   controllers: [ParkingCenterController],
   exports: [],
 })

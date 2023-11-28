@@ -20,3 +20,10 @@ export class ParkOwner {
 }
 
 export const ParkOwnerSchema = SchemaFactory.createForClass(ParkOwner);
+
+ParkOwnerSchema.virtual('centers', {
+  ref: 'ParkingCenter',
+  localField: '_id',
+  foreignField: 'owner',
+  justOne: false,
+});

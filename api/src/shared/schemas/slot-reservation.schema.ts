@@ -51,7 +51,6 @@ export class ParkingReservationData {
     type: MongooseSchema.Types.ObjectId,
     ref: 'ParkingCenter',
     required: true,
-    unique: true,
   })
   center_id: ParkingCenter;
 

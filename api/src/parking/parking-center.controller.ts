@@ -6,12 +6,20 @@ import {
   Body,
   Param,
   Get,
+  UseGuards,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+  UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { ParkingCenterService } from './parking-center.service';
 import { SlotService } from './slots.service';
 import { ApiResponse } from 'src/shared/services/api-responses';
 import { User } from 'src/shared/decorators/user.decorator';
 import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
+import { AddCenterDto, AddSlotDto } from './dtos/add-center.dto';
+import { ParkingCenterGuard } from 'src/shared/guards/centers.guard';
+import { UploadService } from 'src/storage/uploads.service';
 
 @Controller('owner/parking-center')
 export class ParkingCenterController {
@@ -20,10 +28,15 @@ export class ParkingCenterController {
   constructor(
     private readonly parkingService: ParkingCenterService,
     private readonly slotService: SlotService,
+    private readonly uploadService: UploadService,
   ) {}
 
+  @UseGuards(ParkingCenterGuard)
   @Post()
-  async addCenter(@Body() data: any, @User() owner: _ISanitizedCustomer) {
+  async addCenter(
+    @Body() data: AddCenterDto,
+    @User() owner: _ISanitizedCustomer,
+  ) {
     try {
       const centerId = await this.parkingService.addCenter(
         owner._id.toString(),
@@ -37,10 +50,48 @@ export class ParkingCenterController {
   }
 
   @Get()
-  async getAllParkingCenters() {
+  async getAllParkingCenters(
+    @Query('centers') query: string,
+    @Query('currentPage') currentPage: number,
+    @Query('size') size: number,
+  ) {
     try {
       this.logger.log(`All Parking Centers`);
-      const centers = await this.parkingService.getAllParkingCenters();
+      const centers = await this.parkingService.getAllParkingCenters(
+        query,
+        currentPage,
+        size,
+      );
+      return new ApiResponse(200, 'Fetched Parking Centers', centers);
+    } catch (error) {
+      this.logger.error(`Error getting all parking centers: ${error.message}`);
+      throw error;
+    }
+  }
+
+  // @Get()
+  // async getLatestParkingCenters() {
+  //   try {
+  //     this.logger.log(`All Parking Centers`);
+  //     const centers = await this.parkingService.getAllParkingCenters();
+  //     return new ApiResponse(200, 'Fetched Parking Centers', centers);
+  //   } catch (error) {
+  //     this.logger.error(`Error getting all parking centers: ${error.message}`);
+  //     throw error;
+  //   }
+  // }
+
+  @Get('available')
+  async getAvailableParkingCenters(
+    @Query('currentPage') currentPage: number,
+    @Query('size') size: number,
+  ) {
+    try {
+      this.logger.log(`All Parking Centers`);
+      const centers = await this.parkingService.getAvailableParkingCenters(
+        currentPage,
+        size,
+      );
       return new ApiResponse(200, 'Fetched Parking Centers', centers);
     } catch (error) {
       this.logger.error(`Error getting all parking centers: ${error.message}`);
@@ -60,11 +111,38 @@ export class ParkingCenterController {
     }
   }
 
-  @Post('add-slot')
-  async addSlot(@Body() data: any) {
+  @Post('add-slot/:center_id')
+  async addSlot(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          // ... Set of file validator instances here
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 }),
+        ],
+      }),
+    )
+    files: Express.Multer.File[],
+    @Body() data: AddSlotDto,
+    @Param() param: { center_id: string },
+  ) {
     try {
-      const slotId = await this.slotService.addSlot(data.center_id, data.slot);
-      return { slotId };
+      const { center_id } = param;
+      const slotId = await this.slotService.addSlot(center_id, data);
+
+      if (!slotId) {
+        return new ApiResponse(500, 'An error has occured', {});
+      }
+
+      const images = await this.uploadService.uploadFilesToDrive(files);
+      if (images.length < 1) {
+        return new ApiResponse(400, 'No images were uploaded.', {});
+      }
+
+      const imageRes = await this.slotService.addSlotImages(images, slotId);
+      return new ApiResponse(200, 'Added slot to center successfully', {
+        slotId,
+        imageRes,
+      });
     } catch (error) {
       this.logger.error(`Error adding slot: ${error.message}`);
       throw error;
@@ -83,12 +161,27 @@ export class ParkingCenterController {
     }
   }
 
-  @Post('add-center-image')
-  async addParkingCenterImage(@Body() data: any) {
+  @Post('add-center-image/:center_id')
+  async addParkingCenterImage(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          // ... Set of file validator instances here
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 }),
+        ],
+      }),
+    )
+    files: Express.Multer.File[],
+    @Param() { center_id }: { center_id: string },
+  ) {
     try {
-      // await this.parkingService.addCenterImage(data);
-      this.logger.error(`Add Center Image: ${data}`);
-      return { message: 'Center image added successfully' };
+      const images = await this.uploadService.uploadFilesToDrive(files);
+      if (images.length < 1) {
+        return new ApiResponse(400, 'No images were uploaded.', {});
+      }
+
+      await this.parkingService.addCenterImages(images, center_id);
+      return new ApiResponse(200, 'Center images added successfully', {});
     } catch (error) {
       this.logger.error(`Error adding center image: ${error.message}`);
       throw error;
@@ -96,13 +189,28 @@ export class ParkingCenterController {
   }
 
   @Post('add-slot-image/:slot_id')
-  async addSlotImage(@Body() data: any, @Param() slot_id: string) {
+  async addSlotImage(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          // ... Set of file validator instances here
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 }),
+        ],
+      }),
+    )
+    files: Express.Multer.File[],
+    @Param() { slot_id }: { slot_id: string },
+  ) {
     try {
-      await this.slotService.addSlotImages(data, slot_id);
-      return { message: 'Slot image added successfully' };
+      const images = await this.uploadService.uploadFilesToDrive(files);
+      if (images.length < 1) {
+        return new ApiResponse(400, 'No images were uploaded.', {});
+      }
+      await this.slotService.addSlotImages(images, slot_id);
+      return new ApiResponse(200, 'Slot images added successfully', {});
     } catch (error) {
       this.logger.error(`Error adding slot image: ${error.message}`);
-      throw error;
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -142,6 +250,7 @@ export class ParkingCenterController {
     }
   }
 
+  //TODO implement and test this endpoint
   @Get(':center_id/images')
   async getCenterImages(@Param('center_id') centerId: string) {
     try {
@@ -180,6 +289,7 @@ export class ParkingCenterController {
     }
   }
 
+  //TODO implement and test this endpoint
   @Get(':center_id/slots/:slot_id/bookings')
   async getSlotBookings(
     @Param('center_id') centerId: string,
@@ -201,15 +311,14 @@ export class ParkingCenterController {
     @Param('slot_id') slotId: string,
   ) {
     try {
-      this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
       const slotData = await this.slotService.getSlotData(centerId, slotId);
       return new ApiResponse(200, 'Fetched Data Successfully', slotData);
     } catch (error) {
-      this.logger.error(`Error getting slot data: ${error.message}`);
       return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
+  //TODO implement and test this endpoint
   @Get(':center_id/slots/:slot_id/images')
   async getSlotImages(
     @Param('center_id') centerId: string,
