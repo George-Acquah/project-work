@@ -65,8 +65,8 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
-.creds.json
-*.creds.json
+creds.json
+*creds.json
 
 # Yarn
 .yarn/*
