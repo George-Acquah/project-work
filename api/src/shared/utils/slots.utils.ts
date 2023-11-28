@@ -170,7 +170,7 @@ function sanitizeSlot(slot: _IDbSlot): _ISlot {
     type,
     isAvailable,
     slot_images: sanitizeSlotImages(slot_images) || [],
-    slot_data: sanitizeSlotData(slot_data) || null,
+    slot_data: slot_data ? sanitizeSlotData(slot_data) : null,
   };
 }
 
@@ -188,7 +188,7 @@ function sanitizeSlots(slots: _IDbSlot[]): _ISlot[] {
       type,
       isAvailable,
       slot_images: sanitizeSlotImages(slot_images) || [],
-      slot_data: sanitizeSlotData(slot_data) || null,
+      slot_data: slot_data ? sanitizeSlotData(slot_data) : null,
     };
   });
 }
@@ -211,12 +211,33 @@ function sanitizeCenter(center: _IDbParkingCenter): _IParkingCenter {
   };
 }
 
+function sanitizeCenters(centers: _IDbParkingCenter[]): _IParkingCenter[] {
+  return centers.map((center) => {
+    const { _id, center_name, description, type, owner } = center;
+    const center_images = center?.center_images;
+    const center_data = center?.center_data;
+    const slots = center?.slots;
+
+    return {
+      _id: _id.toString() as string,
+      owner,
+      center_name,
+      description,
+      type,
+      slots: sanitizeSlots(slots) || [],
+      center_images: sanitizeCenterImages(center_images) || [],
+      center_data: center_data ? sanitizeCenterData(center_data) : null,
+    };
+  });
+}
+
 export {
   determineSlotType,
   determineCenterType,
   sanitizeSlot,
   sanitizeSlots,
   sanitizeCenter,
+  sanitizeCenters,
   sanitizeSlotImages,
   sanitizeCenterImages,
   sanitizeCenterData,
