@@ -6,10 +6,10 @@ export type SlotImageDocument = HydratedDocument<SlotImage>;
 
 @Schema()
 export class SlotImage {
-  @Prop({ type: String, required: true, default: null })
+  @Prop({ type: String, required: true, default: null, unique: true })
   file_id: string;
 
-  @Prop({ type: String, required: true, default: null })
+  @Prop({ type: String, required: true, default: null, unique: true })
   filename: string;
 
   @Prop({ type: String, required: true, default: null })

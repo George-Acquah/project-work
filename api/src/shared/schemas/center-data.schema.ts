@@ -2,10 +2,10 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ParkingCenter } from './parking-centers.schema';
 
-export type CentertDataDocument = Document & CentertData;
+export type CenterDataDocument = Document & CenterData;
 
 @Schema()
-export class CentertData {
+export class CenterData {
   @Prop({ type: Number, required: true, default: 0 })
   total_slots: number;
 
@@ -28,12 +28,11 @@ export class CentertData {
     type: MongooseSchema.Types.ObjectId,
     ref: 'ParkingCenter',
     required: true,
-    unique: true,
   })
   center_id: ParkingCenter;
 
   // Add a custom method for calculating the week number
-  calculateWeekNumber(this: CentertData): number {
+  calculateWeekNumber(this: CenterData): number {
     // Example: Get the current week number based on the ISO week date
     const currentDate = new Date();
     const weekNumber = Math.ceil(
@@ -47,7 +46,7 @@ export class CentertData {
   }
 
   // Add a custom method for calculating the month number
-  calculateMonthNumber(this: CentertData): number {
+  calculateMonthNumber(this: CenterData): number {
     // Example: Get the current month number (January is 0)
     const currentDate = new Date();
     const monthNumber = currentDate.getMonth() + 1;
@@ -55,16 +54,16 @@ export class CentertData {
   }
 
   // Add a custom method for calculating the total of values in the object
-  calculateTotal(this: CentertData, obj: Record<string, number>): number {
+  calculateTotal(this: CenterData, obj: Record<string, number>): number {
     // Example: Calculate the total of values in the object
     const total = Object.values(obj).reduce((acc, val) => acc + val, 0);
     return total;
   }
 }
 
-export const CentertDataSchema = SchemaFactory.createForClass(CentertData);
+export const CenterDataSchema = SchemaFactory.createForClass(CenterData);
 
-CentertDataSchema.pre<CentertData>('save', function (next) {
+CenterDataSchema.pre<CenterData>('save', function (next) {
   try {
     const { total_daily_bookings } = this;
 

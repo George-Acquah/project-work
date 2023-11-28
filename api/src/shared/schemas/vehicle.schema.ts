@@ -7,7 +7,7 @@ export type VehicleDocument = HydratedDocument<Vehicle>;
 
 @Schema()
 export class Vehicle {
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true, unique: true })
   vehicle_no: string;
 
   @Prop({ type: Boolean, default: false })

@@ -6,10 +6,10 @@ export type UserImageDocument = HydratedDocument<UserImage>;
 
 @Schema()
 export class UserImage {
-  @Prop({ type: String, required: true, default: null })
+  @Prop({ type: String, required: true, default: null, unique: true })
   file_id: string;
 
-  @Prop({ type: String, required: true, default: null })
+  @Prop({ type: String, required: true, default: null, unique: true })
   filename: string;
 
   @Prop({ type: String, required: true, default: null })
@@ -19,7 +19,6 @@ export class UserImage {
     type: MongooseSchema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true,
   })
   userId: User;
 }

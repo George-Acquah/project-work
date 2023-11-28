@@ -20,7 +20,6 @@ export class ParkingCenter {
     type: MongooseSchema.Types.ObjectId,
     ref: 'ParkOwner',
     required: true,
-    unique: true,
   })
   owner: ParkOwner;
 }
@@ -31,14 +30,14 @@ ParkingCenterSchema.virtual('center_images', {
   ref: 'CenterImage',
   localField: '_id',
   foreignField: 'center_id',
-  justOne: true,
+  justOne: false,
 });
 
 ParkingCenterSchema.virtual('slots', {
   ref: 'Slot',
   localField: '_id',
   foreignField: 'center_id',
-  justOne: true,
+  justOne: false,
 });
 
 ParkingCenterSchema.virtual('center_data', {
