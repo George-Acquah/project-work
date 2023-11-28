@@ -15,7 +15,12 @@ export class UserImage {
   @Prop({ type: String, required: true, default: null })
   mimetype: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+    unique: true,
+  })
   userId: User;
 }
 

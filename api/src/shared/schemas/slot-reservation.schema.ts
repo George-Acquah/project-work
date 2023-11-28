@@ -1,8 +1,10 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
-import { Vehicle } from './vehicle.schema';
+import { ParkingCenter } from './parking-centers.schema';
 
 export type SlotReservationDocument = HydratedDocument<SlotReservation>;
+export type ParkingReservationDataDocument =
+  HydratedDocument<ParkingReservationData>;
 
 @Schema()
 export class SlotReservation {
@@ -33,3 +35,29 @@ export class SlotReservation {
   @Prop({ type: Number, default: 0 })
   cost_of_reservation: number;
 }
+
+export const SlotReservationSchema =
+  SchemaFactory.createForClass(SlotReservation);
+
+@Schema()
+export class ParkingReservationData {
+  @Prop({ type: Date, required: true })
+  timestamp: Date;
+
+  @Prop({ type: Number, required: true, default: 0 })
+  total_bookings: number;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'ParkingCenter',
+    required: true,
+    unique: true,
+  })
+  center_id: ParkingCenter;
+
+  // Other relevant fields
+}
+
+export const ParkingReservationDataSchema = SchemaFactory.createForClass(
+  ParkingReservationData,
+);

@@ -48,11 +48,14 @@ interface _ICloudRes {
 }
 
 type _IVehicleImage = _Image;
-type _IParkingCenterImage = _Image;
 type _IAddVehicleImage = _IAddImage;
 
 interface _ISlotImage extends _Image {
   slot_id: string;
+}
+
+interface _IParkingCenterImage extends _Image {
+  center_id: string;
 }
 
 export {
