@@ -20,6 +20,7 @@ import { StorageService } from 'src/storage/storage.service';
 import { UploadMiddleware } from 'src/shared/middlewares/uploads.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GCPStorageConfig } from 'src/storage/storage.config';
+import { AggregationService } from 'src/aggregation.service';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { GCPStorageConfig } from 'src/storage/storage.config';
     UploadService,
     StorageService,
     ConfigService,
+    AggregationService,
   ],
   exports: [UsersService],
 })

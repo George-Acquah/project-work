@@ -20,7 +20,6 @@ import { _TSanitizedUser } from 'src/shared/interfaces/users.interface';
 import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 import { UploadService } from 'src/storage/uploads.service';
 import { User } from 'src/shared/decorators/user.decorator';
-import { ConfigService } from '@nestjs/config';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -29,7 +28,6 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly uploadsService: UploadService,
-    private readonly configService: ConfigService,
   ) {}
 
   @Post('set-image')
@@ -47,11 +45,7 @@ export class UsersController {
     @User() userObj: _TSanitizedUser,
   ) {
     try {
-      const { userImageBucket } = this.configService.get('GCPStorageConfig');
-      const images = await this.uploadsService.uploadFilesToDrive(
-        files,
-        userImageBucket,
-      );
+      const images = await this.uploadsService.uploadFilesToDrive(files);
 
       if (images.length > 0) {
         const firstImage = images[0];
@@ -97,7 +91,7 @@ export class UsersController {
       return new ApiResponse(200, 'Your query was successful', filteredUsers);
     } catch (error) {
       return new ApiResponse(
-        403,
+        error.statusCode || 403,
         error.message ?? 'Your query was not successful',
         {},
       );
