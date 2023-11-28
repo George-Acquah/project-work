@@ -31,12 +31,12 @@ export class ParkingCenterStrategy extends PassportStrategy(
     const user = await this.authService.verifyUser(payload);
 
     if (!user) {
-      throw new ApiResponse(402, 'User does not exist', {});
+      throw new ApiResponse(402, 'Owner does not exist', {});
     }
 
-    if (user.userType !== UserType.CUSTOMER) {
+    if (user.userType !== UserType.PARK_OWNER) {
       throw new UnauthorizedException(
-        'Only drivers or customers are allowed to add vehicles',
+        'Only park owners are allowed to add parking centers',
       );
     }
 
