@@ -35,7 +35,6 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string) {
-    this.logger.log('im here');
     const user = await this.userService.findUser(email);
     this.logger.log(user);
 
