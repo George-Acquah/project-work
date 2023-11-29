@@ -87,6 +87,9 @@ next-auth.d.ts
 creds.json
 *creds.json
 
+next-auth.d.ts
+*next-auth.d.ts
+
 # private files
 */private
 */private/
