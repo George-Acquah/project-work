@@ -9,15 +9,35 @@ import {
   UserCircleIcon,
   AtSymbolIcon,
   CalendarDaysIcon,
+  KeyIcon,
 } from "@heroicons/react/24/outline";
 import { dashboardRoutes } from "./routes";
+export const ErrorMessages = {
+  NETWORK_FAILURE: "There's a problem with your internet connection.",
+  AUTH_REQUIRED: "Authentication is required to access this page.",
+  SERVER_ERROR: "An unexpected server error occurred.",
+  NOT_FOUND: "The requested resource was not found.",
+  UNAUTHORIZED: "You are not authorized to perform this action.",
+  VALIDATION_ERROR: "Validation failed for the request.",
+};
 
+export const ErrorNames = {
+  NETWORK_ERROR: "NetworkError",
+  AUTH_ERROR: "AuthRequiredError",
+  SERVER_ERROR: "ServerError",
+  NOT_FOUND_ERROR: "NotFoundError",
+  UNAUTHORIZED_ERROR: "UnauthorizedError",
+  VALIDATION_ERROR: "ValidationError",
+};
 const clientCookiesKeys = {
   BANNER_HIDDEN: "template-banner-hidden",
+  THEME: "global-theme",
 };
 
 const clientCookiesValues = {
   BANNER_HIDDEN: "true",
+  GLOBAL_LIGHT_THEME: "light",
+  GLOBAL_DARK_THEME: "dark",
 };
 
 const usersLinks: _INavLinks[] = [
@@ -125,6 +145,28 @@ const editAdminDetails: _ICommonInputComp[] = [
   },
 ];
 
+const loginDetails: _ILoginInputComp[] = [
+  {
+    id: "email",
+    placeholder: "Enter Email",
+    label: "Email",
+    icon: AtSymbolIcon,
+    type: "email",
+    required: true,
+    mt: false,
+  },
+  {
+    id: "password",
+    placeholder: "Enter password",
+    label: "Password",
+    icon: KeyIcon,
+    type: "password",
+    required: true,
+    mt: true,
+    minLenght: 4,
+  },
+];
+
 const editAdminProfileDetails: _ICommonInputComp[] = [
   {
     id: "first_name",
@@ -227,4 +269,5 @@ export {
   editAdminProfileDetails,
   editAdminContactDetails,
   editAdminOtherDetails,
+  loginDetails,
 };
