@@ -134,14 +134,23 @@ interface _IApiResponse<T> extends _IPostApiResponse {
     data: T
 }
 
-interface _ICommonInputComp {
+interface _Inputs {
   id: string;
   placeholder: string;
-  value: string;
   label: string;
   icon: IconType;
   type: string;
+}
+interface _ICommonInputComp extends _Inputs{
+  value: string;
   disabled?: boolean;
+  errors?: any;
+}
+
+interface _ILoginInputComp extends _Inputs {
+  required: boolean;
+  mt: boolean;
+  minLenght?: number;
   errors?: any;
 }
 

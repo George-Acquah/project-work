@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components{
+    .light {
+      --color-bg-primary: #F5F5F5 ;
+      --color-text-primary: #333333 ;
+      --button-bg-primary: #ffffff;
+      --button-bg-primary-secondary: #007b00; 
+    }
+    .dark {
+      --color-bg-primary: #ffffff;
+      --color-text-primary: #2d3748;
+      --button-bg-primary: #ffffff;
+      --button-bg-primary-secondary: #007b00; 
+    }
+  }
+
 .pos__center {
     /* display: flex;
     justify-content: center !important;
