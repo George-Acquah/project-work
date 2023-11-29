@@ -1,19 +1,50 @@
 // import { AuthRequiredError, NetworkError } from "@/public/lib/exceptions";
 
 import { auth } from "@/auth";
-
+import { ErrorMessages } from "./constants";
+import {
+  AuthRequiredError,
+  NotFoundError,
+  UnauthorizedError,
+  ValidationError,
+  ServerError,
+  NetworkError,
+} from "./exceptions";
 
 const DEV = process.env.NEXT_PUBLIC_API_URL;
 const PROD = "prod-base-url";
 
 export const API = process.env.NODE_ENV === "development" ? DEV : PROD;
 
-export async function fetcher<JSON = any>(
+function switchErrRes(status: number, errorData: _IApiResponse<{}>) {
+  switch (status) {
+    case 401:
+      throw new AuthRequiredError(
+        errorData.message || ErrorMessages.AUTH_REQUIRED
+      );
+    case 404:
+      throw new NotFoundError(errorData.message || ErrorMessages.NOT_FOUND);
+    case 403:
+      throw new UnauthorizedError(
+        errorData.message || ErrorMessages.UNAUTHORIZED
+      );
+    case 422:
+      throw new ValidationError(
+        errorData.message || ErrorMessages.VALIDATION_ERROR
+      );
+    case 500:
+      throw new ServerError(errorData.message || ErrorMessages.SERVER_ERROR);
+    default:
+      throw new Error(`Unhandled error status: ${status}`);
+  }
+}
+
+export async function fetcher<T>(
   url: string,
   method?: RequestMethod,
   cache?: RequestCache,
-  body?: any,
-): Promise<JSON> {
+  body?: any
+): Promise<_IApiResponse<T>> {
   const fetchUrl = `${API}/${url}`;
 
   const options: RequestInit = {
@@ -28,20 +59,41 @@ export async function fetcher<JSON = any>(
     const res = await fetch(fetchUrl, options);
 
     if (!res.ok) {
-      if (res.status === 401)
-        throw new Error(`${res.statusText}: Login again and come back.`);
+      const errorData = (await res.json()) as _IApiResponse<{}>;
 
-      throw new Error(`Network response was not ok`);
+      // switch (res.status) {
+      //   case 401:
+      //     throw new AuthRequiredError(
+      //       errorData.message || ErrorMessages.AUTH_REQUIRED
+      //     );
+      //   case 404:
+      //     throw new NotFoundError(errorData.message || ErrorMessages.NOT_FOUND);
+      //   case 403:
+      //     throw new UnauthorizedError(
+      //       errorData.message || ErrorMessages.UNAUTHORIZED
+      //     );
+      //   case 422:
+      //     throw new ValidationError(
+      //       errorData.message || ErrorMessages.VALIDATION_ERROR
+      //     );
+      //   case 500:
+      //     throw new ServerError(
+      //       errorData.message || ErrorMessages.SERVER_ERROR
+      //     );
+      //   default:
+      //     throw new Error(`Unhandled error status: ${res.status}`);
+      // }
+      switchErrRes(res.status, errorData);
     }
-    const data = await res.json();
 
+    const data = (await res.json()) as _IApiResponse<T>;
     return data;
   } catch (err: any) {
-    if (err.message.toLowerCase() === "fetch failed")
-    //   throw new NetworkError();
-    throw new Error(`${err.code}: Network Error`);
+    if (err.message.toLowerCase() === "fetch failed") {
+      throw new NetworkError();
+    }
 
-    throw new Error(err.message);
+    throw new Error(`${err.code || "Unknown"}: ${err.message}`);
   }
 }
 
@@ -63,10 +115,8 @@ export async function uploadFetcher(
     const res = await fetch(fetchUrl, options);
 
     if (!res.ok) {
-      if (res.status === 401)
-        throw new Error(`${res.statusText}: Login again and come back.`);
-
-      throw new Error(`Network response was not ok`);
+      const errorData = (await res.json()) as _IApiResponse<{}>;
+      switchErrRes(res.status, errorData);
     }
     return res;
   } catch (err: any) {
@@ -92,5 +142,3 @@ export const authHeader = async (isUpload?: boolean) => {
 
   return headers;
 };
-
-

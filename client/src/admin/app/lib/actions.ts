@@ -1,18 +1,19 @@
-'use server'
+"use server";
 
 import { signIn, signOut } from "@/auth";
 import { JWT } from "@auth/core/jwt";
 import { API, fetcher } from "./data";
+import { cookies } from "next/headers";
 import { endpoints } from "./endpoints";
 import { revalidatePath } from "next/cache";
 import { dashboardRoutes } from "./routes";
 import { redirect } from "next/navigation";
 import { AdminSchema, ApplicantSchema } from "./z-validations";
-
+import { clientCookiesKeys, clientCookiesValues } from "./constants";
 
 const UpdateApplicant = ApplicantSchema.omit({ id: true });
 
-const UpdateAdmin = AdminSchema.omit({ id: true})
+const UpdateAdmin = AdminSchema.omit({ id: true });
 
 async function refreshToken(token: JWT): Promise<JWT> {
   const response = await fetch(`${API}/auth/refresh`, {
@@ -27,8 +28,8 @@ async function refreshToken(token: JWT): Promise<JWT> {
     throw new Error("Your Session has Expired. Sign in again to continue.");
   }
 
-  const res: _ITokens = (await response.json());
- 
+  const res: _ITokens = await response.json();
+
   return {
     ...token,
     ...res,
@@ -44,6 +45,15 @@ async function authenticate(prevState: string | undefined, formData: FormData) {
     }
     throw error;
   }
+}
+
+async function setLightCookies() {
+  const cookieStore = cookies();
+  console.log(cookieStore);
+  cookieStore.set(
+    clientCookiesKeys.THEME,
+    clientCookiesValues.GLOBAL_LIGHT_THEME
+  );
 }
 
 // async function deleteApplicant(id: string) {
@@ -86,7 +96,7 @@ async function authenticate(prevState: string | undefined, formData: FormData) {
 //         message: error.message
 //       };
 //   }
-  
+
 //   revalidatePath(dashboardRoutes.USERS.APPLICANTS.BASE);
 //   redirect(dashboardRoutes.USERS.APPLICANTS.BASE);
 // }
@@ -140,7 +150,8 @@ export {
   authenticate,
   refreshToken,
   signOutHelper,
+  setLightCookies,
   // deleteApplicant,
   // updateApplicant,
   // updateAdmin,
-}
+};
