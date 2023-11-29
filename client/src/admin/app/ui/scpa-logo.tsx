@@ -2,12 +2,12 @@ import { lusitana } from '@/app/ui/font';
 import Link from 'next/link';
 import Image from "next/image";
 
-export default function AcmeLogo({ home }: { home?: boolean}) {
+export default function SmartCarParkingAdminLogo({ home }: { home?: boolean }) {
   return (
     <div
       className={`${lusitana.className} flex flex-row justify-between items-center leading-none `}
     >
-      <Link href={ home ? "/" : "/dashboard" }>
+      <Link href={home ? "/" : "/dashboard"}>
         <Image
           src="/AUC-web.png"
           width={160}

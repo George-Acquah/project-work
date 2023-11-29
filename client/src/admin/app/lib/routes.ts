@@ -27,6 +27,11 @@ const dashboardRoutes = {
       EDIT: "/dashboard/users/admins/edit/:id",
       VIEW: "/dashboard/users/admins/view/:id",
     },
+    UNVERIFIED: {
+      BASE: "/dashboard/users/unverified",
+      ADD: "/dashboard/users/unverified/add",
+      UPDATE: "/dashboard/users/unverified/update/:id",
+    },
   },
   PARKING_LOTS: {
     BASE: "/dashboard/parking-lots",
@@ -55,7 +60,23 @@ const dashboardRoutes = {
     PROFILE: "/dashboard/settings/profile",
     NOTIFICATIONS: "/dashboard/settings/notifications",
   },
+  SECURITY: {
+    BASE: "/dashboard/security",
+    ACCESS_CONTROL: "/dashboard/security/access-control",
+    AUDIT_LOGS: "/dashboard/security/audit-logs",
+  },
+  MAINTENANCE: {
+    BASE: "/dashboard/maintenance",
+    SYSTEM_HEALTH: "/dashboard/maintenance/system-health",
+    TASKS: "/dashboard/maintenance/tasks",
+  },
+  SUPPORT: {
+    BASE: "/dashboard/support",
+    COMMUNICATION: "/dashboard/support/communication",
+    TICKETS: "/dashboard/support/tickets",
+  },
 };
+
 
 export {
   authRoutes,

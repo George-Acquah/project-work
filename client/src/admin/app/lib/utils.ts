@@ -1,5 +1,5 @@
-// import { deleteCookie, setCookie } from "cookies-next";
-// import { clientCookiesKeys, clientCookiesValues } from "./constants";
+import { deleteCookie, setCookie } from "cookies-next";
+import { clientCookiesKeys, clientCookiesValues } from "./constants";
 
 const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -52,13 +52,17 @@ const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
-// function setHiddenCookie() {
-//   setCookie(clientCookiesKeys.BANNER_HIDDEN, clientCookiesValues.BANNER_HIDDEN);
-// }
+function setLightThemeCookie() {
+  setCookie(clientCookiesKeys.THEME, clientCookiesValues.GLOBAL_LIGHT_THEME);
+}
 
-// function deleteHiddenCookie() {
-//   deleteCookie(clientCookiesKeys.BANNER_HIDDEN);
-// }
+function setDarkThemeCookie() {
+  setCookie(clientCookiesKeys.THEME, clientCookiesValues.GLOBAL_DARK_THEME);
+}
+
+function deleteThemeCookie() {
+  deleteCookie(clientCookiesKeys.THEME);
+}
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -99,9 +103,11 @@ export {
   formatCurrency,
   convertDateToString,
   generatePagination,
+  classNames,
+  setDarkThemeCookie,
+  setLightThemeCookie,
   // setHiddenCookie,
   // deleteHiddenCookie,
-  classNames,
   // formatApplicantsTable,
   // formatAdminDetails,
 }

@@ -7,6 +7,7 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class",
   theme: {
     transparent: "transparent",
     current: "currentColor",
@@ -43,18 +44,31 @@ const config: Config = {
           },
         },
         custom: {
-          brand: {
-            primary: "#3498db",
-            "primary-dark": "#2980b9",
-            "primary-light": "#5faee3",
+          background: {
+            "primary-dark": "#2C3E50",
+            "primary-light": "#F5F5F5",
 
-            secondary: "#2ecc71",
-            "secondary-dark": "#27ae60",
-            "secondary-light": "#58d68d",
+            "secondary-dark": "#1E2E3C",
+            "secondary-light": "#E0E0E0",
+          },
+          content: {
+            "subtle-light": "#333333",
+            "subtle-dark": "#ECF0F1 ",
 
-            destructive: "#e74c3c",
-            "destructive-dark": "#c0392b",
-            "destructive-light": "#f1948a",
+            "strong-light": "#333333",
+            "strong-dark": "#F2F2F2",
+          },
+          button: {
+            "primary-light": "#3498DB",
+            "primary-dark": "#3498DB",
+            faint: "#eff6ff", // blue-50
+            muted: "#bfdbfe", // blue-200
+            subtle: "#60a5fa", // blue-400
+            DEFAULT: "#3b82f6", // blue-500
+            emphasis: "#1d4ed8", // blue-700
+
+            "danger-light": "#E74C3C",
+            "danger-dark": "#E74C3C",
           },
         },
       },
