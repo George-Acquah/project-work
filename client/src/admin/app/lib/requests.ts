@@ -1,8 +1,9 @@
 import { UserType } from "./constants";
 import { fetcher } from "./data";
 import { endpoints } from "./endpoints";
-import { formatusersTable } from "./utils";
+import { formatCentersTable, formatusersTable } from "./utils";
 
+//USERS
 async function fetchFilteredUsers(
   users: string,
   currentPage: number,
@@ -44,10 +45,31 @@ async function fetchUsersPage(applicant: string, pageSize: number, type = UserTy
   );
   return response.data;
 }
+//END OF USERS
+
+
+//BEGIN PARKING CENTERS
+async function fetchFilteredParkingCenters(
+  centers: string,
+  currentPage: number,
+  pageSize: number,
+) {
+  const url = endpoints.PARKING_CENTER.GET_ALL_PARKING_CENTERS;
+  const response = await fetcher<_IParkingCenter[]>(
+    `${url}?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
+    "GET",
+    "no-store"
+  );
+  return formatCentersTable(response.data);
+}
+
+//END PARKING CENTERS
 
 export {
   fetchFilteredUsers,
   fetchUsersPage,
   fetchApplicantById,
   fetchRoles,
+
+  fetchFilteredParkingCenters,
 };
