@@ -1,5 +1,7 @@
 import { deleteCookie, setCookie } from "cookies-next";
 import { clientCookiesKeys, clientCookiesValues } from "./constants";
+import { UserType } from "./constants";
+import { endpoints } from "./endpoints";
 
 const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -26,6 +28,13 @@ const convertDateToString = (
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
 };
+
+function formatUserType(type: _TUserType) {
+  if (type === UserType.PARK_OWNER) {
+    return "Park Owner";
+  }
+  return type
+}
 
 
 const generatePagination = (currentPage: number, totalPages: number) => {
@@ -68,34 +77,94 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-// function formatApplicantsTable(applicants: _IUser[]): _IFormattedUser[] {
-//   return applicants.map((applicant) => ({
-//     id: applicant.id,
-//     image: applicant.profile?.image || null,
-//     username: applicant.username,
-//     email: applicant.email,
-//     role: applicant.role,
-//     createdAt: convertDateToString(applicant.createdAt as unknown as string),
-//     updatedAt: convertDateToString(applicant.updatedAt as unknown as string),
-//     isActive: applicant.isActive ? "active" : "not active",
-//   }));
-// }
+const getDistinctFilterUrl = (helper: string) => {
+  switch (helper) {
+    case UserType.ADMIN:
+      return endpoints.USERS.GET_FILTERED_USERS;
+    case UserType.PARK_OWNER:
+      return endpoints.USERS.GET_FILTERED_USERS;
+    case UserType.CUSTOMER:
+      return endpoints.USERS.GET_FILTERED_USERS;
 
-// function formatAdminDetails(applicant: _IUser): _IEditUser {
+    default:
+      return endpoints.USERS.GET_FILTERED_USERS;
+  }
+};
+const getDistinctLatestUrl = (helper: string) => {
+  switch (helper) {
+    case UserType.ADMIN:
+      return endpoints.USERS.GET_LATEST_USERS;
+    case UserType.PARK_OWNER:
+      return endpoints.USERS.GET_LATEST_USERS;
+    case UserType.CUSTOMER:
+      return endpoints.USERS.GET_LATEST_USERS;
+
+    default:
+      return endpoints.USERS.GET_LATEST_USERS;
+  }
+};
+
+function formatusersTable(users: _IUser[]): _IFormattedUser[] {
+  return users.map((user) => ({
+    _id: user._id,
+    image: user.image || null,
+    email: user.email,
+    fullname: `${user?.profile?.first_name ?? "Update"} ${
+      user?.profile?.last_name ?? "Profile"
+    }`,
+    contact: user.profile.contact_no ?? "Update Profile",
+    location: user.profile.area ?? "Update Profile",
+    vehicles: user?.vehicles?.length ?? 0,
+    centers: user?.centers?.length ?? 0,
+    userType: formatUserType(user.userType),
+    createdAt: convertDateToString(
+      (user?.createdAt as unknown as string) ?? new Date()
+    ),
+    updatedAt: convertDateToString(
+      (user?.updatedAt as unknown as string) ?? new Date()
+    ),
+    isVerified: user.isVerified ? "verified" : "not verified",
+  }));
+}
+
+function formatCentersTable(users: _IUser[]): _IFormattedUser[] {
+  return users.map((user) => ({
+    _id: user._id,
+    image: user.image || null,
+    email: user.email,
+    fullname: `${user?.profile?.first_name ?? "Update"} ${
+      user?.profile?.last_name ?? "Profile"
+    }`,
+    contact: user.profile.contact_no ?? "Update Profile",
+    location: user.profile.area ?? "Update Profile",
+    vehicles: user?.vehicles?.length ?? 0,
+    centers: user?.centers?.length ?? 0,
+    userType: formatUserType(user.userType),
+    createdAt: convertDateToString(
+      (user?.createdAt as unknown as string) ?? new Date()
+    ),
+    updatedAt: convertDateToString(
+      (user?.updatedAt as unknown as string) ?? new Date()
+    ),
+    isVerified: user.isVerified ? "verified" : "not verified",
+  }));
+}
+
+// function formatAdminDetails(user: _IUser): _IEditUser {
 //     return {
-//       id: applicant.id,
-//       username: applicant.username,
-//       email: applicant.email,
-//       createdAt: convertDateToString(applicant.createdAt as unknown as string),
-//       updatedAt: convertDateToString(applicant.updatedAt as unknown as string),
-//       image: applicant.profile?.image || null,
-//       first_name: applicant.profile?.first_name || null,
-//       last_name: applicant.profile?.last_name || null,
-//       contact_no: applicant.profile?.contact_no || null,
-//       area: applicant.profile?.area || null,
-//       city: applicant.profile?.city || null,
-//       state: applicant.profile?.state || null,
-//       pinCode: applicant.profile?.pinCode || null,
+//       id: user.id,
+//       username: user.username,
+//       email: user.email,
+//       createdAt: convertDateToString(user.createdAt as unknown as string),
+//       updatedAt: convertDateToString(user.updatedAt as unknown as string),
+//       image: user.profile?.image || null,
+//       first_name: user.profile?.first_name || null,
+//       last_name: user.profile?.last_name || null,
+//       contact_no: user.profile?.contact_no || null,
+//       area: user.profile?.area || null,
+//       city: user.profile?.city || null,
+//       state: user.profile?.state || null,
+//       pinCode: user.profile?.pinCode || null,
 //     };
 // }
 
@@ -106,9 +175,14 @@ export {
   classNames,
   setDarkThemeCookie,
   setLightThemeCookie,
+  formatUserType,
+  getDistinctFilterUrl,
+  getDistinctLatestUrl,
+  formatusersTable,
+  formatCentersTable,
   // setHiddenCookie,
   // deleteHiddenCookie,
-  // formatApplicantsTable,
+  // formatusersTable,
   // formatAdminDetails,
 }
 
