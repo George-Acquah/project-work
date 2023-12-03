@@ -2,7 +2,7 @@ import { lusitana } from '@/app/ui/font';
 import Link from 'next/link';
 import Image from "next/image";
 
-export default function SmartCarParkingAdminLogo({ home }: { home?: boolean }) {
+export function SmartCarParkingAdminLogo({ home }: { home?: boolean }) {
   return (
     <div
       className={`${lusitana.className} flex flex-row justify-between items-center leading-none `}
@@ -12,7 +12,7 @@ export default function SmartCarParkingAdminLogo({ home }: { home?: boolean }) {
           src="/AUC-web.png"
           width={160}
           height={120}
-          className={`h-12 w-60 mx-0 -ml-6 ${home ? "md:h-20 md:w-72" : ""}`}
+          className={`h-12 w-60 mx-0 -ml-6 bg-red-800 ${home ? "md:h-20 md:w-72" : ""}`}
           alt="brand-logo"
         />
       </Link>
