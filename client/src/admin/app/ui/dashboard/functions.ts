@@ -6,14 +6,14 @@ function getLinkClassName(currentPath: string, targetPath: string) {
 
 function getRedLinkClassName(currentPath: string, targetPath: string) {
   return currentPath.indexOf(targetPath) !== -1
-    ? "text-red-500 hover:text-red-600"
-    : "text-red-700 hover:text-red-500";
+    ? "text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-600"
+    : "text-red-700 dark:text-red-500  hover:text-red-500 dark:hover:text-red-600";
 }
 
 function getGreenLinkClassName(currentPath: string, targetPath: string) {
   return currentPath.indexOf(targetPath) !== -1
-    ? "text-green-500 hover:text-green-600"
-    : "text-green-900 hover:text-green-500";
+    ? "text-green-500 dark:text-green-500 hover:text-green-600 dark:hover:text-green-400"
+    : "text-green-900 dark:text-green-500 hover:text-green-500 dark:hover:text-green-400";
 }
 
 function getIconClassName(currentPath: string, targetPath: string) {
