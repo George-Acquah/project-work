@@ -363,7 +363,7 @@ export class UsersService {
     }
   }
 
-  async fetchUsersPage(query: string, items: number): Promise<number> {
+  async fetchUsersPage(query = '', items: number): Promise<number> {
     try {
       const usersCount = await this.userModel
         .countDocuments({
@@ -375,7 +375,9 @@ export class UsersService {
         })
         .exec();
 
+      this.logger.log(usersCount);
       const totalPages = Math.ceil(usersCount / items);
+      this.logger.log(totalPages);
 
       return totalPages;
     } catch (error) {
