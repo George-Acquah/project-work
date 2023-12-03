@@ -1,6 +1,7 @@
 const searchParamsKeys = {
-    APPLICANTS: 'applicant',
-}
+  APPLICANTS: "applicant",
+  USER: "user",
+};
 
 export {
     searchParamsKeys,

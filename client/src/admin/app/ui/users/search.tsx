@@ -6,6 +6,8 @@ import { useTransition } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { searchParamsKeys } from './constants';
 import { SvgSpinner } from '@/app/lib/icons';
+import { inputClass } from '../inputs';
+import { strongTextColor, textColor } from '../themes';
 
 interface IProps {
   placeholder?: string;
@@ -21,9 +23,9 @@ export default function SearchApplicants({ disabled, placeholder = 'Search by Na
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set(searchParamsKeys.APPLICANTS, term);
+      params.set(searchParamsKeys.USER, term);
     } else {
-      params.delete(searchParamsKeys.APPLICANTS);
+      params.delete(searchParamsKeys.USER);
     }
 
     startTransition(() => {
@@ -37,13 +39,15 @@ export default function SearchApplicants({ disabled, placeholder = 'Search by Na
         Search
       </label>
       <input
-        className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+        className={` dark:text-gray-400 rounded-lg ${inputClass}`}
         placeholder={placeholder}
-        disabled= {disabled}
+        disabled={disabled}
         onChange={(e) => handleSearch(e.target.value)}
-        defaultValue={searchParams.get(searchParamsKeys.APPLICANTS)?.toString()}
+        defaultValue={searchParams.get(searchParamsKeys.USER)?.toString()}
       />
-      <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      <MagnifyingGlassIcon
+        className={`absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 peer-focus:${strongTextColor} ${textColor}`}
+      />
       {isPending && (
         <div className="absolute right-0 top-0 bottom-0 flex items-center justify-center">
           <SvgSpinner />
