@@ -10,6 +10,17 @@ interface _ITokens {
 interface _IChildren {
   children: React.ReactNode;
 }
+//DATA
+interface _ICenterData {
+  _id: string;
+  total_daily_bookings: number;
+  total_weekly_bookings: number;
+  total_bookings: number;
+  total_monthly_bookings: number;
+  total_yearly_bookings: number;
+  total_slots: number;
+  center_id: string;
+}
 
 //EEEEE 
 interface _ILoginError {
@@ -17,12 +28,88 @@ interface _ILoginError {
   password?: string[];
 }
 
+// FFFFF
 interface _IFetcher {
   url: string;
   token?: string;
   method?: RequestMethod;
   cache?: RequestCache;
 }
+
+interface _IFeedback {
+  _id: string;
+  // Add other properties relevant to feedback
+}
+
+interface _IFormattedUser {
+  [key: string]: string | number | null;
+  _id: string;
+  email: string;
+  userType: _TUserType | "Park Owner";
+  fullname: string;
+  contact: string;
+  location: string;
+  vehicles: number;
+  centers: number;
+  createdAt: string;
+  updatedAt: string;
+  isVerified: string;
+  image: string | null;
+}
+
+interface _IFormattedCenter {
+  [key: string]: string | number | null;
+  _id: string;
+  center_type: CenterTypes;
+  center_name: string;
+  description: string;
+  location: string;
+  createdAt: string;
+  updatedAt: string;
+  isVerified: string;
+  slots: number;
+  image: string | null;
+}
+interface _IFormattedTransaction {
+  _id: string;
+  // Add other formatted properties relevant to transactions
+}
+
+interface _IFormattedPayment {
+  _id: string;
+  // Add other formatted properties relevant to payments
+}
+
+interface _IFormattedReport {
+  _id: string;
+  // Add other formatted properties relevant to reports
+}
+
+interface _IFormattedNotification {
+  _id: string;
+  // Add other formatted properties relevant to notifications
+}
+
+interface _IFormattedSetting {
+  _id: string;
+  // Add other formatted properties relevant to settings
+}
+
+interface _IFormattedFeedback {
+  _id: string;
+  // Add other formatted properties relevant to feedback
+}
+
+interface _IFormattedMaintenanceRequest {
+  _id: string;
+  // Add other formatted properties relevant to maintenance requests
+}
+
+interface _IFormattedSecurityLog {
+  _id: string;
+  // Add other formatted properties relevant to security logs
+}
+
 
 //IIIIIIIIIII
 interface _Id {
@@ -31,6 +118,12 @@ interface _Id {
 
 interface _IdParams {
   params: _Id;
+}
+
+// MMMMMMM
+interface _IMaintenanceRequest {
+  _id: string;
+  // Add other properties relevant to maintenance requests
 }
 
 
@@ -49,6 +142,11 @@ interface _INavLinks {
   IconType;
 }
 
+interface _INotification {
+  _id: string;
+  // Add other properties relevant to notifications
+}
+
 // PPP
 interface _IParkingCenter {
   _id: string;
@@ -56,9 +154,19 @@ interface _IParkingCenter {
   description: string;
   type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
   center_data: _ICenterData;
+  createdAt: Date;
+  updatedAt: Date;
+  contact: string;
+  location: string;
+  isVerified: boolean;
   center_images: Array<_IParkingCenterImage>;
   slots: Array<_ISlot>;
   owner: string;
+}
+
+interface _IPayment {
+  _id: string;
+  // Add other properties relevant to payments
 }
 interface _IProfile {
   id: string;
@@ -69,6 +177,13 @@ interface _IProfile {
   city: string | null;
   state: string | null;
   pinCode: string | null;
+}
+
+//RRRR
+
+interface _IReport {
+  _id: string;
+  // Add other properties relevant to reports
 }
 
 // SSSSSSSSSSS
@@ -94,30 +209,36 @@ interface _ISlotData {
   slot_id: string;
 }
 
-interface _ICenterData {
+interface _ISecurityLog {
   _id: string;
-  total_daily_bookings: number;
-  total_weekly_bookings: number;
-  total_bookings: number;
-  total_monthly_bookings: number;
-  total_yearly_bookings: number;
-  total_slots: number;
-  center_id: string;
+  // Add other properties relevant to security logs
 }
+
+interface _ISetting {
+  _id: string;
+  // Add other properties relevant to settings
+}
+
 interface _ISpecificTableProps {
-  applicant: string;
+  query: string;
   currentPage: number;
   pageSize: number;
-  type: string;
+  type?: string;
 }
 
 //TTTTTTT
-interface _ITableProps<T = _IFormattedUser[]> {
+interface _ITableProps<T = _TableRowType[]> {
   query: string;
   currentPage: number;
   columnData: string[];
-  type: string;
+  entityType: string;
   data?: T;
+  type?: string;
+}
+
+interface _ITransaction {
+  _id: string;
+  // Add other properties relevant to transactions
 }
 
 // UUU
@@ -132,22 +253,6 @@ interface _IUser {
   profile: _IProfile;
   vehicles: _IVehicle[];
   centers: _IParkingCenter[];
-}
-
-interface _IFormattedUser {
-  [key: string]: string | number | null;
-  _id: string;
-  email: string;
-  userType: _TUserType | "Park Owner";
-  fullname: string;
-  contact: string;
-  location: string;
-  vehicles: number;
-  centers: number;
-  createdAt: string;
-  updatedAt: string;
-  isVerified: string;
-  image: string | null;
 }
 
 interface _IEditUser {
@@ -227,5 +332,8 @@ interface _IParkingCenterImage extends _Image {
   center_id: string;
 }
 type _TVehicleImage = _Image;
+
+type _TableRowType = _IFormattedCenter | _IFormattedUser;
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";
+
