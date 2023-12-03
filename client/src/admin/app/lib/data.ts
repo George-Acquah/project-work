@@ -1,5 +1,3 @@
-// import { AuthRequiredError, NetworkError } from "@/public/lib/exceptions";
-
 import { auth } from "@/auth";
 import { ErrorMessages } from "./constants";
 import {
@@ -16,24 +14,24 @@ const PROD = "prod-base-url";
 
 export const API = process.env.NODE_ENV === "development" ? DEV : PROD;
 
-function switchErrRes(status: number, errorData: _IApiResponse<{}>) {
+function switchErrRes(status: number, message: string) {
   switch (status) {
     case 401:
       throw new AuthRequiredError(
-        errorData.message || ErrorMessages.AUTH_REQUIRED
+        message || ErrorMessages.AUTH_REQUIRED
       );
     case 404:
-      throw new NotFoundError(errorData.message || ErrorMessages.NOT_FOUND);
+      throw new NotFoundError(message || ErrorMessages.NOT_FOUND);
     case 403:
       throw new UnauthorizedError(
-        errorData.message || ErrorMessages.UNAUTHORIZED
+        message || ErrorMessages.UNAUTHORIZED
       );
     case 422:
       throw new ValidationError(
-        errorData.message || ErrorMessages.VALIDATION_ERROR
+        message || ErrorMessages.VALIDATION_ERROR
       );
     case 500:
-      throw new ServerError(errorData.message || ErrorMessages.SERVER_ERROR);
+      throw new ServerError(message || ErrorMessages.SERVER_ERROR);
     default:
       throw new Error(`Unhandled error status: ${status}`);
   }
@@ -58,35 +56,12 @@ export async function fetcher<T>(
   try {
     const res = await fetch(fetchUrl, options);
 
-    if (!res.ok) {
-      const errorData = (await res.json()) as _IApiResponse<{}>;
+    const data = (await res.json()) as _IApiResponse<T>;
 
-      // switch (res.status) {
-      //   case 401:
-      //     throw new AuthRequiredError(
-      //       errorData.message || ErrorMessages.AUTH_REQUIRED
-      //     );
-      //   case 404:
-      //     throw new NotFoundError(errorData.message || ErrorMessages.NOT_FOUND);
-      //   case 403:
-      //     throw new UnauthorizedError(
-      //       errorData.message || ErrorMessages.UNAUTHORIZED
-      //     );
-      //   case 422:
-      //     throw new ValidationError(
-      //       errorData.message || ErrorMessages.VALIDATION_ERROR
-      //     );
-      //   case 500:
-      //     throw new ServerError(
-      //       errorData.message || ErrorMessages.SERVER_ERROR
-      //     );
-      //   default:
-      //     throw new Error(`Unhandled error status: ${res.status}`);
-      // }
-      switchErrRes(res.status, errorData);
+    if (data.statusCode !== 200) {
+      switchErrRes(data.statusCode, data.message);
     }
 
-    const data = (await res.json()) as _IApiResponse<T>;
     return data;
   } catch (err: any) {
     if (err.message.toLowerCase() === "fetch failed") {
@@ -116,7 +91,7 @@ export async function uploadFetcher(
 
     if (!res.ok) {
       const errorData = (await res.json()) as _IApiResponse<{}>;
-      switchErrRes(res.status, errorData);
+      switchErrRes(res.status, errorData.message);
     }
     return res;
   } catch (err: any) {
