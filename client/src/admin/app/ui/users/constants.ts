@@ -1,8 +1,11 @@
-const searchParamsKeys = {
-  APPLICANTS: "applicant",
-  USER: "user",
+interface SearchParamsKeys {
+  [key: string]: string;
 };
 
-export {
-    searchParamsKeys,
-}
+const searchParamsKeys: SearchParamsKeys = {
+  APPLICANTS: "applicant",
+  users: "users",
+  centers: "centers",
+};
+
+export { searchParamsKeys };
