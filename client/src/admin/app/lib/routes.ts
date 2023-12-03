@@ -9,6 +9,7 @@ const dashboardRoutes = {
     OVERVIEW: "/dashboard/overview",
   },
   USERS: {
+    BASE: "/dashboard/users/all",
     CUSTOMERS: {
       BASE: "/dashboard/users/customers",
       ADD: "/dashboard/users/customers/add",
