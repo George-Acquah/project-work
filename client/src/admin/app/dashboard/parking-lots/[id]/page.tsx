@@ -3,49 +3,47 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import { lusitana } from "@/app/ui/font";
 import SearchApplicants from "@/app/ui/users/search";
-import { AddOwner } from "@/app/ui/users/buttons";
+import { AddCustomer } from "@/app/ui/users/buttons";
 import Pagination from "@/app/ui/pagination";
+// import ApplicantsTable from "@/app/ui/users/applicants-table";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
-import UsersTable from "@/app/ui/users/tables";
 
 export const metadata: Metadata = {
-  title: "Owners",
+  title: "Applicants",
 };
 
 interface ISearchParams {
   searchParams?: {
-    users?: string;
+    applicant?: string;
     page?: string;
-    size?: string;
   };
 }
 
 export default async function ApplicantsPage({ searchParams }: ISearchParams) {
-  const user = searchParams?.users || "";
+  const applicant = searchParams?.applicant || "";
   const currentPage = Number(searchParams?.page) || 1;
-  const pageSize = Number(searchParams?.size) || 5;
 
-  const totalPages = await fetchUsersPage(user, pageSize, UserType.PARK_OWNER);
+  const totalPages = await fetchUsersPage(applicant, currentPage, UserType.CUSTOMER);
+
+  console.log(totalPages);
 
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Owners</h1>
+        <h1 className={`${lusitana.className} text-2xl`}>Applicants</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <SearchApplicants entityType="users" />
-        <AddOwner />
+        <SearchApplicants />
+        <AddCustomer />
       </div>
-      <Suspense key={user + currentPage} fallback={<UsersTableSkeleton />}>
-        <UsersTable
-          query={user}
-          currentPage={currentPage}
-          pageSize={pageSize}
-          type={UserType.PARK_OWNER}
-        />
+      <Suspense
+        key={applicant + currentPage}
+        fallback={<UsersTableSkeleton />}
+      >
+        {/* <ApplicantsTable applicant={applicant} currentPage={currentPage} /> */}
       </Suspense>
-      <div className="mt-5 flex w-full justify-center flex-wrap gap-2 space-x-10">
+      <div className="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages} />
       </div>
     </div>
