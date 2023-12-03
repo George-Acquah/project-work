@@ -148,19 +148,8 @@ const vehiclesLinks: _INavLinks[] = [
   },
 ];
 
-const reservationsTableColumn: string[] = [
-  "IMAGE",
-  "USERNAME",
-  "EMAIL ADDRESS",
-  "ROLE",
-  "DATE REGISTERED",
-  "LAST UPDATED",
-  "IS VERIFIED",
-  // "GENDER",
-  // "PHONE NUMBER",
-];
-
-const usersTableColumn: string[] = [
+const tableColumns = {
+  usersTableColumn: [
   "IMAGE",
   "EMAIL ADDRESS",
   "FULLNAME",
@@ -173,7 +162,112 @@ const usersTableColumn: string[] = [
   "LAST UPDATED",
   "IS VERIFIED",
   // "GENDER",
-];
+],centersTableColumn: [
+  "IMAGE",
+  "CENTER NAME",
+  "DESCRIPTION",
+  "PHONE NUMBER",
+  "LOCATION",
+  "SLOTS",
+  "CENTER TYPE",
+  "DATE REGISTERED",
+  "LAST UPDATED",
+  "IS VERIFIED",
+  // "GENDER",
+],
+
+slotsTableColumn: [
+  "IMAGE",
+  "SLOT NAME",
+  "DESCRIPTION",
+  "LOCATION",
+  "STATUS",
+  "PARKING CENTER",
+  "DATE REGISTERED",
+  "LAST UPDATED",
+  "IS VERIFIED",
+  "CAPACITY", // Added capacity column (if applicable)
+  "PRICE/RATE", // Added price/rate column (if applicable)
+],
+
+// Transactions Table
+transactionsTableColumn: [
+  "TRANSACTION ID",
+  "USER",
+  "PARKING CENTER",
+  "SLOT",
+  "AMOUNT",
+  "DATE AND TIME",
+],
+
+// Payments Table
+paymentsTableColumn: [
+  "PAYMENT ID",
+  "USER",
+  "AMOUNT",
+  "DATE AND TIME",
+  "STATUS",
+  "PAYMENT METHOD",
+],
+
+// Reports/Analytics Table
+reportsTableColumn: [
+  "REPORT ID",
+  "DATE",
+  "TOTAL USERS",
+  "TOTAL CENTERS",
+  "TOTAL SLOTS",
+  "OCCUPANCY RATE",
+  "REVENUE",
+],
+
+// Notifications Table
+notificationsTableColumn: [
+  "NOTIFICATION ID",
+  "USER",
+  "CONTENT",
+  "DATE AND TIME",
+  "STATUS",
+],
+
+// Settings Table
+settingsTableColumn: [
+  "SETTING ID",
+  "NAME",
+  "VALUE",
+  "DESCRIPTION",
+],
+
+// Feedback Table
+feedbackTableColumn: [
+  "FEEDBACK ID",
+  "USER",
+  "DATE AND TIME",
+  "RATING",
+  "COMMENTS",
+],
+
+// Maintenance Requests Table
+maintenanceRequestsTableColumn: [
+  "REQUEST ID",
+  "PARKING CENTER",
+  "SLOT",
+  "USER",
+  "DESCRIPTION",
+  "DATE AND TIME",
+  "STATUS",
+],
+
+// Security Logs Table
+securityLogsTableColumn: [
+  "LOG ID",
+  "USER",
+  "ACTION",
+  "DATE AND TIME",
+  "IP ADDRESS",
+  "STATUS",
+],
+}
 
 const navDropdownLinks: _INavLinks[] = [
   {
@@ -341,7 +435,6 @@ export {
   reservationLinks,
   usersLinks,
   paymentLinks,
-  reservationsTableColumn,
   navDropdownLinks,
   editAdminDetails,
   editAdminProfileDetails,
@@ -352,5 +445,5 @@ export {
   UserType,
   parkingLinks,
   vehiclesLinks,
-  usersTableColumn,
+  tableColumns,
 };

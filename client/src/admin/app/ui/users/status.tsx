@@ -2,7 +2,6 @@ import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Badge } from "@tremor/react";
 
 export default function UserStatus({ status }: { status: string }) {
-  console.log(status);
   return (
     <span
     >

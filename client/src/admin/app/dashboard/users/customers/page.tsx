@@ -15,14 +15,14 @@ export const metadata: Metadata = {
 
 interface ISearchParams {
   searchParams?: {
-    user?: string;
+    users?: string;
     page?: string;
     size?: string;
   };
 }
 
 export default async function ApplicantsPage({ searchParams }: ISearchParams) {
-  const user = searchParams?.user || "";
+  const user = searchParams?.users || "";
   const currentPage = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.size) || 5;
 
@@ -34,14 +34,14 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Customers</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <SearchApplicants />
+        <SearchApplicants entityType="users" />
         <AddCustomer />
       </div>
       <Suspense
         key={user + currentPage}
         fallback={<UsersTableSkeleton />}
       >
-        <UsersTable applicant={user} currentPage={currentPage} pageSize={pageSize} type={UserType.CUSTOMER} />
+        <UsersTable query={user} currentPage={currentPage} pageSize={pageSize} type={UserType.CUSTOMER} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center flex-wrap gap-2 space-x-10">
         <Pagination totalPages={totalPages} />
