@@ -18,7 +18,7 @@ export const authConfig = {
         return false; 
       } else if (isLoggedIn) {
         return Response.redirect(
-          new URL("http://localhost:3001/dashboard", nextUrl)
+          new URL("http://localhost:3000/dashboard", nextUrl)
         );
       }
       return true;
