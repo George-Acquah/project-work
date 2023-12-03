@@ -127,28 +127,91 @@ function formatusersTable(users: _IUser[]): _IFormattedUser[] {
   }));
 }
 
-function formatCentersTable(users: _IUser[]): _IFormattedUser[] {
-  return users.map((user) => ({
-    _id: user._id,
-    image: user.image || null,
-    email: user.email,
-    fullname: `${user?.profile?.first_name ?? "Update"} ${
-      user?.profile?.last_name ?? "Profile"
-    }`,
-    contact: user.profile.contact_no ?? "Update Profile",
-    location: user.profile.area ?? "Update Profile",
-    vehicles: user?.vehicles?.length ?? 0,
-    centers: user?.centers?.length ?? 0,
-    userType: formatUserType(user.userType),
+function formatCentersTable(centers: _IParkingCenter[]): _IFormattedCenter[] {
+  return centers.map((center) => ({
+    _id: center._id,
+    image: null,
+    // image: center?.center_images ? center?.center_images[0]?._id : null,
+    center_name: center.center_name,
+    description: center.description,
+    contact: center?.contact ?? "not Implemented",
+    location: center?.location ?? "not Implemented",
+    slots: center?.slots?.length ?? 0,
+    center_type: center.type,
     createdAt: convertDateToString(
-      (user?.createdAt as unknown as string) ?? new Date()
+      (center?.createdAt as unknown as string) ?? new Date()
     ),
     updatedAt: convertDateToString(
-      (user?.updatedAt as unknown as string) ?? new Date()
+      (center?.updatedAt as unknown as string) ?? new Date()
     ),
-    isVerified: user.isVerified ? "verified" : "not verified",
+    isVerified: center.isVerified ? "verified" : "not verified",
   }));
 }
+
+function formatTransactionsTable(
+  transactions: _ITransaction[]
+): _IFormattedTransaction[] {
+  return transactions.map((transaction) => ({
+    _id: transaction._id,
+    // Map other transaction properties to formatted table properties
+  }));
+}
+
+function formatPaymentsTable(payments: _IPayment[]): _IFormattedPayment[] {
+  return payments.map((payment) => ({
+    _id: payment._id,
+    // Map other payment properties to formatted table properties
+  }));
+}
+
+function formatReportsTable(reports: _IReport[]): _IFormattedReport[] {
+  return reports.map((report) => ({
+    _id: report._id,
+    // Map other report properties to formatted table properties
+  }));
+}
+
+function formatNotificationsTable(
+  notifications: _INotification[]
+): _IFormattedNotification[] {
+  return notifications.map((notification) => ({
+    _id: notification._id,
+    // Map other notification properties to formatted table properties
+  }));
+}
+
+function formatSettingsTable(settings: _ISetting[]): _IFormattedSetting[] {
+  return settings.map((setting) => ({
+    _id: setting._id,
+    // Map other setting properties to formatted table properties
+  }));
+}
+
+function formatFeedbackTable(feedback: _IFeedback[]): _IFormattedFeedback[] {
+  return feedback.map((feedbackItem) => ({
+    _id: feedbackItem._id,
+    // Map other feedback properties to formatted table properties
+  }));
+}
+
+function formatMaintenanceRequestsTable(
+  requests: _IMaintenanceRequest[]
+): _IFormattedMaintenanceRequest[] {
+  return requests.map((request) => ({
+    _id: request._id,
+    // Map other maintenance request properties to formatted table properties
+  }));
+}
+
+function formatSecurityLogsTable(
+  logs: _ISecurityLog[]
+): _IFormattedSecurityLog[] {
+  return logs.map((log) => ({
+    _id: log._id,
+    // Map other security log properties to formatted table properties
+  }));
+}
+
 
 // function formatAdminDetails(user: _IUser): _IEditUser {
 //     return {
