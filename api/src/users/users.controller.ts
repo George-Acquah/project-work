@@ -113,11 +113,13 @@ export class UsersController {
   @Get('admin/total-pages')
   async getUsersPage(
     @Query('users') query: string,
+    @Query('type') type: string,
     @Query('size') size: number,
   ): Promise<ApiResponse<number | object>> {
+    this.logger.log('hit', size);
     try {
-      const filteredUsers = await this.usersService.fetchUsersPage(query, size);
-      return new ApiResponse(200, 'You query was successful', filteredUsers);
+      const totalPages = await this.usersService.fetchUsersPage(query, size);
+      return new ApiResponse(200, 'You query was successful', totalPages);
     } catch (error) {
       return new ApiResponse(
         403,
