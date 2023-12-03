@@ -71,41 +71,49 @@ interface _IFormattedCenter {
   image: string | null;
 }
 interface _IFormattedTransaction {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to transactions
 }
 
 interface _IFormattedPayment {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to payments
 }
 
 interface _IFormattedReport {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to reports
 }
 
 interface _IFormattedNotification {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to notifications
 }
 
 interface _IFormattedSetting {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to settings
 }
 
 interface _IFormattedFeedback {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to feedback
 }
 
 interface _IFormattedMaintenanceRequest {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to maintenance requests
 }
 
 interface _IFormattedSecurityLog {
+  [key: string]: string | number | null;
   _id: string;
   // Add other formatted properties relevant to security logs
 }
