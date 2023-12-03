@@ -4,10 +4,7 @@ import { inter } from "@/app/ui/font";
 import { bodyBg } from "./ui/themes";
 import ToggleTheme from "./ui/toggle-theme";
 import { cookies } from "next/headers";
-import { clientCookiesKeys, clientCookiesValues } from "./lib/constants";
-import { setLightCookies } from "./lib/actions";
-// import Toast from "./ui/toast";
-// import Nav from "./ui/dashboard/nav";
+import { clientCookiesKeys } from "./lib/constants";
 
 export const metadata: Metadata = {
   title: {
@@ -28,7 +25,6 @@ export default async function RootLayout({ children }: _IChildren) {
       <body className={`${inter.className} antialiased ${bodyBg}`}>
         {children}
         <ToggleTheme />
-        {/* <Toast /> */}
       </body>
     </html>
   );

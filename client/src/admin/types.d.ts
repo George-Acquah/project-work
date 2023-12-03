@@ -50,7 +50,16 @@ interface _INavLinks {
 }
 
 // PPP
-
+interface _IParkingCenter {
+  _id: string;
+  center_name: string;
+  description: string;
+  type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
+  center_data: _ICenterData;
+  center_images: Array<_IParkingCenterImage>;
+  slots: Array<_ISlot>;
+  owner: string;
+}
 interface _IProfile {
   id: string;
   first_name: string | null;
@@ -63,10 +72,43 @@ interface _IProfile {
 }
 
 // SSSSSSSSSSS
+
+interface _ISlot {
+  _id: string;
+  slot_name: string;
+  description: string;
+  type: SlotTypes; // to be changed to enum depending on slot space;
+  slot_images: Array<_ISlotImage>;
+  isAvailable: boolean;
+  slot_data: _ISlotData;
+  center_id: string;
+}
+
+interface _ISlotData {
+  _id: string;
+  total_daily_bookings: number;
+  total_weekly_bookings: number;
+  total_bookings: number;
+  total_monthly_bookings: number;
+  total_yearly_bookings: number;
+  slot_id: string;
+}
+
+interface _ICenterData {
+  _id: string;
+  total_daily_bookings: number;
+  total_weekly_bookings: number;
+  total_bookings: number;
+  total_monthly_bookings: number;
+  total_yearly_bookings: number;
+  total_slots: number;
+  center_id: string;
+}
 interface _ISpecificTableProps {
   applicant: string;
   currentPage: number;
   pageSize: number;
+  type: string;
 }
 
 //TTTTTTT
@@ -74,30 +116,37 @@ interface _ITableProps<T = _IFormattedUser[]> {
   query: string;
   currentPage: number;
   columnData: string[];
+  type: string;
   data?: T;
 }
 
 // UUU
 interface _IUser {
-  id: string;
-  username: string;
+  _id: string;
   email: string;
-  role: Role;
+  userType: _TUserType;
+  image: any;
   createdAt: Date;
   updatedAt: Date;
-  isActive: boolean;
+  isVerified: boolean;
   profile: _IProfile;
+  vehicles: _IVehicle[];
+  centers: _IParkingCenter[];
 }
 
 interface _IFormattedUser {
-  [key: string]: string | null;
-  id: string;
-  username: string;
+  [key: string]: string | number | null;
+  _id: string;
   email: string;
-  role: Role;
+  userType: _TUserType | "Park Owner";
+  fullname: string;
+  contact: string;
+  location: string;
+  vehicles: number;
+  centers: number;
   createdAt: string;
   updatedAt: string;
-  isActive: string;
+  isVerified: string;
   image: string | null;
 }
 
@@ -120,6 +169,15 @@ interface _IEditUser {
 }
 
 //VVVVVV
+
+interface _IVehicle {
+  _id: string;
+  vehicle_no: string;
+  isVerified: boolean;
+  hasSlot: boolean;
+  images: Array<_TVehicleImage>;
+  driver: string;
+}
 interface _IValidationState<T=any> {
   errors?: T;
   message?: string | null;
@@ -154,6 +212,20 @@ interface _ILoginInputComp extends _Inputs {
   errors?: any;
 }
 
-type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+interface _Image {
+  _id: string;
+  file_id: string;
+  filename: string;
+  mimetype: string;
+}
 
-type Role = "owner" | "customer" | "admin" | "user" | "moderator";
+interface _ISlotImage extends _Image {
+  slot_id: string;
+}
+
+interface _IParkingCenterImage extends _Image {
+  center_id: string;
+}
+type _TVehicleImage = _Image;
+type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";

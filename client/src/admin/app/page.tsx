@@ -1,24 +1,33 @@
-import SmartCarParkingAdminLogo from "./ui/scpa-logo";
+import SmartCarParkingAdminLogo from "./ui/logos";
 import Link from "next/link";
 import Image from "next/image";
 import { lusitana } from "./ui/font";
-import { bgColor, strongTextColor, textColor } from "./ui/themes";
+import { secondaryBg, strongTextColor, textColor } from "./ui/themes";
 
 const SmartCarParkingAdminHome = () => {
   return (
     <main className="flex min-h-screen flex-col p-6">
-      <div className={`flex h-20 shrink-0 items-end rounded-lg  p-4 md:h-52 ${bgColor}`}>
-        <SmartCarParkingAdminLogo home />
+      <div
+        className={`flex justify-content items-center h-32 shrink-0 p-4 md:h-52 w-full rounded-lg ${secondaryBg} ${strongTextColor}`}
+      >
+        <div className="w-36 md:w-48">
+          <SmartCarParkingAdminLogo home />
+        </div>
+        <p className="uppercase text-2xl md:text-4xl ml-4">
+          Smart Car Parking Admin
+        </p>
       </div>
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
         <div
-          className={`flex flex-col justify-center gap-6 rounded-lg  px-6 py-10 md:w-2/5 md:px-20 ${bgColor}`}
+          className={`flex flex-col justify-center gap-6 rounded-lg  px-6 py-10 md:w-2/5 md:px-20 ${secondaryBg}`}
         >
           <p
             className={`text-xl ${textColor} md:text-3xl md:leading-normal ${lusitana.className}`}
           >
-            <strong className={strongTextColor}>Welcome to the Smart Car Parking Admin Portal.</strong> If
-            you are not supposed to be here,{" "}
+            <strong className={strongTextColor}>
+              Welcome to the Smart Car Parking Admin Portal.
+            </strong>{" "}
+            If you are not supposed to be here,{" "}
             <Link
               href="http://localhost:3000"
               className="text-blue-500"
@@ -39,7 +48,7 @@ const SmartCarParkingAdminHome = () => {
           </Link>
         </div>
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* <Image
+          <Image
             src="/hero-desktop.png"
             width={1000}
             height={760}
@@ -47,12 +56,12 @@ const SmartCarParkingAdminHome = () => {
             alt="Screenshots of Dashboard project"
           />
           <Image
-            src="/hero-mobile.png"
+            src="/hero-desktop.png"
             width={560}
             height={620}
             className="md:hidden"
             alt="Screenshots of Dashboard project"
-          /> */}
+          />
         </div>
         ;
       </div>
