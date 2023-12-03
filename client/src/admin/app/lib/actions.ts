@@ -37,6 +37,7 @@ async function refreshToken(token: JWT): Promise<JWT> {
 }
 
 async function authenticate(prevState: string | undefined, formData: FormData) {
+  console.log(formData);
   try {
     await signIn("credentials", Object.fromEntries(formData));
   } catch (error) {
@@ -49,24 +50,46 @@ async function authenticate(prevState: string | undefined, formData: FormData) {
 
 async function setLightCookies() {
   const cookieStore = cookies();
-  console.log(cookieStore);
   cookieStore.set(
     clientCookiesKeys.THEME,
     clientCookiesValues.GLOBAL_LIGHT_THEME
   );
 }
 
-// async function deleteApplicant(id: string) {
-//   const url = `${endpoints.USERS.APPLICANTS.BASE}/${id}`;
-//   try {
-//     const response = await fetcher( url, "DELETE" );
-//     revalidatePath(dashboardRoutes.USERS.APPLICANTS.BASE);
-//     return response;
-//   }
-//   catch (error: any) {
-//     console.log(error.message);
-//   }
-// }
+async function deleteUser(id: string) {
+  const url = `${endpoints.USERS.DELETE_USER}/${id}`;
+  try {
+    const response = await fetcher( url, "DELETE" );
+    revalidatePath(dashboardRoutes.USERS.BASE);
+    return response;
+  }
+  catch (error: any) {
+    console.log(error.message);
+  }
+}
+
+async function deleteCustomer(id: string) {
+  const url = `${endpoints.USERS.DELETE_USER}/${id}`;
+  
+  try {
+    const response = await fetcher(url, "DELETE");
+    revalidatePath(dashboardRoutes.USERS.CUSTOMERS.BASE);
+    return response;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
+
+async function deleteOwner(id: string) {
+  const url = `${endpoints.USERS.DELETE_USER}/${id}`;
+  try {
+    const response = await fetcher(url, "DELETE");
+    revalidatePath(dashboardRoutes.USERS.OWNERS.BASE);
+    return response;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
 
 // async function updateApplicant(
 //   id: string,
@@ -151,7 +174,7 @@ export {
   refreshToken,
   signOutHelper,
   setLightCookies,
-  // deleteApplicant,
-  // updateApplicant,
-  // updateAdmin,
+  deleteCustomer,
+  deleteOwner,
+  deleteUser,
 };

@@ -3,26 +3,18 @@ import Credentials from "@auth/core/providers/credentials"
 import { authConfig } from "./auth.config";
 import { API } from "./app/lib/data";
 import { refreshToken } from "./app/lib/actions";
+import { credentials } from "./app/lib/constants";
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       name: "Credentials",
-      credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-        },
-      },
+      credentials,
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         const { email, password } = credentials;
+        console.log(email, password);
 
           const response = await fetch(`${API}/auth/login`, {
             method: "POST",
@@ -36,12 +28,15 @@ export const { auth, signIn, signOut } = NextAuth({
           });
 
           if (!response.ok) return null;
-        const user = await response.json();
+        const resJson = await response.json();
+        const user = resJson.data;
 
-        if (user.user.userType === process.env.AUTHORIZE_ADMIN) {
-          return user;
-        }
-        return null;
+
+        // if (user.user.userType === process.env.AUTHORIZE_ADMIN) {
+        //   return user;
+        // }
+        // return null;
+        return user;
         }
     }),
   ],

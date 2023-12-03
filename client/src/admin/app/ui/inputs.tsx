@@ -1,5 +1,9 @@
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { Text } from "@tremor/react";
+import { strongTextColor, textColor } from "./themes";
+
+export const inputClass =
+  "peer pl-10 border-stroke dark:shadow-two w-full border text-base outline-none transition-all duration-300 focus:border-custom-primary dark:border-custom-transparent dark:bg-[#2C303B] dark:focus:border-custom-primary dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark";
 
 export default function CommonInputComp({
   value,
@@ -70,11 +74,13 @@ export function LoginInput({
           name={id}
           placeholder={placeholder}
           type={type}
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2  placeholder:text-gray-500"
+          className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${inputClass}`}
           required={required}
           minLength={minLenght}
         />
-        <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+        <LinkIcon
+          className={`pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2  peer-focus:${strongTextColor} ${textColor}`}
+        />
       </div>
       {errors && errors[id] ? (
         <div
