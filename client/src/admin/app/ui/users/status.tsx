@@ -1,19 +1,19 @@
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { Badge } from "@tremor/react";
 
-export default function ApplicantStatus({ status }: { status: string }) {
+export default function UserStatus({ status }: { status: string }) {
   console.log(status);
   return (
     <span
     >
-      {status === "active" ? (
+      {status === "verified" ? (
         <Badge className="bg-green-500 text-white" icon={CheckIcon}>
-          Active
+          Verified
         </Badge>
       ) : null}
-      {status === "not active" ? (
-        <Badge className="bg-gray-100 text-gray-500 -ml-3" icon={XMarkIcon}>
-          Not Active
+      {status === "not verified" ? (
+        <Badge className="bg-red-500 text-neutral-100 -ml-3" icon={XMarkIcon}>
+          Unverified
         </Badge>
       ) : null}
     </span>
