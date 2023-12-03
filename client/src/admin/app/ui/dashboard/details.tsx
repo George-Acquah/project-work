@@ -9,9 +9,10 @@ import {
   DeltaType,
   BadgeDelta,
 } from "@tremor/react";
-import TableComponent from "../table";
+// import TableComponent from "../table";
 import { HelperIconTooltip } from "./details-helper";
 import Pagination from "../pagination";
+import { cardOutline, cardsBg } from "../themes";
 
 // const formatCurrency = Intl.NumberFormat("en-US", {
 //   style: "currency",
@@ -38,10 +39,10 @@ import Pagination from "../pagination";
 
 export const Details = async ({ data }: any) => {
     
-    // const applicants = await fetchFilteredApplicants(applicant, currentPage);
+  // const applicants = await fetchFilteredApplicants(applicant, currentPage);
 
   return (
-    <Card>
+    <Card className={`${cardsBg} ${cardOutline}`}>
       <Flex justifyContent="start" className="space-x-0.5" alignItems="center">
         <Title>Customer Orders</Title>
         <HelperIconTooltip />

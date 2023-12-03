@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@tremor/react";
 
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { cardOutline, cardsBg } from "../themes";
 
 interface IObject {
   date: string;
@@ -66,7 +67,7 @@ export function ChartView({ revenue, applications, applicants }: IProps) {
   });
 
   return (
-    <Card>
+    <Card className={`${cardsBg} ${cardOutline}`}>
       <div className="md:flex justify-between">
         <div>
           <Flex
@@ -89,9 +90,15 @@ export function ChartView({ revenue, applications, applicants }: IProps) {
             onIndexChange={(idx) => setSelectedKpi(idx)}
           >
             <TabList>
-              <Tab>Revenue</Tab>
-              <Tab>Applications</Tab>
-              <Tab>Applicants</Tab>
+              <Tab className="hover:border-gray-400 dark:hover:border-blue-400">
+                Revenue
+              </Tab>
+              <Tab className="hover:border-gray-400 dark:hover:border-blue-400">
+                Applications
+              </Tab>
+              <Tab className="hover:border-gray-400 dark:hover:border-blue-400">
+                Applicants
+              </Tab>
             </TabList>
           </TabGroup>
         </div>
