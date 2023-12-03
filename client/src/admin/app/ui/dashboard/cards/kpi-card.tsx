@@ -7,6 +7,7 @@ import {
   BadgeDelta,
   DeltaType,
 } from "@tremor/react";
+import { cardOutline, cardsBg } from "../../themes";
 
 const getDeltaType = (trend: number): DeltaType => {
   if (trend < -35) return "decrease";
@@ -30,7 +31,7 @@ export const KpiCard = ({
   percentage: number;
 }) => {
   return (
-    <Card className="max-w-lg">
+    <Card className={`max-w-lg ${cardsBg} ${cardOutline}`}>
       <Flex alignItems="start">
         <div>
           <Text>{title}</Text>
