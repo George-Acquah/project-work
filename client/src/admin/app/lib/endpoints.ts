@@ -14,7 +14,7 @@ const endpoints = {
     GET_USERS_PAGE: "users/admin/total-pages",
     GET_LATEST_USERS: "users/admin/latest",
     GET_ALL_ROLES: "users/admin/roles",
-    DELETE_USER: "users/admin/:id",
+    DELETE_USER: "users/admin",
   },
   VEHICLES: {
     GET_ALL_VEHICLES: "customer/vehicle",

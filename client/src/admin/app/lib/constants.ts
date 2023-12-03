@@ -29,6 +29,15 @@ export const ErrorNames = {
   UNAUTHORIZED_ERROR: "UnauthorizedError",
   VALIDATION_ERROR: "ValidationError",
 };
+
+const UserType = {
+  CUSTOMER: "Customer",
+  PARK_OWNER: "ParkOwner",
+  ADMIN: 'Admin',
+  ALL: "All",
+};
+
+
 const clientCookiesKeys = {
   BANNER_HIDDEN: "template-banner-hidden",
   THEME: "global-theme",
@@ -41,6 +50,12 @@ const clientCookiesValues = {
 };
 
 const usersLinks: _INavLinks[] = [
+  {
+    href: dashboardRoutes.USERS.BASE,
+    name: "All Users",
+    type: "normal",
+    icon: UsersIcon,
+  },
   {
     href: dashboardRoutes.USERS.CUSTOMERS.BASE,
     name: "Customers",
@@ -97,6 +112,42 @@ const reservationLinks: _INavLinks[] = [
   },
 ];
 
+const parkingLinks: _INavLinks[] = [
+  {
+    href: "/dashboard/parking-lots",
+    name: "Parking Centers",
+    type: "normal",
+    icon: TvIcon,
+  },
+  // {
+  //   href: "/dashboard/reservations/details",
+  //   name: "Center Details",
+  //   type: "normal",
+  //   icon: DocumentIcon,
+  // },
+  {
+    href: "/dashboard/slots",
+    name: "Slots",
+    type: "normal",
+    icon: DocumentIcon,
+  },
+];
+
+const vehiclesLinks: _INavLinks[] = [
+  {
+    href: "/dashboard/reservations",
+    name: "Overview",
+    type: "normal",
+    icon: TvIcon,
+  },
+  {
+    href: "/dashboard/reservations/details",
+    name: "Reservations",
+    type: "normal",
+    icon: DocumentIcon,
+  },
+];
+
 const reservationsTableColumn: string[] = [
   "IMAGE",
   "USERNAME",
@@ -107,6 +158,21 @@ const reservationsTableColumn: string[] = [
   "IS VERIFIED",
   // "GENDER",
   // "PHONE NUMBER",
+];
+
+const usersTableColumn: string[] = [
+  "IMAGE",
+  "EMAIL ADDRESS",
+  "FULLNAME",
+  "PHONE NUMBER",
+  "LOCATION",
+  "VEHICLES",
+  "CENTERS",
+  "USER TYPE",
+  "DATE REGISTERED",
+  "LAST UPDATED",
+  "IS VERIFIED",
+  // "GENDER",
 ];
 
 const navDropdownLinks: _INavLinks[] = [
@@ -257,6 +323,18 @@ const editAdminContactDetails: _ICommonInputComp[] = [
   },
 ];
 
+const credentials = {
+  email: {
+    label: "Email",
+    type: "email",
+    placeholder: "",
+  },
+  password: {
+    label: "Password",
+    type: "password",
+  },
+};
+
 export {
   clientCookiesKeys,
   clientCookiesValues,
@@ -270,4 +348,9 @@ export {
   editAdminContactDetails,
   editAdminOtherDetails,
   loginDetails,
+  credentials,
+  UserType,
+  parkingLinks,
+  vehiclesLinks,
+  usersTableColumn,
 };
