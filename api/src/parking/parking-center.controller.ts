@@ -99,6 +99,22 @@ export class ParkingCenterController {
     }
   }
 
+  @Get('slots')
+  async getAllSlots(
+    @Query('slots') query: string,
+    @Query('currentPage') currentPage: number,
+    @Query('size') size: number,
+  ) {
+    try {
+      this.logger.log(`All Slots`, query, currentPage, size);
+      const slots = await this.slotService.getAllSlots();
+      return new ApiResponse(200, 'Fetched Slots successfully', slots);
+    } catch (error) {
+      this.logger.error(`Error getting all slots: ${error.message}`);
+      return new ApiResponse(error.statusCode, error.message, {});
+    }
+  }
+
   @Put()
   async updateCenter(@Body() data: any) {
     try {
