@@ -177,6 +177,20 @@ export class SlotService {
     return sanitizeSlots(populatesSlots);
   }
 
+  async getAllSlots() {
+    try {
+      const slots = await this.slotModel.find();
+
+      const populatesSlots = await this.populateSlotsFields(
+        slots,
+        'slot_data slot_images',
+      );
+
+      return sanitizeSlots(populatesSlots);
+    } catch (error) {
+      throw new Error(error.message || 'Could not find slots');
+    }
+  }
   async getSlotDetails(centerId: string, slotId: string): Promise<_ISlot> {
     try {
       const slot = await this.slotModel
