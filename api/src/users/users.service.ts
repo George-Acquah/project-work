@@ -209,7 +209,7 @@ export class UsersService {
 
       return sanitizeUser(foundUser);
     } catch (error) {
-      throw new NotFoundException('Invalid user ID');
+      throw new Error(error.message || 'Invalid user ID');
     }
   }
 

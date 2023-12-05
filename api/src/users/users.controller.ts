@@ -100,10 +100,11 @@ export class UsersController {
 
   @Get(':id')
   async getSingleUser(
-    @Param() id: string,
+    @Param() param: { id: string },
   ): Promise<ApiResponse<_TSanitizedUser | object>> {
     try {
-      const user = await this.usersService.findOne(id);
+      console.log(param.id);
+      const user = await this.usersService.findOne(param.id);
       return new ApiResponse(200, 'Your query was successful', user);
     } catch (err) {
       return new ApiResponse(404, err.message, {});
@@ -150,6 +151,8 @@ export class UsersController {
     return new ApiResponse(200, 'SUccess', [
       UserType.CUSTOMER,
       UserType.PARK_OWNER,
+      UserType.ADMIN,
+      UserType.MODERATOR,
     ]);
   }
 

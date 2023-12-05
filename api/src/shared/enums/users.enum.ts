@@ -6,6 +6,8 @@ enum DbUserType {
 enum UserType {
   CUSTOMER = 'Customer',
   PARK_OWNER = 'ParkOwner',
+  ADMIN = 'Admin',
+  MODERATOR = 'Moderator>',
 }
 
 enum UserConstraints {
