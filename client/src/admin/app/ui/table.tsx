@@ -16,12 +16,17 @@ import ApplicantStatus from "./users/status";
 import Image from "next/image";
 import { UserType } from "../lib/constants";
 import {
+  DeleteCenter,
   DeleteCustomer,
   DeleteOwner,
+  DeleteSlot,
   DeleteUser,
+  EditCenter,
   EditCustomer,
   EditOwner,
+  EditSlot,
   EditUser,
+  VerificationButton,
 } from "./users/buttons";
 import { cardBorder, cardsBg, providerBtnClass } from "./themes";
 
@@ -76,10 +81,10 @@ export default function TableComponent({
                 className="px-6 align-middle border-none text-xs whitespace-nowrap p-4"
               >
                 {columns
-                  .filter((column) => column !== "_id")
+                  .filter((column) => !column.includes("_id"))
                   .map((column, columnIndex) => (
                     <TableCell key={columnIndex} className="px-6">
-                      {renderCell(entityType, column, item)}
+                      {renderCell(entityType, column, item, item._id, type)}
                     </TableCell>
                   ))}
                 {/* Edit and Delete buttons */}
@@ -119,78 +124,129 @@ export default function TableComponent({
 const renderCell = (
   entityType: string,
   column: string,
-  item: _TableRowType
+  item: _TableRowType,
+  id: string,
+  type = UserType.ALL,
 ) => {
   if (column === "image") {
     return <TableImage user={item} />;
   }
 
   if (column === "isVerified") {
-    return <ApplicantStatus status={item[column]} />;
+    return (
+      <div className="flex items-center gap-x-2">
+        <ApplicantStatus status={item[column] as string} />
+        <TableButtonHelper id={id} entityType={entityType} type={type} verify/>
+      </div>
+    );
+  }
+
+  if (column === "isAvailable") {
+    return <ApplicantStatus status={item[column] as string} />;
   }
 
   const additionalClassName =
     (entityType === "users" &&
       (column === "vehicles" || column === "centers")) ||
-    (entityType === "centers" && column === "slots")
+    (entityType === "centers" &&
+      (column === "slots" || column === "capacity")) ||
+    (entityType === "slots" && (column === "capacity" || column === "price"))
       ? "text-center"
       : "";
 
-  return (
-    <Text className={additionalClassName}>
-      {renderCellContent(entityType, column, item)}
-    </Text>
-  );
-};
-
-const renderCellContent = (
-  entityType: string,
-  column: string,
-  item: _TableRowType
-) => {
-  switch (entityType) {
-    case "users":
-      return item[column];
-    case "parkingCenter":
-      return item[column];
-    default:
-      return item[column];
-  }
+  return <Text className={additionalClassName}>{item[column]}</Text>;
 };
 
 const TableButtonHelper = ({
   id,
   entityType,
   type,
+  verify,
+  status,
 }: {
-  type?: string;
   id: string;
   entityType: string;
+  type?: string;
+    verify?: boolean;
+    status?: boolean;
 }) => {
   return (
     <>
       {entityType === "users" ? (
         type === UserType.ALL ? (
+          verify ? (
+            <div className="flex">
+              <VerificationButton
+                id={id}
+                status={status!}
+                action={undefined}
+              />
+            </div>
+          ) : (
+            <div className="flex justify-end gap-3">
+              <EditUser id={id} />
+              <DeleteUser id={id} />
+            </div>
+          )
+        ) : type === UserType.CUSTOMER ? (
+          verify ? (
+            <div className="flex">
+              <VerificationButton
+                id={id}
+                status={status!}
+                action={undefined}
+              />
+            </div>
+          ) : (
+            <div className="flex justify-end gap-3">
+              <EditUser id={id} />
+              <DeleteUser id={id} />
+            </div>
+          )
+        ) : verify ? (
+          <div className="flex">
+            <VerificationButton
+              id={id}
+              status={status!}
+              action={undefined}
+            />
+          </div>
+        ) : (
           <div className="flex justify-end gap-3">
             <EditUser id={id} />
             <DeleteUser id={id} />
           </div>
-        ) : type === UserType.CUSTOMER ? (
-          <div className="flex justify-end gap-3">
-            <EditCustomer id={id} />
-            <DeleteCustomer id={id} />
+        )
+      ) : entityType === "centers" ? (
+        verify ? (
+          <div className="flex">
+            <VerificationButton
+              id={id}
+              status={status!}
+              action={undefined}
+            />
           </div>
         ) : (
           <div className="flex justify-end gap-3">
-            <EditOwner id={id} />
-            <DeleteOwner id={id} />
+            <EditUser id={id} />
+            <DeleteUser id={id} />
           </div>
         )
-      ) : entityType === "centers" ? (
-        <div className="flex justify-end gap-3">
-          <EditCustomer id={id} />
-          <EditCustomer id={id} />
-        </div>
+      ) : entityType === "slots" ? (
+        verify ? (
+          <div className="flex">
+            <VerificationButton
+              id={id}
+              status={status!}
+              action={undefined}
+            />
+          </div>
+        ) : (
+          <div className="flex justify-end gap-3">
+            <EditUser id={id} />
+            <DeleteUser id={id} />
+          </div>
+        )
       ) : (
         // Add cases for other entity types as needed
         <div className="flex justify-end gap-3">
