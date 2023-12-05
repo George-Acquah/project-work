@@ -25,7 +25,7 @@ export default function SmartCarParkingAdminLogo({ home }: { home?: boolean }) {
 export function LinklessLogo() {
   return (
     <Image
-      src="/AUC-web.png"
+      src="/Scpl.png"
       width={160}
       height={120}
       className="h-12 w-40 mx-0 -ml-6"

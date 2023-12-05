@@ -6,6 +6,13 @@ interface _ITokens {
   expiresIn: number;
 }
 
+//BBBBBBB
+interface _IBtn {
+  href: string;
+  text: string;
+  label: string;
+}
+
 
 interface _IChildren {
   children: React.ReactNode;
@@ -22,7 +29,32 @@ interface _ICenterData {
   center_id: string;
 }
 
-//EEEEE 
+//EEEEE
+
+interface _IRadio {
+  id: string;
+  checked: boolean;
+  value: string;
+  label: string;
+}
+
+interface _IEditApplicantForm {
+  id: string;
+  fields: _IField[];
+  updateEntity: _TUpdateEntityFunction;
+  entityData: any;
+  selecteds: any;
+  successMessage?: string;
+}
+interface _IField {
+  label: string;
+  key: string;
+  type: _TFields;
+  disabled: boolean;
+  options?: string[];
+  icon?: IconType;
+  radio?: _IRadio[];
+}
 interface _ILoginError {
   username?: string[];
   password?: string[];
@@ -69,6 +101,26 @@ interface _IFormattedCenter {
   isVerified: string;
   slots: number;
   image: string | null;
+  isAvailable: string;
+  capacity: number;
+}
+
+interface _IFormattedSlot {
+  [key: string]: string | number | null;
+  _id: string;
+  slot_type: SlotTypes;
+  slot_name: string;
+  description: string;
+  parking_center: string;
+  location: string;
+  createdAt: string;
+  updatedAt: string;
+  isVerified: string;
+  isAvailable: string;
+  image: string | null;
+  center_id: string;
+  capacity: number;
+  price: number;
 }
 interface _IFormattedTransaction {
   [key: string]: string | number | null;
@@ -166,6 +218,7 @@ interface _IParkingCenter {
   updatedAt: Date;
   contact: string;
   location: string;
+  isAvailable: boolean;
   isVerified: boolean;
   center_images: Array<_IParkingCenterImage>;
   slots: Array<_ISlot>;
@@ -204,6 +257,11 @@ interface _ISlot {
   slot_images: Array<_ISlotImage>;
   isAvailable: boolean;
   slot_data: _ISlotData;
+  createdAt: Date;
+  updatedAt: Date;
+  contact: string;
+  location: string;
+  isVerified: boolean;
   center_id: string;
 }
 
@@ -250,6 +308,12 @@ interface _ITransaction {
 }
 
 // UUU
+
+interface _IUpdate {
+  id: string;
+  label: string;
+  href: string;
+}
 interface _IUser {
   _id: string;
   email: string;
@@ -263,10 +327,16 @@ interface _IUser {
   centers: _IParkingCenter[];
 }
 
+interface _IEditAdminForm {
+  admin: _IEditUser;
+  title?: string;
+  errors?: any;
+}
+
 interface _IEditUser {
   [key: string]: string | null;
-  id: string;
-  username: string;
+  _id: string;
+  fullname: string;
   email: string;
   createdAt: string;
   updatedAt: string;
@@ -314,6 +384,7 @@ interface _Inputs {
 }
 interface _ICommonInputComp extends _Inputs{
   value: string;
+  tooltip?: boolean;
   disabled?: boolean;
   errors?: any;
 }
@@ -341,7 +412,27 @@ interface _IParkingCenterImage extends _Image {
 }
 type _TVehicleImage = _Image;
 
-type _TableRowType = _IFormattedCenter | _IFormattedUser;
+type _TableRowType = _IFormattedCenter | _IFormattedUser | _IFormattedSlot;
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";
+type _TFields = "text" | "radio" | "select" | "email";
+
+type _TUpdateEntityFunction<T> = (
+  id: string,
+  data: string,
+  prevState: any,
+  formData: FormData
+) => Promise<
+  | {
+      // errors: {
+      //   [key in T["key"]]: string[] | undefined;
+      // };
+      errors: any;
+      message: string;
+    }
+  | {
+      message: any;
+      errors?: undefined;
+    }
+>;
 
