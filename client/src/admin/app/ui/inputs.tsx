@@ -1,6 +1,6 @@
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import { Text } from "@tremor/react";
-import { strongTextColor, textColor } from "./themes";
+import { ExclamationCircleIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
+import { Icon, Text } from "@tremor/react";
+import { bodyBg, strongTextColor, textColor } from "./themes";
 
 export const inputClass =
   "peer pl-10 border-stroke dark:shadow-two w-full border text-base outline-none transition-all duration-300 focus:border-custom-primary dark:border-custom-transparent dark:bg-[#2C303B] dark:focus:border-custom-primary dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark";
@@ -14,12 +14,26 @@ export default function CommonInputComp({
   type,
   disabled,
   errors,
+  tooltip,
 }: _ICommonInputComp) {
   const LinkIcon = icon;
   return (
     <div className="mb-4 lg:mr-4">
-      <label htmlFor={id} className="mb-2 block text-sm font-medium">
+      <label
+        htmlFor={id}
+        className={`mb-2 text-sm font-medium ${
+          tooltip ? "flex items-center" : "block"
+        } ${id === "email" ? "mt-1" : ""} `}
+      >
         {label}
+        {tooltip && (
+          <Icon
+            icon={InformationCircleIcon}
+            variant="simple"
+            tooltip={`Your ${label.toLowerCase()} is auto generated`}
+            className="bg-transparent"
+          />
+        )}
       </label>
       <div className="relative">
         <input
@@ -27,7 +41,9 @@ export default function CommonInputComp({
           name={id}
           defaultValue={value}
           placeholder={placeholder}
-          className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+          className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${inputClass} ${bodyBg} ${
+            id === "email" ? "mt-[5px]" : ""
+          }`}
           type={type}
           disabled={disabled}
         />
