@@ -5,15 +5,19 @@
 @layer components {
   .light {
     --color-bg-primary: #f5f5f5;
-    --color-text-primary: #333333;
+    --border-primary: #9ca3af;
+    --brand-primary: #f5f5f5;
+    --brand-secondary: #f5f5f5/60;
+    --bg-muted: #ffffff;
     --button-bg-primary: #ffffff;
-    --button-bg-primary-secondary: #007b00;
   }
   .dark {
     --color-bg-primary: #ffffff;
-    --color-text-primary: #2d3748;
+    --border-primary: #374151;
+    --brand-primary: #374151;
+    --brand-secondary: #2C3E50;
+    --bg-muted: #2C303B/50;
     --button-bg-primary: #ffffff;
-    --button-bg-primary-secondary: #007b00;
   }
 
   input[type="checkbox"]:checked ~ label span svg {
