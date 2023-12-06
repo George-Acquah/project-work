@@ -1,59 +1,78 @@
-
-import { editAdminDetails, editAdminProfileDetails, editAdminContactDetails, editAdminOtherDetails } from "@/app/lib/constants";
+import {
+  editAdminDetails,
+  editAdminProfileDetails,
+  editAdminContactDetails,
+  editAdminOtherDetails,
+} from "@/app/lib/constants";
 import { SvgSpinner } from "@/app/lib/icons";
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { ExclamationCircleIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Title, Text, Button } from "@tremor/react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import CommonInputComp from "../inputs";
+import { cardsBg, textColor } from "../themes";
+import { inputIcons } from "../users/constants";
 
-interface IEditAdminForm {
-  admin: _IEditUser;
-  title?: string;
+interface _InputWithErrors {
+  id: string;
+  children: React.ReactNode;
   errors?: any;
 }
-interface IBtn {
-  href: string;
-  text: string;
-  label: string;
-}
+export const InputWithErrors = ({ errors, id, children }: _InputWithErrors) => {
+  return (
+    <>
+      {children}
+      {errors && errors[id] ? (
+        <div
+          id="customer-error"
+          aria-live="polite"
+          className="mt-2 text-sm text-red-500 flex space-x-2"
+        >
+          <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+          {errors[id].map((error: string) => (
+            <Text className="text-red-500" key={error}>
+              {error}
+            </Text>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
+};
 
-function getValue(
-  applicant: _IEditUser,
-  helper: string
-) {
-  const columns = Object.keys(applicant);
+function getValue(admin: _IEditUser, helper: string) {
+  const columns = Object.keys(admin);
   let result = "";
 
   columns.map((column) => {
     if (column === helper) {
-      result = applicant[column]!;
+      result = admin[column]!;
     }
   });
 
   return result;
 }
 
-export function EditBtn({ href, text, label }: IBtn) {
+export function EditBtn({ href, text, label }: _IBtn) {
   const { pending } = useFormStatus();
   return (
     <div className="mt-6 flex items-center justify-end gap-4">
       <Link
         href={href}
-        className="flex h-[2.3rem] items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+        className={`flex h-[2.3rem] items-center rounded  px-4 text-sm font-medium  transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 ${textColor}`}
       >
         Cancel
       </Link>
       <Button
         aria-disabled={pending}
-        className="aria-disabled:pointer-events-none aria-disabled:bg-opacity-70"
+        className="aria-disabled:pointer-events-none rounded aria-disabled:bg-opacity-70"
         size="xs"
         type="submit"
       >
         {pending ? (
           <div className="flex items-center">
             <p className="mr-2">{text}...</p>
-            <SvgSpinner className="text-white"/>
+            <SvgSpinner className="text-white" />
           </div>
         ) : (
           `${label}`
@@ -63,7 +82,7 @@ export function EditBtn({ href, text, label }: IBtn) {
   );
 }
 
-export function GlobalError({ message }: { message: any}) {
+export function GlobalError({ message }: { message: any }) {
   return (
     <>
       {message && (
@@ -76,12 +95,16 @@ export function GlobalError({ message }: { message: any}) {
   );
 }
 
-export default function CommonDivComp({ admin, title, errors }: IEditAdminForm) {
+export default function CommonDivComp({
+  admin,
+  title,
+  errors,
+}: _IEditAdminForm) {
   return (
     <>
       <Title>{title}</Title>
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <div className="lg:grid lg:grid-cols-2 ">
+      <div className={`rounded-md ${cardsBg} p-4 md:p-6`}>
+        <div className="lg:grid lg:grid-cols-2">
           {title === "User Details"
             ? editAdminDetails.map((detail) => {
                 return (
@@ -95,6 +118,7 @@ export default function CommonDivComp({ admin, title, errors }: IEditAdminForm) 
                     type={detail.type}
                     disabled={detail.disabled}
                     errors={errors}
+                    tooltip={detail?.tooltip}
                   />
                 );
               })
@@ -149,3 +173,10 @@ export default function CommonDivComp({ admin, title, errors }: IEditAdminForm) 
     </>
   );
 }
+
+export const RenderIcons = ({ helper }: { helper: "user" | "email" }) => {
+  const Icon = inputIcons[helper];
+  return (
+    <Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+  );
+};
