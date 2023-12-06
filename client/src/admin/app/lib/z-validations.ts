@@ -54,7 +54,7 @@ const AdminSchema = z.object({
 
 const ApplicantSchema = z.object({
   id: z.string(),
-  role: z.enum(["admin", "applicant", "moderator", "student", "user"], {
+  userType: z.enum(["admin", "applicant", "moderator", "student", "user"], {
     invalid_type_error: "Please select a user role.",
   }),
   isActive: z.enum(["true", "false"], {
