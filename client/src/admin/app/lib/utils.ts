@@ -10,10 +10,20 @@ const formatCurrency = (amount: number) => {
   });
 };
 
-const convertDateToString = (
-  dateString: string,
-  locale: string = "en-US"
-) => {
+const formatKey = (key: string): string => {
+  // Example: Convert "FullName" to "Full Name"
+  return key
+    .replace(/([A-Z])/g, " $1") // Insert space before capital letters
+    .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+};
+
+const formatTitles = (key: string): string => {
+  return key
+    .replace(/_/g, " ") // Replace underscores with spaces
+    .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first letter
+};
+
+const convertDateToString = (dateString: string, locale: string = "en-US") => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
     // Invalid date, return the original string or handle the error accordingly
@@ -33,9 +43,8 @@ function formatUserType(type: _TUserType) {
   if (type === UserType.PARK_OWNER) {
     return "Park Owner";
   }
-  return type
+  return type;
 }
-
 
 const generatePagination = (currentPage: number, totalPages: number) => {
   if (totalPages <= 7) {
@@ -145,6 +154,32 @@ function formatCentersTable(centers: _IParkingCenter[]): _IFormattedCenter[] {
       (center?.updatedAt as unknown as string) ?? new Date()
     ),
     isVerified: center.isVerified ? "verified" : "not verified",
+    isAvailable: center.isAvailable ? "available" : "not available",
+    capacity: Math.ceil(Math.random() * (20 - 2 + 1) + 2),
+  }));
+}
+
+function formatSlotsTable(slots: _ISlot[]): _IFormattedSlot[] {
+  return slots.map((slot) => ({
+    _id: slot._id,
+    center_id: slot.center_id,
+    image: null,
+    // image: center?.center_images ? center?.center_images[0]?._id : null,
+    slot_name: slot.slot_name,
+    description: slot.description,
+    location: slot?.location ?? "not Implemented",
+    slot_type: slot.type,
+    parking_center: slot.center_id,
+    createdAt: convertDateToString(
+      (slot?.createdAt as unknown as string) ?? new Date()
+    ),
+    updatedAt: convertDateToString(
+      (slot?.updatedAt as unknown as string) ?? new Date()
+    ),
+    isVerified: slot.isVerified ? "verified" : "not verified",
+    isAvailable: slot.isAvailable ? "available" : "not available",
+    capacity: Math.ceil(Math.random() * (20 - 2 + 1) + 2),
+    price: Math.ceil(Math.random() * (30 - 2 + 1) + 2),
   }));
 }
 
@@ -212,24 +247,29 @@ function formatSecurityLogsTable(
   }));
 }
 
-
-// function formatAdminDetails(user: _IUser): _IEditUser {
-//     return {
-//       id: user.id,
-//       username: user.username,
-//       email: user.email,
-//       createdAt: convertDateToString(user.createdAt as unknown as string),
-//       updatedAt: convertDateToString(user.updatedAt as unknown as string),
-//       image: user.profile?.image || null,
-//       first_name: user.profile?.first_name || null,
-//       last_name: user.profile?.last_name || null,
-//       contact_no: user.profile?.contact_no || null,
-//       area: user.profile?.area || null,
-//       city: user.profile?.city || null,
-//       state: user.profile?.state || null,
-//       pinCode: user.profile?.pinCode || null,
-//     };
-// }
+function formatAdminDetails(user: _IUser): _IEditUser {
+  return {
+    _id: user._id,
+    fullname: `${user?.profile?.first_name ?? "Update"} ${
+      user?.profile?.last_name ?? "Profile"
+    }`,
+    email: user.email,
+    createdAt: convertDateToString(
+      (user?.createdAt as unknown as string) ?? new Date()
+    ),
+    updatedAt: convertDateToString(
+      (user?.updatedAt as unknown as string) ?? new Date()
+    ),
+    image: user?.image || null,
+    first_name: user.profile?.first_name || null,
+    last_name: user.profile?.last_name || null,
+    contact_no: user.profile?.contact_no || null,
+    area: user.profile?.area || null,
+    city: user.profile?.city || null,
+    state: user.profile?.state || null,
+    pinCode: user.profile?.pinCode || null,
+  };
+}
 
 export {
   formatCurrency,
@@ -243,9 +283,11 @@ export {
   getDistinctLatestUrl,
   formatusersTable,
   formatCentersTable,
+  formatSlotsTable,
+  formatAdminDetails,
+  formatKey,
+  formatTitles,
   // setHiddenCookie,
   // deleteHiddenCookie,
   // formatusersTable,
-  // formatAdminDetails,
-}
-
+};

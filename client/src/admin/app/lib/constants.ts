@@ -10,8 +10,14 @@ import {
   AtSymbolIcon,
   CalendarDaysIcon,
   KeyIcon,
+  MapPinIcon,
+  GlobeAltIcon,
+  PhoneIcon,
+
+  IdentificationIcon,
 } from "@heroicons/react/24/outline";
 import { dashboardRoutes } from "./routes";
+
 export const ErrorMessages = {
   NETWORK_FAILURE: "There's a problem with your internet connection.",
   AUTH_REQUIRED: "Authentication is required to access this page.",
@@ -150,124 +156,122 @@ const vehiclesLinks: _INavLinks[] = [
 
 const tableColumns = {
   usersTableColumn: [
-  "IMAGE",
-  "EMAIL ADDRESS",
-  "FULLNAME",
-  "PHONE NUMBER",
-  "LOCATION",
-  "VEHICLES",
-  "CENTERS",
-  "USER TYPE",
-  "DATE REGISTERED",
-  "LAST UPDATED",
-  "IS VERIFIED",
-  // "GENDER",
-],centersTableColumn: [
-  "IMAGE",
-  "CENTER NAME",
-  "DESCRIPTION",
-  "PHONE NUMBER",
-  "LOCATION",
-  "SLOTS",
-  "CENTER TYPE",
-  "DATE REGISTERED",
-  "LAST UPDATED",
-  "IS VERIFIED",
-  // "GENDER",
-],
+    "IMAGE",
+    "EMAIL ADDRESS",
+    "FULLNAME",
+    "PHONE NUMBER",
+    "LOCATION",
+    "VEHICLES",
+    "CENTERS",
+    "USER TYPE",
+    "DATE REGISTERED",
+    "LAST UPDATED",
+    "IS VERIFIED",
+    // "GENDER",
+  ],
+  centersTableColumn: [
+    "IMAGE",
+    "CENTER NAME",
+    "DESCRIPTION",
+    "PHONE NUMBER",
+    "LOCATION",
+    "SLOTS",
+    "CENTER TYPE",
+    "DATE REGISTERED",
+    "LAST UPDATED",
+    "IS VERIFIED",
+    "STATUS",
+    "CAPACITY", // Added capacity column (if applicable)
+  ],
 
-slotsTableColumn: [
-  "IMAGE",
-  "SLOT NAME",
-  "DESCRIPTION",
-  "LOCATION",
-  "STATUS",
-  "PARKING CENTER",
-  "DATE REGISTERED",
-  "LAST UPDATED",
-  "IS VERIFIED",
-  "CAPACITY", // Added capacity column (if applicable)
-  "PRICE/RATE", // Added price/rate column (if applicable)
-],
+  slotsTableColumn: [
+    "IMAGE",
+    "SLOT NAME",
+    "DESCRIPTION",
+    "LOCATION",
+    "SLOT TYPE",
+    "PARKING CENTER",
+    "DATE REGISTERED",
+    "LAST UPDATED",
+    "IS VERIFIED",
+    "STATUS",
+    "CAPACITY", // Added capacity column (if applicable)
+    "PRICE/RATE", // Added price/rate column (if applicable)
+  ],
 
-// Transactions Table
-transactionsTableColumn: [
-  "TRANSACTION ID",
-  "USER",
-  "PARKING CENTER",
-  "SLOT",
-  "AMOUNT",
-  "DATE AND TIME",
-],
+  // Transactions Table
+  transactionsTableColumn: [
+    "TRANSACTION ID",
+    "USER",
+    "PARKING CENTER",
+    "SLOT",
+    "AMOUNT",
+    "DATE AND TIME",
+  ],
 
-// Payments Table
-paymentsTableColumn: [
-  "PAYMENT ID",
-  "USER",
-  "AMOUNT",
-  "DATE AND TIME",
-  "STATUS",
-  "PAYMENT METHOD",
-],
+  // Payments Table
+  paymentsTableColumn: [
+    "PAYMENT ID",
+    "USER",
+    "AMOUNT",
+    "DATE AND TIME",
+    "STATUS",
+    "PAYMENT METHOD",
+  ],
 
-// Reports/Analytics Table
-reportsTableColumn: [
-  "REPORT ID",
-  "DATE",
-  "TOTAL USERS",
-  "TOTAL CENTERS",
-  "TOTAL SLOTS",
-  "OCCUPANCY RATE",
-  "REVENUE",
-],
+  // Reports/Analytics Table
+  reportsTableColumn: [
+    "REPORT ID",
+    "DATE",
+    "TOTAL USERS",
+    "TOTAL CENTERS",
+    "TOTAL SLOTS",
+    "OCCUPANCY RATE",
+    "REVENUE",
+  ],
 
-// Notifications Table
-notificationsTableColumn: [
-  "NOTIFICATION ID",
-  "USER",
-  "CONTENT",
-  "DATE AND TIME",
-  "STATUS",
-],
+  // Notifications Table
+  notificationsTableColumn: [
+    "NOTIFICATION ID",
+    "USER",
+    "CONTENT",
+    "DATE AND TIME",
+    "STATUS",
+  ],
 
-// Settings Table
-settingsTableColumn: [
-  "SETTING ID",
-  "NAME",
-  "VALUE",
-  "DESCRIPTION",
-],
+  // Settings Table
+  settingsTableColumn: ["SETTING ID", "NAME", "VALUE", "DESCRIPTION"],
 
-// Feedback Table
-feedbackTableColumn: [
-  "FEEDBACK ID",
-  "USER",
-  "DATE AND TIME",
-  "RATING",
-  "COMMENTS",
-],
+  // Feedback Table
+  feedbackTableColumn: [
+    "FEEDBACK ID",
+    "USER",
+    "DATE AND TIME",
+    "RATING",
+    "COMMENTS",
+  ],
 
-// Maintenance Requests Table
-maintenanceRequestsTableColumn: [
-  "REQUEST ID",
-  "PARKING CENTER",
-  "SLOT",
-  "USER",
-  "DESCRIPTION",
-  "DATE AND TIME",
-  "STATUS",
-],
+  // Maintenance Requests Table
+  maintenanceRequestsTableColumn: [
+    "REQUEST ID",
+    "PARKING CENTER",
+    "SLOT",
+    "USER",
+    "DESCRIPTION",
+    "DATE AND TIME",
+    "STATUS",
+  ],
 
-// Security Logs Table
-securityLogsTableColumn: [
-  "LOG ID",
-  "USER",
-  "ACTION",
-  "DATE AND TIME",
-  "IP ADDRESS",
-  "STATUS",
-],
-}
+  // Security Logs Table
+  securityLogsTableColumn: [
+    "LOG ID",
+    "USER",
+    "ACTION",
+    "DATE AND TIME",
+    "IP ADDRESS",
+    "STATUS",
+  ],
+};
 
 const navDropdownLinks: _INavLinks[] = [
   {
@@ -286,13 +290,14 @@ const navDropdownLinks: _INavLinks[] = [
 
 const editAdminDetails: _ICommonInputComp[] = [
   {
-    id: "email",
-    placeholder: "Enter Email",
+    id: "fullname",
+    placeholder: "Enter Fullname",
     value: "test-val",
     label: "Username",
     icon: UserCircleIcon,
     type: "text",
-    disabled: false,
+    disabled: true,
+    tooltip: true,
   },
   {
     id: "email",
@@ -375,7 +380,7 @@ const editAdminContactDetails: _ICommonInputComp[] = [
     placeholder: "Enter Contact",
     value: "contact",
     label: "Contact No",
-    icon: UserCircleIcon,
+    icon: PhoneIcon,
     type: "text",
     disabled: false,
   },
@@ -384,7 +389,7 @@ const editAdminContactDetails: _ICommonInputComp[] = [
     placeholder: "Enter Area",
     value: "test area",
     label: "Area",
-    icon: UserCircleIcon,
+    icon: MapPinIcon,
     type: "text",
     disabled: false,
   },
@@ -393,7 +398,7 @@ const editAdminContactDetails: _ICommonInputComp[] = [
     placeholder: "Enter City",
     value: "Accra",
     label: "City",
-    icon: UserCircleIcon,
+    icon: MapPinIcon, // You might want to use a different icon here
     type: "text",
     disabled: false,
   },
@@ -402,7 +407,7 @@ const editAdminContactDetails: _ICommonInputComp[] = [
     placeholder: "Enter State",
     value: "state",
     label: "State",
-    icon: UserCircleIcon,
+    icon: GlobeAltIcon, // You might want to use a different icon here
     type: "text",
     disabled: false,
   },
@@ -411,11 +416,12 @@ const editAdminContactDetails: _ICommonInputComp[] = [
     placeholder: "Enter Pincode",
     value: "pinCode",
     label: "Pincode",
-    icon: UserCircleIcon,
+    icon: IdentificationIcon, // You might want to use a different icon here
     type: "text",
     disabled: false,
   },
 ];
+
 
 const credentials = {
   email: {
@@ -427,6 +433,16 @@ const credentials = {
     label: "Password",
     type: "password",
   },
+};
+
+const chartData = {
+  CHART_COLUMN: [
+    "Revenue",
+    "Centers",
+    "Slots",
+    "Vehicles",
+  ],
+  CONTACT_DETAILS: [],
 };
 
 export {
@@ -446,4 +462,5 @@ export {
   parkingLinks,
   vehiclesLinks,
   tableColumns,
+  chartData,
 };
