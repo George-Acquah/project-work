@@ -19,7 +19,13 @@ import UserMenu from "./user-menu";
 import { loginCallbackUrl } from "@/app/lib/routes";
 import { signOutHelper } from "@/app/lib/actions";
 import { LinklessLogo } from "../logos";
-import { bgColor, textColor, strongTextColor, hoverTexts, hoverBg } from "../themes";
+import {
+  bgColor,
+  textColor,
+  strongTextColor,
+  hoverTexts,
+  hoverBg,
+} from "../themes";
 
 interface IProps {
   user: _IUser | undefined;
@@ -120,11 +126,6 @@ export default function Navbar({ user }: IProps) {
                 data={usersLinks}
                 title="User"
               />
-              {/* <NavlinksComponent
-                pathname={pathname}
-                data={applicationsLinks}
-                title="applications"
-              /> */}
               <NavlinksComponent
                 pathname={pathname}
                 data={paymentLinks}
@@ -141,7 +142,7 @@ export default function Navbar({ user }: IProps) {
                         src={user?.image || "https://avatar.vercel.sh/leerob"}
                         height={32}
                         width={32}
-                        alt={`${user?.username} avatar`}
+                        alt="placeholer avatar"
                       />
                     </div>
                     <div className="ml-3">
