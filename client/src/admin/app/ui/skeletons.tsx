@@ -1,3 +1,5 @@
+import { bodyBg, cardsBg, textColor } from "./themes";
+
 // Loading animation
 const shimmer =
   "before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
@@ -104,40 +106,42 @@ export default function DashboardSkeleton() {
 
 export function TableRowSkeleton() {
   return (
-    <tr className="w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
+    <tr
+      className={`w-full border-b border-gray-100 last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg`}
+    >
       {/* Customer Name and Image */}
       <td className="relative overflow-hidden whitespace-nowrap py-3 pl-6 pr-3">
-        <div className="h-8 w-8 rounded-full bg-gray-100"></div>
+        <div className={`h-8 w-8 rounded-full ${bodyBg}`}></div>
       </td>
       <td className="relative overflow-hidden whitespace-nowrap py-3 pl-6 pr-3">
-        <div className="h-6 w-24 rounded bg-gray-100"></div>
+        <div className={`h-6 w-24 rounded ${bodyBg}`}></div>
       </td>
 
       {/* Email */}
       <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-32 rounded bg-gray-100"></div>
+        <div className={`h-6 w-32 rounded ${bodyBg}`}></div>
       </td>
       {/* Amount */}
       <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded bg-gray-100"></div>
+        <div className={`h-6 w-16 rounded ${bodyBg}`}></div>
       </td>
       {/* Date */}
       <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-36 rounded bg-gray-100"></div>
+        <div className={`h-6 w-36 rounded ${bodyBg}`}></div>
       </td>
       {/* Date */}
       <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-36 rounded bg-gray-100"></div>
+        <div className={`h-6 w-36 rounded ${bodyBg}`}></div>
       </td>
       {/* Status */}
       <td className="whitespace-nowrap px-3 py-3">
-        <div className="h-6 w-16 rounded-2xl bg-gray-100"></div>
+        <div className={`h-6 w-16 rounded-2xl ${bodyBg}`}></div>
       </td>
       {/* Actions */}
       <td className="whitespace-nowrap py-3 pl-6 pr-3">
         <div className="flex justify-end gap-3">
-          <div className="h-[38px] w-[38px] rounded bg-gray-100"></div>
-          <div className="h-[38px] w-[38px] rounded bg-gray-100"></div>
+          <div className={`h-[38px] w-[38px] rounded ${bodyBg}`}></div>
+          <div className={`h-[38px] w-[38px] rounded ${bodyBg}`}></div>
         </div>
       </td>
     </tr>
@@ -172,16 +176,8 @@ export function UsersTableSkeleton() {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          {/* <div className="md:hidden">
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-            <InvoicesMobileSkeleton />
-          </div> */}
-          <table className="min-w-full text-gray-900 table">
+        <div className={`rounded-lg ${cardsBg} ${textColor} p-2 md:pt-0`}>
+          <table className="min-w-full  table">
             <thead className="rounded-lg text-left text-sm font-normal uppercase">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
@@ -205,15 +201,12 @@ export function UsersTableSkeleton() {
                 <th scope="col" className="px-3 py-5 font-medium">
                   Active
                 </th>
-                <th
-                  scope="col"
-                  className="relative pb-4 pl-3 pr-6 pt-2"
-                >
+                <th scope="col" className="relative pb-4 pl-3 pr-6 pt-2">
                   <span className="sr-only">Edit</span>
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white">
+            <tbody className={`${cardsBg} `}>
               <TableRowSkeleton />
               <TableRowSkeleton />
               <TableRowSkeleton />

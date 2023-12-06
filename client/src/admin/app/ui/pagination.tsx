@@ -4,8 +4,10 @@ import { ArrowLeftIcon, ArrowRightIcon, InformationCircleIcon } from '@heroicons
 import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/app/lib/utils';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { Select, SelectItem, Icon } from '@tremor/react';
+import { useEffect, useMemo, useState } from 'react';
+import { inputClass } from './inputs';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
   const pathname = usePathname();
@@ -153,23 +155,42 @@ export function PageSizeSelect({
   createHref: (size: string | number) => string;
   currentPageSize: number;
 }) {
+  const router = useRouter();
+  const [pageSize, setPageSize] = useState(currentPageSize.toString());
+
+  const handleChange = (event: string) => {
+    setPageSize(event);
+    router.push(createHref(event));
+  };
+
+  const selectOptions = useMemo(() => {
+    return [5, 10, 20, 30, 40, 50].map((size) => (
+      <SelectItem
+        className={`cursor-pointer rounded dark:shadow-two text-base outline-none transition-all duration-300 bg-white/80 hover:bg-white dark:bg-[#2C303B]  dark:hover:bg-[#2C303B]/50 focus:outline-none  border-gray-600  dark:border-gray-600 `}
+        key={size}
+        value={`${size}`}
+      >
+        {size}
+      </SelectItem>
+    ));
+  }, []); // Memoize the select options to prevent unnecessary renders
+
   return (
-    <div className="space-x-0.5 flex ">
+    <div className="space-x-0.5 flex">
       <Select
-        className="w-2/8"
+        className={`w-2/8 dark:shadow-two text-base transition-all duration-300 bg-white/80 hover:bg-white dark:bg-[#2C303B]  dark:hover:bg-[#2C303B]/50`}
         defaultValue={`${currentPageSize}`}
         value={`${currentPageSize}`}
+        onValueChange={handleChange}
       >
-        {[5, 10, 20, 30, 40, 50].map((size) => (
-          <Link key={size} href={createHref(size)}>
-            <SelectItem  value={`${size}`}>{size}</SelectItem>
-          </Link>
-        ))}
+        {selectOptions}
       </Select>
+
       <Icon
         icon={InformationCircleIcon}
         variant="simple"
         tooltip="Select Page Size"
+        className='bg-transparent'
       />
     </div>
   );

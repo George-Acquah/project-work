@@ -1,6 +1,10 @@
-import { fetchFilteredParkingCenters, fetchFilteredUsers } from "@/app/lib/requests"
+import {
+  fetchFilteredParkingCenters,
+  fetchFilteredSlots,
+  fetchFilteredUsers,
+} from "@/app/lib/requests";
 import TableComponent from "../table";
-import { UserType, tableColumns, } from "@/app/lib/constants";
+import { UserType, tableColumns } from "@/app/lib/constants";
 
 const UsersTable = async ({
   query,
@@ -8,12 +12,12 @@ const UsersTable = async ({
   pageSize,
   type = UserType.ALL,
 }: _ISpecificTableProps) => {
-  const users = await fetchFilteredUsers(
+  const users = (await fetchFilteredUsers(
     query,
     currentPage,
     pageSize,
     type
-  ) as _IFormattedUser[];
+  )) as _IFormattedUser[];
 
   return (
     <TableComponent
@@ -35,7 +39,7 @@ export const CentersTable = async ({
   const centers = (await fetchFilteredParkingCenters(
     query,
     currentPage,
-    pageSize,
+    pageSize
   )) as _IFormattedCenter[];
 
   return (
@@ -45,6 +49,28 @@ export const CentersTable = async ({
       currentPage={currentPage}
       data={centers}
       entityType="centers"
+    />
+  );
+};
+
+export const SlotsTable = async ({
+  query,
+  currentPage,
+  pageSize,
+}: _ISpecificTableProps) => {
+  const centers = (await fetchFilteredSlots(
+    query,
+    currentPage,
+    pageSize
+  )) as _IFormattedSlot[];
+
+  return (
+    <TableComponent
+      columnData={tableColumns.slotsTableColumn}
+      query={query}
+      currentPage={currentPage}
+      data={centers}
+      entityType="slots"
     />
   );
 };

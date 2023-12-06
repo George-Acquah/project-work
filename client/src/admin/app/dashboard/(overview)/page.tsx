@@ -23,6 +23,7 @@ export default async function Page() {
       <TabGroup className="mt-6">
         <TabList>
           <Tab>Overview</Tab>
+          <Tab>Slots</Tab>
           <Tab>Details</Tab>
         </TabList>
         <TabPanels>
@@ -60,10 +61,50 @@ export default async function Page() {
             <div className="mt-6">
               <ChartView
                 revenue={[]}
-                applicants={[]}
-                applications={[]}
+                vehicles={[]}
+                centers={[]}
+                slots={[]}
               />
             </div>
+          </TabPanel>
+          <TabPanel>
+            <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
+              <KpiCard
+                title={"Total Slots"}
+                total={"1000"}
+                trend={20}
+                target={"$ 10,500"}
+                percentage={80}
+              />
+              <KpiCard
+                title={"Total Slots Available"}
+                total={"10"}
+                trend={-20}
+                target={"$ 10,500"}
+                percentage={8}
+              />
+              <KpiCard
+                title={"Daily Slots Reserved"}
+                total={"0"}
+                trend={0}
+                target={"$ 10,500"}
+                percentage={20}
+              />
+              <KpiCard
+                title={"Weekly Slots Reserved"}
+                total={"0"}
+                trend={0}
+                target={"$ 10,500"}
+                percentage={20}
+              />
+              <KpiCard
+                title={"Monthly Slots Reserved"}
+                total={"0"}
+                trend={0}
+                target={"$ 10,500"}
+                percentage={20}
+              />
+            </Grid>
           </TabPanel>
           <TabPanel>
             <div className="mt-6">

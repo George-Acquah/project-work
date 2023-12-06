@@ -14,35 +14,38 @@ const config: Config = {
     extend: {
       colors: {
         // // light mode
-        // tremor: {
-        //   // brand: {
-        //   //   faint: "#eff6ff", // blue-50
-        //   //   muted: "#bfdbfe", // blue-200
-        //   //   subtle: "#60a5fa", // blue-400
-        //   //   DEFAULT: "#3b82f6", // blue-500
-        //   //   emphasis: "#1d4ed8", // blue-700
-        //   //   inverted: "#ffffff", // white
-        //   // },
-        //   // background: {
-        //   //   muted: "#f9fafb", // gray-50
-        //   //   subtle: "#f3f4f6", // gray-100
-        //   //   DEFAULT: "#ffffff", // white
-        //   //   emphasis: "#374151", // gray-700
-        //   // },
-        //   // border: {
-        //   //   DEFAULT: "#ff0000", // gray-200
-        //   // },
-        //   // ring: {
-        //   //   DEFAULT: "#e5e7eb", // gray-200
-        //   // },
-        //   // content: {
-        //   //   subtle: "#9ca3af", // gray-400
-        //   //   DEFAULT: "#6b7280", // gray-500
-        //   //   emphasis: "#374151", // gray-700
-        //   //   strong: "#111827", // gray-900
-        //   //   inverted: "#ffffff", // white
-        //   // },
-        // },
+        tremor: {
+          brand: {
+            faint: "#eff6ff", // blue-50
+            muted: "var(--brand-primary)", // blue-200
+            subtle: "var(--brand-secondary)", // blue-400
+            DEFAULT: "#3b82f6", // blue-500
+            emphasis: "#1d4ed8", // blue-700
+            inverted: "#ffffff", // white
+          },
+          background: {
+            muted: "var(--bg-muted)", // gray-50
+            // subtle: "#f3f4f6", // gray-100
+            // DEFAULT: "#ffffff", // white
+            emphasis: "#374151", // gray-700
+          },
+          border: {
+            DEFAULT: "var(--border-primary)", // gray-200
+          },
+          ring: {
+            DEFAULT: "var(--border-primary)", // gray-200
+          },
+          // outline: {
+          //   DEFAULT: "var(--border-primary)",
+          // },
+          // content: {
+          //   subtle: "#9ca3af", // gray-400
+          //   DEFAULT: "#6b7280", // gray-500
+          //   emphasis: "#374151", // gray-700
+          //   strong: "#111827", // gray-900
+          //   inverted: "#ffffff", // white
+          // },
+        },
         custom: {
           background: {
             "primary-dark": "#2C3E50",
@@ -87,20 +90,6 @@ const config: Config = {
         },
       },
       boxShadow: {
-        // light mode
-        "tremor-input-light": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-        "tremor-card-light":
-          "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
-        "tremor-dropdown-light":
-          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
-
-        // dark mode
-        "tremor-input-dark": "0 1px 2px 0 rgba(255, 255, 255, 0.05)",
-        "tremor-card-dark":
-          "0 1px 3px 0 rgba(255, 255, 255, 0.1), 0 1px 2px -1px rgba(255, 255, 255, 0.1)",
-        "tremor-dropdown-dark":
-          "0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -2px rgba(255, 255, 255, 0.1)",
-
         signUp: "0px 5px 10px rgba(4, 10, 34, 0.2)",
         one: "0px 2px 3px rgba(7, 7, 77, 0.05)",
         two: "0px 5px 10px rgba(6, 8, 15, 0.1)",
@@ -118,13 +107,11 @@ const config: Config = {
         three: "0px 5px 15px rgba(6, 8, 15, 0.05)",
       },
       borderRadius: {
-        "tremor-small": "0.375rem",
-        "tremor-default": "0.5rem",
         "tremor-full": "9999px",
       },
       fontSize: {
-        "tremor-label": "0.75rem",
-        "tremor-default": ["0.875rem", { lineHeight: "1.25rem" }],
+        // "tremor-label": "0.75rem",
+        // "tremor-default": ["0.875rem", { lineHeight: "1.25rem" }],
         "tremor-title": ["1.125rem", { lineHeight: "1.75rem" }],
         "tremor-metric": ["1.875rem", { lineHeight: "2.25rem" }],
       },
