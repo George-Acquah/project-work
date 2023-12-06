@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { dashboardRoutes } from "@/app/lib/routes";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import EditApplicantForm from "@/app/ui/users/applicants/edit-form";
-import { fetchApplicantById, fetchRoles } from "@/app/lib/requests";
+// import EditApplicantForm from "@/app/ui/users/applicants/edit-form";
+import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
 
 export const metadata: Metadata = {
   title: "Edit Applicant",
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 export default async function Page({ params }: _IdParams) {
   const id = params.id;
   const [applicant, roles] = await Promise.all([
-    fetchApplicantById(id),
-    fetchRoles(),
+    fetchUserById(id),
+    fetchUserTypes(),
   ]);
 
   console.log(applicant);
@@ -28,17 +28,17 @@ export default async function Page({ params }: _IdParams) {
       <Breadcrumbs
         breadcrumbs={[
           {
-            label: "Applicants",
-            href: `${dashboardRoutes.USERS.APPLICANTS.BASE}`,
+            label: "Parking Centers",
+            href: `${dashboardRoutes.PARKING_LOTS.BASE}`,
           },
           {
-            label: "Update Applicant",
-            href: `${dashboardRoutes.USERS.APPLICANTS.BASE}/${id}/update`,
+            label: "Update Parking Centers",
+            href: `${dashboardRoutes.PARKING_LOTS.BASE}/${id}/update`,
             active: true,
           },
         ]}
       />
-      <EditApplicantForm applicant={applicant} roles={roles} />
+      {/* <EditApplicantForm applicant={applicant} roles={roles} /> */}
     </main>
   );
 }

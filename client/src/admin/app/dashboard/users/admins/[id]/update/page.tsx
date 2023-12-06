@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { dashboardRoutes } from "@/app/lib/routes";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import EditApplicantForm from "@/app/ui/users/applicants/edit-form";
+import EditApplicantForm from "@/app/ui/users/users/edit-form";
 import { fetchApplicantById, fetchRoles } from "@/app/lib/requests";
 
 export const metadata: Metadata = {
