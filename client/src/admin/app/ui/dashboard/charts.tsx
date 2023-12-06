@@ -15,6 +15,7 @@ import {
 
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { cardOutline, cardsBg } from "../themes";
+import { chartData } from "@/app/lib/constants";
 
 interface IObject {
   date: string;
@@ -23,8 +24,9 @@ interface IObject {
 
 interface IProps {
   revenue: IObject[];
-  applications: IObject[];
-  applicants: IObject[];
+  centers: IObject[];
+  vehicles: IObject[];
+  slots: IObject[];
 }
 
 // Basic formatters for the chart values
@@ -40,7 +42,12 @@ const formatDate = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
-export function ChartView({ revenue, applications, applicants }: IProps) {
+export function ChartView({
+  revenue,
+  centers,
+  slots,
+  vehicles,
+}: IProps) {
   const [selectedKpi, setSelectedKpi] = useState(0);
 
   // map formatters by selectedKpi
@@ -48,15 +55,20 @@ export function ChartView({ revenue, applications, applicants }: IProps) {
     revenue: dollarFormatter,
     orders: numberFormatter,
     customers: numberFormatter,
+    vehicles: numberFormatter,
   };
 
   let data = revenue;
   if (selectedKpi === 1) {
-    data = applications;
+    data = centers;
   }
 
   if (selectedKpi === 2) {
-    data = applicants;
+    data = slots;
+  }
+
+  if (selectedKpi === 3) {
+    data = vehicles;
   }
 
   const transformedData = data.map((dataObj) => {
@@ -67,7 +79,7 @@ export function ChartView({ revenue, applications, applicants }: IProps) {
   });
 
   return (
-    <Card className={`${cardsBg} ${cardOutline}`}>
+    <Card className={`${cardsBg} ${cardOutline} rounded-md`}>
       <div className="md:flex justify-between">
         <div>
           <Flex
@@ -90,15 +102,14 @@ export function ChartView({ revenue, applications, applicants }: IProps) {
             onIndexChange={(idx) => setSelectedKpi(idx)}
           >
             <TabList>
-              <Tab className="hover:border-gray-400 dark:hover:border-blue-400">
-                Revenue
-              </Tab>
-              <Tab className="hover:border-gray-400 dark:hover:border-blue-400">
-                Applications
-              </Tab>
-              <Tab className="hover:border-gray-400 dark:hover:border-blue-400">
-                Applicants
-              </Tab>
+              {chartData.CHART_COLUMN.map((item) => (
+                <Tab
+                  key={item}
+                  className="hover:border-gray-400 dark:hover:border-blue-400"
+                >
+                  {item}
+                </Tab>
+              ))}
             </TabList>
           </TabGroup>
         </div>

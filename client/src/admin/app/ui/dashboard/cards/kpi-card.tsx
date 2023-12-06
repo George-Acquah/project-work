@@ -31,13 +31,16 @@ export const KpiCard = ({
   percentage: number;
 }) => {
   return (
-    <Card className={`max-w-lg ${cardsBg} ${cardOutline}`}>
+    <Card className={`max-w-lg ${cardsBg} rounded-lg ${cardOutline}`}>
       <Flex alignItems="start">
         <div>
           <Text>{title}</Text>
           <Metric>{total}</Metric>
         </div>
-        <BadgeDelta deltaType={getDeltaType(trend)}>{`${trend}%`}</BadgeDelta>
+        <BadgeDelta
+          className="rounded-full"
+          deltaType={getDeltaType(trend)}
+        >{`${trend}%`}</BadgeDelta>
       </Flex>
       <Flex className="mt-4">
         <Text className="truncate">{`${percentage}% (${total})`}</Text>
