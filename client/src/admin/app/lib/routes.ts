@@ -13,8 +13,8 @@ const dashboardRoutes = {
     CUSTOMERS: {
       BASE: "/dashboard/users/customers",
       ADD: "/dashboard/users/customers/add",
-      EDIT: "/dashboard/users/customers/edit/:id",
-      VIEW: "/dashboard/users/customers/view/:id",
+      EDIT: "/dashboard/users/customers/edit/",
+      VIEW: "/dashboard/users/customers/view/",
     },
     OWNERS: {
       BASE: "/dashboard/users/owners",
@@ -37,18 +37,18 @@ const dashboardRoutes = {
   PARKING_LOTS: {
     BASE: "/dashboard/parking-lots",
     ADD: "/dashboard/parking-lots/add",
-    EDIT: "/dashboard/parking-lots/edit/:id",
-    VIEW: "/dashboard/parking-lots/view/:id",
+    EDIT: "/dashboard/parking-lots/edit/",
+    VIEW: "/dashboard/parking-lots/view/",
   },
   SLOTS: {
     BASE: "/dashboard/slots",
     ADD: "/dashboard/slots/add",
-    EDIT: "/dashboard/slots/edit/:id",
-    VIEW: "/dashboard/slots/view/:id",
+    EDIT: "/dashboard/slots/edit/",
+    VIEW: "/dashboard/slots/view/",
   },
   BOOKINGS: {
     BASE: "/dashboard/bookings",
-    VIEW: "/dashboard/bookings/view/:id",
+    VIEW: "/dashboard/bookings/view/",
   },
   REPORTS: {
     BASE: "/dashboard/reports",
@@ -75,6 +75,10 @@ const dashboardRoutes = {
     BASE: "/dashboard/support",
     COMMUNICATION: "/dashboard/support/communication",
     TICKETS: "/dashboard/support/tickets",
+  },
+  ADMIN: {
+    BASE: "/dashboard/admin",
+    UPDATE: "/dashboard/admin/update",
   },
 };
 
