@@ -56,7 +56,7 @@ export default function SearchApplicants({
       />
       {isPending && (
         <div className="absolute right-0 top-0 bottom-0 flex items-center justify-center">
-          <SvgSpinner />
+          <SvgSpinner className="dark:text-gray-400" />
         </div>
       )}
     </div>
