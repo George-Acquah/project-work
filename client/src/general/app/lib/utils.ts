@@ -77,6 +77,10 @@ function setDarkThemeCookie() {
   setCookie(clientCookiesKeys.THEME, clientCookiesValues.GLOBAL_DARK_THEME);
 }
 
+function setCustomThemeCookie(val: string, opt?: any) {
+  setCookie(clientCookiesKeys.THEME, val, opt);
+}
+
 function deleteThemeCookie() {
   deleteCookie(clientCookiesKeys.THEME);
 }
