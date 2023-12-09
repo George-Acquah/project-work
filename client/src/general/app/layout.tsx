@@ -3,8 +3,10 @@ import "@/app/ui/globals.css";
 import { inter } from "@/app/ui/shared/font";
 import { bodyBg } from "./ui/shared/themes";
 import ToggleTheme from "@/app/ui/shared/toggle-theme";
+import { Providers } from "./providers";
+import { themeKey } from "@/utils/contexts/contexts";
 import { cookies } from "next/headers";
-import { clientCookiesKeys } from "./lib/constants";
+import Header from "./ui/nav/header";
 
 export const metadata: Metadata = {
   title: {
@@ -15,16 +17,18 @@ export const metadata: Metadata = {
   // metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
 };
 
-export default async function RootLayout({ children }: any) {
+export default async function RootLayout({ children }: _IChildren) {
   const cookieStore = cookies();
-  const themeCookie = cookieStore.get(clientCookiesKeys.THEME);
+  const themeCookie = cookieStore.get(themeKey);
   const theme = themeCookie?.value;
-
   return (
-    <html lang="en" className={theme}>
+    <html suppressHydrationWarning lang="en">
       <body className={`${inter.className} antialiased ${bodyBg}`}>
-        {children}
-        <ToggleTheme />
+        <Providers theme={theme!}>
+          <Header />
+          {children}
+          <ToggleTheme />
+        </Providers>
       </body>
     </html>
   );

@@ -1,21 +1,6 @@
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  TvIcon,
-  UserPlusIcon,
-  UsersIcon,
-  BoltSlashIcon,
-  DocumentIcon,
-  UserCircleIcon,
-  AtSymbolIcon,
-  CalendarDaysIcon,
-  KeyIcon,
-  MapPinIcon,
-  GlobeAltIcon,
-  PhoneIcon,
-
-  IdentificationIcon,
-} from "@heroicons/react/24/outline";
+import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/solid";
+import { SvgHome, SvgRefresh, SvgCheck, SvgExternalLink, SvgArrowElbow, SvgGitHub } from "../ui/shared/icons";
+import { UserIcon } from "@heroicons/react/24/outline";
 // import { dashboardRoutes } from "./routes";
 
 export const ErrorMessages = {
@@ -51,10 +36,9 @@ const clientCookiesKeys = {
 
 const clientCookiesValues = {
   BANNER_HIDDEN: "true",
-  GLOBAL_LIGHT_THEME: "light",
-  GLOBAL_DARK_THEME: "dark",
-};
-
+  GLOBAL_LIGHT_THEME: "light" as _IThemeType,
+  GLOBAL_DARK_THEME: "dark" as _IThemeType,
+}
 // const usersLinks: _INavLinks[] = [
 //   {
 //     href: dashboardRoutes.USERS.BASE,
@@ -272,6 +256,51 @@ const tableColumns = {
     "STATUS",
   ],
 };
+const navigations = {
+  navigationItems: [
+    {
+      path: "/",
+      name: "Home",
+      icon: SvgHome,
+    },
+    {
+      path: "/",
+      name: "Latest",
+      icon: SvgHome,
+    },
+    {
+      path: "/about",
+      name: "About Us",
+      // data: aboutData,
+      icon: SvgRefresh,
+    },
+    {
+      path: "/contact",
+      name: "Investor Center",
+      icon: SvgGitHub,
+    },
+    // {
+    //   path: "/academics",
+    //   name: "Academics",
+    //   // data: academicsData,
+    //   icon: SvgCheck,
+    // },
+    // {
+    //   path: "/admissions",
+    //   name: "Admissions",
+    //   // data: admissionsData,
+    //   icon: SvgExternalLink,
+    // },
+    // {
+    //   path: "/programs",
+    //   name: "Programs",
+    //   // data: programsData,
+    //   icon: SvgArrowElbow,
+    // },
+  ] as _ISidebarMenu[],
+};
+
+
 
 // const navDropdownLinks: _INavLinks[] = [
 //   {
@@ -310,27 +339,58 @@ const tableColumns = {
 //   },
 // ];
 
-// const loginDetails: _ILoginInputComp[] = [
-//   {
-//     id: "email",
-//     placeholder: "Enter Email",
-//     label: "Email",
-//     icon: AtSymbolIcon,
-//     type: "email",
-//     required: true,
-//     mt: false,
-//   },
-//   {
-//     id: "password",
-//     placeholder: "Enter password",
-//     label: "Password",
-//     icon: KeyIcon,
-//     type: "password",
-//     required: true,
-//     mt: true,
-//     minLenght: 4,
-//   },
-// ];
+const loginDetails: _ILoginInputComp[] = [
+  {
+    id: "email",
+    placeholder: "Enter Email",
+    label: "Email",
+    icon: AtSymbolIcon,
+    type: "email",
+    required: true,
+    mt: false,
+  },
+  {
+    id: "password",
+    placeholder: "Enter password",
+    label: "Password",
+    icon: KeyIcon,
+    type: "password",
+    required: true,
+    mt: true,
+    minLenght: 4,
+  },
+];
+
+const registerDetails: _ILoginInputComp[] = [
+  {
+    id: "fullname",
+    placeholder: "Enter Full Name",
+    label: "Full Name",
+    icon: UserIcon,
+    type: "text",
+    required: true,
+    mt: false,
+  },
+  {
+    id: "email",
+    placeholder: "Enter Email",
+    label: "Email",
+    icon: AtSymbolIcon,
+    type: "email",
+    required: true,
+    mt: false,
+  },
+  {
+    id: "password",
+    placeholder: "Enter password",
+    label: "Password",
+    icon: KeyIcon,
+    type: "password",
+    required: true,
+    mt: true,
+    minLenght: 4,
+  },
+];
 
 // const editAdminProfileDetails: _ICommonInputComp[] = [
 //   {
@@ -448,19 +508,21 @@ const chartData = {
 export {
   clientCookiesKeys,
   clientCookiesValues,
+  loginDetails,
+  credentials,
+  UserType,
+  tableColumns,
+  chartData,
+  navigations,
+  registerDetails,
   // navDropdownLinks,
   // editAdminDetails,
   // editAdminProfileDetails,
   // editAdminContactDetails,
   // editAdminOtherDetails,
-  // loginDetails,
-  credentials,
-  UserType,
   // reservationLinks,
   // usersLinks,
   // paymentLinks,
   // parkingLinks,
   // vehiclesLinks,
-  tableColumns,
-  chartData,
 };

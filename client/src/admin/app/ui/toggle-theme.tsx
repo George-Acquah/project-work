@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import React, { memo } from "react";
 import { clientCookiesKeys } from "../lib/constants";
-import { DarkIcon, LightIcon, SetLightTheme } from "./theme-icons";
+import { DarkIcon, LightIcon } from "./theme-icons";
 import { bgColor } from "./themes";
 
 export const ToggleTheme = memo(() => {
