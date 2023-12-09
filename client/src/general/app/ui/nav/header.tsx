@@ -122,7 +122,7 @@ const Header = () => {
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
               <Link
-                href="/"
+                href="/auth/login"
                 className={`ease-in-out shadow-btn hover:shadow-btn-hover hidden rounded bg-greenText px-6 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-8 lg:px-6 xl:px-8`}
                 onClick={closeNavbarMenu}
               >
