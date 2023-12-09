@@ -2,9 +2,17 @@ interface _IChildren {
   children: React.ReactNode;
 }
 
-
-
 // CCCCCCCC
+interface _ICenterData {
+  _id: string;
+  total_daily_bookings: number;
+  total_weekly_bookings: number;
+  total_bookings: number;
+  total_monthly_bookings: number;
+  total_yearly_bookings: number;
+  total_slots: number;
+  center_id: string;
+}
 interface _IThemeContext {
   themes: string[];
   toggleTheme?: () => void;
@@ -64,7 +72,61 @@ interface _INavbarContext {
 }
 // END CCCCCCCCCCC
 
+//FFFFFFFFFFFFFFFFFFFF
+interface _IFetcher {
+  url: string;
+  token?: string;
+  method?: RequestMethod;
+  cache?: RequestCache;
+}
 
+// END FFFFFFFFFFFF
+
+//IIIIIIIIIII
+interface _Inputs {
+  id: string;
+  placeholder: string;
+  label: string;
+  icon: IconType;
+  type: string;
+}
+interface _ICommonInputComp extends _Inputs {
+  value: string;
+  tooltip?: boolean;
+  disabled?: boolean;
+  errors?: any;
+}
+
+interface _Image {
+  _id: string;
+  file_id: string;
+  filename: string;
+  mimetype: string;
+}
+
+interface _ILoginInputComp extends _Inputs {
+  required: boolean;
+  mt: boolean;
+  minLenght?: number;
+  errors?: any;
+}
+// END IIIIIIIIII
+
+// LLLLLLLL
+interface _ILogin {
+  dispatch: (payload: FormData) => void;
+  title: string;
+  description: string;
+  hrText: string;
+  data: _ILoginInputComp[];
+  children: React.ReactNode;
+  usageText: string;
+  href: string;
+  btnName: string;
+  route: string;
+  state: any;
+}
+// END LLLLLLLLLL
 
 //NNNNNNNNNNNN
 interface _ISidebarMenu {
@@ -82,7 +144,133 @@ interface _ISubSidebarMenu {
 }
 // END NNNNNNNNNNNNN
 
+// PPP
+interface _IParkingCenter {
+  _id: string;
+  center_name: string;
+  description: string;
+  type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
+  center_data: _ICenterData;
+  createdAt: Date;
+  updatedAt: Date;
+  contact: string;
+  location: string;
+  isAvailable: boolean;
+  isVerified: boolean;
+  center_images: Array<_IParkingCenterImage>;
+  slots: Array<_ISlot>;
+  owner: string;
+}
 
+interface _IPayment {
+  _id: string;
+  // Add other properties relevant to payments
+}
+interface _IProfile {
+  id: string;
+  first_name: string | null;
+  last_name: string | null;
+  contact_no: string | null;
+  area: string | null;
+  city: string | null;
+  state: string | null;
+  pinCode: string | null;
+}
 
+// END PPPPPPPPP
+
+// RRRRRRRRRR
+interface _IPostApiResponse {
+  statusCode: number;
+  message: string;
+}
+
+interface _IApiResponse<T> extends _IPostApiResponse {
+  data: T;
+}
+
+// END RRRRRRRRRRRRRR
+
+// SSSSSSSSSSSSSSSSSS
+interface _ISlot {
+  _id: string;
+  slot_name: string;
+  description: string;
+  type: SlotTypes; // to be changed to enum depending on slot space;
+  slot_images: Array<_ISlotImage>;
+  isAvailable: boolean;
+  slot_data: _ISlotData;
+  createdAt: Date;
+  updatedAt: Date;
+  contact: string;
+  location: string;
+  isVerified: boolean;
+  center_id: string;
+}
+
+interface _ISlotData {
+  _id: string;
+  total_daily_bookings: number;
+  total_weekly_bookings: number;
+  total_bookings: number;
+  total_monthly_bookings: number;
+  total_yearly_bookings: number;
+  slot_id: string;
+}
+
+// END SSSSSSSSSSSSSSSSS
+
+// TTTTTTTTTTTTT
+interface _ITokens {
+  access_token: string;
+  u_id: string;
+  refresh_token: string;
+  expiresIn: number;
+}
+
+// END TTTTTTTTTTTTTTTTT
+
+// UUUUUUUUU
+interface _IUser {
+  _id: string;
+  email: string;
+  userType: _TUserType;
+  image: any;
+  createdAt: Date;
+  updatedAt: Date;
+  isVerified: boolean;
+  profile: _IProfile;
+  vehicles: _IVehicle[];
+  centers: _IParkingCenter[];
+}
+
+// END UUUUUUUUUUU
+
+//VVVVVV
+
+interface _IVehicle {
+  _id: string;
+  vehicle_no: string;
+  isVerified: boolean;
+  hasSlot: boolean;
+  images: Array<_TVehicleImage>;
+  driver: string;
+}
+interface _IValidationState<T=any> {
+  errors?: T;
+  message?: string | null;
+};
+
+// END VVVVVVVVVVVVVV
+
+interface _ISlotImage extends _Image {
+  slot_id: string;
+}
+
+interface _IParkingCenterImage extends _Image {
+  center_id: string;
+}
+type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+type _TVehicleImage = _Image;
 type _IThemeType = "light" | "dark";
 type ValueObject = Record<string, string>;
