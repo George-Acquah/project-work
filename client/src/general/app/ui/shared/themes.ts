@@ -29,7 +29,7 @@ const secHover =
 const cardHover = "hover:bg-primary/10 dark:hover:bg-primary/80";
 
 const providerBtnClass =
-  "border-stroke dark:text-body-color-dark dark:shadow-two mb-6 flex w-full items-center justify-center rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-transparent dark:bg-[#2C303B] dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary dark:hover:shadow-none";
+  "border-stroke dark:text-body-color-dark dark:shadow-two mb-6 flex w-full items-center justify-center rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 hover:bg-green-50/70 hover:text-green-600 dark:border-transparent dark:bg-[#2C303B] dark:hover:bg-green-400/5 dark:hover:bg-opacity-70 dark:hover:text-green-500 dark:hover:shadow-none";
 
 const gradientDark = "via-body-color/80 dark:via-body-color/50";
 
@@ -39,6 +39,12 @@ const navbar = {
     "relative my-1.5 block h-0.5 w-[30px] bg-black transition-all duration-300 dark:bg-white",
   NAV_DEF:
     "navbar absolute right-0 z-30 w-[250px] rounded border-[.5px] border-body-color/50 bg-white px-6 py-4 duration-300 dark:border-body-color/20 dark:bg-dark lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100",
+};
+
+const globalBorder = {
+  hoverBorder: "hover:border-green-900 dark:hover:border-green-900",
+  focusBorder: "focus:border-green-900 dark:focus:border-green-900",
+  border: "border-green-900  dark:border-green-900",
 };
 
 export {
@@ -59,4 +65,5 @@ export {
   gradientDark,
   cardHover,
   navbar,
+  globalBorder,
 };
