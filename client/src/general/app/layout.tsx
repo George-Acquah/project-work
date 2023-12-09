@@ -6,6 +6,7 @@ import ToggleTheme from "@/app/ui/shared/toggle-theme";
 import { Providers } from "./providers";
 import { themeKey } from "@/utils/contexts/contexts";
 import { cookies } from "next/headers";
+import Header from "./ui/nav/header";
 
 export const metadata: Metadata = {
   title: {
@@ -24,6 +25,7 @@ export default async function RootLayout({ children }: _IChildren) {
     <html suppressHydrationWarning lang="en">
       <body className={`${inter.className} antialiased ${bodyBg}`}>
         <Providers theme={theme!}>
+          <Header />
           {children}
           <ToggleTheme />
         </Providers>

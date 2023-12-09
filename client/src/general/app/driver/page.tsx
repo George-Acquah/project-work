@@ -2,7 +2,7 @@ import React from 'react'
 
 const DriverPage = () => {
   return (
-    <div>Driver Page</div>
+    <div >Driver Page</div>
   )
 }
 
