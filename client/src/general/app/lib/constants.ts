@@ -1,4 +1,6 @@
+import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/solid";
 import { SvgHome, SvgRefresh, SvgCheck, SvgExternalLink, SvgArrowElbow, SvgGitHub } from "../ui/shared/icons";
+import { UserIcon } from "@heroicons/react/24/outline";
 // import { dashboardRoutes } from "./routes";
 
 export const ErrorMessages = {
@@ -337,27 +339,58 @@ const navigations = {
 //   },
 // ];
 
-// const loginDetails: _ILoginInputComp[] = [
-//   {
-//     id: "email",
-//     placeholder: "Enter Email",
-//     label: "Email",
-//     icon: AtSymbolIcon,
-//     type: "email",
-//     required: true,
-//     mt: false,
-//   },
-//   {
-//     id: "password",
-//     placeholder: "Enter password",
-//     label: "Password",
-//     icon: KeyIcon,
-//     type: "password",
-//     required: true,
-//     mt: true,
-//     minLenght: 4,
-//   },
-// ];
+const loginDetails: _ILoginInputComp[] = [
+  {
+    id: "email",
+    placeholder: "Enter Email",
+    label: "Email",
+    icon: AtSymbolIcon,
+    type: "email",
+    required: true,
+    mt: false,
+  },
+  {
+    id: "password",
+    placeholder: "Enter password",
+    label: "Password",
+    icon: KeyIcon,
+    type: "password",
+    required: true,
+    mt: true,
+    minLenght: 4,
+  },
+];
+
+const registerDetails: _ILoginInputComp[] = [
+  {
+    id: "fullname",
+    placeholder: "Enter Full Name",
+    label: "Full Name",
+    icon: UserIcon,
+    type: "text",
+    required: true,
+    mt: false,
+  },
+  {
+    id: "email",
+    placeholder: "Enter Email",
+    label: "Email",
+    icon: AtSymbolIcon,
+    type: "email",
+    required: true,
+    mt: false,
+  },
+  {
+    id: "password",
+    placeholder: "Enter password",
+    label: "Password",
+    icon: KeyIcon,
+    type: "password",
+    required: true,
+    mt: true,
+    minLenght: 4,
+  },
+];
 
 // const editAdminProfileDetails: _ICommonInputComp[] = [
 //   {
@@ -475,20 +508,21 @@ const chartData = {
 export {
   clientCookiesKeys,
   clientCookiesValues,
+  loginDetails,
+  credentials,
+  UserType,
+  tableColumns,
+  chartData,
+  navigations,
+  registerDetails,
   // navDropdownLinks,
   // editAdminDetails,
   // editAdminProfileDetails,
   // editAdminContactDetails,
   // editAdminOtherDetails,
-  // loginDetails,
-  credentials,
-  UserType,
   // reservationLinks,
   // usersLinks,
   // paymentLinks,
   // parkingLinks,
   // vehiclesLinks,
-  tableColumns,
-  chartData,
-  navigations,
 };
