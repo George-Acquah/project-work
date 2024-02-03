@@ -22,5 +22,3 @@ const DarkIcon = () => {
     />
   );
 };
-
-export { LightIcon, DarkIcon };
