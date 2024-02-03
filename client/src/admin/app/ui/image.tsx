@@ -1,8 +1,6 @@
 'use client'
-import React, { useMemo } from "react";
+import React from "react";
 import {
-  PhotoIcon,
-  PlusSmallIcon,
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
