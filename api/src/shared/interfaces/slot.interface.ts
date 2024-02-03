@@ -5,7 +5,7 @@ import {
   _IParkingCenterImage,
   _ISlotImage,
 } from './images.interface';
-import { _IDbVehicle, _IVehicle } from './vehicles.interface';
+import { _IVehicle } from './vehicles.interface';
 import { Document } from 'mongoose';
 
 interface _IDbParkingCenter extends Document {
@@ -87,8 +87,9 @@ interface _ICenterData {
 }
 
 interface _IDbSlotReservation extends Document {
-  slot: _IDbSlot; // can contain details of parking center
-  vehicle: _IDbVehicle; // can contain details of customer
+  slot_id: string; // can contain details of parking center
+  vehicle_id: string; // can contain details of customer
+  isValid: boolean;
   time_of_reservation: Date;
   wait_time: number;
   start_time: Date;
@@ -118,6 +119,11 @@ interface _ISlotReservation {
   end_time: Date; // to be calculated automatically
   duration_of_reservation: number; // in minutes, will probably be formatted to the client
   cost_of_reservation: number;
+}
+
+interface _IReservationRequest {
+  start_time: Date;
+  reservation_duration: number;
 }
 
 interface _IAddParkingCenter {
@@ -154,6 +160,16 @@ interface _IAddSlotData extends _IAddData {
   slot_id: string;
 }
 
+interface _IReserveSlot {
+  slot_id: string;
+  center_id: string;
+  vehicle_id: string;
+  start_time: Date;
+  reservation_duration: number;
+  currentPage: number;
+  size: number;
+}
+
 export {
   _ISlotReservation,
   _IParkingCenter,
@@ -173,4 +189,6 @@ export {
   _IAddSlotData,
   _IReservationData,
   _IDbReservationData,
+  _IReservationRequest,
+  _IReserveSlot,
 };
