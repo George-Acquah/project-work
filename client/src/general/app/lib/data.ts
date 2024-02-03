@@ -33,7 +33,7 @@ function switchErrRes(status: number, message: string) {
     case 500:
       throw new ServerError(message || ErrorMessages.SERVER_ERROR);
     default:
-      throw new Error(`Unhandled error status: ${status}`);
+      throw new Error(`${status}: ${message}`);
   }
 }
 
@@ -64,9 +64,9 @@ export async function fetcher<T>(
 
     return data;
   } catch (err: any) {
-    if (err.message.toLowerCase() === "fetch failed") {
-      throw new NetworkError();
-    }
+    // if (err.message.toLowerCase() === "fetch failed") {
+    //   throw new NetworkError();
+    // }
 
     throw err;
   }
@@ -114,4 +114,12 @@ export const authHeader = async (isUpload?: boolean) => {
   }
 
   return headers;
+};
+
+export function fetchData<T = any> (data: T, timeout: number) {
+  return new Promise<T>((resolve) => {
+    setTimeout(() => {
+      resolve(data);
+    }, timeout);
+  });
 };

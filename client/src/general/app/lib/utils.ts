@@ -25,7 +25,7 @@ const formatTitles = (key: string): string => {
 const convertDateToString = (dateString: string, locale: string = "en-US") => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
-    // Invalid date, return the original string or handle the error accordingly
+    
     return dateString;
   }
 

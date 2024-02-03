@@ -23,6 +23,7 @@ const endpoints = {
     ADD_VEHICLE: "customer/vehicle/add",
   },
   PARKING_CENTER: {
+    BASE: "owner/parking-center",
     ADD_CENTER: "owner/parking-center",
     GET_ALL_PARKING_CENTERS: "owner/parking-center",
     GET_AVAILABLE_PARKING_CENTERS: "owner/parking-center/available",
@@ -38,6 +39,7 @@ const endpoints = {
     GET_CENTER_IMAGES: "owner/parking-center/:center_id/images",
     GET_SLOTS_FOR_CENTER: "owner/parking-center/:center_id/slots",
     GET_SLOT_DETAILS: "owner/parking-center/:center_id/slots/:slot_id",
+    GET_AVAILABLE_SLOTS: "owner/parking-center/:center_id/available-slots",
     GET_SLOT_BOOKINGS:
       "owner/parking-center/:center_id/slots/:slot_id/bookings",
     GET_SLOT_DATA: "owner/parking-center/:center_id/slots/:slot_id/data",
