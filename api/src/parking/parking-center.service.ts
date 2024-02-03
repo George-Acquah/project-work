@@ -39,6 +39,7 @@ import { ParkingCenter } from 'src/shared/schemas/parking-centers.schema';
 import { ParkingReservationData } from 'src/shared/schemas/slot-reservation.schema';
 import {
   determineCenterType,
+  sanitizeCenter,
   sanitizeCenterData,
   sanitizeCenters,
 } from 'src/shared/utils/slots.utils';
@@ -98,7 +99,13 @@ export class ParkingCenterService {
   async findPopulatedCenters() {
     const centers = await this.findAllCenters();
 
-    return await this.populateCentersFields<_IDbParkingCenter[]>(centers, '');
+    const populatedCenters = await Promise.all(
+      centers.map(async (center) => {
+        return await this.populateCentersFields<_IDbParkingCenter>(center, '');
+      }),
+    );
+
+    return populatedCenters;
   }
   async findCentersOfOwner(owner: string) {
     try {
@@ -110,7 +117,13 @@ export class ParkingCenterService {
   async findPopulatedCentersOfOwner(owner: string) {
     const centers = await this.findCentersOfOwner(owner);
 
-    return await this.populateCentersFields<_IDbParkingCenter[]>(centers, '');
+    const populatedCenters = await Promise.all(
+      centers.map(async (center) => {
+        return await this.populateCentersFields<_IDbParkingCenter>(center, '');
+      }),
+    );
+
+    return populatedCenters;
   }
   //END OF FIND METHODS
 
@@ -126,25 +139,19 @@ export class ParkingCenterService {
 
   //METHOD TO POPULATE FIELDS
   async populateCentersFields<T>(
-    centers: _IDbParkingCenter[],
+    center: _IDbParkingCenter,
     fields: string,
     deepFields = '',
-  ): Promise<T | _IDbParkingCenter[]> {
-    const populatedCenters = await Promise.all(
-      centers.map(async (center) => {
-        const populatedCenter = await this.parkingCenterModel.populate(center, {
-          path: fields,
-          strictPopulate: false,
-          populate: {
-            path: deepFields,
-            strictPopulate: false,
-          },
-        });
-        return populatedCenter;
-      }),
-    );
-
-    return populatedCenters;
+  ): Promise<T | _IDbParkingCenter> {
+    const populatedCenter = await this.parkingCenterModel.populate(center, {
+      path: fields,
+      strictPopulate: false,
+      populate: {
+        path: deepFields,
+        strictPopulate: false,
+      },
+    });
+    return populatedCenter;
   }
 
   //GET METHODS
@@ -161,13 +168,16 @@ export class ParkingCenterService {
       currentPage,
       items,
     );
-    const populatedCenters = await this.populateCentersFields<
-      _IDbParkingCenter[]
-    >(
-      parkingCenters,
-      'center_images center_data slots',
-      'slot_images slot_data',
+    const populatedCenters = await Promise.all(
+      parkingCenters.map(async (center) => {
+        return await this.populateCentersFields<_IDbParkingCenter>(
+          center,
+          'center_images center_data slots',
+          'slot_images slot_data',
+        );
+      }),
     );
+
     return sanitizeCenters(populatedCenters);
   }
 
@@ -185,9 +195,17 @@ export class ParkingCenterService {
       currentPage,
       items,
     );
-    const populatedCenters = await this.populateCentersFields<
-      _IDbParkingCenter[]
-    >(centers, 'center_images center_data slots', 'slot_images slot_data');
+
+    const populatedCenters = await Promise.all(
+      centers.map(async (center) => {
+        return await this.populateCentersFields<_IDbParkingCenter>(
+          center,
+          'center_images center_data slots',
+          'slot_images slot_data',
+        );
+      }),
+    );
+
     return sanitizeCenters(populatedCenters);
   }
 
@@ -205,11 +223,17 @@ export class ParkingCenterService {
 
   async getSingleParkingCenter(id: string): Promise<_IParkingCenter> {
     try {
-      const parkingCenter = (await this.parkingCenterModel
-        .findById(new Types.ObjectId(id))
-        .populate('images')
-        .lean()) as _IParkingCenter;
-      return parkingCenter;
+      const parkingCenter = await this.parkingCenterModel.findById(
+        new Types.ObjectId(id),
+      );
+
+      const populatedCenter =
+        await this.populateCentersFields<_IDbParkingCenter>(
+          parkingCenter,
+          'center_images center_data slots',
+          'slot_images slot_data',
+        );
+      return sanitizeCenter(populatedCenter);
     } catch (error) {
       throw new Error(error.message);
     }
