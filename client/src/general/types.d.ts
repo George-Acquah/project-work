@@ -92,6 +92,7 @@ interface _Inputs {
 }
 interface _ICommonInputComp extends _Inputs {
   value: string;
+  required?: boolean;
   tooltip?: boolean;
   disabled?: boolean;
   errors?: any;
@@ -102,6 +103,15 @@ interface _Image {
   file_id: string;
   filename: string;
   mimetype: string;
+}
+
+interface _IAddImageProps {
+  rounded: _TImageBorder;
+  custom_class?: boolean;
+  imageUrl?: string;
+  onChange?: (files: File[]) => void;
+  onChangeSingle?: (file: File | null) => void;
+  single?: boolean;
 }
 
 interface _ILoginInputComp extends _Inputs {
@@ -136,6 +146,14 @@ interface _ISidebarMenu {
   data?: _ISubSidebarMenu[];
 }
 
+interface _IModal {
+  reason: string;
+  text: string;
+  isOpen: boolean;
+  closeModal: () => void;
+  children: React.ReactNode;
+}
+
 interface _ISubSidebarMenu {
   path: string;
   name: string;
@@ -150,7 +168,7 @@ interface _IParkingCenter {
   center_name: string;
   description: string;
   type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
-  center_data: _ICenterData;
+  center_data: _ICenterData|null;
   createdAt: Date;
   updatedAt: Date;
   contact: string;
@@ -165,6 +183,12 @@ interface _IParkingCenter {
 interface _IPayment {
   _id: string;
   // Add other properties relevant to payments
+}
+
+interface _IRSCParams {
+  params: {
+    id: string;
+  };
 }
 interface _IProfile {
   id: string;
@@ -184,9 +208,39 @@ interface _IPostApiResponse {
   statusCode: number;
   message: string;
 }
+interface _IReservationPayload<T = Date> {
+  start_time: T;
+  reservation_duration: number;
+}
+
+interface _IReserveSlot {
+  slot_id: string;
+  center_id: string;
+  start_time: Date;
+  reservation_duration: number;
+  currentPage: number;
+  size: number;
+}
+
+interface _IReservationResponse {
+  reservation_id: string;
+  slot_id: string;
+  vehicle_id: string;
+  start_time: Date;
+  end_time: Date;
+  wait_time: number;
+  duration: number;
+  cost: 0;
+  status: true;
+}
 
 interface _IApiResponse<T> extends _IPostApiResponse {
   data: T;
+}
+
+interface _ISlotPageWithSlots {
+  slots: _ISlot[];
+  totalPages: number
 }
 
 // END RRRRRRRRRRRRRR
@@ -199,7 +253,7 @@ interface _ISlot {
   type: SlotTypes; // to be changed to enum depending on slot space;
   slot_images: Array<_ISlotImage>;
   isAvailable: boolean;
-  slot_data: _ISlotData;
+  slot_data: _ISlotData|null;
   createdAt: Date;
   updatedAt: Date;
   contact: string;
@@ -216,6 +270,15 @@ interface _ISlotData {
   total_monthly_bookings: number;
   total_yearly_bookings: number;
   slot_id: string;
+}
+
+interface _ISlotReservation {
+  reservationId: string;
+  slotId: string;
+  start_time: string;
+  end_time: string;
+  cost_of_reservation: number;
+  free_waiting_time: number;
 }
 
 // END SSSSSSSSSSSSSSSSS
@@ -261,6 +324,13 @@ interface _IValidationState<T=any> {
   message?: string | null;
 };
 
+interface _IRequestReservationState {
+  errors?: any;
+  message?: string | null;
+  slots?: _ISlot[];
+  code?: number;
+};
+
 // END VVVVVVVVVVVVVV
 
 interface _ISlotImage extends _Image {
@@ -271,6 +341,24 @@ interface _IParkingCenterImage extends _Image {
   center_id: string;
 }
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
+type _TImageBorder = "full" | "sm" | "md" | "lg" | "xl" | "2xl";
+type _TImageSize = "full" | "sm" | "md" | "lg" | "xl" | "2xl";
 type _TVehicleImage = _Image;
 type _IThemeType = "light" | "dark";
 type ValueObject = Record<string, string>;
+
+
+
+interface _IBooking {
+  parkingCenterName: string;
+  slotName: string;
+  location: string;
+  dateTime: string;
+  status: string;
+}
+
+interface _IFavoriteParkingCenter {
+  parkingCenterName: string;
+  location: string;
+}
+
