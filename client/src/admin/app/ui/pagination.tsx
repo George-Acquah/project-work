@@ -7,7 +7,6 @@ import { generatePagination } from '@/app/lib/utils';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { Select, SelectItem, Icon } from '@tremor/react';
 import { useEffect, useMemo, useState } from 'react';
-import { inputClass } from './inputs';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
   const pathname = usePathname();
