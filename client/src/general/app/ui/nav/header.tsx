@@ -11,8 +11,9 @@ import {
   SvgClose,
 } from "../shared/icons";
 import MobileMenu, { NavImages } from "./mobile-menu";
+import { signOutHelper } from "@/app/lib/actions";
 
-const Header = () => {
+const Header = ({ loggedIn }: { loggedIn: boolean}) => {
   const {
     navbarOpen,
     toggleNavbar,
@@ -57,8 +58,6 @@ const Header = () => {
                 onClick={() => toggleNavbar(navbarOpen)}
               />
             </div>
-            {/* {state.user && <div>Welcome, {state.user.username}</div> } */}
-
             <div className="hidden lg:flex lg:gap-x-12">
               {navigationItems.map((item, index) => (
                 <div
@@ -121,18 +120,30 @@ const Header = () => {
               ))}
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-              <Link
-                href="/auth/login"
-                className={`ease-in-out shadow-btn hover:shadow-btn-hover hidden rounded bg-greenText px-6 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-8 lg:px-6 xl:px-8`}
-                onClick={closeNavbarMenu}
-              >
-                SignIn
-              </Link>
+              {loggedIn ? (
+                <button
+                  className={`ease-in-out shadow-btn hover:shadow-btn-hover hidden rounded bg-greenText px-6 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-8 lg:px-6 xl:px-8`}
+                  onClick={async () => {
+                    closeNavbarMenu();
+                    await signOutHelper();
+                  }}
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <Link
+                  href="/auth/login"
+                  className={`ease-in-out shadow-btn hover:shadow-btn-hover hidden rounded bg-greenText px-6 py-3 text-base font-medium text-white transition duration-300 hover:bg-opacity-90 md:block md:px-8 lg:px-6 xl:px-8`}
+                  onClick={closeNavbarMenu}
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </div>
         </div>
       </nav>
-      {navbarOpen && <MobileMenu />}
+      {navbarOpen && <MobileMenu loggedIn={ loggedIn } />}
     </header>
   );
 };

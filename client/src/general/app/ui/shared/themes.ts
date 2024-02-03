@@ -10,7 +10,8 @@ const hoverTexts =
 const hoverBg =
   "hover:bg-background-secondary-light hover:dark:bg-background-secondary-dark";
 const secondaryBg = "bg-white/80 py-10 dark:bg-dark";
-const cardsBg = "bg-white dark:bg-[#2C303B]";
+const cardsBg =
+  "dark:bg-gray-dark bg-white";
 const cardOutline =
   "outline outline-[2px] outline-slate-200 dark:outline-gray-500";
 
@@ -44,7 +45,7 @@ const navbar = {
 const globalBorder = {
   hoverBorder: "hover:border-green-900 dark:hover:border-green-900",
   focusBorder: "focus:border-green-900 dark:focus:border-green-900",
-  border: "border-green-900  dark:border-green-900",
+  border: "border-green-900 dark:border-green-900",
 };
 
 export {

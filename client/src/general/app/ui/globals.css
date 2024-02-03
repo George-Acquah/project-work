@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @layer components {
-.light {
-    --bg-subtle-white: #FFFFFF; /* Subtle white color for light theme */
-    --bg-accent-white: #F5F5F5; /* Accent white color for light theme */
+  .light {
+    --bg-subtle-white: #ffffff; /* Subtle white color for light theme */
+    --bg-accent-white: #f5f5f5; /* Accent white color for light theme */
     --bg-primary-white: #fcfcfc; /* Primary white color for light theme */
-    --bg-secondary-white: #CCCCCC; /* Secondary white color for light theme */
-    --bg-emphasized-white: #E0E0E0; /* Emphasized white color for light theme */
+    --bg-secondary-white: #cccccc; /* Secondary white color for light theme */
+    --bg-emphasized-white: #e0e0e0; /* Emphasized white color for light theme */
 
     --bg-subtle-black: #333333; /* Subtle black color for light theme */
     --bg-accent-black: #555555; /* Accent black color for light theme */
@@ -16,56 +16,55 @@
     --bg-secondary-black: #999999; /* Secondary black color for light theme */
     --bg-emphasized-black: #000000; /* Emphasized black color for light theme */
 
-    --bg-subtle-blue: #85C1E9; /* Subtle blue color for light theme */
-    --bg-accent-blue: #3498DB; /* Accent blue color for light theme */
-    --bg-primary-blue: #2980B9; /* Primary blue color for light theme */
-    --bg-secondary-blue: #5DADE2; /* Secondary blue color for light theme */
-    --bg-emphasized-blue: #21618C; /* Emphasized blue color for light theme */
+    --bg-subtle-blue: #85c1e9; /* Subtle blue color for light theme */
+    --bg-accent-blue: #3498db; /* Accent blue color for light theme */
+    --bg-primary-blue: #2980b9; /* Primary blue color for light theme */
+    --bg-secondary-blue: #5dade2; /* Secondary blue color for light theme */
+    --bg-emphasized-blue: #21618c; /* Emphasized blue color for light theme */
 
-    --bg-subtle-green: #C8E6C9; /* Subtle green color for light theme */
-    --bg-accent-green: #81C784; /* Accent green color for light theme */
-    --bg-primary-green: #4CAF50; /* Primary green color for light theme */
-    --bg-secondary-green: #AED581; /* Secondary green color for light theme */
-    --bg-emphasized-green: #388E3C; /* Emphasized green color for light theme */
+    --bg-subtle-green: #c8e6c9; /* Subtle green color for light theme */
+    --bg-accent-green: #81c784; /* Accent green color for light theme */
+    --bg-primary-green: #4caf50; /* Primary green color for light theme */
+    --bg-secondary-green: #aed581; /* Secondary green color for light theme */
+    --bg-emphasized-green: #388e3c; /* Emphasized green color for light theme */
 
-
-    --menu-open-bg: #F5F5F5;
-        --text-color: #333333;
-        --nav-hover: #E0E0E0;
-        --button-hover: #35ad39;
-        --button-primary: #4CAF50;
+    --menu-open-bg: #f5f5f5;
+    --text-color: #333333;
+    --nav-hover: #e0e0e0;
+    --button-hover: #35ad39;
+    --button-primary: #4caf50;
   }
 
   .dark {
-    --bg-subtle-white: #E0E0E0; /* Subtle white color for dark theme */
-    --bg-accent-white: #CCCCCC; /* Accent white color for dark theme */
+    --bg-subtle-white: #e0e0e0; /* Subtle white color for dark theme */
+    --bg-accent-white: #cccccc; /* Accent white color for dark theme */
     --bg-primary-white: #999999; /* Primary white color for dark theme */
     --bg-secondary-white: #666666; /* Secondary white color for dark theme */
-    --bg-emphasized-white: #F5F5F5; /* Emphasized white color for dark theme */
+    --bg-emphasized-white: #f5f5f5; /* Emphasized white color for dark theme */
 
     --bg-subtle-black: #0000007f; /* Subtle black color for dark theme */
     --bg-accent-black: #555555; /* Accent black color for dark theme */
     --bg-primary-black: #666666; /* Primary black color for dark theme */
     --bg-secondary-black: #333333; /* Secondary black color for dark theme */
-    --bg-emphasized-black: #FFFFFF; /* Emphasized black color for dark theme */
+    --bg-emphasized-black: #ffffff; /* Emphasized black color for dark theme */
 
-    --bg-subtle-blue: #21618C; /* Subtle blue color for dark theme */
-    --bg-accent-blue: #5DADE2; /* Accent blue color for dark theme */
-    --bg-primary-blue: #2980B9; /* Primary blue color for dark theme */
-    --bg-secondary-blue: #3498DB; /* Secondary blue color for dark theme */
-    --bg-emphasized-blue: #85C1E9; /* Emphasized blue color for dark theme */
+    --bg-subtle-blue: #21618c; /* Subtle blue color for dark theme */
+    --bg-accent-blue: #5dade2; /* Accent blue color for dark theme */
+    --bg-primary-blue: #2980b9; /* Primary blue color for dark theme */
+    --bg-secondary-blue: #3498db; /* Secondary blue color for dark theme */
+    --bg-emphasized-blue: #85c1e9; /* Emphasized blue color for dark theme */
 
-    --bg-subtle-green: #388E3C; /* Subtle green color for dark theme */
-    --bg-accent-green: #AED581; /* Accent green color for dark theme */
-    --bg-primary-green: #4CAF50; /* Primary green color for dark theme */
-    --bg-secondary-green: #81C784; /* Secondary green color for dark theme */
-    --bg-emphasized-green: #C8E6C9; /* Emphasized green color for dark theme */
+    --bg-subtle-green: #388e3c; /* Subtle green color for dark theme */
+    --bg-accent-green: #aed581; /* Accent green color for dark theme */
+    --bg-primary-green: #4caf50; /* Primary green color for dark theme */
+    --bg-secondary-green: #81c784; /* Secondary green color for dark theme */
+    --bg-emphasized-green: #c8e6c9; /* Emphasized green color for dark theme */
 
     --menu-open-bg: #333333;
-    --text-color: #F5F5F5;
-    --nav-hover: #81C784;
+    --text-color: #f5f5f5;
+    --nav-hover: #81c784;
     --button-hover: #35ad39;
-    --button-primary: #4CAF50;
+    --button-primary: #4caf50;
   }
 
   input[type="checkbox"]:checked ~ label span svg {
@@ -91,4 +90,30 @@
 
 .pos__center {
   margin: 0px auto !important;
+}
+
+/* Style for the custom combobox container */
+.custom-combobox {
+  position: relative;
+  display: inline-block;
+}
+
+/* Style for the combobox input */
+option {
+  appearance: none; /* Remove default styles in Firefox */
+  -webkit-appearance: none; /* Remove default styles in Chrome and Safari */
+}
+
+select {
+  appearance: none; /* Remove default styles in Firefox */
+  -webkit-appearance: none; /* Remove default styles in Chrome and Safari */
+}
+/* Style for the dropdown arrow */
+.custom-combobox::after {
+  content: "\25BC"; /* Unicode character for down arrow */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none; /* Ensure the arrow doesn't interfere with select interaction */
 }

@@ -24,6 +24,8 @@ export function NavbarProvider({ children }: _IChildren) {
   const [sticky, setSticky] = useState(false);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [openIndex, setOpenIndex] = useState(-1);
+  const [isMobile, setIsMobile] = useState(false);
+
   const handleSubmenu = (index: number) => {
     if (openIndex === index) {
       setOpenIndex(-1);
@@ -35,17 +37,6 @@ export function NavbarProvider({ children }: _IChildren) {
   const closeNavbarMenu = () => setNavbarOpen(false);
   const openNavbarMenu = () => setNavbarOpen(true);
   const toggleNavbar = (arg: boolean) => setNavbarOpen(!arg);
-
-  const handleScroll = () => {
-    const currentScrollPos = window.scrollY;
-    const reasonableScrollDistance = 300;
-
-    if (currentScrollPos >= reasonableScrollDistance) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
-  };
 
   const handleStickyNavbar = useCallback(() => {
     const currentScrollPosition = window.scrollY;
@@ -62,6 +53,19 @@ export function NavbarProvider({ children }: _IChildren) {
     }
   }, [sticky, navbarOpen]);
 
+  const smallScreenSize = 991; // Set your desired small screen size
+
+  const handleMobileView = useCallback(() => {
+    const currentScreenWidth = window.innerWidth;
+
+    if (currentScreenWidth >= smallScreenSize) {
+      setIsMobile(false);
+      setNavbarOpen(false);
+    } else {
+      setIsMobile(true);
+    }
+  }, [setIsMobile, setNavbarOpen, smallScreenSize]);
+
   useEffect(() => {
     window.addEventListener("scroll", handleStickyNavbar);
 
@@ -71,12 +75,21 @@ export function NavbarProvider({ children }: _IChildren) {
   }, [handleStickyNavbar]);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
+    const handleResize = () => {
+      handleMobileView();
     };
-  }, []);
+
+    // Attach the event listener when the component mounts
+    window.addEventListener("resize", handleResize);
+
+    // Initial check on component mount
+    handleMobileView();
+
+    // Detach the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [handleMobileView]);
 
   const contextValue = {
     isVisible,
@@ -100,7 +113,7 @@ export function NavbarProvider({ children }: _IChildren) {
 export const useNavbar = () => {
   const context = useContext(NavbarContext);
   if (!context) {
-    throw new Error("useNavbar must be used within a NavbarProvider");
+    throw new Error("useNavbar must be used within a Navbar Provider");
   }
   return context;
 };

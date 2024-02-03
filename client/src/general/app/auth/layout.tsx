@@ -3,9 +3,12 @@ import Link from "next/link";
 import { gradientDark, textColor } from "@/app/ui/shared/themes";
 
 export const HR = () => (
-  <div
-    className={`h-px w-full bg-gradient-to-r from-transparent to-transparent ${gradientDark}`}
-  />
+  <>
+    {" "}
+    <div
+      className={`h-px w-full bg-gradient-to-r from-transparent to-transparent ${gradientDark}`}
+    ></div>
+  </>
 );
 
 export const VR = () => (

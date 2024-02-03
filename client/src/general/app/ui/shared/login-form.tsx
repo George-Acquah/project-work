@@ -1,8 +1,6 @@
 "use client";
 
 import { useFormState, useFormStatus } from "react-dom";
-import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import Button from "./button";
 import { authenticate } from "@/app/lib/actions";
 import { loginDetails } from "@/app/lib/constants";
 import { SvgCheck } from "@/app/ui/shared/icons";
@@ -11,14 +9,14 @@ import AuthForm from "./auth-form";
 import { globalBorder } from "./themes";
 
 export default function LoginForm() {
-  const [state, dispatch] = useFormState(authenticate, undefined);
+  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
   return (
     <AuthForm
       data={loginDetails}
       title="Sign in to your account here"
       description="Login to your account for a reservation now."
       dispatch={dispatch}
-      state={state}
+      state={errorMessage}
       hrText="Or, sign in with your email"
       href="/auth/register"
       usageText={`Don&apos;t you have an account?`}

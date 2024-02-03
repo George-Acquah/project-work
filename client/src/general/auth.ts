@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
-import Credentials from "@auth/core/providers/credentials";
+// import Credentials from "@auth/core/providers/credentials";
+import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import { API } from "./app/lib/data";
 import { refreshToken } from "./app/lib/actions";
@@ -29,7 +30,6 @@ export const { auth, signIn, signOut } = NextAuth({
         if (!response.ok) return null;
         const resJson = await response.json();
         const user = resJson.data;
-
         // if (user.user.userType === process.env.AUTHORIZE_ADMIN) {
         //   return user;
         // }
@@ -44,11 +44,13 @@ export const { auth, signIn, signOut } = NextAuth({
         return { ...token, ...user };
       }
 
-      if (new Date().getTime() < token.tokens.expiresIn!) {
-        return token;
-      }
+      // if (new Date().getTime() < token.tokens.expiresIn!) {
+      //   return token;
+      // }
 
-      return await refreshToken(token);
+      // return await refreshToken(token);
+
+      return token;
     },
 
     async session({ session, token }) {

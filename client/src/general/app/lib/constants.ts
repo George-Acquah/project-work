@@ -1,6 +1,6 @@
 import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/solid";
-import { SvgHome, SvgRefresh, SvgCheck, SvgExternalLink, SvgArrowElbow, SvgGitHub } from "../ui/shared/icons";
-import { UserIcon } from "@heroicons/react/24/outline";
+import { SvgHome, SvgRefresh, SvgGitHub } from "../ui/shared/icons";
+import { CalendarIcon, ClockIcon, UserIcon } from "@heroicons/react/24/outline";
 // import { dashboardRoutes } from "./routes";
 
 export const ErrorMessages = {
@@ -27,11 +27,26 @@ const UserType = {
   ADMIN: 'Admin',
   ALL: "All",
 };
+interface SearchParamsKeys {
+  [key: string]: string;
+}
 
+const searchParamsKeys: SearchParamsKeys = {
+  APPLICANTS: "applicant",
+  users: "users",
+  centers: "centers",
+  slots: "slots",
+  SLOTS_KEY: 's_key',
+};
 
 const clientCookiesKeys = {
   BANNER_HIDDEN: "template-banner-hidden",
   THEME: "global-theme",
+  LIST_VAL: "__ls_val",
+  RESERVATION_STATUS: "_res_s",
+  REQUEST_RESERVATION: "__req_res_ds",
+  REQUEST_RESERVATION_DATA: "__req_res_d",
+  AVAILABLE_SLOTS_PAGES: "__av_sp",
 };
 
 const clientCookiesValues = {
@@ -39,6 +54,20 @@ const clientCookiesValues = {
   GLOBAL_LIGHT_THEME: "light" as _IThemeType,
   GLOBAL_DARK_THEME: "dark" as _IThemeType,
 }
+
+  const listData = [
+    { name: "All Slots" },
+    { name: "Available Slots" },
+    { name: "Unavailable Slots" },
+];
+  
+  const slotsResData = [
+    { name: "Ratings above 80%" },
+    { name: "Price above 50.00" },
+    { name: "Price below 40.00" },
+    { name: "Waiting time less than 1 minute" },
+    { name: "Waiting time less more 5 minute" },
+  ];
 // const usersLinks: _INavLinks[] = [
 //   {
 //     href: dashboardRoutes.USERS.BASE,
@@ -361,6 +390,97 @@ const loginDetails: _ILoginInputComp[] = [
   },
 ];
 
+const addCenterDetails: _ICommonInputComp[] = [
+  {
+    id: "center_name",
+    placeholder: "Enter Center Name",
+    label: "Center Name",
+    value: "Test Name",
+    icon: AtSymbolIcon,
+    type: "text",
+    required: true,
+    disabled: false,
+  },
+  {
+    id: "description",
+    placeholder: "Enter Description For Center",
+    label: "Description",
+    icon: KeyIcon,
+    type: "text",
+    value: "Test Desc",
+    required: true,
+    disabled: false,
+    tooltip: false,
+  },
+  // {
+  //   id: "description",
+  //   placeholder: "Enter Description For Center",
+  //   label: "Description",
+  //   icon: KeyIcon,
+  //   type: "text",
+  //   required: true,
+  //   mt: true,
+  //   minLenght: 4,
+  // },
+];
+
+const requestReservationDetails: _ILoginInputComp[] = [
+  {
+    id: "start_time",
+    placeholder: "Choose start Time",
+    label: "Choose start Time",
+    icon: CalendarIcon,
+    type: "datetime-local",
+    required: true,
+    mt: true,
+  },
+  {
+    id: "duration",
+    placeholder: "35",
+    label: "Reservation of Duration",
+    icon: ClockIcon,
+    type: "number",
+    minLenght: 5,
+    required: true,
+    mt: true,
+  },
+];
+
+const addCenterAddressDetails: _ICommonInputComp[] = [
+  {
+    id: "address",
+    placeholder: "Enter Center Address",
+    label: "Center Address",
+    value: "Test Address",
+    icon: AtSymbolIcon,
+    type: "text",
+    required: true,
+    disabled: false,
+  },
+  {
+    id: "latitude",
+    placeholder: "Enter Center Latitude",
+    label: "Latitude",
+    icon: KeyIcon,
+    type: "text",
+    value: "Test Latitude",
+    required: true,
+    disabled: false,
+    tooltip: false,
+  },
+  {
+    id: "longitude",
+    placeholder: "Enter Center Longitude",
+    label: "Longitude",
+    icon: KeyIcon,
+    type: "text",
+    value: "Test Longitude",
+    required: true,
+    disabled: false,
+    tooltip: false,
+  },
+];
+
 const registerDetails: _ILoginInputComp[] = [
   {
     id: "fullname",
@@ -508,6 +628,8 @@ const chartData = {
 export {
   clientCookiesKeys,
   clientCookiesValues,
+  searchParamsKeys,
+  listData,
   loginDetails,
   credentials,
   UserType,
@@ -515,6 +637,10 @@ export {
   chartData,
   navigations,
   registerDetails,
+  addCenterDetails,
+  addCenterAddressDetails,
+  requestReservationDetails,
+  slotsResData,
   // navDropdownLinks,
   // editAdminDetails,
   // editAdminProfileDetails,
