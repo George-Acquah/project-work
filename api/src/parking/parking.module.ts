@@ -26,6 +26,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import {
   ParkingReservationData,
   ParkingReservationDataSchema,
+  SlotReservation,
+  SlotReservationSchema,
 } from 'src/shared/schemas/slot-reservation.schema';
 import { UploadService } from 'src/storage/uploads.service';
 import { ConfigModule } from '@nestjs/config';
@@ -43,6 +45,7 @@ import { AggregationService } from 'src/aggregation.service';
       { name: Slot.name, schema: SlotSchema },
       { name: SlotImage.name, schema: SlotImageSchema },
       { name: SlotData.name, schema: SlotDataSchema },
+      { name: SlotReservation.name, schema: SlotReservationSchema },
       {
         name: ParkingReservationData.name,
         schema: ParkingReservationDataSchema,

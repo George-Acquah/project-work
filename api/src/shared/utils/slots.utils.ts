@@ -207,7 +207,7 @@ function sanitizeCenter(center: _IDbParkingCenter): _IParkingCenter {
     type,
     slots: sanitizeSlots(slots) || [],
     center_images: sanitizeCenterImages(center_images) || [],
-    center_data: sanitizeCenterData(center_data) || null,
+    center_data: center_data ? sanitizeCenterData(center_data) : null,
   };
 }
 

@@ -18,7 +18,7 @@ export class SlotReservation {
   isValid: boolean;
 
   @Prop({ type: Number, required: false, default: 0 })
-  wait_time: number;
+  wait_time: number; // to be determined automatically and sent to the client
 
   @Prop({ type: Date, default: Date.now() })
   start_time: Date;
@@ -53,8 +53,6 @@ export class ParkingReservationData {
     required: true,
   })
   center_id: ParkingCenter;
-
-  // Other relevant fields
 }
 
 export const ParkingReservationDataSchema = SchemaFactory.createForClass(

@@ -47,10 +47,11 @@ export class AggregationService {
     const offset = (currentPage - 1) * items;
 
     try {
+      const simpleConditions = fieldNames.map((field) => ({
+        [field]: { $regex: query, $options: 'i' },
+      }));
       const conditions = {
-        $or: fieldNames.map((field) => ({
-          [field]: { $regex: query, $options: 'i' },
-        })),
+        $or: simpleConditions,
       } as unknown as FilterQuery<T>[];
 
       const documents = await model
@@ -62,6 +63,91 @@ export class AggregationService {
       return documents;
     } catch (error) {
       throw new Error(`Error fetching filtered documents: ${error.message}`);
+    }
+  }
+
+  async fetchAvailableDocuments<T extends Document>(
+    model: Model<T>,
+    center_id: string,
+    startTime: Date,
+    endTime: Date,
+    currentPage = 1,
+    items = 5,
+    options: object,
+  ): Promise<T[]> {
+    const offset = (currentPage - 1) * items;
+
+    try {
+      const documents = await model
+        .find({
+          ...options,
+          // $or: [
+          //   {
+          //     $and: [
+          //       { start_time: { $lt: startTime } },
+          //       { end_time: { $gt: startTime } },
+          //     ],
+          //   },
+          //   {
+          //     $and: [
+          //       { start_time: { $lt: endTime } },
+          //       { end_time: { $gt: endTime } },
+          //     ],
+          //   },
+          //   {
+          //     $and: [
+          //       { start_time: { $gte: startTime } },
+          //       { end_time: { $lte: endTime } },
+          //     ],
+          //   },
+          // ],
+        })
+        .skip(offset)
+        .limit(items)
+        .exec();
+
+      return documents;
+    } catch (error) {
+      throw new Error(`Error fetching filtered documents: ${error.message}`);
+    }
+  }
+
+  async fetchPageNumbers<T extends Document>(
+    model: Model<T>,
+    fieldNames: string[],
+    query = '',
+    items: number,
+    options?: object,
+  ) {
+    console.log(options);
+    try {
+      // const test = [
+      //   [{ start_time: { $lt: startTime } }, { end_time: { $gt: startTime } }],
+      //   [{ start_time: { $lt: endTime } }, { end_time: { $gt: endTime } }],
+      //   // [{ start_time: { $gte: startTime } }, { end_time: { $lte: endTime } }],
+      // ];
+      // const complexConditions = test.map((first) =>
+      //   first.map((final) => ({ final })),
+      // );
+
+      const simpleConditions = fieldNames.map((field) => ({
+        [field]: { $regex: query, $options: 'i' },
+      }));
+
+      const conditions = {
+        $or: simpleConditions,
+      } as unknown as FilterQuery<T>[];
+
+      const totalCount = await model
+        .countDocuments({ ...options }, conditions)
+        .exec();
+
+      const totalPages = Math.ceil(totalCount / items);
+
+      return totalPages;
+    } catch (error) {
+      console.error('Database Error:', error);
+      throw new Error(error.message);
     }
   }
 }

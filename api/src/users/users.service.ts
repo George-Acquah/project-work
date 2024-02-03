@@ -365,19 +365,13 @@ export class UsersService {
 
   async fetchUsersPage(query = '', items: number): Promise<number> {
     try {
-      const usersCount = await this.userModel
-        .countDocuments({
-          $or: [
-            // { username: { $regex: query, $options: 'i' } },
-            { email: { $regex: query, $options: 'i' } },
-            { userType: { $regex: query, $options: 'i' } },
-          ],
-        })
-        .exec();
-
-      this.logger.log(usersCount);
-      const totalPages = Math.ceil(usersCount / items);
-      this.logger.log(totalPages);
+      const fieldNames = ['email', 'userType'];
+      const totalPages = await this.aggregationService.fetchPageNumbers(
+        this.userModel,
+        fieldNames,
+        query,
+        items,
+      );
 
       return totalPages;
     } catch (error) {
