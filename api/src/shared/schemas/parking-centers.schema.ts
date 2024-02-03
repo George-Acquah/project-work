@@ -46,3 +46,10 @@ ParkingCenterSchema.virtual('center_data', {
   foreignField: 'center_id',
   justOne: true,
 });
+
+ParkingCenterSchema.virtual('center_address', {
+  ref: 'CenterAddress',
+  localField: '_id',
+  foreignField: 'center_id',
+  justOne: true,
+});
