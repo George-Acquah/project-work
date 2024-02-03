@@ -20,6 +20,8 @@ import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
 import { AddCenterDto, AddSlotDto } from './dtos/add-center.dto';
 import { ParkingCenterGuard } from 'src/shared/guards/centers.guard';
 import { UploadService } from 'src/storage/uploads.service';
+import { ReservationRequestDto } from './dtos/reservation-requests.dto';
+import { _IReserveSlot } from 'src/shared/interfaces/slot.interface';
 
 @Controller('owner/parking-center')
 export class ParkingCenterController {
@@ -279,6 +281,35 @@ export class ParkingCenterController {
     }
   }
 
+  @Post(':center_id/available-slots')
+  async getAvailableSlots(
+    @Param('center_id') centerId: string,
+    @Query('currentPage') currentPage: number,
+    @Query('size') size: number,
+    @Body() data: ReservationRequestDto,
+  ) {
+    console.log(data);
+    try {
+      this.logger.log(`All Available Slots `);
+      const { start_time, reservation_duration } = data;
+      const slots = await this.slotService.findAvailableSlots(
+        centerId,
+        new Date(start_time),
+        reservation_duration,
+        currentPage,
+        size,
+      );
+      const totalPages = await this.slotService.fetchSlotsPage(centerId, size);
+      return new ApiResponse(200, 'Fetched Available Slots', {
+        slots,
+        totalPages,
+      });
+    } catch (error) {
+      this.logger.error(`Error getting all available slots: ${error.message}`);
+      throw error;
+    }
+  }
+
   @Get(':center_id/slots')
   async getSlotsForCenter(@Param('center_id') centerId: string) {
     try {
@@ -305,9 +336,44 @@ export class ParkingCenterController {
     }
   }
 
+  @Post(':center_id/slots/:slot_id/reserve-slot')
+  async reserveSlot(
+    @Param('center_id') center_id: string,
+    @Param('slot_id') slot_id: string,
+    @Query('vehicle_id') vehicle_id: string,
+    @Query('currentPage') currentPage: number,
+    @Query('size') size: number,
+    @Body() data: ReservationRequestDto,
+  ) {
+    try {
+      this.logger.error(
+        `Get Slot Images: ${center_id} ${slot_id} ${vehicle_id}`,
+      );
+      const reservation_data: _IReserveSlot = {
+        center_id,
+        slot_id,
+        vehicle_id,
+        start_time: new Date(data.start_time),
+        reservation_duration: data.reservation_duration,
+        currentPage,
+        size,
+      };
+      const reservation = await this.slotService.reserveParkingSlot(
+        reservation_data,
+      );
+      return new ApiResponse(
+        200,
+        'You have successfully reserved this slot',
+        reservation,
+      );
+    } catch (error) {
+      this.logger.error(`Error getting slot bookings: ${error.message}`);
+      return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
   //TODO implement and test this endpoint
-  @Get(':center_id/slots/:slot_id/bookings')
-  async getSlotBookings(
+  @Get(':center_id/slots/:slot_id/reservations')
+  async getAllSlotBookings(
     @Param('center_id') centerId: string,
     @Param('slot_id') slotId: string,
   ) {
@@ -315,6 +381,24 @@ export class ParkingCenterController {
       this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
       // const bookings = await this.slotService.getSlotBookings(centerId, slotId);
       // return { bookings };
+    } catch (error) {
+      this.logger.error(`Error getting slot bookings: ${error.message}`);
+      return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
+
+  @Get(':center_id/slots/:slot_id/reservations/:reservation_id')
+  async getSlotBooking(@Param('reservation_id') reservationId: string) {
+    try {
+      const reservation = await this.slotService.getSlotReservation(
+        reservationId,
+      );
+      // return { bookings };
+      return new ApiResponse(
+        200,
+        'Reservation Fetched Successfully',
+        reservation,
+      );
     } catch (error) {
       this.logger.error(`Error getting slot bookings: ${error.message}`);
       return new ApiResponse(error.statusCode || 501, error.message, {});
