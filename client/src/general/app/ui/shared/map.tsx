@@ -155,7 +155,6 @@ const MapComp = ({ centers, highlighted_id, withSearch }: _IMapComp) => {
             >
               {/* {coordinates && (
                 <Marker
-
               }}
               onLoad={() => {
                 if (mapRef.current) {

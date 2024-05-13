@@ -35,7 +35,6 @@ const RequestReservationPage = async ({
     ]);
 
   const slots = def_data && JSON.parse(def_data) as _ISlot[];
-  
   if (!!reservation_status && slots && slots.length === 0) {
     return (
       <form

@@ -64,10 +64,6 @@ export async function fetcher<T>(
 
     return data;
   } catch (err: any) {
-    // if (err.message.toLowerCase() === "fetch failed") {
-    //   throw new NetworkError();
-    // }
-
     throw err;
   }
 }
