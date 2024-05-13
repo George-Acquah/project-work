@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Document } from 'mongoose';
 
 interface _IDbImage extends Document {
@@ -45,6 +46,7 @@ interface _ICloudRes {
   filename: string;
   mimetype: string;
   publicUrl: string;
+  // gcp_url: string;
 }
 
 type _IVehicleImage = _Image;

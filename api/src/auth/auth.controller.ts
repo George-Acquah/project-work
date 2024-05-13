@@ -3,41 +3,49 @@ import { CreateUserDto } from 'src/users/dtos/create-users.dto';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import {
-  _ISanitizedCustomer,
   _ISanitizedParkOwner,
-  _TSanitizedUser,
+  _TSanitizedUser
 } from 'src/shared/interfaces/users.interface';
 import { ApiResponse } from 'src/shared/services/api-responses';
 import { LoginUserDto } from 'src/users/dtos/login-users.dtos';
 import { RefreshJwtAuthGuard } from 'src/shared/guards/refreshJwt.guard';
 import { User } from 'src/shared/decorators/user.decorator';
-import { LocalJwtAuthGuard } from 'src/shared/guards/localJwt.guard';
 
 @Controller('auth')
 export class AuthController {
   private logger = new Logger(AuthController.name);
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UsersService,
+    private readonly userService: UsersService
   ) {}
 
   @Post('users/customer')
-  async registerCustomer(
-    @Body() data: CreateUserDto,
-  ): Promise<ApiResponse<_ISanitizedCustomer>> {
+  async registerCustomer(@Body() data: CreateUserDto) {
     this.logger.warn(data);
-    const customer = await this.userService.createCustomer(data);
+    try {
+      console.log(data);
+      const customer = await this.userService.createCustomer(data);
 
-    return new ApiResponse(
-      200,
-      'You have successfully created an acount',
-      customer,
-    );
+      if (customer) {
+        return new ApiResponse(
+          200,
+          `You have successfully created an acount with ${customer.email}`,
+          customer
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      return new ApiResponse(
+        error.status ?? 400,
+        error.message ?? 'Something Bad Occured while logging in',
+        {}
+      );
+    }
   }
 
   @Post('users/owner')
   async registerOwner(
-    @Body() data: CreateUserDto,
+    @Body() data: CreateUserDto
   ): Promise<ApiResponse<_ISanitizedParkOwner>> {
     this.logger.warn(data);
     const owner = await this.userService.createOwner(data);
@@ -45,13 +53,14 @@ export class AuthController {
     return new ApiResponse(
       200,
       'You have successfully created an acount',
-      owner,
+      owner
     );
   }
 
-  @UseGuards(LocalJwtAuthGuard)
+  // @UseGuards(LocalJwtAuthGuard)
   @Post('login')
   async login(@Body() userDto: LoginUserDto) {
+    console.log('received');
     try {
       const data = await this.authService.login(userDto);
 
@@ -59,14 +68,14 @@ export class AuthController {
         return new ApiResponse(
           200,
           `You have Successfully logged in as ${data.user.email}`,
-          data,
+          data
         );
       }
     } catch (error) {
       return new ApiResponse(
-        400,
-        error.message ?? 'Something Bad Occured while logging in',
-        {},
+        error?.response?.statusCode ?? 400,
+        error?.message ?? 'Something Bad Occured while logging in',
+        {}
       );
     }
   }

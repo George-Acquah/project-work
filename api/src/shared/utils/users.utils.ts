@@ -7,7 +7,7 @@ import {
   _ISanitizedCustomer,
   _ISanitizedParkOwner,
   _ISanitizedProfile,
-  _TSanitizedUser,
+  _TSanitizedUser
 } from '../interfaces/users.interface';
 import { _IDbVehicle } from '../interfaces/vehicles.interface';
 import { sanitizeVehicles } from './vehicles.utils';
@@ -20,7 +20,7 @@ export function sanitizeUserImage(image: _IDbUserImage): _IUserImage {
     file_id,
     filename,
     mimetype,
-    userId,
+    userId
   };
 }
 
@@ -33,7 +33,7 @@ function sanitizeProfile(profile: _IDbProfile): _ISanitizedProfile {
     area: profile.area || null,
     city: profile.city || null,
     state: profile.state || null,
-    pinCode: profile.pinCode || null,
+    pinCode: profile.pinCode || null
   };
 }
 
@@ -49,7 +49,7 @@ export function sanitizeUser(user: any): _TSanitizedUser {
       profile: sanitizeProfile(profile),
       vehicles: vehicles ? sanitizeVehicles(vehicles) : [],
       rankings,
-      image: image ? sanitizeUserImage(image) : null,
+      image: image ? sanitizeUserImage(image) : null
     };
     return sanitizedUser;
   }
@@ -64,7 +64,7 @@ export function sanitizeUser(user: any): _TSanitizedUser {
     profile: sanitizeProfile(profile),
     centers,
     rankings,
-    image: image ? sanitizeUserImage(image) : null,
+    image: image ? sanitizeUserImage(image) : null
   };
   return sanitizedUser;
 }
@@ -73,7 +73,7 @@ function generateRandomTextAndLength() {
   const minLength = 7;
   const maxLength = 15;
   const length = Math.floor(
-    Math.random() * (maxLength - minLength + 1) + minLength,
+    Math.random() * (maxLength - minLength + 1) + minLength
   );
 
   const characters =
@@ -111,7 +111,7 @@ function getExpirationTime(minutes: number) {
 
 export function updateUserFields(
   applicant: Partial<_ICustomer | _IParkOwner>,
-  data: Partial<_ICustomer | _IParkOwner>,
+  data: Partial<_ICustomer | _IParkOwner>
 ) {
   // if (data.username) {
   //   applicant.username = data.username;

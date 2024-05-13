@@ -1,20 +1,22 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   Injectable,
   Logger,
   NotAcceptableException,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Model, Types } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
+import { SORT } from 'src/shared/enums/general.enum';
 import { CenterTypes } from 'src/shared/enums/slots.enum';
 import {
   _ICloudRes,
   _IDbCenterImage,
-  _IDbVehicleImage,
+  _IDbVehicleImage
 } from 'src/shared/interfaces/images.interface';
 import {
   _IAddCenterData,
@@ -22,31 +24,44 @@ import {
   _ICenterData,
   _IDbCenterData,
   _IDbParkingCenter,
+  _IDbSlotReservation,
   _IDbReservationData,
   _INewParkingCenter,
   _IParkingCenter,
   _ISlotData,
+  _IDbSlot,
+  _IDbCenterAddress,
+  _IAddCenterAddress,
+  _ICenterAddress
 } from 'src/shared/interfaces/slot.interface';
 import {
   _IAddVehicle,
   _IDbVehicle,
   _INewVehicle,
-  _IVehicle,
+  _IVehicle
 } from 'src/shared/interfaces/vehicles.interface';
+import { CenterAddress } from 'src/shared/schemas/center-address.schema';
 import { CenterData } from 'src/shared/schemas/center-data.schema';
 import { CenterImage } from 'src/shared/schemas/center-image.schema';
 import { ParkingCenter } from 'src/shared/schemas/parking-centers.schema';
-import { ParkingReservationData } from 'src/shared/schemas/slot-reservation.schema';
+import {
+  ParkingReservationData,
+  SlotReservation
+} from 'src/shared/schemas/slot-reservation.schema';
+import { Slot } from 'src/shared/schemas/slot.schema';
 import {
   determineCenterType,
   sanitizeCenter,
+  sanitizeCenterAddress,
   sanitizeCenterData,
-  sanitizeCenters,
+  sanitizeCenters
 } from 'src/shared/utils/slots.utils';
 
 @Injectable()
 export class ParkingCenterService {
   private logger = new Logger();
+  private center_populate_fields =
+    'center_images center_data center_address slots';
   constructor(
     @InjectModel(ParkingCenter.name)
     private parkingCenterModel: Model<_IDbParkingCenter>,
@@ -55,8 +70,14 @@ export class ParkingCenterService {
     @InjectModel(CenterImage.name)
     private centerImagesModel: Model<_IDbCenterImage[]>,
     @InjectModel(ParkingReservationData.name)
-    private reservationDataSchema: Model<_IDbReservationData>,
-    private readonly aggregationService: AggregationService,
+    private reservationDataModel: Model<_IDbReservationData>,
+    @InjectModel(SlotReservation.name)
+    private slotReservationModel: Model<_IDbSlotReservation>,
+    @InjectModel(CenterAddress.name)
+    private centerAddressModel: Model<_IDbCenterAddress>,
+    @InjectModel(Slot.name)
+    private slotModel: Model<_IDbSlot>,
+    private readonly aggregationService: AggregationService
   ) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -69,17 +90,17 @@ export class ParkingCenterService {
       await Promise.all(
         allCenterData.map(async (centerData) => {
           // Store the daily bookings in the ReservationData collection
-          await this.reservationDataSchema.create({
+          await this.reservationDataModel.create({
             center_id: centerData.center_id,
             date: new Date(),
-            total_daily_bookings: centerData.total_daily_bookings,
+            total_daily_bookings: centerData.total_daily_bookings
           });
 
           // Reset total_daily_bookings to zero and save the updated CentertData document
           await this.centerDataModel.findByIdAndUpdate(centerData._id, {
-            $set: { total_daily_bookings: 0 },
+            $set: { total_daily_bookings: 0 }
           });
-        }),
+        })
       );
 
       this.logger.log('Daily reset completed successfully.');
@@ -102,7 +123,7 @@ export class ParkingCenterService {
     const populatedCenters = await Promise.all(
       centers.map(async (center) => {
         return await this.populateCentersFields<_IDbParkingCenter>(center, '');
-      }),
+      })
     );
 
     return populatedCenters;
@@ -120,7 +141,7 @@ export class ParkingCenterService {
     const populatedCenters = await Promise.all(
       centers.map(async (center) => {
         return await this.populateCentersFields<_IDbParkingCenter>(center, '');
-      }),
+      })
     );
 
     return populatedCenters;
@@ -141,15 +162,15 @@ export class ParkingCenterService {
   async populateCentersFields<T>(
     center: _IDbParkingCenter,
     fields: string,
-    deepFields = '',
+    deepFields = ''
   ): Promise<T | _IDbParkingCenter> {
     const populatedCenter = await this.parkingCenterModel.populate(center, {
       path: fields,
       strictPopulate: false,
       populate: {
         path: deepFields,
-        strictPopulate: false,
-      },
+        strictPopulate: false
+      }
     });
     return populatedCenter;
   }
@@ -158,7 +179,7 @@ export class ParkingCenterService {
   async getAllParkingCenters(
     query = '',
     currentPage: number,
-    items: number,
+    items: number
   ): Promise<_IParkingCenter[]> {
     const fieldNames = ['center_name', 'type'];
     const parkingCenters = await this.aggregationService.fetchFilteredDocuments(
@@ -166,44 +187,83 @@ export class ParkingCenterService {
       fieldNames,
       query,
       currentPage,
-      items,
+      items
     );
     const populatedCenters = await Promise.all(
       parkingCenters.map(async (center) => {
         return await this.populateCentersFields<_IDbParkingCenter>(
           center,
-          'center_images center_data slots',
-          'slot_images slot_data',
+          this.center_populate_fields,
+          'slot_images slot_data'
         );
-      }),
+      })
     );
 
     return sanitizeCenters(populatedCenters);
   }
 
+  async getPopularParkingCenters(
+    query = '',
+    currentPage: number,
+    limit: number
+  ): Promise<_IParkingCenter[]> {
+    try {
+      const popular_centers = await this.aggregationService.deepAggregate<
+        _IDbSlotReservation,
+        any
+      >(this.slotReservationModel, currentPage, limit, SORT.DESCENDING);
+
+      const populatedCenters = await Promise.all(
+        popular_centers.map(async (center) => {
+          return await this.populateCentersFields<_IDbParkingCenter>(
+            center.popular_centers,
+            this.center_populate_fields,
+            'slot_images slot_data'
+          );
+        })
+      );
+
+      return sanitizeCenters(populatedCenters);
+    } catch (error) {
+      console.error('Error fetching popular parking centers:', error);
+    }
+  }
+
+  // async getNearbyCenters(
+  //   latitude: number,
+  //   longitude: number
+  // ): Promise<ParkingCenter[]> {
+  //   // Implement logic to retrieve nearby centers based on geographical proximity
+  // }
+
+  // async getAvailableCenters(): Promise<ParkingCenter[]> {
+  //   // Implement logic to retrieve available centers with available slots
+  // }
+
   async getAvailableParkingCenters(
-    currentPage = 1,
-    items = 3,
+    query = '',
+    currentPage: number,
+    limit: number
   ): Promise<_IParkingCenter[]> {
     const centers = await this.aggregationService.aggregate(
       this.parkingCenterModel,
       'slots',
       'center_id',
       {
-        'slots.isAvailable': false,
+        'slots.isAvailable': false
       },
       currentPage,
-      items,
+      limit
     );
 
     const populatedCenters = await Promise.all(
       centers.map(async (center) => {
         return await this.populateCentersFields<_IDbParkingCenter>(
           center,
-          'center_images center_data slots',
-          'slot_images slot_data',
+          this.center_populate_fields,
+          'slot_images slot_data'
         );
-      }),
+      })
     );
 
     return sanitizeCenters(populatedCenters);
@@ -224,14 +284,14 @@ export class ParkingCenterService {
   async getSingleParkingCenter(id: string): Promise<_IParkingCenter> {
     try {
       const parkingCenter = await this.parkingCenterModel.findById(
-        new Types.ObjectId(id),
+        new Types.ObjectId(id)
       );
 
       const populatedCenter =
         await this.populateCentersFields<_IDbParkingCenter>(
           parkingCenter,
           'center_images center_data slots',
-          'slot_images slot_data',
+          'slot_images slot_data'
         );
       return sanitizeCenter(populatedCenter);
     } catch (error) {
@@ -265,7 +325,7 @@ export class ParkingCenterService {
   //ADD METHODS
   async addCenterImages(
     images: _ICloudRes[],
-    center_id: string,
+    center_id: string
   ): Promise<_IDbCenterImage[]> {
     try {
       if (!center_id || center_id === null || center_id === '') {
@@ -288,6 +348,18 @@ export class ParkingCenterService {
 
   async addCenterData(data: _IAddCenterData): Promise<_ICenterData> {
     try {
+      const { center_id } = data;
+
+      const center = await this.parkingCenterModel.findById(
+        new Types.ObjectId(center_id)
+      );
+
+      if (!center) {
+        throw new NotFoundException(
+          'Can not add any data to a non existent parking center'
+        );
+      }
+
       // Create center data in the database
       const centerData = await this.centerDataModel.create(data);
 
@@ -297,17 +369,40 @@ export class ParkingCenterService {
     }
   }
 
+  async addCenterAddress(data: _IAddCenterAddress): Promise<_ICenterAddress> {
+    try {
+      const { center_id } = data;
+
+      const center = await this.parkingCenterModel.findById(
+        new Types.ObjectId(center_id)
+      );
+
+      if (!center) {
+        throw new NotFoundException(
+          'Can not add an address to a non existent parking center'
+        );
+      }
+
+      // Create center data in the database
+      const address = await this.centerAddressModel.create(data);
+
+      return sanitizeCenterAddress(address);
+    } catch (error) {
+      throw new Error(error.message || 'Could not add address');
+    }
+  }
+
   async addCenter(owner: string, data: _IAddParkingCenter): Promise<string> {
     try {
       const { center_name, description } = data;
 
       // Check if the center already exists
       const existingCenter = await this.parkingCenterModel.findOne({
-        center_name,
+        center_name
       });
 
       if (existingCenter) {
-        throw new NotAcceptableException('This center already exists');
+        throw new NotAcceptableException('This center name already exists');
       }
 
       // Create a new parking center
@@ -315,7 +410,7 @@ export class ParkingCenterService {
         center_name,
         description,
         type: CenterTypes.TYPE_C,
-        owner,
+        owner
       });
 
       // Save the new parking center
@@ -324,12 +419,11 @@ export class ParkingCenterService {
 
       // Fetch data for the created center
       const centerData = await this.centerDataModel.findOne({
-        center_id: newCenter._id,
+        center_id: newCenter._id
       });
 
       // If center data is not found, return the id
       if (!centerData) {
-        this.logger.log('returned short');
         return newCenter._id.toString();
       }
 
@@ -345,10 +439,37 @@ export class ParkingCenterService {
       return newCenter._id.toString();
     } catch (error) {
       throw new Error(
-        `Failed to add center. ${error.message || 'Please try again.'}`,
+        `Failed to add center. ${error.message || 'Please try again.'}`
       );
     }
   }
 
   //END OF ADD METHODS
+
+  //BEGIN UPDATE METHODS
+  async updateCenterAddress(
+    data: _IAddCenterAddress,
+    address_id: string
+  ): Promise<_ICenterAddress> {
+    try {
+      const { center_id } = data;
+
+      const center = await this.parkingCenterModel.findById(
+        new Types.ObjectId(center_id)
+      );
+
+      if (!center) {
+        throw new NotFoundException(
+          'Can not add an address to a non existent parking center'
+        );
+      }
+
+      // Create center data in the database
+      const address = await this.centerAddressModel.create(data);
+
+      return sanitizeCenterAddress(address);
+    } catch (error) {
+      throw new Error(error.message || 'Could not add address');
+    }
+  }
 }

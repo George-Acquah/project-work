@@ -18,7 +18,7 @@ export class UserImage {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: true
   })
   userId: User;
 }

@@ -7,7 +7,7 @@ import { _ICloudRes } from 'src/shared/interfaces/images.interface';
 export class UploadService {
   constructor(private readonly googleStorageService: StorageService) {}
   async uploadFilesToDrive(
-    files: { originalname: string; mimetype: string; buffer: Buffer }[],
+    files: { originalname: string; mimetype: string; buffer: Buffer }[]
   ): Promise<Array<_ICloudRes>> {
     const uploadedFiles: Array<_ICloudRes> = [];
 
@@ -16,12 +16,13 @@ export class UploadService {
 
       if (file.mimetype === 'application/pdf') {
         uploadedFiles.push(
+          //TODO Some implementation to upload PDF else remove IF ELSE statement
           await this.googleStorageService.uploadFile(
             file.originalname,
             file.mimetype,
             file.buffer,
-            filename,
-          ),
+            filename
+          )
         );
       } else {
         uploadedFiles.push(
@@ -29,8 +30,8 @@ export class UploadService {
             file.originalname,
             file.mimetype,
             file.buffer,
-            filename,
-          ),
+            filename
+          )
         );
       }
     }

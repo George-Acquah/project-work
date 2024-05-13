@@ -37,5 +37,5 @@ export {
   _IReservationPayload,
   _ITokens,
   _IReservationsPayloadRequest,
-  _TJwtPayload,
+  _TJwtPayload
 };

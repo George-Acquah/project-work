@@ -5,3 +5,9 @@ export interface _ILoginResponse<T = _ISanitizedCustomer> {
   user: T;
   tokens: _ITokens;
 }
+
+export interface _ILookup {
+  from: string;
+  foreignField: string;
+  as: string;
+}

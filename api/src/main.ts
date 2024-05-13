@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { SocketIOAdapter } from './socket-io-adapter';
 
 async function bootstrap() {
@@ -11,12 +11,14 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = parseInt(configService.get('PORT'));
   const clientPort = parseInt(configService.get('CLIENT_PORT'));
+  app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    origin: [
-      `http://localhost:${clientPort}`,
-      new RegExp(`^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$`),
-    ],
+    // origin: [
+    //   `http://192.168.43.198:${clientPort}`,
+    //   new RegExp(`^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$`)
+    // ]
+    origin: `*`
   });
 
   app.useWebSocketAdapter(new SocketIOAdapter(app, configService));
