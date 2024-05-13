@@ -11,7 +11,7 @@ import {
   Post,
   Query,
   UploadedFiles,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserType } from 'src/shared/enums/users.enum';
@@ -21,13 +21,12 @@ import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 import { UploadService } from 'src/storage/uploads.service';
 import { User } from 'src/shared/decorators/user.decorator';
 
-@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   private logger = new Logger(UsersController.name);
   constructor(
     private readonly usersService: UsersService,
-    private readonly uploadsService: UploadService,
+    private readonly uploadsService: UploadService
   ) {}
 
   @Post('set-image')
@@ -37,12 +36,12 @@ export class UsersController {
       new ParseFilePipe({
         validators: [
           // ... Set of file validator instances here
-          new MaxFileSizeValidator({ maxSize: 2000 * 1024 }),
-        ],
-      }),
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 })
+        ]
+      })
     )
     files: Express.Multer.File[],
-    @User() userObj: _TSanitizedUser,
+    @User() userObj: _TSanitizedUser
   ) {
     try {
       const images = await this.uploadsService.uploadFilesToDrive(files);
@@ -52,7 +51,7 @@ export class UsersController {
 
         const savedUserImage = await this.usersService.addUserImage(
           firstImage,
-          userObj._id,
+          userObj._id
         );
 
         const { userId, ...resp } = savedUserImage;
@@ -77,13 +76,13 @@ export class UsersController {
   async getFilteredUsers(
     @Query('users') query: string,
     @Query('currentPage') currentPage: number,
-    @Query('size') size: number,
+    @Query('size') size: number
   ): Promise<ApiResponse<_TSanitizedUser[] | object>> {
     try {
       const filteredUsers = await this.usersService.fetchFilteredUsers(
         query,
         currentPage,
-        size,
+        size
       );
 
       //TODO implement next page token
@@ -93,17 +92,17 @@ export class UsersController {
       return new ApiResponse(
         error.statusCode || 403,
         error.message ?? 'Your query was not successful',
-        {},
+        {}
       );
     }
   }
 
   @Get(':id')
   async getSingleUser(
-    @Param() param: { id: string },
+    @Param() param: { id: string }
   ): Promise<ApiResponse<_TSanitizedUser | object>> {
     try {
-      console.log(param.id);
+      console.log(param);
       const user = await this.usersService.findOne(param.id);
       return new ApiResponse(200, 'Your query was successful', user);
     } catch (err) {
@@ -115,7 +114,7 @@ export class UsersController {
   async getUsersPage(
     @Query('users') query: string,
     @Query('type') type: string,
-    @Query('size') size: number,
+    @Query('size') size: number
   ): Promise<ApiResponse<number | object>> {
     this.logger.log('hit', size);
     try {
@@ -125,14 +124,14 @@ export class UsersController {
       return new ApiResponse(
         403,
         error.message ?? 'Your query was not successful',
-        {},
+        {}
       );
     }
   }
 
   @Get('admin/latest')
   async getLatestUsers(
-    @Query('size') size: number,
+    @Query('size') size: number
   ): Promise<ApiResponse<_TSanitizedUser | object>> {
     try {
       const latestUsers = await this.usersService.fetchLatestUsers(size);
@@ -141,7 +140,7 @@ export class UsersController {
       return new ApiResponse(
         HttpStatus.INTERNAL_SERVER_ERROR,
         error.message ?? 'Your query was not successful',
-        {},
+        {}
       );
     }
   }
@@ -152,7 +151,7 @@ export class UsersController {
       UserType.CUSTOMER,
       UserType.PARK_OWNER,
       UserType.ADMIN,
-      UserType.MODERATOR,
+      UserType.MODERATOR
     ]);
   }
 
@@ -165,13 +164,13 @@ export class UsersController {
       return new ApiResponse(
         200,
         'You have successfully deleted this user',
-        {},
+        {}
       );
     } catch (error) {
       return new ApiResponse(
         HttpStatus.INTERNAL_SERVER_ERROR,
         'You have successfully deleted this user',
-        {},
+        {}
       );
     }
   }

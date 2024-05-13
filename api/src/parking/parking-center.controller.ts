@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Controller,
   Logger,
@@ -21,8 +22,10 @@ import { AddCenterDto, AddSlotDto } from './dtos/add-center.dto';
 import { ParkingCenterGuard } from 'src/shared/guards/centers.guard';
 import { UploadService } from 'src/storage/uploads.service';
 import { ReservationRequestDto } from './dtos/reservation-requests.dto';
-import { _IReserveSlot } from 'src/shared/interfaces/slot.interface';
+import { _IAddCenterAddress, _IReserveSlot } from 'src/shared/interfaces/slot.interface';
+import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('owner/parking-center')
 export class ParkingCenterController {
   private logger = new Logger(ParkingCenterController.name);
@@ -30,19 +33,19 @@ export class ParkingCenterController {
   constructor(
     private readonly parkingService: ParkingCenterService,
     private readonly slotService: SlotService,
-    private readonly uploadService: UploadService,
+    private readonly uploadService: UploadService
   ) {}
 
   @UseGuards(ParkingCenterGuard)
   @Post()
   async addCenter(
     @Body() data: AddCenterDto,
-    @User() owner: _ISanitizedCustomer,
+    @User() owner: _ISanitizedCustomer
   ) {
     try {
       const centerId = await this.parkingService.addCenter(
         owner._id.toString(),
-        data,
+        data
       );
       return new ApiResponse(200, 'Center Added Successfully', centerId);
     } catch (error) {
@@ -55,14 +58,14 @@ export class ParkingCenterController {
   async getAllParkingCenters(
     @Query('centers') query: string,
     @Query('currentPage') currentPage: number,
-    @Query('size') size: number,
+    @Query('size') size: number
   ) {
     try {
       this.logger.log(`All Parking Centers`);
       const centers = await this.parkingService.getAllParkingCenters(
         query,
         currentPage,
-        size,
+        size
       );
       return new ApiResponse(200, 'Fetched Parking Centers', centers);
     } catch (error) {
@@ -71,32 +74,64 @@ export class ParkingCenterController {
     }
   }
 
-  // @Get()
-  // async getLatestParkingCenters() {
-  //   try {
-  //     this.logger.log(`All Parking Centers`);
-  //     const centers = await this.parkingService.getAllParkingCenters();
-  //     return new ApiResponse(200, 'Fetched Parking Centers', centers);
-  //   } catch (error) {
-  //     this.logger.error(`Error getting all parking centers: ${error.message}`);
-  //     throw error;
-  //   }
-  // }
-
   @Get('available')
   async getAvailableParkingCenters(
-    @Query('currentPage') currentPage: number,
-    @Query('size') size: number,
+    @Query('centers') query: string,
+    @Query('currentPage') currentPage: string,
+    @Query('size') size: string
   ) {
     try {
       this.logger.log(`All Parking Centers`);
       const centers = await this.parkingService.getAvailableParkingCenters(
-        currentPage,
-        size,
+        query,
+        parseInt(currentPage),
+        parseInt(size)
       );
-      return new ApiResponse(200, 'Fetched Parking Centers', centers);
+      return new ApiResponse(200, 'Fetched Available Parking Centers', centers);
     } catch (error) {
-      this.logger.error(`Error getting all parking centers: ${error.message}`);
+      this.logger.error(`Error getting available parking centers: ${error.message}`);
+      throw error;
+    }
+  }
+
+  @Get('popular')
+  async getPopularParkingCenters(
+    @Query('centers') query: string,
+    @Query('currentPage') currentPage: string,
+    @Query('size') size: string
+  ) {
+    try {
+      const centers = await this.parkingService.getPopularParkingCenters(
+        query,
+        parseInt(currentPage),
+        parseInt(size)
+      );
+      return new ApiResponse(200, 'Fetched Popular Parking Centers', centers);
+    } catch (error) {
+      this.logger.error(
+        `Error getting popular parking centers: ${error.message}`
+      );
+      throw error;
+    }
+  }
+
+  @Get('nearby')
+  async getNearbyParkingCenters(
+    @Query('centers') query: string,
+    @Query('currentPage') currentPage: string,
+    @Query('size') size: string
+  ) {
+    try {
+      const centers = await this.parkingService.getPopularParkingCenters(
+        query,
+        parseInt(currentPage),
+        parseInt(size)
+      );
+      return new ApiResponse(200, 'Fetched Nearby Parking Centers', centers);
+    } catch (error) {
+      this.logger.error(
+        `Error fetching nearby parking centers: ${error.message}`
+      );
       throw error;
     }
   }
@@ -105,7 +140,7 @@ export class ParkingCenterController {
   async getAllSlots(
     @Query('slots') query: string,
     @Query('currentPage') currentPage: number,
-    @Query('size') size: number,
+    @Query('size') size: number
   ) {
     try {
       this.logger.log(`All Slots`, query, currentPage, size);
@@ -135,13 +170,13 @@ export class ParkingCenterController {
       new ParseFilePipe({
         validators: [
           // ... Set of file validator instances here
-          new MaxFileSizeValidator({ maxSize: 2000 * 1024 }),
-        ],
-      }),
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 })
+        ]
+      })
     )
     files: Express.Multer.File[],
     @Body() data: AddSlotDto,
-    @Param() param: { center_id: string },
+    @Param() param: { center_id: string }
   ) {
     try {
       const { center_id } = param;
@@ -159,7 +194,7 @@ export class ParkingCenterController {
       const imageRes = await this.slotService.addSlotImages(images, slotId);
       return new ApiResponse(200, 'Added slot to center successfully', {
         slotId,
-        imageRes,
+        imageRes
       });
     } catch (error) {
       this.logger.error(`Error adding slot: ${error.message}`);
@@ -185,12 +220,12 @@ export class ParkingCenterController {
       new ParseFilePipe({
         validators: [
           // ... Set of file validator instances here
-          new MaxFileSizeValidator({ maxSize: 2000 * 1024 }),
-        ],
-      }),
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 })
+        ]
+      })
     )
     files: Express.Multer.File[],
-    @Param() { center_id }: { center_id: string },
+    @Param() { center_id }: { center_id: string }
   ) {
     try {
       const images = await this.uploadService.uploadFilesToDrive(files);
@@ -212,12 +247,12 @@ export class ParkingCenterController {
       new ParseFilePipe({
         validators: [
           // ... Set of file validator instances here
-          new MaxFileSizeValidator({ maxSize: 2000 * 1024 }),
-        ],
-      }),
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 })
+        ]
+      })
     )
     files: Express.Multer.File[],
-    @Param() { slot_id }: { slot_id: string },
+    @Param() { slot_id }: { slot_id: string }
   ) {
     try {
       const images = await this.uploadService.uploadFilesToDrive(files);
@@ -281,14 +316,52 @@ export class ParkingCenterController {
     }
   }
 
+  @Post(':center_id/add-address')
+  async addCenterAddress(
+    @Param('center_id') center_id: string,
+    @Body() data: _IAddCenterAddress
+  ) {
+    try {
+      const arg = {
+        center_id,
+        ...data
+      };
+      const address = await this.parkingService.addCenterAddress(arg);
+
+      return new ApiResponse(200, 'Address Added Succesfully', address);
+    } catch (error) {
+      this.logger.error(`Error getting all available slots: ${error.message}`);
+      throw error;
+    }
+  }
+
+  @Put(':center_id/update-address')
+  async updateCenterAddress(
+    @Param('center_id') center_id: string,
+    @Query('address_id') address_id: string,
+    @Body() data: _IAddCenterAddress
+  ) {
+    try {
+      const arg = {
+        center_id,
+        ...data
+      };
+      const address = await this.parkingService.updateCenterAddress(arg, address_id);
+
+      return new ApiResponse(200, 'Address Added Succesfully', address);
+    } catch (error) {
+      this.logger.error(`Error getting all available slots: ${error.message}`);
+      throw error;
+    }
+  }
+
   @Post(':center_id/available-slots')
-  async getAvailableSlots(
+  async requestReservation(
     @Param('center_id') centerId: string,
     @Query('currentPage') currentPage: number,
     @Query('size') size: number,
-    @Body() data: ReservationRequestDto,
+    @Body() data: ReservationRequestDto
   ) {
-    console.log(data);
     try {
       this.logger.log(`All Available Slots `);
       const { start_time, reservation_duration } = data;
@@ -297,12 +370,12 @@ export class ParkingCenterController {
         new Date(start_time),
         reservation_duration,
         currentPage,
-        size,
+        size
       );
       const totalPages = await this.slotService.fetchSlotsPage(centerId, size);
       return new ApiResponse(200, 'Fetched Available Slots', {
         slots,
-        totalPages,
+        totalPages
       });
     } catch (error) {
       this.logger.error(`Error getting all available slots: ${error.message}`);
@@ -324,7 +397,7 @@ export class ParkingCenterController {
   @Get(':center_id/slots/:slot_id')
   async getSlotDetails(
     @Param('center_id') centerId: string,
-    @Param('slot_id') slotId: string,
+    @Param('slot_id') slotId: string
   ) {
     try {
       this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
@@ -341,30 +414,26 @@ export class ParkingCenterController {
     @Param('center_id') center_id: string,
     @Param('slot_id') slot_id: string,
     @Query('vehicle_id') vehicle_id: string,
-    @Query('currentPage') currentPage: number,
-    @Query('size') size: number,
-    @Body() data: ReservationRequestDto,
+    @Body() data: ReservationRequestDto
   ) {
     try {
       this.logger.error(
-        `Get Slot Images: ${center_id} ${slot_id} ${vehicle_id}`,
+        `Get Slot Images: ${center_id} ${slot_id} ${vehicle_id}`
       );
       const reservation_data: _IReserveSlot = {
         center_id,
         slot_id,
         vehicle_id,
         start_time: new Date(data.start_time),
-        reservation_duration: data.reservation_duration,
-        currentPage,
-        size,
+        reservation_duration: data.reservation_duration
       };
       const reservation = await this.slotService.reserveParkingSlot(
-        reservation_data,
+        reservation_data
       );
       return new ApiResponse(
         200,
         'You have successfully reserved this slot',
-        reservation,
+        reservation
       );
     } catch (error) {
       this.logger.error(`Error getting slot bookings: ${error.message}`);
@@ -375,7 +444,7 @@ export class ParkingCenterController {
   @Get(':center_id/slots/:slot_id/reservations')
   async getAllSlotBookings(
     @Param('center_id') centerId: string,
-    @Param('slot_id') slotId: string,
+    @Param('slot_id') slotId: string
   ) {
     try {
       this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
@@ -391,13 +460,13 @@ export class ParkingCenterController {
   async getSlotBooking(@Param('reservation_id') reservationId: string) {
     try {
       const reservation = await this.slotService.getSlotReservation(
-        reservationId,
+        reservationId
       );
       // return { bookings };
       return new ApiResponse(
         200,
         'Reservation Fetched Successfully',
-        reservation,
+        reservation
       );
     } catch (error) {
       this.logger.error(`Error getting slot bookings: ${error.message}`);
@@ -408,7 +477,7 @@ export class ParkingCenterController {
   @Get(':center_id/slots/:slot_id/data')
   async getSlotData(
     @Param('center_id') centerId: string,
-    @Param('slot_id') slotId: string,
+    @Param('slot_id') slotId: string
   ) {
     try {
       const slotData = await this.slotService.getSlotData(centerId, slotId);
@@ -422,7 +491,7 @@ export class ParkingCenterController {
   @Get(':center_id/slots/:slot_id/images')
   async getSlotImages(
     @Param('center_id') centerId: string,
-    @Param('slot_id') slotId: string,
+    @Param('slot_id') slotId: string
   ) {
     try {
       // const images = await this.slotService.getSlotImages(centerId, slotId);

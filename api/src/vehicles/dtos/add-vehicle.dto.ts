@@ -5,7 +5,7 @@ export class AddVehicleDto {
   @IsNotEmpty()
   vehicle_no: string;
 
-  constructor(dto: AddVehicleDto) {
-    Object.assign(this, dto);
-  }
+  // constructor(dto: AddVehicleDto) {
+  //   Object.assign(this, dto);
+  // }
 }

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Model, Document, FilterQuery } from 'mongoose';
+import { Model, Document, FilterQuery, PipelineStage } from 'mongoose';
+import { SORT } from './shared/enums/general.enum';
+import { _ILookup } from './shared/interfaces/responses.interface';
 
 @Injectable()
 export class AggregationService {
@@ -13,7 +15,8 @@ export class AggregationService {
     currentPage: number,
     items: number,
     localField = '_id',
-  ) {
+    group?: object
+  ): Promise<T[]> {
     try {
       const offset = (currentPage - 1) * items;
       const result = await model.aggregate([
@@ -22,15 +25,82 @@ export class AggregationService {
             from, // Assuming the name of the slots collection is 'slots'
             localField,
             foreignField,
-            as: from,
-          },
+            as: from
+          }
         },
         {
-          $match: match,
+          $match: match
         },
         { $skip: offset },
-        { $limit: items },
+        { $limit: items }
       ]);
+
+      if (group) {
+        result.push({ $group: group });
+      }
+      return result;
+    } catch (error) {
+      throw new Error(`Aggregation error: ${error.message}`);
+    }
+  }
+
+  async deepAggregate<T extends Document, S extends Document>(
+    model: Model<T>,
+    currentPage: number,
+    limit: number,
+    sort: SORT = SORT.DESCENDING
+  ): Promise<S[]> {
+    try {
+      const offset = (currentPage - 1) * limit;
+      const result = await model.aggregate<S>([
+        {
+          $group: {
+            _id: '$slot_id',
+            count: { $sum: 1 }
+          }
+        },
+        { $skip: offset }, // Add $skip stage here
+        {
+          $sort: {
+            count: sort === SORT.DESCENDING ? -1 : 1
+          }
+        },
+        {
+          $limit: limit
+        },
+        {
+          $lookup: {
+            from: 'slots',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'parking_slot'
+          }
+        },
+        {
+          $unwind: '$parking_slot'
+        },
+        {
+          $group: {
+            _id: '$parking_slot.center_id',
+            count: { $sum: '$count' }
+          }
+        },
+        {
+          $lookup: {
+            from: 'parkingcenters',
+            localField: '_id',
+            foreignField: '_id',
+            as: 'popular_centers'
+          }
+        },
+        {
+          $unset: ['_id', 'center_id', 'count']
+        },
+        {
+          $unwind: '$popular_centers'
+        }
+      ]);
+
       return result;
     } catch (error) {
       throw new Error(`Aggregation error: ${error.message}`);
@@ -43,21 +113,33 @@ export class AggregationService {
     query: string,
     currentPage: number,
     items: number,
-  ): Promise<T[]> {
+    populatePath?: string,
+    populateLimit?: number
+  ) {
     const offset = (currentPage - 1) * items;
 
     try {
       const simpleConditions = fieldNames.map((field) => ({
-        [field]: { $regex: query, $options: 'i' },
+        [field]: { $regex: query, $options: 'i' }
       }));
       const conditions = {
-        $or: simpleConditions,
+        $or: simpleConditions
       } as unknown as FilterQuery<T>[];
 
       const documents = await model
         .find(conditions)
         .skip(offset)
         .limit(items)
+        // Populate only when populationPath and populationLimit are provided
+        .populate(
+          populatePath && populateLimit
+            ? {
+                path: populatePath,
+                strictPopulate: false,
+                options: { limit: populateLimit } // Limit the number of items per population
+              }
+            : undefined
+        )
         .exec();
 
       return documents;
@@ -73,14 +155,14 @@ export class AggregationService {
     endTime: Date,
     currentPage = 1,
     items = 5,
-    options: object,
+    options: object
   ): Promise<T[]> {
     const offset = (currentPage - 1) * items;
 
     try {
       const documents = await model
         .find({
-          ...options,
+          ...options
           // $or: [
           //   {
           //     $and: [
@@ -112,42 +194,73 @@ export class AggregationService {
     }
   }
 
-  async fetchPageNumbers<T extends Document>(
+  async pageNumbersPipeline<T extends Document>(
     model: Model<T>,
     fieldNames: string[],
     query = '',
     items: number,
-    options?: object,
+    options?: object
   ) {
-    console.log(options);
     try {
-      // const test = [
-      //   [{ start_time: { $lt: startTime } }, { end_time: { $gt: startTime } }],
-      //   [{ start_time: { $lt: endTime } }, { end_time: { $gt: endTime } }],
-      //   // [{ start_time: { $gte: startTime } }, { end_time: { $lte: endTime } }],
-      // ];
-      // const complexConditions = test.map((first) =>
-      //   first.map((final) => ({ final })),
-      // );
-
+      // Construct simple conditions for each field name
       const simpleConditions = fieldNames.map((field) => ({
-        [field]: { $regex: query, $options: 'i' },
+        [field]: { $regex: query, $options: 'i' }
       }));
 
+      // Combine simple conditions using $or operator
       const conditions = {
-        $or: simpleConditions,
+        $or: simpleConditions
       } as unknown as FilterQuery<T>[];
-
+      // Calculate total count of documents matching conditions
       const totalCount = await model
-        .countDocuments({ ...options }, conditions)
+        .countDocuments({ ...options, ...conditions })
         .exec();
 
+      // Calculate total pages based on total count and items per page
       const totalPages = Math.ceil(totalCount / items);
 
       return totalPages;
     } catch (error) {
       console.error('Database Error:', error);
       throw new Error(error.message);
+    }
+  }
+
+  async virtualFieldsPipeline<T extends Document>(
+    model: Model<T>,
+    match_fields: string[],
+    query: string,
+    lookup_data: _ILookup[],
+    currentPage: number,
+    limit: number
+  ) {
+    try {
+      const offset = (currentPage - 1) * limit;
+      const matchers = match_fields.map((field) => ({
+        [field]: new RegExp(query)
+      }));
+      const lookups: PipelineStage.Lookup[] = lookup_data.map((data) => ({
+        $lookup: {
+          from: data.from,
+          as: data.as,
+          localField: '_id',
+          foreignField: data.foreignField
+        }
+      }));
+
+      const pipeline = await model.aggregate([
+        {
+          $match: { $and: matchers } // Combine matchers using $and
+        },
+        { $skip: offset }, // Skip documents based on the offset
+        ...lookups,
+        { $limit: limit } // Limit the number of documents returned
+      ]);
+
+      return pipeline;
+    } catch (error) {
+      console.error(error);
+      throw error; // Rethrow the error to propagate it to the caller
     }
   }
 }

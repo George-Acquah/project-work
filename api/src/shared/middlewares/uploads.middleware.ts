@@ -10,7 +10,7 @@ export class UploadMiddleware implements NestMiddleware {
   private readonly allowedFiles = (
     req: _ICustomRequest,
     file: Express.Multer.File,
-    cb: (error: Error | null, acceptFile: boolean) => void,
+    cb: (error: Error | null, acceptFile: boolean) => void
   ): void => {
     // Define the allowed file extensions
     const allowedExtensions = /\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF|pdf|PDF)$/;
@@ -28,7 +28,7 @@ export class UploadMiddleware implements NestMiddleware {
   public use(req: _ICustomRequest, res: Response, next: NextFunction): any {
     const upload = multer({
       storage: this.storage,
-      fileFilter: this.allowedFiles,
+      fileFilter: this.allowedFiles
     }).array('files', 5); // Use .array to accept multiple files with the field name 'files'
 
     upload(req, res, function (err: any) {

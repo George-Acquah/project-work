@@ -1,11 +1,11 @@
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ParkingCenter } from './parking-centers.schema';
+import { Slot } from './slot.schema';
 
-export type CenterAddressDocument = Document & CenterAddress;
+export type SlotAddressDocument = Document & SlotAddress;
 
 @Schema()
-export class CenterAddress {
+export class SlotAddress {
   @Prop({ type: String, required: true })
   city: string;
 
@@ -21,12 +21,8 @@ export class CenterAddress {
   @Prop({ type: String })
   country: string;
 
-  @Prop({
-    type: MongooseSchema.Types.ObjectId,
-    ref: 'ParkingCenter',
-    required: true
-  })
-  center_id: ParkingCenter;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Slot', required: true })
+  slot_id: Slot;
 }
 
-export const CenterAddressSchema = SchemaFactory.createForClass(CenterAddress);
+export const SlotAddressSchema = SchemaFactory.createForClass(SlotAddress);

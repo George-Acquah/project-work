@@ -1,7 +1,12 @@
 enum _EWSExceptionTypes {
   BAD_REQUEST = 'BadRequest',
   UNAUTHORIZED = 'Unauthorized',
-  UNKNOWN = 'Unknown',
+  UNKNOWN = 'Unknown'
+}
+
+enum SORT {
+  DESCENDING = 'descending',
+  ASCENDING = 'ascending'
 }
 
 enum AddressConstraints {
@@ -18,7 +23,7 @@ enum AddressConstraints {
   STATE_MAXVALUE = 50,
 
   PINCODE_MAXLENGTH = 'Max supported length of pincode is 6',
-  PINCODE_MAXVALUE = 6,
+  PINCODE_MAXVALUE = 6
 }
 
 enum VehicleConstraints {
@@ -33,7 +38,7 @@ enum VehicleConstraints {
   FIRSTNAME_MAXVALUE = 50,
 
   LASTNAME_MAXLENGTH = 'Max supported length of lastname is 50',
-  LASTNAME_MAXVALUE = 50,
+  LASTNAME_MAXVALUE = 50
 }
 
 enum SlotConstraints {
@@ -48,7 +53,7 @@ enum SlotConstraints {
   FIRSTNAME_MAXVALUE = 50,
 
   LASTNAME_MAXLENGTH = 'Max supported length of lastname is 50',
-  LASTNAME_MAXVALUE = 50,
+  LASTNAME_MAXVALUE = 50
 }
 
 export {
@@ -56,4 +61,5 @@ export {
   AddressConstraints,
   SlotConstraints,
   VehicleConstraints,
+  SORT
 };

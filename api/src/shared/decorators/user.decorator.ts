@@ -6,5 +6,5 @@ export const User = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): _TSanitizedUser => {
     const request: Request = ctx.switchToHttp().getRequest();
     return request.user as _TSanitizedUser;
-  },
+  }
 );

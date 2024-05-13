@@ -50,11 +50,11 @@ export class ParkingReservationData {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'ParkingCenter',
-    required: true,
+    required: true
   })
   center_id: ParkingCenter;
 }
 
 export const ParkingReservationDataSchema = SchemaFactory.createForClass(
-  ParkingReservationData,
+  ParkingReservationData
 );
