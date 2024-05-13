@@ -1,6 +1,6 @@
 const protectedRoutes = ["/profile"];
-const authRoutes = ["/login"];
-const publicRoutes = ["/about", "/"];
+// const authRoutes = ["/login"];
+// const publicRoutes = ["/about", "/"];
 const loginCallbackUrl = "/dashboard";
 
 const dashboardRoutes = {
@@ -82,6 +82,19 @@ const dashboardRoutes = {
   },
 };
 
+const publicRoutes = ['/', '/auth/new-verification'];
+
+const authRoutes = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/error',
+  '/auth/reset',
+  '/auth/new-password',
+];
+
+const apiAuthPrefix = '/api/auth';
+const DEFAULT_LOGIN_REDIRECT = '/settings';
+
 
 export {
   authRoutes,
@@ -89,4 +102,6 @@ export {
   publicRoutes,
   loginCallbackUrl,
   dashboardRoutes,
+  apiAuthPrefix,
+  DEFAULT_LOGIN_REDIRECT
 };
