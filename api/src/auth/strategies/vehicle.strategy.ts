@@ -11,19 +11,20 @@ import { strategies } from 'src/shared/constants/auth.constants';
 @Injectable()
 export class VehicleStrategy extends PassportStrategy(
   Strategy,
-  strategies.VEHICLE,
+  strategies.VEHICLE
 ) {
   constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
       secretOrKey: process.env.SECRET_KEY,
       jwtFromRequest: (request: Request) => {
+        console.log(request.headers);
         const authHeader = request.headers.authorization;
         if (authHeader && authHeader.split(' ')[0] === 'Bearer') {
           return authHeader.split(' ')[1];
         }
         return undefined;
-      },
+      }
     });
   }
 
@@ -36,7 +37,7 @@ export class VehicleStrategy extends PassportStrategy(
 
     if (user.userType !== UserType.CUSTOMER) {
       throw new UnauthorizedException(
-        'Only drivers or customers are allowed to add vehicles',
+        'Only drivers or customers are allowed to add vehicles'
       );
     }
 

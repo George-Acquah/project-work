@@ -10,7 +10,7 @@ export type UserDocument = HydratedDocument<User>;
 @Schema({
   discriminatorKey: 'userType',
   toJSON: { virtuals: true },
-  toObject: { virtuals: true },
+  toObject: { virtuals: true }
 })
 export class User extends Document {
   @Prop({ required: true, unique: true })
@@ -24,7 +24,7 @@ export class User extends Document {
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
-    ref: 'Profile',
+    ref: 'Profile'
   })
   profile: MongooseSchema.Types.ObjectId;
 }
@@ -35,7 +35,7 @@ UserSchema.virtual('image', {
   ref: 'UserImage',
   localField: '_id',
   foreignField: 'userId',
-  justOne: true,
+  justOne: true
 });
 
 UserSchema.pre('save', async function (next: (err?: Error) => void) {

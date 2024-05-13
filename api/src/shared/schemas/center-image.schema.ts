@@ -18,7 +18,7 @@ export class CenterImage {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'ParkingCenter',
-    required: true,
+    required: true
   })
   center_id: ParkingCenter;
 }

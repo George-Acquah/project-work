@@ -4,7 +4,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  UnauthorizedException,
+  UnauthorizedException
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
@@ -20,13 +20,13 @@ import {
   _ISanitizedCustomer,
   _ISanitizedParkOwner,
   _TSanitizedUser,
-  _TUser,
+  _TUser
 } from 'src/shared/interfaces/users.interface';
 import { LoginUserDto } from './dtos/login-users.dtos';
 import {
   _ICloudRes,
   _IDbUserImage,
-  _IUserImage,
+  _IUserImage
 } from 'src/shared/interfaces/images.interface';
 import { AggregationService } from 'src/aggregation.service';
 
@@ -40,13 +40,13 @@ export class UsersService {
     private parkOwnerModel: Model<_IParkOwner>,
     @InjectModel('Profile') private profileModel: Model<_IDbProfile>,
     @InjectModel('UserImage') private userImageModel: Model<_IDbUserImage>,
-    private readonly aggregationService: AggregationService,
+    private readonly aggregationService: AggregationService
   ) {}
 
   async populateUserFields<T>(
     users: _TUser[],
     fields: string,
-    deepFields = '',
+    deepFields = ''
   ): Promise<T | any> {
     const populatedUsers = await Promise.all(
       users.map(async (user) => {
@@ -55,11 +55,11 @@ export class UsersService {
           strictPopulate: false,
           populate: {
             path: deepFields,
-            strictPopulate: false,
-          },
+            strictPopulate: false
+          }
         });
         return populatedUser;
-      }),
+      })
     );
 
     return populatedUsers;
@@ -71,7 +71,7 @@ export class UsersService {
 
       const savedImage = new this.userImageModel({
         userId: id,
-        ...image,
+        ...image
       });
 
       await savedImage.save();
@@ -103,7 +103,7 @@ export class UsersService {
   }
 
   async createCustomer(
-    userDetails: CreateUserDto,
+    userDetails: CreateUserDto
   ): Promise<_ISanitizedCustomer> {
     const { email } = userDetails;
     const existingCustomer = await this.userModel.findOne({ email });
@@ -166,8 +166,8 @@ export class UsersService {
         strictPopulate: false,
         populate: {
           path: 'images center_images',
-          strictPopulate: false,
-        },
+          strictPopulate: false
+        }
       })
       .exec();
 
@@ -198,8 +198,8 @@ export class UsersService {
           strictPopulate: false,
           populate: {
             path: 'images',
-            strictPopulate: false,
-          },
+            strictPopulate: false
+          }
         })
         .exec();
 
@@ -216,7 +216,7 @@ export class UsersService {
   async updateApplicant(
     id: string,
     data: any,
-    isAdmin: boolean,
+    isAdmin: boolean
   ): Promise<_TSanitizedUser | null> {
     const user = await this.userModel.findOne({ _id: id });
 
@@ -231,16 +231,7 @@ export class UsersService {
       if (data.userType) {
         user.userType = data.userType;
       }
-      // if (data.isActive !== undefined) {
-      //   user. = data.isActive;
-      // }
     } else {
-      // if (
-      //   data.username &&
-      //   (data.username !== '' || data.username !== applicant.username)
-      // ) {
-      //   applicant.username = data.username;
-      // }
       if (data.email && (data.email !== '' || data.email !== user.email)) {
         user.email = data.email;
       }
@@ -324,7 +315,7 @@ export class UsersService {
       const populatedUsers = (await this.populateUserFields<_TUser[]>(
         latestUsers,
         'profile image vehicles',
-        'images',
+        'images'
       )) as _TUser[];
 
       console.log(populatedUsers);
@@ -339,7 +330,7 @@ export class UsersService {
   async fetchFilteredUsers(
     query = '',
     currentPage: number,
-    items: number,
+    items: number
   ): Promise<_TSanitizedUser[]> {
     const fieldNames = ['email', 'userType']; // Add more fields as needed
     try {
@@ -348,13 +339,13 @@ export class UsersService {
         fieldNames,
         query,
         currentPage,
-        items,
+        items
       );
 
       const populatedUsers = (await this.populateUserFields<_TUser[]>(
         users,
         'profile image vehicles centers',
-        'images',
+        'images'
       )) as _TUser[];
 
       return populatedUsers.map((user) => sanitizeUser(user));
@@ -366,11 +357,11 @@ export class UsersService {
   async fetchUsersPage(query = '', items: number): Promise<number> {
     try {
       const fieldNames = ['email', 'userType'];
-      const totalPages = await this.aggregationService.fetchPageNumbers(
+      const totalPages = await this.aggregationService.pageNumbersPipeline(
         this.userModel,
         fieldNames,
         query,
-        items,
+        items
       );
 
       return totalPages;

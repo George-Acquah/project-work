@@ -3,7 +3,7 @@ import {
   _IDbCenterImage,
   _IDbSlotImage,
   _IParkingCenterImage,
-  _ISlotImage,
+  _ISlotImage
 } from './images.interface';
 import { _IVehicle } from './vehicles.interface';
 import { Document } from 'mongoose';
@@ -13,6 +13,7 @@ interface _IDbParkingCenter extends Document {
   description: string;
   type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
   center_data: _IDbCenterData;
+  center_address: _IDbCenterAddress;
   center_images: Array<_IDbCenterImage>;
   slots: Array<_IDbSlot>;
   owner: string;
@@ -23,6 +24,7 @@ interface _IParkingCenter {
   description: string;
   type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
   center_data: _ICenterData;
+  center_address: _ICenterAddress;
   center_images: Array<_IParkingCenterImage>;
   slots: Array<_ISlot>;
   owner: string;
@@ -35,6 +37,7 @@ interface _IDbSlot extends Document {
   slot_images: Array<_IDbSlotImage>;
   isAvailable: boolean;
   slot_data: _IDbSlotData;
+  slot_address: _IDbSlotAddress;
   center_id: string;
 }
 interface _ISlot {
@@ -45,6 +48,7 @@ interface _ISlot {
   slot_images: Array<_ISlotImage>;
   isAvailable: boolean;
   slot_data: _ISlotData;
+  slot_address: _ISlotAddress;
   center_id: string;
 }
 
@@ -86,6 +90,30 @@ interface _ICenterData {
   center_id: string;
 }
 
+interface _IAddress {
+  city: string;
+  latitude: number;
+  longitude: number;
+  state: string;
+  country: string;
+}
+
+interface _IDbCenterAddress extends _IAddress, Document {
+  center_id: string;
+}
+
+interface _IDbSlotAddress extends _IAddress, Document {
+  slot_id: string;
+}
+interface _ICenterAddress extends _IAddress {
+  _id: string;
+  center_id: string;
+}
+
+interface _ISlotAddress extends _IAddress {
+  _id: string;
+  slot_id: string;
+}
 interface _IDbSlotReservation extends Document {
   slot_id: string; // can contain details of parking center
   vehicle_id: string; // can contain details of customer
@@ -160,14 +188,20 @@ interface _IAddSlotData extends _IAddData {
   slot_id: string;
 }
 
+interface _IAddCenterAddress extends _IAddress {
+  center_id: string;
+}
+
+interface _IAddSlotAddress extends _IAddress {
+  slot_id: string;
+}
+
 interface _IReserveSlot {
   slot_id: string;
   center_id: string;
   vehicle_id: string;
   start_time: Date;
   reservation_duration: number;
-  currentPage: number;
-  size: number;
 }
 
 export {
@@ -191,4 +225,10 @@ export {
   _IDbReservationData,
   _IReservationRequest,
   _IReserveSlot,
+  _IDbSlotAddress,
+  _IDbCenterAddress,
+  _ICenterAddress,
+  _ISlotAddress,
+  _IAddCenterAddress,
+  _IAddSlotAddress
 };

@@ -3,17 +3,21 @@ import {
   _IDbCenterImage,
   _IDbSlotImage,
   _IParkingCenterImage,
-  _ISlotImage,
+  _ISlotImage
 } from '../interfaces/images.interface';
 import {
+  _ICenterAddress,
   _ICenterData,
+  _IDbCenterAddress,
   _IDbCenterData,
   _IDbParkingCenter,
   _IDbSlot,
+  _IDbSlotAddress,
   _IDbSlotData,
   _IParkingCenter,
   _ISlot,
-  _ISlotData,
+  _ISlotAddress,
+  _ISlotData
 } from '../interfaces/slot.interface';
 
 function determineSlotType(slot_data: _ISlotData): SlotTypes {
@@ -21,7 +25,7 @@ function determineSlotType(slot_data: _ISlotData): SlotTypes {
     total_daily_bookings,
     total_weekly_bookings,
     total_monthly_bookings,
-    total_yearly_bookings,
+    total_yearly_bookings
   } = slot_data;
 
   // Calculate the average daily bookings
@@ -53,7 +57,7 @@ function determineCenterType(center_data: _ICenterData): CenterTypes {
     total_weekly_bookings,
     total_monthly_bookings,
     total_yearly_bookings,
-    total_slots,
+    total_slots
   } = center_data;
 
   // Calculate the average daily bookings
@@ -90,13 +94,13 @@ function sanitizeSlotImages(images: _IDbSlotImage[]): _ISlotImage[] {
       file_id,
       filename,
       mimetype,
-      slot_id,
+      slot_id
     };
   });
 }
 
 function sanitizeCenterImages(
-  images: _IDbCenterImage[],
+  images: _IDbCenterImage[]
 ): _IParkingCenterImage[] {
   return images.map((image) => {
     const { _id, file_id, filename, mimetype, center_id } = image;
@@ -106,7 +110,7 @@ function sanitizeCenterImages(
       file_id,
       filename,
       mimetype,
-      center_id,
+      center_id
     };
   });
 }
@@ -119,7 +123,7 @@ function sanitizeSlotData(data: _IDbSlotData): _ISlotData {
     total_monthly_bookings,
     total_weekly_bookings,
     total_yearly_bookings,
-    slot_id,
+    slot_id
   } = data;
 
   return {
@@ -129,7 +133,21 @@ function sanitizeSlotData(data: _IDbSlotData): _ISlotData {
     total_daily_bookings,
     total_monthly_bookings,
     total_weekly_bookings,
-    total_yearly_bookings,
+    total_yearly_bookings
+  };
+}
+
+function sanitizeSlotAddress(address: _IDbSlotAddress): _ISlotAddress {
+  const { _id, city, latitude, longitude, state, country, slot_id } = address;
+
+  return {
+    _id: _id.toString() as string,
+    slot_id,
+    city,
+    latitude,
+    longitude,
+    state,
+    country
   };
 }
 
@@ -142,7 +160,7 @@ function sanitizeCenterData(data: _IDbCenterData): _ICenterData {
     total_weekly_bookings,
     total_yearly_bookings,
     total_slots,
-    center_id,
+    center_id
   } = data;
 
   return {
@@ -153,7 +171,21 @@ function sanitizeCenterData(data: _IDbCenterData): _ICenterData {
     total_daily_bookings,
     total_monthly_bookings,
     total_weekly_bookings,
-    total_yearly_bookings,
+    total_yearly_bookings
+  };
+}
+
+function sanitizeCenterAddress(address: _IDbCenterAddress): _ICenterAddress {
+  const { _id, city, latitude, longitude, state, country, center_id } = address;
+
+  return {
+    _id: _id.toString() as string,
+    center_id,
+    city,
+    latitude,
+    longitude,
+    state,
+    country
   };
 }
 
@@ -161,6 +193,7 @@ function sanitizeSlot(slot: _IDbSlot): _ISlot {
   const { _id, slot_name, description, type, isAvailable, center_id } = slot;
   const slot_images = slot?.slot_images;
   const slot_data = slot?.slot_data;
+  const slot_address = slot?.slot_address;
 
   return {
     _id: _id.toString() as string,
@@ -171,6 +204,7 @@ function sanitizeSlot(slot: _IDbSlot): _ISlot {
     isAvailable,
     slot_images: sanitizeSlotImages(slot_images) || [],
     slot_data: slot_data ? sanitizeSlotData(slot_data) : null,
+    slot_address: slot_address ? sanitizeSlotAddress(slot_address) : null
   };
 }
 
@@ -179,6 +213,7 @@ function sanitizeSlots(slots: _IDbSlot[]): _ISlot[] {
     const { _id, slot_name, description, type, isAvailable, center_id } = slot;
     const slot_images = slot?.slot_images;
     const slot_data = slot?.slot_data;
+    const slot_address = slot?.slot_address;
 
     return {
       _id: _id.toString() as string,
@@ -189,6 +224,7 @@ function sanitizeSlots(slots: _IDbSlot[]): _ISlot[] {
       isAvailable,
       slot_images: sanitizeSlotImages(slot_images) || [],
       slot_data: slot_data ? sanitizeSlotData(slot_data) : null,
+      slot_address: slot_address ? sanitizeSlotAddress(slot_address) : null
     };
   });
 }
@@ -198,6 +234,7 @@ function sanitizeCenter(center: _IDbParkingCenter): _IParkingCenter {
   const center_images = center?.center_images;
   const center_data = center?.center_data;
   const slots = center?.slots;
+  const center_address = center?.center_address;
 
   return {
     _id: _id.toString() as string,
@@ -208,6 +245,9 @@ function sanitizeCenter(center: _IDbParkingCenter): _IParkingCenter {
     slots: sanitizeSlots(slots) || [],
     center_images: sanitizeCenterImages(center_images) || [],
     center_data: center_data ? sanitizeCenterData(center_data) : null,
+    center_address: center_address
+      ? sanitizeCenterAddress(center_address)
+      : null
   };
 }
 
@@ -217,6 +257,7 @@ function sanitizeCenters(centers: _IDbParkingCenter[]): _IParkingCenter[] {
     const center_images = center?.center_images;
     const center_data = center?.center_data;
     const slots = center?.slots;
+    const center_address = center?.center_address;
 
     return {
       _id: _id.toString() as string,
@@ -227,6 +268,9 @@ function sanitizeCenters(centers: _IDbParkingCenter[]): _IParkingCenter[] {
       slots: sanitizeSlots(slots) || [],
       center_images: sanitizeCenterImages(center_images) || [],
       center_data: center_data ? sanitizeCenterData(center_data) : null,
+      center_address: center_address
+        ? sanitizeCenterAddress(center_address)
+        : null
     };
   });
 }
@@ -242,4 +286,6 @@ export {
   sanitizeCenterImages,
   sanitizeCenterData,
   sanitizeSlotData,
+  sanitizeCenterAddress,
+  sanitizeSlotAddress
 };
