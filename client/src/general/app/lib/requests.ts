@@ -12,6 +12,12 @@ async function verifyUser() {
   return response.data;
 }
 
+async function fetchUserById(id: string) {
+  const url = `${endpoints.USERS.GET_SINGLE_USER}/${id}`;
+  const response = await fetcher<_IUser>(url, "GET", "no-store");
+  return response.data;
+}
+
 async function fetchUserTypes() {
   const url = endpoints.USERS.GET_ALL_ROLES;
   const response = await fetcher<string[]>(`${url}`, "GET", "default");
@@ -119,6 +125,7 @@ async function fetchSlotsPage(
 
 export {
   verifyUser,
+  fetchUserById,
   fetchUserTypes,
   fetchFilteredParkingCenters,
   fetchSingleParkingCenter,

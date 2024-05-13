@@ -1,40 +1,35 @@
 import NextAuth from "next-auth";
+import { DEFAULT_LOGIN_REDIRECT, apiAuthPrefix, authRoutes, publicRoutes } from "./app/lib/routes";
 import { authConfig } from "./auth.config";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export default NextAuth(authConfig).auth;
+const { auth } = NextAuth(authConfig);
+export default auth((req) => {
+  const { pathname } = req.nextUrl;
+  const isLoggedIn = !!req.auth;
+  
+    const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
+    const isPublicRoute = publicRoutes.includes(pathname);
+  const isAuthRoute = authRoutes.includes(pathname);
+  
+    if (isApiAuthRoute) return null;
+
+    if (isAuthRoute) {
+      if (isLoggedIn) {
+        return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.nextUrl));
+      }
+      return null;
+  }
+  
+    if (!isLoggedIn && !isPublicRoute) {
+      let callbackUrl = pathname;
+
+      if (req.nextUrl.search) {
+        callbackUrl += req.nextUrl.search;
+      }
+    }
+
+})
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.png).*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
-
-export function middleware(request: NextRequest) {
-  request.cookies.delete("nextjs");
-
-  const response = NextResponse.next();
-
-  return response;
-}
-// export function middleware(request: NextRequest) {
-//   const reservationStatus = request.cookies.get("__ls_val");
-//   const reservationPayload = request.cookies.get(
-//     process.env.NEXT_PUBLIC_REQUEST_RESERVATION_PAYLOAD
-//   );
-
-//     if (reservationPayload && reservationStatus) {
-//       // request.cookies.delete(process.env.NEXT_PUBLIC_REQUEST_RESERVATION);
-//       // request.cookies.delete(process.env.NEXT_PUBLIC_REQUEST_RESERVATION_DATA);
-//       // request.cookies.delete(process.env.NEXT_PUBLIC_AVAILABLE_SLOTS);
-//       // request.cookies.delete(
-//       //   process.env.NEXT_PUBLIC_REQUEST_RESERVATION_PAYLOAD
-//       // );
-//       console.log(request.cookies.has("__ls_val")); // => true
-//       request.cookies.delete("__ls_val");
-//       console.log("Ima gon work");
-//     }
-
-//   const response = NextResponse.next();
-
-//   return response;
-// }

@@ -21,11 +21,11 @@ const UpdateAdmin = AdminSchema.omit({ id: true, username: true });
 const CreateParkingCenter = CenterSchema.omit({ id: true });
 
 // AUTHS
-async function refreshToken(token: JWT): Promise<JWT> {
+async function refreshToken(tokens: _ITokens): Promise<JWT> {
   const response = await fetch(`${API}/auth/refresh`, {
     method: "POST",
     headers: {
-      authorization: `Refresh ${token.tokens.refresh_token}`,
+      authorization: `Refresh ${tokens.refresh_token}`,
     },
     credentials: "include",
   });
@@ -34,12 +34,15 @@ async function refreshToken(token: JWT): Promise<JWT> {
     throw new Error("Your Session has Expired. Sign in again to continue.");
   }
 
-  const res: _ITokens = await response.json();
+  const res = await response.json();
 
-  return {
-    ...token,
-    ...res,
-  };
+  console.log('testing: ', tokens)
+return {
+  // ...tokens,
+  user: res.data.user,
+  tokens: res.data.tokens,
+};
+
 }
 
 async function authenticate(prevState: string | undefined, formData: FormData) {
