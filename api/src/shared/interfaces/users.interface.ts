@@ -114,5 +114,5 @@ export {
   _TUser,
   _TSanitizedUser,
   _IDbProfile,
-  _ISanitizedProfile,
+  _ISanitizedProfile
 };

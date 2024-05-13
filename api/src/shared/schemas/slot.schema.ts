@@ -20,7 +20,7 @@ export class Slot {
   @Prop({
     type: MongooseSchema.Types.ObjectId,
     ref: 'ParkingCenter',
-    required: true,
+    required: true
   })
   center_id: ParkingCenter;
 }
@@ -31,12 +31,12 @@ SlotSchema.virtual('slot_data', {
   ref: 'SlotData',
   localField: '_id',
   foreignField: 'slot_id',
-  justOne: true,
+  justOne: true
 });
 
 SlotSchema.virtual('slot_images', {
   ref: 'SlotImage',
   localField: '_id',
   foreignField: 'slot_id',
-  justOne: false,
+  justOne: false
 });

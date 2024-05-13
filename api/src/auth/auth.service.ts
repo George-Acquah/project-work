@@ -2,7 +2,7 @@ import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import {
   _IPayload,
   _ITokens,
-  _TJwtPayload,
+  _TJwtPayload
 } from 'src/shared/interfaces/jwt_payload.interface';
 import { sign, verify } from 'jsonwebtoken';
 import { _TSanitizedUser } from 'src/shared/interfaces/users.interface';
@@ -12,7 +12,7 @@ import { compare } from 'bcrypt';
 import {
   appendRandomTextAndLength,
   getExpirationTime,
-  sanitizeUser,
+  sanitizeUser
 } from 'src/shared/utils/users.utils';
 
 @Injectable()
@@ -27,24 +27,23 @@ export class AuthService {
     const tokenPayload = verify(token, secret) as _TJwtPayload;
     return {
       sub: {
-        email: tokenPayload.sub.email,
+        email: tokenPayload.sub.email
       },
       user_id: tokenPayload.user_id,
-      userType: tokenPayload.userType,
+      userType: tokenPayload.userType
     };
   }
 
   async validateUser(email: string, password: string) {
     const user = await this.userService.findUser(email);
-    this.logger.log(user);
-
+    //Compare password from user to password in DB
     const isValidPassword = await compare(password, user.password);
 
     if (user && isValidPassword) {
       return sanitizeUser(user);
     }
 
-    throw new UnauthorizedException();
+    throw new UnauthorizedException('Wrong Password');
   }
 
   async refreshToken(user: _TSanitizedUser) {
@@ -52,21 +51,21 @@ export class AuthService {
       user_id: user._id?.toString() ?? '',
       userType: user.userType,
       sub: {
-        email: user.email,
-      },
+        email: user.email
+      }
     };
 
     const access_token = await this.signPayload(
       payload,
       process.env.SECRET_KEY,
-      '2h',
+      '2h'
     );
 
     const u_id = appendRandomTextAndLength(user._id);
     const refresh_token = await this.signPayload(
       payload,
       process.env.REFRESH_KEY,
-      '2d',
+      '2d'
     );
 
     const expiresIn = getExpirationTime(45);
@@ -75,11 +74,11 @@ export class AuthService {
       access_token,
       u_id,
       refresh_token,
-      expiresIn,
+      expiresIn
     };
 
     return {
-      tokens,
+      tokens
     };
   }
 
@@ -91,41 +90,41 @@ export class AuthService {
       user_id: user._id?.toString() ?? '',
       userType: user.userType,
       sub: {
-        email: user.email,
-      },
+        email: user.email
+      }
     };
 
     const access_token = await this.signPayload(
       payload,
       process.env.SECRET_KEY,
-      '1d',
+      '10h'
     );
 
     const u_id = appendRandomTextAndLength(user._id);
     const refresh_token = await this.signPayload(
       payload,
       process.env.REFRESH_KEY,
-      '2d',
+      '2d'
     );
 
-    const expiresIn = getExpirationTime(45);
+    const expiresIn = getExpirationTime(5);
 
     const tokens: _ITokens = {
       access_token,
       u_id,
       refresh_token,
-      expiresIn,
+      expiresIn
     };
 
     return {
       user,
-      tokens,
+      tokens
     };
   }
 
   async findByPayload(payload: _IPayload) {
     const {
-      sub: { email },
+      sub: { email }
     } = payload;
 
     return await this.userService.findUser(email);

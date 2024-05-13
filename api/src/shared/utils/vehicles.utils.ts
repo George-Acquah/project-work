@@ -1,6 +1,6 @@
 import {
   _IDbVehicleImage,
-  _IVehicleImage,
+  _IVehicleImage
 } from '../interfaces/images.interface';
 import { _IDbVehicle, _IVehicle } from '../interfaces/vehicles.interface';
 
@@ -12,7 +12,7 @@ function sanitizeVehicleImage(images: _IDbVehicleImage[]): _IVehicleImage[] {
       _id: _id.toString() as string,
       file_id,
       filename,
-      mimetype,
+      mimetype
     };
   });
 }
@@ -27,7 +27,7 @@ function sanitizevehicle(vehicle: _IDbVehicle): _IVehicle {
     isVerified,
     hasSlot,
     driver,
-    images: sanitizeVehicleImage(images) || [],
+    images: sanitizeVehicleImage(images) || []
   };
 }
 
@@ -41,7 +41,7 @@ function sanitizeVehicles(vehicles: _IDbVehicle[]): _IVehicle[] {
       isVerified,
       hasSlot,
       driver,
-      images: sanitizeVehicleImage(images) || [],
+      images: sanitizeVehicleImage(images) || []
     };
   });
 }

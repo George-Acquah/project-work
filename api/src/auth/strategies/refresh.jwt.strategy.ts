@@ -9,19 +9,20 @@ import { strategies } from 'src/shared/constants/auth.constants';
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(
   Strategy,
-  strategies.REFRESH,
+  strategies.REFRESH
 ) {
   constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_KEY,
       jwtFromRequest: (request: Request) => {
+        console.log(request.headers);
         const authHeader = request.headers.authorization;
         if (authHeader && authHeader.split(' ')[0] === 'Refresh') {
           return authHeader.split(' ')[1];
         }
         return undefined;
-      },
+      }
     });
   }
 
