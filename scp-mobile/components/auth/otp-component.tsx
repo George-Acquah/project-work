@@ -16,7 +16,7 @@ import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
 
 interface _IOtp {
-  from: string;
+  from?: string;
 }
 const OTP = ({ from }: _IOtp) => {
   const colorScheme = useColorScheme();
