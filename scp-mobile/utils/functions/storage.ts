@@ -13,7 +13,7 @@ const save = async <T>(key: string, value: T) => {
 const load = async <T>(
   key: string,
   type: "json" | "string"
-): Promise<T | string> => {
+): Promise<T | string | null> => {
   try {
     const value = await SecureStore.getItemAsync(key);
     if (value) {
@@ -36,6 +36,32 @@ const load = async <T>(
   }
 };
 
+const loadSync = <T>(
+  key: string,
+  type: "json" | "string"
+): T | string | null => {
+  try {
+    const value = SecureStore.getItem(key);
+    if (value) {
+      if (type === "json") {
+        try {
+          return JSON.parse(value);
+        } catch (error) {
+          console.error("Error parsing JSON data:");
+          return null; // Return null for invalid JSON
+        }
+      } else {
+        return value;
+      }
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error loading from secure storage:", error);
+    return null;
+  }
+};
+
 const remove = async (key: string) => {
   try {
     await SecureStore.deleteItemAsync(key);
@@ -44,4 +70,4 @@ const remove = async (key: string) => {
   }
 };
 
-export { load, save, remove}
+export { load, save, remove, loadSync}

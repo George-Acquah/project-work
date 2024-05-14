@@ -1,32 +1,32 @@
-import { COLORS } from "@/constants/Colors";
+import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
 
 export const text_colors = {
   title: {
-    lightColor: COLORS.contentPrimary,
-    darkColor: COLORS.contentPrimary,
+    lightColor: LIGHT_THEME.contentPrimary,
+    darkColor: DARK_THEME.contentPrimary,
   },
   description: {
-    lightColor: COLORS.contentInverseSecondary,
-    darkColor: COLORS.contentInverseSecondary,
+    lightColor: LIGHT_THEME.contentInverseSecondary,
+    darkColor: DARK_THEME.contentInverseSecondary,
   },
   signup_label: {
-    lightColor: COLORS.contentSecondary,
-    darkColor: COLORS.contentSecondary,
+    lightColor: LIGHT_THEME.contentSecondary,
+    darkColor: DARK_THEME.contentSecondary,
   },
   terms: {
-    lightColor: COLORS.primary400,
-    darkColor: COLORS.primary400,
+    lightColor: LIGHT_THEME.primary400,
+    darkColor: DARK_THEME.primary400,
   },
 };
 
 
 export const bg_colors = {
   input_container: {
-    lightColor: COLORS.backgroundSecondary,
-    darkColor: COLORS.backgroundSecondary,
+    lightColor: LIGHT_THEME.backgroundSecondary,
+    darkColor: DARK_THEME.backgroundSecondary,
   },
   main: {
-    lightColor: COLORS.backgroundPrimary,
-    darkColor: COLORS.backgroundPrimary,
+    lightColor: LIGHT_THEME.backgroundPrimary,
+    darkColor: DARK_THEME.backgroundPrimary,
   },
 };
