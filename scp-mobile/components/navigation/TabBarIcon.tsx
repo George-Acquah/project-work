@@ -1,9 +1,45 @@
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
+import {
+  AntDesign,
+  Entypo,
+  FontAwesome,
+  MaterialIcons,
+  Ionicons,
+} from "@expo/vector-icons";
+import { type IconProps } from "@expo/vector-icons/build/createIconSet";
+import { type ComponentProps } from "react";
 
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { type IconProps } from '@expo/vector-icons/build/createIconSet';
-import { type ComponentProps } from 'react';
+type FontProvider =
+  | typeof FontAwesome
+  | typeof Ionicons
+  | typeof MaterialIcons
+  | typeof Entypo
+  | typeof AntDesign;
 
-export function TabBarIcon({ style, ...rest }: IconProps<ComponentProps<typeof Ionicons>['name']>) {
-  return <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...rest} />;
+interface _ITabBarIcon {
+  fontProvider: FontProvider;
+  auth?: boolean;
+}
+
+export function TabBarIcon({
+  fontProvider,
+  name,
+  style,
+  auth,
+  ...rest
+}: IconProps<ComponentProps<FontProvider>["name"]> & _ITabBarIcon) {
+  const IconComponent = fontProvider;
+  return (
+    <IconComponent
+      size={28}
+      name={name}
+      style={[
+        {
+          marginBottom: -3,
+          marginLeft: auth ? 8 : 0,
+        },
+        style,
+      ]}
+      {...rest}
+    />
+  );
 }
