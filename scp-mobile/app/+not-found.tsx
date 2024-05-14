@@ -1,10 +1,11 @@
-import { Link, Stack } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/common/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { ThemedView } from "@/components/common/ThemedView";
 
 export default function NotFoundScreen() {
+  console.log(useLocalSearchParams<any>());
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />

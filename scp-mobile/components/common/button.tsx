@@ -2,7 +2,8 @@ import React from "react";
 import { Pressable, PressableProps, View, Text, TouchableOpacity } from "react-native";
 import {FontAwesome } from "@expo/vector-icons"
 import { TabBarIcon } from "../navigation/TabBarIcon";
-import { button_styles } from "./styles";
+import { generateStyles } from "./styles";
+import { useColorScheme } from "@/hooks/useColorScheme"
 
 interface _IButton extends PressableProps {
   variant?:
@@ -41,6 +42,8 @@ const Button = React.forwardRef<Ref, _IButton>(
     },
     ref
   ) => {
+    const colorScheme = useColorScheme() ?? 'light';
+    const button_styles = generateStyles(colorScheme);
     const buttonStyles = React.useMemo(() => {
       let colorStyle: {};
       switch (variant) {
