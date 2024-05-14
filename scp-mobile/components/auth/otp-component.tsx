@@ -1,29 +1,33 @@
-import { View, Text } from "@/components/Themed";
-import Colors, { COLORS } from "@/constants/Colors";
+import { ThemedView as View } from "@/components/common/ThemedView";
+import { ThemedText as Text } from "@/components/common/ThemedText";
 import { FONTS } from "@/constants/fonts";
-import { SIZES_2 } from "@/constants/styles";
 import Button from "@/components/common/button";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { bg_colors, text_colors } from "./styles";
 import { AUTH_MODALS } from "@/constants/root";
 import { OtpInput } from "react-native-otp-entry";
-import  { Entypo } from "@expo/vector-icons"
+import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
-import RendererHOC from "@/components/Renderer.HOC";
-import TabBarIcon from "@/components/common/Icons";
 import { TouchableOpacity } from "react-native";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { SIZES } from "@/constants/styles";
+import { TabBarIcon } from "../navigation/TabBarIcon";
+import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import RendererHOC from "../common/renderer.hoc";
 
 interface _IOtp {
   from: string;
 }
-const OTP = ({from}: _IOtp) => {
-
+const OTP = ({ from }: _IOtp) => {
+  const colorScheme = useColorScheme();
   const onOTPSubmit = () => {
     //Whenever the submit buton is clicked
     if (from === AUTH_MODALS.SIGNUP) {
       //Navigate to Success Screen After Performing verification of OTP
       router.navigate(
-        `/success/?title=${"Account Created"}&description=${"You have successfully created ypur account"}&btnLabel=${"Go to Home"}&route=${"/(auth)/welcome"}&action=${AUTH_MODALS.VEHICLES}`
+        `/success/?title=${"Account Created"}&description=${"You have successfully created ypur account"}&btnLabel=${"Go to Home"}&route=${"/(auth)/welcome"}&action=${
+          AUTH_MODALS.VEHICLES
+        }`
       );
     } else if (from === AUTH_MODALS.FORGOT) {
       //Navigate to Set up new Password Screen
@@ -32,10 +36,8 @@ const OTP = ({from}: _IOtp) => {
   };
 
   const renderHeader = () => (
-    <View style={{marginTop: SIZES_2.padding}}>
-      <TouchableOpacity
-        onPress={() => router.back()}
-      >
+    <View style={{ marginTop: SIZES.padding }}>
+      <TouchableOpacity onPress={() => router.back()}>
         <TabBarIcon fontProvider={Entypo} name="chevron-left" color="#fff" />
       </TouchableOpacity>
     </View>
@@ -63,7 +65,11 @@ const OTP = ({from}: _IOtp) => {
         {/* OTP Input */}
         <OtpInput
           numberOfDigits={6}
-          focusColor={COLORS.primary500}
+          focusColor={
+            colorScheme === "light"
+              ? LIGHT_THEME.primary500
+              : DARK_THEME.primary500
+          }
           focusStickBlinkingDuration={500}
           disabled={false}
           onTextChange={(text) => console.log(text)}
@@ -73,23 +79,35 @@ const OTP = ({from}: _IOtp) => {
           }}
           theme={{
             pinCodeContainerStyle: {
-              backgroundColor: COLORS.backgroundSecondary,
-              width: SIZES_2.width / 8,
-              height: SIZES_2.width / 8,
+              backgroundColor:
+                colorScheme === "light"
+                  ? LIGHT_THEME.backgroundSecondary
+                  : DARK_THEME.backgroundSecondary,
+              width: SIZES.width / 8,
+              height: SIZES.width / 8,
               borderWidth: 3,
-              borderRadius: SIZES_2.radius,
-              borderColor: COLORS.backgroundSecondary,
-              marginTop: SIZES_2.padding * 2,
+              borderRadius: SIZES.radius,
+              borderColor:
+                colorScheme === "light"
+                  ? LIGHT_THEME.backgroundSecondary
+                  : DARK_THEME.backgroundSecondary,
+              marginTop: SIZES.padding * 2,
             },
             focusedPinCodeContainerStyle: {
-              borderColor: COLORS.gray300,
+              borderColor: SHARED_COLORS.gray300,
             },
             focusStickStyle: {
-              backgroundColor: COLORS.contentPrimary,
+              backgroundColor:
+                colorScheme === "light"
+                  ? LIGHT_THEME.contentPrimary
+                  : DARK_THEME.contentPrimary,
             },
             pinCodeTextStyle: {
               ...FONTS.h3,
-              color: COLORS.contentPrimary,
+              color:
+                colorScheme === "light"
+                  ? LIGHT_THEME.contentPrimary
+                  : DARK_THEME.contentPrimary,
             },
           }}
         />
@@ -98,7 +116,7 @@ const OTP = ({from}: _IOtp) => {
         <View
           style={{
             flexDirection: "row",
-            marginTop: SIZES_2.radius,
+            marginTop: SIZES.radius,
             alignItems: "center",
             justifyContent: "space-between",
           }}
@@ -109,8 +127,8 @@ const OTP = ({from}: _IOtp) => {
 
           <Button
             title="Resend"
-            style={{ backgroundColor: null }}
-            additionalTextStyles={{ color: Colors.light.primary }}
+            style={{ backgroundColor: undefined }}
+            additionalTextStyles={{ color:LIGHT_THEME.primary500 }}
             type="opacity"
           />
         </View>
@@ -122,17 +140,17 @@ const OTP = ({from}: _IOtp) => {
     return (
       <View
         style={{
-          marginBottom: SIZES_2.padding,
+          marginBottom: SIZES.padding,
         }}
       >
         <Button
           additionalStyles={{
-            borderRadius: SIZES_2.radius,
-            marginTop: SIZES_2.padding,
+            borderRadius: SIZES.radius,
+            marginTop: SIZES.padding,
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            color: COLORS.gray50,
+            color: SHARED_COLORS.gray50,
           }}
           type="opacity"
           onPress={() => {
@@ -140,12 +158,7 @@ const OTP = ({from}: _IOtp) => {
             onOTPSubmit();
           }}
         >
-          <RendererHOC
-            loading={false}
-            error={null}
-            color={COLORS.gray50}
-            pad
-          >
+          <RendererHOC loading={false} error={null} color={SHARED_COLORS.gray50} pad>
             <Text style={{ ...FONTS.pr2 }} {...text_colors.title}>
               Verify
             </Text>
@@ -157,7 +170,7 @@ const OTP = ({from}: _IOtp) => {
 
   return (
     <View
-      style={{ flex: 1, paddingHorizontal: SIZES_2.padding }}
+      style={{ flex: 1, paddingHorizontal: SIZES.padding }}
       {...bg_colors.main}
     >
       {/* Header */}
@@ -170,7 +183,7 @@ const OTP = ({from}: _IOtp) => {
         extraScrollHeight={-300}
         contentContainerStyle={{
           flexGrow: 1,
-          marginTop: SIZES_2.radius,
+          marginTop: SIZES.radius,
         }}
       >
         {/* Title and Description */}

@@ -1,15 +1,23 @@
-import { View, Text } from "@/components/Themed";
-import TabBarIcon from "@/components/common/Icons";
+import { ThemedView as View } from "@/components/common/ThemedView";
+import { ThemedText as Text } from "@/components/common/ThemedText";
 import Button from "@/components/common/button";
-import { COLORS } from "@/constants/Colors";
 import { FONTS } from "@/constants/fonts";
 import { IMAGES } from "@/constants/images";
 import { AUTH_MODALS } from "@/constants/root";
-import { SIZES_2 } from "@/constants/styles";
-import { Image, TextInput, TextInputProps, TouchableOpacity, TouchableOpacityProps } from "react-native"
-import {FontAwesome } from "@expo/vector-icons"
+import {
+  Image,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import { bg_colors } from "./styles";
+import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import { SIZES } from "@/constants/styles";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { TabBarIcon } from "../navigation/TabBarIcon";
 
 interface _ICheckbox extends TouchableOpacityProps {
   isSelected: boolean;
@@ -27,26 +35,25 @@ interface _IFormInputs extends TextInputProps {
 }
 type TextInputRef = TextInput;
 
-
 const text_colors = {
   title: {
-    lightColor: COLORS.gray50,
-    darkColor: COLORS.gray400,
+    lightColor: SHARED_COLORS.gray50,
+    darkColor: SHARED_COLORS.gray400,
   },
   sub_container: {
-    lightColor: COLORS.gray900,
-    darkColor: COLORS.gray900,
+    lightColor: SHARED_COLORS.gray900,
+    darkColor: SHARED_COLORS.gray900,
   },
 };
 
 const background_colors = {
   container: {
-    lightColor: COLORS.gray400,
-    darkColor: COLORS.gray400,
+    lightColor: SHARED_COLORS.gray400,
+    darkColor: SHARED_COLORS.gray400,
   },
   sub_container: {
-    lightColor: COLORS.gray900,
-    darkColor: COLORS.gray900,
+    lightColor: SHARED_COLORS.gray900,
+    darkColor: SHARED_COLORS.gray900,
   },
 };
 
@@ -75,6 +82,7 @@ const FormInputs = React.forwardRef<TextInputRef, _IFormInputs>(
       onPressIn,
       editable,
     } = props;
+    const colorScheme = useColorScheme()
     return (
       <View style={[{ ...rootContainerStyles }]}>
         {/* Label */}
@@ -85,14 +93,14 @@ const FormInputs = React.forwardRef<TextInputRef, _IFormInputs>(
         )}
 
         {/* Inputs */}
-        <View style={[{ marginTop: SIZES_2.base, ...containerStyles }]}>
+        <View style={[{ marginTop: SIZES.base, ...containerStyles }]}>
           <View
             style={[
               {
                 flexDirection: "row",
                 height: 50,
-                borderRadius: SIZES_2.radius,
-                paddingHorizontal: SIZES_2.radius,
+                borderRadius: SIZES.radius,
+                paddingHorizontal: SIZES.radius,
                 alignItems: "center",
                 ...inputContainerStyles,
               },
@@ -106,12 +114,12 @@ const FormInputs = React.forwardRef<TextInputRef, _IFormInputs>(
                 {
                   flex: 1,
                   paddingVertical: 0,
-                  color: COLORS.contentPrimary,
+                  color: LIGHT_THEME.contentPrimary,
                   ...FONTS.pr2,
                 },
                 style,
               ]}
-              placeholderTextColor={COLORS.contentInverseSecondary}
+              placeholderTextColor={LIGHT_THEME.contentInverseSecondary}
               placeholder={placeholder}
               value={value}
               onChangeText={onChangeText}
@@ -141,11 +149,11 @@ const Checkbox = ({ isSelected, label, onPress, style }: _ICheckbox) => {
         name={isSelected ? "check-square" : "square"}
         color={"white"}
         size={24}
-        // styles={{ marginRight: SIZES_2.base }}
+        // styles={{ marginRight: SIZES.base }}
       />
       {label && (
         <Text
-          style={{ ...FONTS.ps2, marginLeft: SIZES_2.base }}
+          style={{ ...FONTS.ps2, marginLeft: SIZES.base }}
           {...text_colors.title}
         >
           {label}
@@ -155,26 +163,27 @@ const Checkbox = ({ isSelected, label, onPress, style }: _ICheckbox) => {
   );
 };
 
-
-
 const renderImage = () => {
   return (
     <View>
       <Image
         source={{ uri: IMAGES.first }}
         height={250}
-        width={SIZES_2.width}
+        width={SIZES.width}
       />
     </View>
   );
 };
 
-const renderLoginDetails = (showModal: (screen: string) => void, animationState: any) => {
+const renderLoginDetails = (
+  showModal: (screen: string) => void,
+  animationState: any
+) => {
   return (
     <View
       style={{
         flex: 1,
-        padding: SIZES_2.padding,
+        padding: SIZES.padding,
         justifyContent: "space-between",
       }}
     >
@@ -197,12 +206,12 @@ const renderLoginDetails = (showModal: (screen: string) => void, animationState:
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            marginLeft: SIZES_2.radius,
-            color: COLORS.gray50,
+            marginLeft: SIZES.radius,
+            color: SHARED_COLORS.gray50,
           }}
           icon="mobile-phone"
           iconSize={30}
-          iconColor={COLORS.gray50}
+          iconColor={SHARED_COLORS.gray50}
           title="Continue With Phone Number"
           type="opacity"
           onPress={() => {
@@ -216,17 +225,17 @@ const renderLoginDetails = (showModal: (screen: string) => void, animationState:
         <Button
           additionalStyles={{
             borderRadius: 30,
-            backgroundColor: COLORS.gray900,
-            borderColor: COLORS.gray500,
-            marginTop: SIZES_2.padding,
+            backgroundColor: SHARED_COLORS.gray900,
+            borderColor: SHARED_COLORS.gray500,
+            marginTop: SIZES.padding,
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            marginLeft: SIZES_2.radius,
-            color: COLORS.gray50,
+            marginLeft: SIZES.radius,
+            color: SHARED_COLORS.gray50,
           }}
           icon="google"
-          iconColor={COLORS.gray50}
+          iconColor={SHARED_COLORS.gray50}
           title="Continue With Google"
           type="opacity"
           onPress={() => {
@@ -237,17 +246,17 @@ const renderLoginDetails = (showModal: (screen: string) => void, animationState:
         <Button
           additionalStyles={{
             borderRadius: 30,
-            backgroundColor: COLORS.gray900,
-            borderColor: COLORS.gray500,
-            marginTop: SIZES_2.padding,
+            backgroundColor: SHARED_COLORS.gray900,
+            borderColor: SHARED_COLORS.gray500,
+            marginTop: SIZES.padding,
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            marginLeft: SIZES_2.radius,
-            color: COLORS.gray50,
+            marginLeft: SIZES.radius,
+            color: SHARED_COLORS.gray50,
           }}
           icon="github"
-          iconColor={COLORS.gray50}
+          iconColor={SHARED_COLORS.gray50}
           title="Continue With Github"
           type="opacity"
           onPress={() => {
@@ -268,11 +277,11 @@ const renderLoginDetails = (showModal: (screen: string) => void, animationState:
           additionalStyles={{
             borderRadius: 30,
 
-            marginTop: SIZES_2.padding,
+            marginTop: SIZES.padding,
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            color: COLORS.gray50,
+            color: SHARED_COLORS.gray50,
           }}
           title="Create An Account"
           type="opacity"
@@ -285,11 +294,10 @@ const renderLoginDetails = (showModal: (screen: string) => void, animationState:
   );
 };
 
-
 export {
   renderImage,
   renderLoginDetails,
   background_colors,
   Checkbox,
-  FormInputs
-}
+  FormInputs,
+};

@@ -7,11 +7,9 @@ import React, {
 } from "react";
 import { Platform, TouchableOpacity } from "react-native";
 import { BottomSheetModal, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { View, Text } from "@/components/Themed";
+import { ThemedView as View } from "@/components/common/ThemedView";
 import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
-import { SIZES_2 } from "@/constants/styles";
 import { Entypo } from "@expo/vector-icons";
-import TabBarIcon from "@/components/common/Icons";
 import Login from "./login";
 import { MotiView } from "moti";
 import { AUTH_MODALS } from "@/constants/root";
@@ -20,6 +18,10 @@ import { bg_colors } from "./styles";
 import ForgotPassword from "./forgot-password";
 import AddVehicle from "./add-vehicle";
 import AddAddress from "./add-address";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { TabBarIcon } from "../navigation/TabBarIcon";
+import { SIZES } from "@/constants/styles";
+
 
 type Ref = BottomSheetModal;
 interface _IAuthModal {
@@ -91,14 +93,17 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
             bottom: 0,
             zIndex: selectedScreen === screen_type ? 2 : 1,
           }}
+          from={{}}
           animate={{
             left: selectedScreen === screen_type ? 0 : num,
             opacity: selectedScreen === screen_type ? 1 : 0,
           }}
-          transition={{
-            type: "timing",
-            duration: 500,
-          }}
+          transition={
+            {
+              type: "timing",
+              duration: 500,
+            } as any
+          }
         >
           {children}
         </MotiView>
@@ -120,9 +125,9 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
         <View
           style={{
             flex: 1,
-            borderTopRightRadius: SIZES_2.radius * 2,
-            borderTopLeftRadius: SIZES_2.radius * 2,
-            padding: SIZES_2.padding,
+            borderTopRightRadius: SIZES.radius * 2,
+            borderTopLeftRadius: SIZES.radius * 2,
+            padding: SIZES.padding,
           }}
           {...bg_colors.main}
         >

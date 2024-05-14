@@ -1,12 +1,14 @@
-import { View } from "@/components/Themed";
+import { ThemedView as View } from "@/components/common/ThemedView";
 import { renderImage, renderLoginDetails, background_colors } from "./helpers";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import AuthModal from "./modal";
 import { MotiView, useAnimationState } from "moti";
 import { useLocalSearchParams } from "expo-router";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
-interface _IWelcomeParams extends SearchParamsKeys{
+
+interface _IWelcomeParams extends SearchParamsKeys {
   action: string;
 }
 const Welcome = () => {
@@ -31,12 +33,24 @@ const Welcome = () => {
   // Modal Callbacks
   const showModal = useCallback((screen: string) => {
     setSelectedScreen(screen);
-    bottomSheetModalRef.current.present();
+    if (bottomSheetModalRef.current) {
+      bottomSheetModalRef.current.present();
+    } else {
+      // Handle the case when bottomSheetModalRef.current is null
+      // For example, log an error or show a fallback UI
+      console.error("bottomSheetModalRef.current is null");
+    }
   }, []);
 
   const hideModal = useCallback(() => {
     scaleAnimationState.transitionTo("normal");
-    bottomSheetModalRef.current.dismiss();
+    if (bottomSheetModalRef.current) {
+      bottomSheetModalRef.current.dismiss();
+    } else {
+      // Handle the case when bottomSheetModalRef.current is null
+      // For example, log an error or show a fallback UI
+      console.error("bottomSheetModalRef.current is null");
+    }
   }, []);
 
   //use Effect

@@ -1,10 +1,8 @@
-import { View, Text } from "@/components/Themed";
-import Colors, { COLORS } from "@/constants/Colors";
+import { ThemedView as View } from "@/components/common/ThemedView";
+import { ThemedText as Text } from "@/components/common/ThemedText";
 import { FONTS } from "@/constants/fonts";
-import { SIZES_2 } from "@/constants/styles";
 import { Alert, TextInput, TouchableOpacity } from "react-native";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
-import TabBarIcon from "@/components/common/Icons";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import Button from "@/components/common/button";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -14,17 +12,22 @@ import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectAuthLoading } from "@/features/auth/auth.slice";
-import RendererHOC from "@/components/Renderer.HOC";
 import { FormInputs } from "./helpers";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { SIZES } from "@/constants/styles";
+import { TabBarIcon } from "../navigation/TabBarIcon";
+import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import RendererHOC from "../common/renderer.hoc";
 
 interface _IRegister {
   setSelectedScreen: Dispatch<SetStateAction<string>>;
   hideModal: () => void;
 }
 const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
-  const phoneNumberRef = useRef<TextInput>();
-  const passwordRef = useRef<TextInput>();
-  const emailRef = useRef<TextInput>();
+  const colorScheme = useColorScheme();
+  const phoneNumberRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
+  const emailRef = useRef<TextInput>(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,7 +50,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
         // router.navigate(`otp?from=${AUTH_MODALS.SIGNUP}`);
         setSelectedScreen(AUTH_MODALS.LOGIN);
       }
-    } catch (error) {
+    } catch (error: any) {
       Alert.alert(error.message);
     }
   };
@@ -72,7 +75,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
       {/* Phone Number */}
       <FormInputs
         ref={phoneNumberRef}
-        rootContainerStyles={{ marginTop: SIZES_2.padding }}
+        rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Phone Number"
         placeholder="Enter your phone number"
         value={phoneNumber}
@@ -83,14 +86,14 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
             name="mobile-phone"
             color={"white"}
             size={34}
-            styles={{ marginRight: SIZES_2.base }}
+            style={{ marginRight: SIZES.base }}
           />
         }
       />
       {/* Email */}
       <FormInputs
         ref={emailRef}
-        rootContainerStyles={{ marginTop: SIZES_2.padding }}
+        rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Email Address"
         placeholder="Enter your email address"
         value={email}
@@ -101,14 +104,14 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
             name="mail"
             color={"white"}
             size={24}
-            styles={{ marginRight: SIZES_2.base }}
+            style={{ marginRight: SIZES.base }}
           />
         }
       />
       {/* Password */}
       <FormInputs
         ref={passwordRef}
-        rootContainerStyles={{ marginTop: SIZES_2.padding }}
+        rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Password"
         placeholder="Enter your password"
         value={password}
@@ -120,7 +123,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
             name="lock"
             color={"white"}
             size={24}
-            styles={{ marginRight: SIZES_2.base }}
+            style={{ marginRight: SIZES.base }}
           />
         }
         appendComponent={
@@ -128,7 +131,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
             <TabBarIcon
               fontProvider={FontAwesome}
               name={isVisible ? "eye-slash" : "eye"}
-              color={Colors.light.lightPrimary}
+              color={LIGHT_THEME.primary700}
               size={24}
               onPress={() => setIsVisible(!isVisible)}
             />
@@ -140,7 +143,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
 
   const renderTermsAndPolicies = () => {
     return (
-      <View style={{ marginTop: SIZES_2.padding, alignItems: "center" }}>
+      <View style={{ marginTop: SIZES.padding, alignItems: "center" }}>
         <Text style={{ ...FONTS.ps2 }} {...text_colors.signup_label}>
           By registering, you agree to our
         </Text>
@@ -183,11 +186,11 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
           <Button
             title="Login"
             style={{
-              backgroundColor: null,
+              backgroundColor: undefined,
               height: null,
-              marginLeft: SIZES_2.base,
+              marginLeft: SIZES.base,
             }}
-            additionalTextStyles={{ color: COLORS.primary400 }}
+            additionalTextStyles={{ color: LIGHT_THEME.primary400 }}
             type="opacity"
             onPress={() => {
               setSelectedScreen(AUTH_MODALS.LOGIN);
@@ -198,13 +201,13 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
         {/* Sign In button */}
         <Button
           additionalStyles={{
-            borderRadius: SIZES_2.radius,
-            marginTop: SIZES_2.padding,
-            marginLeft: SIZES_2.base,
+            borderRadius: SIZES.radius,
+            marginTop: SIZES.padding,
+            marginLeft: SIZES.base,
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            color: COLORS.gray50,
+            color: SHARED_COLORS.gray50,
           }}
           type="opacity"
           onPress={handleRegister}
@@ -212,7 +215,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
           <RendererHOC
             loading={registerLoading}
             error={null}
-            color={COLORS.gray50}
+            color={SHARED_COLORS.gray50}
             pad
           >
             <Text style={{ ...FONTS.pr2 }} {...text_colors.title}>
@@ -233,7 +236,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
         extraScrollHeight={-300}
         contentContainerStyle={{
           flexGrow: 1,
-          marginTop: SIZES_2.radius,
+          marginTop: SIZES.radius,
         }}
       >
         {/* Title And Descriptions */}
