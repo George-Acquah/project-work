@@ -1,0 +1,177 @@
+import React, {
+  Dispatch,
+  SetStateAction,
+  forwardRef,
+  useCallback,
+  useMemo,
+} from "react";
+import { Platform, TouchableOpacity } from "react-native";
+import { BottomSheetModal, BottomSheetBackdrop } from "@gorhom/bottom-sheet";
+import { View, Text } from "@/components/Themed";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
+import { SIZES_2 } from "@/constants/styles";
+import { Entypo } from "@expo/vector-icons";
+import TabBarIcon from "@/components/common/Icons";
+import Login from "./login";
+import { MotiView } from "moti";
+import { AUTH_MODALS } from "@/constants/root";
+import Register from "./register";
+import { bg_colors } from "./styles";
+import ForgotPassword from "./forgot-password";
+import AddVehicle from "./add-vehicle";
+import AddAddress from "./add-address";
+
+type Ref = BottomSheetModal;
+interface _IAuthModal {
+  selectedScreen: string;
+  setSelectedScreen: Dispatch<SetStateAction<string>>;
+  hideModal: () => void;
+}
+
+interface _IRenderMotiModals {
+  screen_type: string;
+  children: React.ReactNode;
+  num: number;
+}
+const AuthModal = forwardRef<Ref, _IAuthModal>(
+  ({ selectedScreen, setSelectedScreen, hideModal }, ref) => {
+    // variables
+    const snapPoints = useMemo(() => {
+      if (Platform.OS === "ios") return ["93%"];
+      else if (Platform.OS === "android") return ["93%"];
+      else return ["60%"];
+    }, []);
+
+    const renderBackdrop = useCallback(
+      (props: BottomSheetDefaultBackdropProps) => (
+        <BottomSheetBackdrop
+          {...props}
+          disappearsOnIndex={-1}
+          appearsOnIndex={0}
+          opacity={0.3}
+          pressBehavior="none"
+        />
+      ),
+      []
+    );
+
+    // renders
+    const renderHeader = () => {
+      return (
+        <View>
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                hideModal();
+              }}
+            >
+              <TabBarIcon
+                fontProvider={Entypo}
+                name="chevron-left"
+                color="#fff"
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    };
+
+    const RenderMotiModals = ({
+      screen_type,
+      num,
+      children,
+    }: _IRenderMotiModals) => {
+      return (
+        <MotiView
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: selectedScreen === screen_type ? 2 : 1,
+          }}
+          animate={{
+            left: selectedScreen === screen_type ? 0 : num,
+            opacity: selectedScreen === screen_type ? 1 : 0,
+          }}
+          transition={{
+            type: "timing",
+            duration: 500,
+          }}
+        >
+          {children}
+        </MotiView>
+      );
+    };
+
+
+    return (
+      <BottomSheetModal
+        ref={ref}
+        snapPoints={snapPoints}
+        enablePanDownToClose={false}
+        backdropComponent={renderBackdrop}
+        backgroundStyle={{ backgroundColor: "transparent", borderRadius: 0 }}
+        handleComponent={() => {
+          return <View />;
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            borderTopRightRadius: SIZES_2.radius * 2,
+            borderTopLeftRadius: SIZES_2.radius * 2,
+            padding: SIZES_2.padding,
+          }}
+          {...bg_colors.main}
+        >
+          {/* HEADER */}
+          {renderHeader()}
+
+          {/* SCREENS - LOGIN, SIGNUP AND FORGOT PASSWORD */}
+          <View style={{ flex: 1 }}>
+            {/* LOGIN */}
+            <RenderMotiModals screen_type={AUTH_MODALS.LOGIN} num={-100}>
+              <Login setSelectedScreen={setSelectedScreen} />
+            </RenderMotiModals>
+
+            {/* SIGN UP */}
+            <RenderMotiModals screen_type={AUTH_MODALS.SIGNUP} num={100}>
+              <Register
+                setSelectedScreen={setSelectedScreen}
+                hideModal={hideModal}
+              />
+            </RenderMotiModals>
+
+            {/* FORGOT PASSWORD */}
+            <RenderMotiModals screen_type={AUTH_MODALS.FORGOT} num={100}>
+              <ForgotPassword
+                setSelectedScreen={setSelectedScreen}
+                hideModal={hideModal}
+              />
+            </RenderMotiModals>
+
+            {/* Render Add Vehicles */}
+            <RenderMotiModals screen_type={AUTH_MODALS.VEHICLES} num={100}>
+              <AddVehicle
+                setSelectedScreen={setSelectedScreen}
+                hideModal={hideModal}
+              />
+            </RenderMotiModals>
+
+            {/* Render Address */}
+            <RenderMotiModals screen_type={AUTH_MODALS.ADDRESS} num={100}>
+              <AddAddress
+                setSelectedScreen={setSelectedScreen}
+                hideModal={hideModal}
+              />
+            </RenderMotiModals>
+          </View>
+        </View>
+      </BottomSheetModal>
+    );
+  }
+);
+
+export default AuthModal;
