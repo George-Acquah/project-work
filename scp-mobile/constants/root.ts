@@ -1,4 +1,3 @@
-import { _IHeaderData } from "@/components/common/Icons";
 import { Ionicons } from "@expo/vector-icons";
 
 const APP_NAME = "Smart Car Parking";
@@ -18,34 +17,6 @@ const keys = {
 const AXIOS_ERRORS = {
   NETWORK_ERROR: "Network Error",
 }
-
-// HEADER 
-const headerData: _IHeaderData[] = [
-  {
-    id: 1,
-    fontProvider: Ionicons,
-    icon: "bed-outline",
-    label: "Available",
-  },
-  {
-    id: 2,
-    fontProvider: Ionicons,
-    icon: "airplane-outline",
-    label: "Nearby",
-  },
-  {
-    id: 3,
-    fontProvider: Ionicons,
-    icon: "car-outline",
-    label: "Popular",
-  },
-  // {
-  //   id: 4,
-  //   fontProvider: FontAwesome,
-  //   icon: "bolt",
-  //   label: "Taxi",
-  // },
-];
 
 const tipsData: _ITipsData[] = [
   {
@@ -99,17 +70,21 @@ const AUTH_MODALS = {
   ADDRESS: "add-address",
 };
 
+const NAVIGATION_MODALS = {
+  REQUEST_RESERVATION: 'request-reservation'
+}
+
 
 
 export { 
   APP_NAME,
   AXIOS_ERRORS,
   keys,
-  headerData,
   tipsData,
   tabData,
   ids,
   searchParamsKeys,
   pathname_helper,
-AUTH_MODALS,
+  AUTH_MODALS,
+NAVIGATION_MODALS,
 }

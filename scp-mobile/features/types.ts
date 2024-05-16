@@ -22,7 +22,7 @@ interface _IBookingState extends _IRootState{
   openMap: boolean;
   selectedBooking: _IBooking | _IFavoriteParkingCenter | null;
   upcomingBookings: _IBooking[] | null;
-  bookingHistory?: _IBooking[] | null;
+  bookingHistory: _IBooking[] | null;
   favoriteParkingCenters?: _IFavoriteParkingCenter[] | null;
 }
 

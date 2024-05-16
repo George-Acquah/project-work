@@ -1,6 +1,6 @@
 import { Center_Filter } from "@/utils/enums/global.enum";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { RootState } from "store";
+import { RootState } from "@/store";
 
 interface _InitialState {
   showOnboarding: boolean;

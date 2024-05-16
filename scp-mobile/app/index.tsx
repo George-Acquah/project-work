@@ -33,7 +33,7 @@ const Index = () => {
   }
 
   // Render based on auth status
-  return auth ? <Redirect href="/" /> : <Redirect href="/welcome" />;
+  return auth ? <Redirect href="/onboarding" /> : <Redirect href="/welcome" />;
 };
 
 export default Index;
