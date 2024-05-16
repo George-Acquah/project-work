@@ -11,22 +11,22 @@ const generateStyles = (colorScheme: 'light' | 'dark') => {
       borderWidth: 1,
       borderColor:
         colorScheme === "light"
-          ? LIGHT_THEME.backgroundInversePrimary
-          : DARK_THEME.backgroundInversePrimary,
+          ? LIGHT_THEME.primary700
+          : LIGHT_THEME.primary700,
       backgroundColor:
         colorScheme === "light"
-          ? LIGHT_THEME.backgroundPrimary
-          : DARK_THEME.backgroundPrimary,
+          ? LIGHT_THEME.primary700
+          : LIGHT_THEME.primary700,
     },
     defaultButton: {
       borderColor:
         colorScheme === "light"
-          ? LIGHT_THEME.backgroundInversePrimary
-          : DARK_THEME.backgroundInversePrimary,
+          ? LIGHT_THEME.primary700
+          : LIGHT_THEME.primary700,
       backgroundColor:
         colorScheme === "light"
-          ? LIGHT_THEME.backgroundPrimary
-          : DARK_THEME.backgroundPrimary,
+          ? LIGHT_THEME.primary700
+          : LIGHT_THEME.primary700,
     },
     destructiveButton: {
       backgroundColor: "rgba(239, 68, 68, 0.8)",
@@ -56,8 +56,8 @@ const generateStyles = (colorScheme: 'light' | 'dark') => {
     defaultText: {
       color:
         colorScheme === "light"
-          ? LIGHT_THEME.contentPrimary
-          : DARK_THEME.contentPrimary,
+          ? LIGHT_THEME.contentInversePrimary
+          : LIGHT_THEME.contentInversePrimary,
     },
     destructiveText: {
       color: "#FFFFFF",
@@ -82,4 +82,84 @@ const generateStyles = (colorScheme: 'light' | 'dark') => {
   });
 };
 
-export { generateStyles };
+const generatePaginationStyles = (colorScheme: "light" | "dark") => {
+  return StyleSheet.create({
+    //Pagination Arrows
+    arrowContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 5,
+      backgroundColor:
+        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray800,
+      marginRight: 10,
+    },
+    containerRight: {
+      marginRight: 0,
+      marginLeft: 10,
+    },
+    //Page numbers
+    numberContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      height: 36,
+      borderRadius: 5,
+      backgroundColor:
+        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray800,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      marginHorizontal: 2,
+    },
+    singleContainer: {
+      borderRadius: 5,
+      backgroundColor:
+        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray800,
+    },
+    activeContainer: {
+      backgroundColor:
+        colorScheme === "light"
+          ? LIGHT_THEME.primary500
+          : SHARED_COLORS.gray900,
+    },
+    inactiveContainer: {
+      backgroundColor:
+        colorScheme === "light" ? SHARED_COLORS.gray200 : SHARED_COLORS.gray700,
+    },
+    middleContainer: {
+      backgroundColor: "transparent",
+    },
+    pagText: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color:
+        colorScheme === "light" ? SHARED_COLORS.gray900 : SHARED_COLORS.gray100,
+    },
+    activeText: {
+      color:
+        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray900,
+    },
+    inactiveText: {
+      color:
+        colorScheme === "light" ? SHARED_COLORS.gray500 : SHARED_COLORS.gray400,
+    },
+
+    // Pagination Return
+    container: {
+      width: "100%",
+      paddingHorizontal: 4,
+    },
+    paginationContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingTop: 4,
+    },
+    pageNumbersContainer: {
+      flexDirection: "row",
+      marginHorizontal: 1,
+    },
+  });
+};
+
+export { generateStyles, generatePaginationStyles };

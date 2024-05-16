@@ -6,7 +6,7 @@ function switchErrRes(
 ): { code: number; message: string } {
   switch (status) {
     case 400:
-      throw { code: 400, message: message || "Authentication required" };
+      throw { code: 400, message: message || "Bad Request" };
     case 401:
       throw { code: 401, message: message || "Authentication required" };
     case 404:
@@ -45,7 +45,6 @@ export async function callApi<T, D = any>(
       //   "Content-Type": "application/json",
       // },
     });
-    console.log("response");
 
     // Check if the server response indicates an error
     if (
@@ -64,7 +63,6 @@ export async function callApi<T, D = any>(
     }
     return response.data;
   } catch (error) {
-    console.log("error caught: ", error);
     handleApiError(error);
     throw error;
   }

@@ -1,12 +1,16 @@
-import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
+import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 
 export const text_colors = {
   title: {
     lightColor: LIGHT_THEME.contentPrimary,
     darkColor: DARK_THEME.contentPrimary,
   },
+  main_title: {
+    lightColor: LIGHT_THEME.backgroundPrimary,
+    darkColor: DARK_THEME.backgroundPrimary,
+  },
   description: {
-    lightColor: LIGHT_THEME.contentInverseSecondary,
+    lightColor: LIGHT_THEME.contentSecondary,
     darkColor: DARK_THEME.contentInverseSecondary,
   },
   signup_label: {
@@ -14,15 +18,19 @@ export const text_colors = {
     darkColor: DARK_THEME.contentSecondary,
   },
   terms: {
-    lightColor: LIGHT_THEME.primary400,
-    darkColor: DARK_THEME.primary400,
+    lightColor: LIGHT_THEME.primary700,
+    darkColor: LIGHT_THEME.primary700,
+  },
+  error: {
+    lightColor: SHARED_COLORS.negative500,
+    darkColor: SHARED_COLORS.negative500,
   },
 };
 
 
 export const bg_colors = {
   input_container: {
-    lightColor: LIGHT_THEME.backgroundSecondary,
+    lightColor: SHARED_COLORS.gray300,
     darkColor: DARK_THEME.backgroundSecondary,
   },
   main: {

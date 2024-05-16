@@ -3,16 +3,21 @@ import { StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/common/ThemedText";
 import { ThemedView } from "@/components/common/ThemedView";
+import { bg_colors, text_colors } from "@/components/auth/styles";
 
 export default function NotFoundScreen() {
   console.log(useLocalSearchParams<any>());
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
-      <ThemedView style={styles.container}>
-        <ThemedText type="title">This screen doesn't exist.</ThemedText>
+      <ThemedView style={styles.container} {...bg_colors.main}>
+        <ThemedText type="title" {...text_colors.title}>
+          This screen doesn't exist.
+        </ThemedText>
         <Link href="/" style={styles.link}>
-          <ThemedText type="link">Go to home screen!</ThemedText>
+          <ThemedText type="link" {...text_colors.title}>
+            Go to home screen!
+          </ThemedText>
         </Link>
       </ThemedView>
     </>
