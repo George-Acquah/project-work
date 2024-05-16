@@ -1,14 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { mapInitialState } from "../states";
-import { RootState } from "store";
+import { RootState } from "@/store";
 
 const mapSlice = createSlice({
   name: "map",
   initialState: mapInitialState,
   reducers: {
-    setDestination: (state, action: PayloadAction<_IDestination>) => {
+    setDestination: (state, action: PayloadAction<_IDestination | null>) => {
       state.destination = action.payload;
-
     },
     setOrigin: (
       state,
