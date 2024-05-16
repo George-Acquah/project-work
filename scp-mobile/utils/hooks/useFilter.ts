@@ -25,32 +25,34 @@ const useCenterFilter = () => {
   const center_type = useAppSelector(selectCentersFilter);
 
   const dispatch_data = (data: _ICenterParams) => (
-      useMemo(() => {
-        switch (center_type) {
-          case Center_Filter.AVAILABLE:
-            return fetchAvailableCenters(data);
-          case Center_Filter.POPULAR:
-            return fetchPopularCenters(data);
-          case Center_Filter.NEARBY:
-            return fetchNearbyCenters(data);
-          default:
-            break;
-        }
-      }, [center_type])
-  )
+    useMemo(() => {
+      switch (center_type) {
+        case Center_Filter.AVAILABLE:
+          return fetchAvailableCenters(data);
+        case Center_Filter.POPULAR:
+          return fetchPopularCenters(data);
+        case Center_Filter.NEARBY:
+          return fetchNearbyCenters(data);
+        default:
+          throw new Error(`Unexpected center_type: ${center_type}`);
+      }
+    }, [center_type])
+  );
 
-  const select_data = useMemo(() => {
-    switch (center_type) {
-      case Center_Filter.AVAILABLE:
-        return selectAvailableCenters;
-      case Center_Filter.POPULAR:
-        return selectPopularCenters;
-      case Center_Filter.NEARBY:
-        return selectNearbyCenters;
-      default:
-        break;
-    }
-  }, [center_type]);
+const select_data = useMemo(() => {
+  switch (center_type) {
+    case Center_Filter.AVAILABLE:
+      return selectAvailableCenters;
+    case Center_Filter.POPULAR:
+      return selectPopularCenters;
+    case Center_Filter.NEARBY:
+      return selectNearbyCenters;
+    default:
+      // Handle unexpected center_type, for example:
+      throw new Error(`Unexpected center_type: ${center_type}`);
+  }
+}, [center_type]);
+
 
   const select_data_ids = useMemo(() => {
     switch (center_type) {
@@ -61,7 +63,7 @@ const useCenterFilter = () => {
       case Center_Filter.NEARBY:
         return selectMemoedNearbyCenter;
       default:
-        break;
+        throw new Error(`Unexpected center_type: ${center_type}`);
     }
   }, [center_type]);
 
@@ -74,7 +76,7 @@ const useCenterFilter = () => {
       case Center_Filter.NEARBY:
         return selectNearbyCenterLoading;
       default:
-        break;
+        throw new Error(`Unexpected center_type: ${center_type}`);
     }
   }, [center_type]);
 
@@ -87,7 +89,7 @@ const useCenterFilter = () => {
       case Center_Filter.NEARBY:
         return selectNearbyCenterError;
       default:
-        break;
+        throw new Error(`Unexpected center_type: ${center_type}`);
     }
   }, [center_type]);
 
