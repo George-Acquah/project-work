@@ -5,12 +5,13 @@ import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { generatePagination } from "@/utils/functions/pagination";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import { generatePaginationStyles } from "./styles";
  
 const Pagination = ({ totalPages }: { totalPages: number }) => {
-  const colorScheme = useColorScheme() ?? 'dark'
+  const colorScheme = useColorScheme() ?? 'dark';
+  const styles = generatePaginationStyles(colorScheme);
   const pathname = usePathname();
   const searchParams = useLocalSearchParams<{ page?: string }>();
-
   const currentPage = Number(searchParams.page) || 1;
 
     const createPageURL = (pageNumber: number | string) => {
@@ -71,6 +72,8 @@ const PaginationArrow = ({
   direction: "left" | "right";
   isDisabled?: boolean;
   }) => {
+    const colorScheme = useColorScheme() ?? "dark";
+    const styles = generatePaginationStyles(colorScheme);
   return (
     <Link
       style={[
@@ -103,7 +106,9 @@ const PaginationNumber = ({
   href: any;
   position?: "first" | "last" | "middle" | "single";
   isActive: boolean;
-}) => {
+  }) => {
+    const colorScheme = useColorScheme() ?? "dark";
+    const styles = generatePaginationStyles(colorScheme);
   const containerStyles = [
     styles.numberContainer,
     position === "single" && styles.singleContainer,
@@ -124,98 +129,5 @@ const PaginationNumber = ({
     </Link>
   );
 };
-
-
-const styles = StyleSheet.create({
-  //Pagination Arrows
-  arrowContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    backgroundColor:
-      useColorScheme() === "light"
-        ? SHARED_COLORS.gray100
-        : SHARED_COLORS.gray800,
-    marginRight: 10,
-  },
-  containerRight: {
-    marginRight: 0,
-    marginLeft: 10,
-  },
-  //Page numbers
-  numberContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: 36,
-    borderRadius: 5,
-    backgroundColor:
-      useColorScheme() === "light"
-        ? SHARED_COLORS.gray100
-        : SHARED_COLORS.gray800,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginHorizontal: 2,
-  },
-  singleContainer: {
-    borderRadius: 5,
-    backgroundColor:
-      useColorScheme() === "light"
-        ? SHARED_COLORS.gray100
-        : SHARED_COLORS.gray800,
-  },
-  activeContainer: {
-    backgroundColor:
-      useColorScheme() === "light"
-        ? LIGHT_THEME.primary500
-        : SHARED_COLORS.gray900,
-  },
-  inactiveContainer: {
-    backgroundColor:
-      useColorScheme() === "light"
-        ? SHARED_COLORS.gray200
-        : SHARED_COLORS.gray700,
-  },
-  middleContainer: {
-    backgroundColor: "transparent",
-  },
-  pagText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color:
-      useColorScheme() === "light"
-        ? SHARED_COLORS.gray900
-        : SHARED_COLORS.gray100,
-  },
-  activeText: {
-    color:
-      useColorScheme() === "light"
-        ? SHARED_COLORS.gray100
-        : SHARED_COLORS.gray900,
-  },
-  inactiveText: {
-    color:
-      useColorScheme() === "light"
-        ? SHARED_COLORS.gray500
-        : SHARED_COLORS.gray400,
-  },
-
-  // Pagination Return
-  container: {
-    width: "100%",
-    paddingHorizontal: 4,
-  },
-  paginationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 4,
-  },
-  pageNumbersContainer: {
-    flexDirection: "row",
-    marginHorizontal: 1,
-  },
-});
 
   export default Pagination;
