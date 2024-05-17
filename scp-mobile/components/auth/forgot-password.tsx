@@ -7,13 +7,17 @@ import { text_colors } from "./styles";
 import { AUTH_MODALS } from "@/constants/root";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { TextInput } from "react-native";
-import { FormInputs } from "./helpers";
+import { TextInput, Alert } from "react-native";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { SIZES } from "@/constants/styles";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
+import { useColorScheme } from "@/hooks/useColorScheme";
+import AuthSchema from "@/schemas/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import FormInputs from "../common/input-form";
 
 interface _IForgotPassword {
   setSelectedScreen: Dispatch<SetStateAction<string>>;
@@ -23,10 +27,26 @@ const ForgotPassword = ({ setSelectedScreen, hideModal }: _IForgotPassword) => {
   const [email, setEmail] = useState("");
   const emailRef = useRef<TextInput>(null);
 
-  const handleForgotPassword = () => {
-    hideModal();
-    //Navigate to OTP
-    router.navigate(`otp?from=${AUTH_MODALS.FORGOT}`);
+  const forgotPasswordSchema = AuthSchema.omit({ phone_number: true, password: true });
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      email: "",
+    },
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
+  const colorScheme = useColorScheme() ?? "light";
+
+  const handleForgotPassword = (data: any) => {
+    try {
+      Alert.alert("Successful", JSON.stringify(data));
+      const { email } = data;
+      hideModal();
+      //Navigate to OTP
+      router.navigate(`otp?from=${AUTH_MODALS.FORGOT}`);
+    } catch (error: any) {
+      console.log("An error occured")
+    }
   };
   const renderTitle = () => {
     return (
@@ -48,16 +68,16 @@ const ForgotPassword = ({ setSelectedScreen, hideModal }: _IForgotPassword) => {
       {/* Email */}
       <FormInputs
         ref={emailRef}
+        control={control as any}
+        name='email'
         rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Email Address"
         placeholder="Enter your email address"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
         prependComponent={
           <TabBarIcon
             fontProvider={Entypo}
             name="mail"
-            color={"white"}
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
             size={24}
             style={{ marginRight: SIZES.base }}
           />
@@ -87,7 +107,7 @@ const ForgotPassword = ({ setSelectedScreen, hideModal }: _IForgotPassword) => {
               height: null,
               marginLeft: SIZES.base,
             }}
-            additionalTextStyles={{ color: LIGHT_THEME.primary400 }}
+            additionalTextStyles={{ color: LIGHT_THEME.primary700 }}
             type="opacity"
             onPress={() => {
               setSelectedScreen(AUTH_MODALS.LOGIN);
@@ -107,7 +127,7 @@ const ForgotPassword = ({ setSelectedScreen, hideModal }: _IForgotPassword) => {
             color: SHARED_COLORS.gray50,
           }}
           type="opacity"
-          onPress={handleForgotPassword}
+          onPress={handleSubmit(handleForgotPassword)}
         >
           <RendererHOC
             loading={false}
@@ -115,7 +135,7 @@ const ForgotPassword = ({ setSelectedScreen, hideModal }: _IForgotPassword) => {
             color={SHARED_COLORS.gray50}
             pad
           >
-            <Text style={{ ...FONTS.pr2 }} {...text_colors.title}>
+            <Text style={{ ...FONTS.pr2 }} {...text_colors.main_title}>
               Submit
             </Text>
           </RendererHOC>

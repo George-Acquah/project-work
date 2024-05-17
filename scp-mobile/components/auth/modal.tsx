@@ -21,6 +21,7 @@ import AddAddress from "./add-address";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { SIZES } from "@/constants/styles";
+import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
 
 
 type Ref = BottomSheetModal;
@@ -43,6 +44,7 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
       else if (Platform.OS === "android") return ["93%"];
       else return ["60%"];
     }, []);
+    const colorScheme = useColorScheme() ?? 'light'
 
     const renderBackdrop = useCallback(
       (props: BottomSheetDefaultBackdropProps) => (
@@ -61,7 +63,7 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
     const renderHeader = () => {
       return (
         <View>
-          <View>
+          <View >
             <TouchableOpacity
               onPress={() => {
                 hideModal();
@@ -70,7 +72,7 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
               <TabBarIcon
                 fontProvider={Entypo}
                 name="chevron-left"
-                color="#fff"
+                color={ colorScheme === 'light' ? LIGHT_THEME.contentPrimary : DARK_THEME.contentPrimary}
               />
             </TouchableOpacity>
           </View>
@@ -166,6 +168,14 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
             </RenderMotiModals>
 
             {/* Render Address */}
+            <RenderMotiModals screen_type={AUTH_MODALS.ADDRESS} num={100}>
+              <AddAddress
+                setSelectedScreen={setSelectedScreen}
+                hideModal={hideModal}
+              />
+            </RenderMotiModals>
+
+            {/* Render Request Reservation */}
             <RenderMotiModals screen_type={AUTH_MODALS.ADDRESS} num={100}>
               <AddAddress
                 setSelectedScreen={setSelectedScreen}
