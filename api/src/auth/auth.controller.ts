@@ -72,6 +72,7 @@ export class AuthController {
         );
       }
     } catch (error) {
+      console.log(error);
       return new ApiResponse(
         error?.response?.statusCode ?? 400,
         error?.message ?? 'Something Bad Occured while logging in',
