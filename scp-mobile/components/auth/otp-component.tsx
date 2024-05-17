@@ -38,7 +38,15 @@ const OTP = ({ from }: _IOtp) => {
   const renderHeader = () => (
     <View style={{ marginTop: SIZES.padding }}>
       <TouchableOpacity onPress={() => router.back()}>
-        <TabBarIcon fontProvider={Entypo} name="chevron-left" color="#fff" />
+        <TabBarIcon
+          fontProvider={Entypo}
+          name="chevron-left"
+          color={
+            colorScheme === "light"
+              ? LIGHT_THEME.contentPrimary
+              : DARK_THEME.contentPrimary
+          }
+        />
       </TouchableOpacity>
     </View>
   );
@@ -159,7 +167,7 @@ const OTP = ({ from }: _IOtp) => {
           }}
         >
           <RendererHOC loading={false} error={null} color={SHARED_COLORS.gray50} pad>
-            <Text style={{ ...FONTS.pr2 }} {...text_colors.title}>
+            <Text style={{ ...FONTS.pr2 }} {...text_colors.main_title}>
               Verify
             </Text>
           </RendererHOC>

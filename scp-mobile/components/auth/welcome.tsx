@@ -37,7 +37,6 @@ const Welcome = () => {
       bottomSheetModalRef.current.present();
     } else {
       // Handle the case when bottomSheetModalRef.current is null
-      // For example, log an error or show a fallback UI
       console.error("bottomSheetModalRef.current is null");
     }
   }, []);
@@ -48,7 +47,6 @@ const Welcome = () => {
       bottomSheetModalRef.current.dismiss();
     } else {
       // Handle the case when bottomSheetModalRef.current is null
-      // For example, log an error or show a fallback UI
       console.error("bottomSheetModalRef.current is null");
     }
   }, []);
@@ -56,7 +54,6 @@ const Welcome = () => {
   //use Effect
   useEffect(() => {
     if (action) {
-      console.log("here");
       showModal(action);
     } else {
       scaleAnimationState.transitionTo("normal");

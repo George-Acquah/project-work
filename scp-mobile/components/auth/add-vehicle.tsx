@@ -12,46 +12,63 @@ import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectAuthLoading } from "@/features/auth/auth.slice";
-import { FormInputs } from "./helpers";
 import { SIZES } from "@/constants/styles";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
+import { FieldValues, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import AuthSchema from "@/schemas/auth.schema";
+import FormInputs from "../common/input-form";
 
 interface _IRegister {
   setSelectedScreen: Dispatch<SetStateAction<string>>;
   hideModal: () => void;
 }
+
 const AddVehicle = ({ setSelectedScreen, hideModal }: _IRegister) => {
+
+  const registerSchema = AuthSchema;
+  const { control, handleSubmit } = useForm<FieldValues>({
+    defaultValues: {
+      email: "",
+      phone_number: "",
+      password: "",
+    },
+    resolver: zodResolver(registerSchema),
+  });
+
   const vehicleNumberRef = useRef<TextInput>(null);
   const driverRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
-  const [vehicleNumber, setvehicleNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const dispatch = useAppDispatch();
   const registerLoading = useAppSelector(selectAuthLoading);
 
-  const handleAddVehicle = async () => {
-    try {
-      const result = await dispatch(
-        register({
-          email,
-          password,
-        })
-      );
-      const user = unwrapResult(result);
-      if (user && user.statusCode === 200) {
-        // hideModal();
-        // //Navigate to OTP
-        // router.navigate(`otp?from=${AUTH_MODALS.SIGNUP}`);
-        setSelectedScreen(AUTH_MODALS.LOGIN);
-      }
-    } catch (error: any) {
-      Alert.alert(error.message);
-    }
+  // const handleAddVehicle = async () => {
+  //   try {
+  //     const result = await dispatch(
+  //       register({
+  //         email,
+  //         password,
+  //       })
+  //     );
+  //     const user = unwrapResult(result);
+  //     if (user && user.statusCode === 200) {
+  //       // hideModal();
+  //       // //Navigate to OTP
+  //       // router.navigate(`otp?from=${AUTH_MODALS.SIGNUP}`);
+  //       setSelectedScreen(AUTH_MODALS.LOGIN);
+  //     }
+  //   } catch (error: any) {
+  //     Alert.alert(error.message);
+  //   }
+  // };
+
+  const onSubmit = (data: any) => {
+    Alert.alert("Successful", JSON.stringify(data));
   };
+
 
   const renderTitle = () => {
     return (
@@ -73,11 +90,11 @@ const AddVehicle = ({ setSelectedScreen, hideModal }: _IRegister) => {
       {/* Phone Number */}
       <FormInputs
         ref={vehicleNumberRef}
+        control={control}
+        name="phone_number"
         rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Phone Number"
         placeholder="Enter your phone number"
-        value={vehicleNumber}
-        onChangeText={(text) => setvehicleNumber(text)}
         prependComponent={
           <TabBarIcon
             fontProvider={FontAwesome}
@@ -91,11 +108,11 @@ const AddVehicle = ({ setSelectedScreen, hideModal }: _IRegister) => {
       {/* Email */}
       <FormInputs
         ref={emailRef}
+        control={control}
+        name="email"
         rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Email Address"
         placeholder="Enter your email address"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
         prependComponent={
           <TabBarIcon
             fontProvider={Entypo}
@@ -109,11 +126,11 @@ const AddVehicle = ({ setSelectedScreen, hideModal }: _IRegister) => {
       {/* Password */}
       <FormInputs
         ref={driverRef}
+        control={control}
+        name="password"
         rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Password"
         placeholder="Enter your password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
         secureTextEntry={!isVisible}
         prependComponent={
           <TabBarIcon
@@ -208,7 +225,7 @@ const AddVehicle = ({ setSelectedScreen, hideModal }: _IRegister) => {
             color: SHARED_COLORS.gray50,
           }}
           type="opacity"
-          onPress={handleAddVehicle}
+          onPress={handleSubmit(onSubmit)}
         >
           <RendererHOC
             loading={registerLoading}
