@@ -15,6 +15,10 @@ type FontProvider =
   | typeof Entypo
   | typeof AntDesign;
 
+export interface _IFont {
+  fontProvider: FontProvider;
+  icon: React.ComponentProps<FontProvider>["name"];
+}
 interface _ITabBarIcon {
   fontProvider: FontProvider;
   auth?: boolean;

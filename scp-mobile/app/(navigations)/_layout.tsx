@@ -39,7 +39,7 @@ export default function NavigationsLayout() {
         },
       }}
     >
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name={SCREENS.EXPLORE}
         options={{
           title: "EXPLORE",
@@ -60,7 +60,10 @@ export default function NavigationsLayout() {
               <View
                 style={{
                   borderTopWidth: focused ? 2 : 0,
-                  borderTopColor: SHARED_COLORS.gray600,
+                  borderTopColor:
+                    colorScheme === "light"
+                      ? SHARED_COLORS.gray600
+                      : LIGHT_THEME.primary700,
                   width: "100%",
                   justifyContent: "center",
                   alignItems: "center",
@@ -70,16 +73,24 @@ export default function NavigationsLayout() {
                 <View style={{ top: 12 }}>
                   <TabBarIcon
                     fontProvider={MaterialIcons}
-                    name="newspaper"
+                    name="code-slash"
                     size={28}
-                    color={focused ? "black" : SHARED_COLORS.gray500}
+                    color={
+                      focused
+                        ? colorScheme === "light"
+                          ? "black"
+                          : LIGHT_THEME.primary800
+                        : colorScheme === "light"
+                        ? SHARED_COLORS.gray500
+                        : LIGHT_THEME.primary400
+                    }
                   />
                 </View>
               </View>
             );
           },
         }}
-      /> */}
+      />
       <Tabs.Screen
         name={SCREENS.CENTERS}
         options={{
@@ -210,7 +221,7 @@ export default function NavigationsLayout() {
           },
         }}
       />
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name={SCREENS.ACCOUNT}
         options={{
           title: "PROFILE",
@@ -225,7 +236,10 @@ export default function NavigationsLayout() {
               <View
                 style={{
                   borderTopWidth: focused ? 2 : 0,
-                  borderTopColor: SHARED_COLORS.gray600,
+                  borderTopColor:
+                    colorScheme === "light"
+                      ? SHARED_COLORS.gray600
+                      : LIGHT_THEME.primary700,
                   width: "100%",
                   justifyContent: "center",
                   alignItems: "center",
@@ -237,14 +251,22 @@ export default function NavigationsLayout() {
                     fontProvider={MaterialIcons}
                     name="person"
                     size={28}
-                    color={focused ? "black" : SHARED_COLORS.gray500}
+                    color={
+                      focused
+                        ? colorScheme === "light"
+                          ? "black"
+                          : LIGHT_THEME.primary800
+                        : colorScheme === "light"
+                        ? SHARED_COLORS.gray500
+                        : LIGHT_THEME.primary400
+                    }
                   />
                 </View>
               </View>
             );
           },
         }}
-      /> */}
+      />
     </Tabs>
   );
 }
