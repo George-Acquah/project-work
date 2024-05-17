@@ -15,8 +15,9 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { bg_colors, text_colors } from "@/components/auth/styles";
 import { FormInputs } from "@/components/auth/helpers";
 import { SIZES } from "@/constants/styles";
-import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "@/components/common/renderer.hoc";
+import { useColorScheme } from "@/hooks/useColorScheme"
 
 const ResetPasswordScreen = () => {
   const passwordRef = useRef<TextInput>(null);
@@ -27,6 +28,7 @@ const ResetPasswordScreen = () => {
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const dispatch = useAppDispatch();
   const registerLoading = useAppSelector(selectAuthLoading);
+  const colorScheme = useColorScheme() ?? 'light';
 
   const handleRegister = async () => {
     try {
@@ -46,7 +48,7 @@ const ResetPasswordScreen = () => {
       // }
       //Navigate to OTP
       router.navigate(
-        `/success/?title=${"Your password was successfully changed"}&description=${"You can now login with your new password"}&btnLabel=${"Login"}&route=${"/(auth)/welcome"}&action=${
+        `/success/?title=${"Your password was successfully changed"}&description=${"You can now login with your new password"}&btnLabel=${"Go Back To Login"}&route=${"/(auth)/welcome"}&action=${
           AUTH_MODALS.VEHICLES
         }`
       );
@@ -58,7 +60,7 @@ const ResetPasswordScreen = () => {
   // renders
   const renderHeader = () => {
     return (
-      <View>
+      <View style={{ marginTop: SIZES.padding }}>
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -68,7 +70,11 @@ const ResetPasswordScreen = () => {
             <TabBarIcon
               fontProvider={Entypo}
               name="chevron-left"
-              color="#fff"
+              color={
+                colorScheme === "light"
+                  ? LIGHT_THEME.contentPrimary
+                  : DARK_THEME.contentPrimary
+              }
             />
           </TouchableOpacity>
         </View>
@@ -106,7 +112,7 @@ const ResetPasswordScreen = () => {
           <TabBarIcon
             fontProvider={FontAwesome}
             name="lock"
-            color={"white"}
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
             size={24}
             style={{ marginRight: SIZES.base }}
           />
@@ -116,7 +122,7 @@ const ResetPasswordScreen = () => {
             <TabBarIcon
               fontProvider={FontAwesome}
               name={isVisible ? "eye-slash" : "eye"}
-              color={LIGHT_THEME.contentPrimary}
+              color={LIGHT_THEME.primary700}
               size={24}
               onPress={() => setIsVisible(!isVisible)}
             />
@@ -137,7 +143,7 @@ const ResetPasswordScreen = () => {
           <TabBarIcon
             fontProvider={FontAwesome}
             name="lock"
-            color={"white"}
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
             size={24}
             style={{ marginRight: SIZES.base }}
           />
@@ -147,7 +153,7 @@ const ResetPasswordScreen = () => {
             <TabBarIcon
               fontProvider={FontAwesome}
               name={isConfirmVisible ? "eye-slash" : "eye"}
-              color={LIGHT_THEME.contentPrimary}
+              color={LIGHT_THEME.primary700}
               size={24}
               onPress={() => setIsConfirmVisible(!isConfirmVisible)}
             />
@@ -180,7 +186,7 @@ const ResetPasswordScreen = () => {
             color={SHARED_COLORS.gray50}
             pad
           >
-            <Text style={{ ...FONTS.pr2 }} {...text_colors.title}>
+            <Text style={{ ...FONTS.pr2 }} {...text_colors.main_title}>
               Confirm
             </Text>
           </RendererHOC>

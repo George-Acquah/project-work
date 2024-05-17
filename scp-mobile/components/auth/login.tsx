@@ -12,12 +12,17 @@ import { login, selectAuthLoading } from "@/features/auth/auth.slice";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { router } from "expo-router";
-import { Checkbox, FormInputs } from "./helpers";
+import { Checkbox } from "./helpers";
 import { SIZES } from "@/constants/styles";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
 import { TabBarIcon } from "../navigation/TabBarIcon";
+import AuthSchema from "@/schemas/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import FormInputs from "../common/input-form";
+import { LoginParams } from "@/api/auth";
 
 interface _ILogin {
   setSelectedScreen: Dispatch<SetStateAction<string>>;
@@ -25,19 +30,27 @@ interface _ILogin {
 const Login = ({ setSelectedScreen }: _ILogin) => {
   const phoneNumberRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
+
+  const loginSchema = AuthSchema.omit({ phone_number: true });
+  const { control, handleSubmit } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(loginSchema),
+  });
   const [isVisible, setIsVisible] = useState(false);
   const [selectRememberMe, setSelectRememberMe] = useState(false);
-const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme();
   const dispatch = useAppDispatch();
   const loginLoading = useAppSelector(selectAuthLoading);
 
-  const handleLogin = async () => {
+  const handleLogin = async (data: LoginParams) => {
     try {
+      const { email, password } = data;
       const result = await dispatch(
         login({
-          email: phoneNumber,
+          email,
           password,
         })
       );
@@ -83,7 +96,7 @@ const colorScheme = useColorScheme();
         <Button
           title="Forgot Password"
           style={{ backgroundColor: undefined, height: 30 }}
-          additionalTextStyles={{ color: LIGHT_THEME.primary500 }}
+          additionalTextStyles={{ color: LIGHT_THEME.primary700 }}
           type="opacity"
           onPress={() => setSelectedScreen(AUTH_MODALS.FORGOT)}
         />
@@ -112,7 +125,7 @@ const colorScheme = useColorScheme();
               height: null,
               marginLeft: SIZES.base,
             }}
-            additionalTextStyles={{ color: LIGHT_THEME.primary500 }}
+            additionalTextStyles={{ color: LIGHT_THEME.primary700 }}
             type="opacity"
             onPress={() => {
               setSelectedScreen(AUTH_MODALS.SIGNUP);
@@ -131,7 +144,7 @@ const colorScheme = useColorScheme();
             color: SHARED_COLORS.gray50,
           }}
           type="opacity"
-          onPress={handleLogin}
+          onPress={handleSubmit(handleLogin)}
         >
           <RendererHOC
             loading={loginLoading}
@@ -139,7 +152,7 @@ const colorScheme = useColorScheme();
             color={SHARED_COLORS.gray50}
             pad
           >
-            <Text style={{ ...FONTS.pr2 }} {...text_colors.title}>
+            <Text style={{ ...FONTS.pr2 }} {...text_colors.main_title}>
               Login
             </Text>
           </RendererHOC>
@@ -167,16 +180,16 @@ const colorScheme = useColorScheme();
         {/* Phone Number */}
         <FormInputs
           ref={phoneNumberRef}
+          control={control as any}
+          name="email"
           rootContainerStyles={{ marginTop: SIZES.padding * 2 }}
           label="Phone Number / Email"
           placeholder="Enter phone number or email"
-          value={phoneNumber}
-          onChangeText={(text) => setPhoneNumber(text)}
           prependComponent={
             <TabBarIcon
               fontProvider={FontAwesome}
               name="mobile-phone"
-              color={"white"}
+              color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
               size={34}
               style={{ marginRight: SIZES.base }}
             />
@@ -186,17 +199,17 @@ const colorScheme = useColorScheme();
         {/* Password */}
         <FormInputs
           ref={passwordRef}
-          rootContainerStyles={{ marginTop: SIZES.padding * 2 }}
+          control={control as any}
+          name="password"
+          rootContainerStyles={{ marginTop: SIZES.padding }}
           label="Password"
           placeholder="Enter your password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
           secureTextEntry={!isVisible}
           prependComponent={
             <TabBarIcon
               fontProvider={FontAwesome}
               name="lock"
-              color={"white"}
+              color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
               size={24}
               style={{ marginRight: SIZES.base }}
             />
@@ -206,7 +219,7 @@ const colorScheme = useColorScheme();
               <TabBarIcon
                 fontProvider={FontAwesome}
                 name={isVisible ? "eye-slash" : "eye"}
-                color={LIGHT_THEME.primary500}
+                color={LIGHT_THEME.primary700}
                 size={24}
                 onPress={() => setIsVisible(!isVisible)}
               />

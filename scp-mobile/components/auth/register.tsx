@@ -12,31 +12,44 @@ import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectAuthLoading } from "@/features/auth/auth.slice";
-import { FormInputs } from "./helpers";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { SIZES } from "@/constants/styles";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
+import AuthSchema from "@/schemas/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, FieldValues } from "react-hook-form";
+import FormInputs from "../common/input-form";
 
 interface _IRegister {
   setSelectedScreen: Dispatch<SetStateAction<string>>;
   hideModal: () => void;
 }
 const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
-  const colorScheme = useColorScheme();
+
+  const colorScheme = useColorScheme() ?? 'light';
   const phoneNumberRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
+    const registerSchema = AuthSchema;
+    const { control, handleSubmit } = useForm<FieldValues>({
+      defaultValues: {
+        email: "",
+        phone_number: "",
+        password: "",
+      },
+      resolver: zodResolver(registerSchema),
+    });
+
   const [isVisible, setIsVisible] = useState(false);
   const dispatch = useAppDispatch();
   const registerLoading = useAppSelector(selectAuthLoading);
 
-  const handleRegister = async () => {
+  const handleRegister = async (data: any) => {
     try {
+      const {email, password } = data;
       const result = await dispatch(
         register({
           email,
@@ -75,16 +88,16 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
       {/* Phone Number */}
       <FormInputs
         ref={phoneNumberRef}
+        control={control}
+        name="phone_number"
         rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Phone Number"
         placeholder="Enter your phone number"
-        value={phoneNumber}
-        onChangeText={(text) => setPhoneNumber(text)}
         prependComponent={
           <TabBarIcon
             fontProvider={FontAwesome}
             name="mobile-phone"
-            color={"white"}
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
             size={34}
             style={{ marginRight: SIZES.base }}
           />
@@ -93,16 +106,16 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
       {/* Email */}
       <FormInputs
         ref={emailRef}
+        control={control}
+        name="email"
         rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Email Address"
         placeholder="Enter your email address"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
         prependComponent={
           <TabBarIcon
             fontProvider={Entypo}
             name="mail"
-            color={"white"}
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
             size={24}
             style={{ marginRight: SIZES.base }}
           />
@@ -111,17 +124,17 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
       {/* Password */}
       <FormInputs
         ref={passwordRef}
+        control={control}
+        name="password"
         rootContainerStyles={{ marginTop: SIZES.padding }}
         label="Password"
         placeholder="Enter your password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
         secureTextEntry={!isVisible}
         prependComponent={
           <TabBarIcon
             fontProvider={FontAwesome}
             name="lock"
-            color={"white"}
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
             size={24}
             style={{ marginRight: SIZES.base }}
           />
@@ -190,7 +203,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
               height: null,
               marginLeft: SIZES.base,
             }}
-            additionalTextStyles={{ color: LIGHT_THEME.primary400 }}
+            additionalTextStyles={{ color: LIGHT_THEME.primary700 }}
             type="opacity"
             onPress={() => {
               setSelectedScreen(AUTH_MODALS.LOGIN);
@@ -210,7 +223,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
             color: SHARED_COLORS.gray50,
           }}
           type="opacity"
-          onPress={handleRegister}
+          onPress={handleSubmit(handleRegister)}
         >
           <RendererHOC
             loading={registerLoading}
@@ -218,7 +231,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
             color={SHARED_COLORS.gray50}
             pad
           >
-            <Text style={{ ...FONTS.pr2 }} {...text_colors.title}>
+            <Text style={{ ...FONTS.pr2 }} {...text_colors.main_title}>
               Register
             </Text>
           </RendererHOC>

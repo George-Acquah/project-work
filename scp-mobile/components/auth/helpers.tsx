@@ -14,7 +14,7 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import { bg_colors } from "./styles";
-import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { SIZES } from "@/constants/styles";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { TabBarIcon } from "../navigation/TabBarIcon";
@@ -37,7 +37,11 @@ type TextInputRef = TextInput;
 
 const text_colors = {
   title: {
-    lightColor: SHARED_COLORS.gray50,
+    lightColor: SHARED_COLORS.gray700,
+    darkColor: SHARED_COLORS.gray400,
+  },
+  main_title: {
+    lightColor: SHARED_COLORS.gray300,
     darkColor: SHARED_COLORS.gray400,
   },
   sub_container: {
@@ -114,12 +118,19 @@ const FormInputs = React.forwardRef<TextInputRef, _IFormInputs>(
                 {
                   flex: 1,
                   paddingVertical: 0,
-                  color: LIGHT_THEME.contentPrimary,
+                  color:
+                    colorScheme === "light"
+                      ? LIGHT_THEME.contentPrimary
+                      : DARK_THEME.contentPrimary,
                   ...FONTS.pr2,
                 },
                 style,
               ]}
-              placeholderTextColor={LIGHT_THEME.contentInverseSecondary}
+              placeholderTextColor={
+                colorScheme === "light"
+                  ? SHARED_COLORS.gray600
+                  : DARK_THEME.contentInverseSecondary
+              }
               placeholder={placeholder}
               value={value}
               onChangeText={onChangeText}
@@ -139,6 +150,7 @@ const FormInputs = React.forwardRef<TextInputRef, _IFormInputs>(
 );
 
 const Checkbox = ({ isSelected, label, onPress, style }: _ICheckbox) => {
+  const colorScheme = useColorScheme() ?? 'light';
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -147,7 +159,7 @@ const Checkbox = ({ isSelected, label, onPress, style }: _ICheckbox) => {
       <TabBarIcon
         fontProvider={FontAwesome}
         name={isSelected ? "check-square" : "square"}
-        color={"white"}
+        color={colorScheme === "light" ? SHARED_COLORS.gray600 : "white"}
         size={24}
         // styles={{ marginRight: SIZES.base }}
       />
@@ -189,10 +201,10 @@ const renderLoginDetails = (
     >
       {/* Title And Description */}
       <View>
-        <Text style={[{ ...FONTS.h2 }]} {...text_colors.title}>
+        <Text style={[{ ...FONTS.h2 }]} {...text_colors.main_title}>
           Log In
         </Text>
-        <Text style={[{ ...FONTS.ps3 }]} {...text_colors.title}>
+        <Text style={[{ ...FONTS.ps3 }]} {...text_colors.main_title}>
           Please choose how you would like to log in
         </Text>
       </View>
@@ -239,6 +251,9 @@ const renderLoginDetails = (
           title="Continue With Google"
           type="opacity"
           onPress={() => {
+            setTimeout(() => {
+              animationState.transitionTo("scaleDown");
+            }, 100);
             showModal(AUTH_MODALS.ADDRESS);
           }}
         />
@@ -260,6 +275,9 @@ const renderLoginDetails = (
           title="Continue With Github"
           type="opacity"
           onPress={() => {
+            setTimeout(() => {
+              animationState.transitionTo("scaleDown");
+            }, 100);
             showModal(AUTH_MODALS.VEHICLES);
           }}
         />
@@ -286,6 +304,9 @@ const renderLoginDetails = (
           title="Create An Account"
           type="opacity"
           onPress={() => {
+            setTimeout(() => {
+              animationState.transitionTo("scaleDown");
+            }, 100);
             showModal(AUTH_MODALS.SIGNUP);
           }}
         />

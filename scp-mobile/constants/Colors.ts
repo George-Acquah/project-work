@@ -79,6 +79,20 @@ export const LIGHT_THEME = {
   primary500: "#63B38E",
   primary600: "#48A57A",
   primary700: "#349864",
+  primary800: "#227B4A",
+  primary900: "#1B6C3F",
+
+  // Secondary (Yellow)
+  secondary50: "#FFFDE7",
+  secondary100: "#FFF9C4",
+  secondary200: "#FFF59D",
+  secondary300: "#FFF176",
+  secondary400: "#FFEE58",
+  secondary500: "#FFEB3B",
+  secondary600: "#FDD835",
+  secondary700: "#FBC02D",
+  secondary800: "#F9A825",
+  secondary900: "#F57F17",
 
   // Background
   backgroundPrimary: "#FFFFFF",
@@ -106,6 +120,18 @@ export const DARK_THEME = {
   primary500: "#AFAFAF",
   primary600: "#CBCBCB",
   primary700: "#EEEEEE",
+
+  // Secondary (Yellow)
+  secondary50: "#FFFAE7",
+  secondary100: "#FFF1C2",
+  secondary200: "#FFE59E",
+  secondary300: "#FFD180",
+  secondary400: "#FFC451",
+  secondary500: "#FFBB33",
+  secondary600: "#FFB300",
+  secondary700: "#FFA000",
+  secondary800: "#FF8F00",
+  secondary900: "#FF6F00",
 
   // Background
   backgroundPrimary: "#1F1F1F",

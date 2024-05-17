@@ -4,6 +4,7 @@ import {FontAwesome } from "@expo/vector-icons"
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { generateStyles } from "./styles";
 import { useColorScheme } from "@/hooks/useColorScheme"
+import { FONTS } from "@/constants/fonts";
 
 interface _IButton extends PressableProps {
   variant?:
@@ -122,7 +123,12 @@ const Button = React.forwardRef<Ref, _IButton>(
             )}
             {title ? (
               <Text
-                style={[button_styles.text, ...textStyles, text_sizes[size]]}
+                style={[
+                  { ...FONTS.ps1  },
+                  button_styles.text,
+                  ...textStyles,
+                  text_sizes[size],
+                ]}
               >
                 {title}
               </Text>
@@ -151,7 +157,12 @@ const Button = React.forwardRef<Ref, _IButton>(
             )}
             {title ? (
               <Text
-                style={[button_styles.text, ...textStyles, text_sizes[size]]}
+                style={[
+                  { ...FONTS.ps1 },
+                  button_styles.text,
+                  ...textStyles,
+                  text_sizes[size],
+                ]}
               >
                 {title}
               </Text>

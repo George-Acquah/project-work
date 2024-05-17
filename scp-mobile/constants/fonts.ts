@@ -6,6 +6,11 @@ export const FONTS = {
     fontSize: SIZES.t1,
     lineHeight: 64,
   },
+  b1: {
+    fontFamily: "RobotoBold",
+    fontSize: SIZES.ps1,
+    lineHeight: 32,
+  },
   t2: {
     fontFamily: "RobotoBold",
     fontSize: SIZES.t2,

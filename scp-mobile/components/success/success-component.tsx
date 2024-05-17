@@ -68,6 +68,7 @@ const SuccessComponent = ({
         additionalStyles={{
           borderRadius: SIZES.radius,
           marginTop: SIZES.padding,
+          marginBottom: SIZES.padding
         }}
         additionalTextStyles={{
           ...FONTS.l2,
