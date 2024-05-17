@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { bookingsInitialState } from "../states";
-import { RootState } from "store";
+import { RootState } from "@/store";
 
 // This will be for the actual implementation
 interface _IBookingUrls {
@@ -93,7 +93,7 @@ const bookingSlice = createSlice({
       })
       .addCase(fetchAllBookings.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message;
+        state.error = action.error.message as string;
       });
   },
 });
