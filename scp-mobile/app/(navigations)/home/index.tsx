@@ -18,7 +18,7 @@ import { SIZES } from "@/constants/styles";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { text_colors } from "@/components/auth/styles";
 import FiltersTab from "@/components/navigation/shared/filters-tab";
-import { useColorScheme } from "@/hooks/useColorScheme"
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import PlacesAutoComplete from "@/components/navigation/shared/auto-complete";
 import RendererHOC from "@/components/common/renderer.hoc";
 import ParkingCenters from "@/components/navigation/centers/parking-centers";
