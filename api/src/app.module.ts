@@ -18,10 +18,10 @@ import { StorageService } from './storage/storage.service';
     AuthModule,
     ParkingModule,
     UsersModule,
-    VehiclesModule,
+    VehiclesModule
   ],
   controllers: [AppController],
-  providers: [AppService, StorageService],
+  providers: [AppService, StorageService]
 })
 export class AppModule {
   constructor() {

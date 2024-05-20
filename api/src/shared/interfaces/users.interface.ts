@@ -100,6 +100,15 @@ interface _ISanitizedCommonUser {
   image?: _IUserImage;
 }
 
+interface _IUpdatedUserRes {
+  _id: string;
+  email: string;
+  userType: string;
+  first_name: string | null;
+  last_name: string | null;
+  user_image: string | null;
+}
+
 // Create a generic interface for all users by combining the specific interfaces
 type _TUser = (OwnerHelpUser | CustomerHelpUser) & _ICommonUser;
 type _TSanitizedUser = (OwnerHelpUser | CustomerHelpUser) &
@@ -114,5 +123,6 @@ export {
   _TUser,
   _TSanitizedUser,
   _IDbProfile,
-  _ISanitizedProfile
+  _ISanitizedProfile,
+  _IUpdatedUserRes
 };

@@ -126,8 +126,7 @@ dist
 # TernJS port file
 .tern-port
 
-#Expo Files
-.expo
-.expo*
-*.expo
-*.expo*
+# Expo 
+/.expo
+*/.expo
+/.expo*

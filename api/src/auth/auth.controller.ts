@@ -86,6 +86,7 @@ export class AuthController {
   async refreshToken(@User() user: _TSanitizedUser) {
     try {
       const tokens = await this.authService.refreshToken(user);
+      console.log('Session successfully refreshed');
       return new ApiResponse(200, 'Session successfully refreshed', tokens);
     } catch (error) {
       return new ApiResponse(400, error.message ?? "Couldn't refresh", {});

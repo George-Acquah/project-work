@@ -1,7 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Model, Document, FilterQuery, PipelineStage } from 'mongoose';
+import mongoose, {
+  Model,
+  Document,
+  FilterQuery,
+  PipelineStage,
+  ClientSession
+} from 'mongoose';
 import { SORT } from './shared/enums/general.enum';
 import { _ILookup } from './shared/interfaces/responses.interface';
+import { _IUpdatedUserRes } from './shared/interfaces/users.interface';
 
 @Injectable()
 export class AggregationService {
@@ -261,6 +268,96 @@ export class AggregationService {
     } catch (error) {
       console.error(error);
       throw error; // Rethrow the error to propagate it to the caller
+    }
+  }
+
+  async updateUserPipeline<T extends Document>(
+    model: Model<T>,
+    id: string,
+    updateFields: any,
+    session?: ClientSession // The fields to update
+  ): Promise<_IUpdatedUserRes[]> {
+    try {
+      const pipeline = await model.aggregate(
+        [
+          {
+            $match: {
+              _id: id
+            }
+          },
+          {
+            $lookup: {
+              from: 'profiles',
+              localField: 'profile',
+              foreignField: '_id',
+              as: 'profile'
+            }
+          },
+          {
+            $lookup: {
+              from: 'userimages',
+              localField: '_id',
+              foreignField: 'userId',
+              as: 'user_image'
+            }
+          },
+          {
+            $unwind: '$profile'
+          },
+          {
+            $set: updateFields // Apply the update fields here
+          },
+          {
+            $unwind: '$user_image'
+          },
+          {
+            $project: {
+              email: 1,
+              userType: 1,
+              'profile.first_name': 1,
+              'profile.last_name': 1,
+              'user_image.file_id': 1
+            }
+          }
+        ],
+        { session }
+      );
+
+      return pipeline;
+    } catch (error) {
+      console.error('Error in updateUserPipeline:', error);
+      throw error; // Rethrow the error to propagate it to the caller
+    }
+  }
+
+  async returnIdPipeline<T extends Document>(
+    model: Model<T>,
+    identifier: string // Rename to identifier for flexibility
+  ): Promise<string | null> {
+    try {
+      const pipeline = (await model.aggregate([
+        {
+          $match: {
+            $or: [
+              { _id: new mongoose.Types.ObjectId(identifier) }, // Match by _id
+              { email: identifier } // Match by email
+            ]
+          }
+        },
+        {
+          $project: {
+            $toString: '$_id'
+          }
+        },
+        {
+          $limit: 1
+        }
+      ])) as unknown as string | null; // Return null if no document found
+
+      return pipeline;
+    } catch (error) {
+      console.error('Error in returnIdPipeline:', error);
+      throw error; // Rethrow the error
     }
   }
 }

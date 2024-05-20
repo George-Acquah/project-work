@@ -8,7 +8,7 @@ const RootMongooseModule = MongooseModule.forRootAsync({
     const uri = configService.get<string>(
       process.env.NODE_ENV === 'production'
         ? 'MONGODB_URI_PROD'
-        : 'MONGODB_URI_DEV',
+        : 'MONGODB_URI_DEV'
     );
 
     try {
@@ -18,14 +18,14 @@ const RootMongooseModule = MongooseModule.forRootAsync({
 
       // Optionally, log connection details if needed
       return {
-        uri,
+        uri
       };
     } catch (error) {
       console.error('Error connecting to MongoDB:', error);
       throw error; // Rethrow the error to indicate connection failure
     }
   },
-  inject: [ConfigService],
+  inject: [ConfigService]
 });
 
 export { RootMongooseModule };

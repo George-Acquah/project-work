@@ -10,7 +10,7 @@ import { strategies } from 'src/shared/constants/auth.constants';
 @Injectable()
 export class ReservationsStrategy extends PassportStrategy(
   Strategy,
-  strategies.RESERVATION,
+  strategies.RESERVATION
 ) {
   constructor(private authService: AuthService) {
     super({
@@ -22,7 +22,7 @@ export class ReservationsStrategy extends PassportStrategy(
         }
 
         return undefined;
-      },
+      }
     });
   }
 

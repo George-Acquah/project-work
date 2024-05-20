@@ -32,6 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, strategies.JWT) {
       throw new ApiResponse(402, 'User does not exist', {});
     }
 
+    console.log(user);
     return user;
   }
 }
