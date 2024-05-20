@@ -38,4 +38,29 @@ export class UploadService {
 
     return uploadedFiles;
   }
+
+  async uploadFileToDrive(file: {
+    originalname: string;
+    mimetype: string;
+    buffer: Buffer;
+  }): Promise<_ICloudRes> {
+    const filename = getUniqueFilename(file.originalname);
+
+    if (file.mimetype === 'application/pdf') {
+      //TODO Some implementation to upload PDF else remove IF ELSE statement
+      return await this.googleStorageService.uploadFile(
+        file.originalname,
+        file.mimetype,
+        file.buffer,
+        filename
+      );
+    } else {
+      return await this.googleStorageService.uploadFile(
+        file.originalname,
+        file.mimetype,
+        file.buffer,
+        filename
+      );
+    }
+  }
 }

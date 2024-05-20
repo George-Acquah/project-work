@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { Model, Types } from 'mongoose';
+import { ClientSession, Model, Types } from 'mongoose';
 import { CreateUserDto } from './dtos/create-users.dto';
 import { Customer } from 'src/shared/schemas/customer.schema';
 import { ParkOwner } from 'src/shared/schemas/owner.schema';
@@ -19,6 +19,7 @@ import {
   _IParkOwner,
   _ISanitizedCustomer,
   _ISanitizedParkOwner,
+  _IUpdatedUserRes,
   _TSanitizedUser,
   _TUser
 } from 'src/shared/interfaces/users.interface';
@@ -29,6 +30,7 @@ import {
   _IUserImage
 } from 'src/shared/interfaces/images.interface';
 import { AggregationService } from 'src/aggregation.service';
+import { TransactionService } from 'src/transaction.service';
 
 @Injectable()
 export class UsersService {
@@ -40,7 +42,8 @@ export class UsersService {
     private parkOwnerModel: Model<_IParkOwner>,
     @InjectModel('Profile') private profileModel: Model<_IDbProfile>,
     @InjectModel('UserImage') private userImageModel: Model<_IDbUserImage>,
-    private readonly aggregationService: AggregationService
+    private readonly aggregationService: AggregationService,
+    private readonly transactionService: TransactionService
   ) {}
 
   async populateUserFields<T>(
@@ -65,6 +68,13 @@ export class UsersService {
     return populatedUsers;
   }
 
+  async returnId(email: string) {
+    return await this.aggregationService.returnIdPipeline(
+      this.userModel,
+      email
+    );
+  }
+
   async addUserImage(userImage: _ICloudRes, id: string): Promise<_IUserImage> {
     try {
       const { publicUrl, ...image } = userImage;
@@ -78,7 +88,7 @@ export class UsersService {
 
       return sanitizeUserImage(savedImage);
     } catch (error) {
-      throw new Error('An Error Ocuured while saving Image');
+      throw new Error(error);
     }
   }
 
@@ -213,7 +223,7 @@ export class UsersService {
     }
   }
 
-  async updateApplicant(
+  async updateUserByAdmin(
     id: string,
     data: any,
     isAdmin: boolean
@@ -266,38 +276,62 @@ export class UsersService {
     return sanitizeUser(user);
   }
 
-  async updateUser(email: string, userDetails: any): Promise<_TSanitizedUser> {
+  async updateUser(
+    id: string,
+    email: string,
+    userDetails: any
+  ): Promise<_IUpdatedUserRes> {
     this.logger.log(userDetails);
-    const user = await this.findUser(email);
+    const user = await this.returnId(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (user !== id) {
+      throw new Error('You can only update your own records');
+    }
+
+    console.log(user);
+
     this.logger.log('user: ', user);
 
-    // user.profile.username = `${userDetails.first_name.toLocaleLowerCase()} ${userDetails.last_name.toLocaleLowerCase()}`;
+    const updates: any = {};
 
     if (userDetails.contact_no) {
-      user.profile.contact_no = userDetails.contact_no;
+      updates['profile.contact_no'] = userDetails.contact_no;
     }
     if (userDetails.first_name) {
-      user.profile.first_name = userDetails.first_name;
+      updates['profile.first_name'] = userDetails.first_name;
     }
     if (userDetails.last_name) {
-      user.profile.last_name = userDetails.last_name;
+      updates['profile.last_name'] = userDetails.last_name;
     }
     if (userDetails.area) {
-      user.profile.area = userDetails.area;
+      updates['profile.area'] = userDetails.area;
     }
     if (userDetails.city) {
-      user.profile.city = userDetails.city;
+      updates['profile.city'] = userDetails.city;
     }
     if (userDetails.state) {
-      user.profile.state = userDetails.state;
+      updates['profile.state'] = userDetails.state;
     }
     if (userDetails.pincode) {
-      user.profile.pinCode = userDetails.pincode;
+      updates['profile.pinCode'] = userDetails.pincode;
     }
 
-    user.save();
-    this.logger.log('saved user: ', user);
-    return sanitizeUser(user);
+    try {
+      const result = await this.aggregationService.updateUserPipeline(
+        this.userModel,
+        user,
+        updates
+      );
+      const updatedUser = result[0]; // Assuming the pipeline returns an array with one element
+      // this.logger.log('updated user: ', updatedUser);
+      return updatedUser;
+    } catch (error) {
+      this.logger.error('Error updating user: ', error);
+      throw error;
+    }
   }
 
   async remove(userId: string): Promise<void> {
@@ -368,6 +402,88 @@ export class UsersService {
     } catch (error) {
       console.error('Database Error:', error);
       throw new Error('Failed to fetch applicants.');
+    }
+  }
+
+  //With Yransactions
+  async updateUserTransaction(
+    id: string,
+    email: string,
+    userDetails: any,
+    session: ClientSession
+  ): Promise<_IUpdatedUserRes> {
+    this.logger.log(userDetails);
+    const user = await this.returnId(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (user !== id) {
+      throw new Error('You can only update your own records');
+    }
+
+    console.log(user);
+
+    this.logger.log('user: ', user);
+
+    const updates: any = {};
+
+    if (userDetails.contact_no) {
+      updates['profile.contact_no'] = userDetails.contact_no;
+    }
+    if (userDetails.first_name) {
+      updates['profile.first_name'] = userDetails.first_name;
+    }
+    if (userDetails.last_name) {
+      updates['profile.last_name'] = userDetails.last_name;
+    }
+    if (userDetails.area) {
+      updates['profile.area'] = userDetails.area;
+    }
+    if (userDetails.city) {
+      updates['profile.city'] = userDetails.city;
+    }
+    if (userDetails.state) {
+      updates['profile.state'] = userDetails.state;
+    }
+    if (userDetails.pincode) {
+      updates['profile.pinCode'] = userDetails.pincode;
+    }
+
+    try {
+      const result = await this.aggregationService.updateUserPipeline(
+        this.userModel,
+        user,
+        updates,
+        session
+      );
+      const updatedUser = result[0]; // Assuming the pipeline returns an array with one element
+      // this.logger.log('updated user: ', updatedUser);
+      return updatedUser;
+    } catch (error) {
+      this.logger.error('Error updating user: ', error);
+      throw error;
+    }
+  }
+
+  async addUserImageTransaction(
+    userImage: _ICloudRes,
+    id: string,
+    session: ClientSession
+  ): Promise<_IUserImage> {
+    try {
+      const { publicUrl, ...image } = userImage;
+
+      const savedImage = new this.userImageModel({
+        userId: id,
+        ...image
+      });
+
+      await savedImage.save({ session });
+
+      return sanitizeUserImage(savedImage);
+    } catch (error) {
+      throw new Error(`An Error Ocuured while saving Image: ${error}`);
     }
   }
 }

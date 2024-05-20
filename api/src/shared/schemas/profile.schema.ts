@@ -11,7 +11,7 @@ export class Profile {
   first_name: {
     maxlength: [
       UserConstraints.FIRSTNAME_MAXVALUE,
-      UserConstraints.FIRSTNAME_MAXLENGTH,
+      UserConstraints.FIRSTNAME_MAXLENGTH
     ];
   };
 
@@ -19,7 +19,7 @@ export class Profile {
   last_name: {
     maxlength: [
       UserConstraints.LASTNAME_MAXVALUE,
-      UserConstraints.LASTNAME_MAXLENGTH,
+      UserConstraints.LASTNAME_MAXLENGTH
     ];
   };
 
@@ -27,7 +27,7 @@ export class Profile {
   contact_no: {
     maxlength: [
       AddressConstraints.CONTACTNO_MAXVALUE,
-      AddressConstraints.CONTACTNO_MAXLENGTH,
+      AddressConstraints.CONTACTNO_MAXLENGTH
     ];
   };
 
@@ -35,7 +35,7 @@ export class Profile {
   area: {
     maxlength: [
       AddressConstraints.AREA_MAXVALUE,
-      AddressConstraints.AREA_MAXLENGTH,
+      AddressConstraints.AREA_MAXLENGTH
     ];
   };
 
@@ -46,7 +46,7 @@ export class Profile {
   state: {
     maxlength: [
       AddressConstraints.STATE_MAXVALUE,
-      AddressConstraints.STATE_MAXLENGTH,
+      AddressConstraints.STATE_MAXLENGTH
     ];
   };
 
@@ -54,7 +54,7 @@ export class Profile {
   pinCode: {
     maxlength: [
       AddressConstraints.PINCODE_MAXVALUE,
-      AddressConstraints.PINCODE_MAXLENGTH,
+      AddressConstraints.PINCODE_MAXLENGTH
     ];
   };
 }

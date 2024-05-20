@@ -8,7 +8,7 @@ import { strategies } from 'src/shared/constants/auth.constants';
 @Injectable()
 export class LocalJwtStrategy extends PassportStrategy(
   Strategy,
-  strategies.LOCAL,
+  strategies.LOCAL
 ) {
   constructor(private authService: AuthService) {
     super({ usernameField: 'email' });

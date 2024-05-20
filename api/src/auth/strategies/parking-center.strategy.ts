@@ -11,7 +11,7 @@ import { strategies } from 'src/shared/constants/auth.constants';
 @Injectable()
 export class ParkingCenterStrategy extends PassportStrategy(
   Strategy,
-  strategies.PARKING_CENTER,
+  strategies.PARKING_CENTER
 ) {
   constructor(private authService: AuthService) {
     super({
@@ -23,7 +23,7 @@ export class ParkingCenterStrategy extends PassportStrategy(
           return authHeader.split(' ')[1];
         }
         return undefined;
-      },
+      }
     });
   }
 
@@ -36,7 +36,7 @@ export class ParkingCenterStrategy extends PassportStrategy(
 
     if (user.userType !== UserType.PARK_OWNER) {
       throw new UnauthorizedException(
-        'Only park owners are allowed to add parking centers',
+        'Only park owners are allowed to add parking centers'
       );
     }
 
