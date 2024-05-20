@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { ThemedText } from "@/components/common/ThemedText";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { generateBookingStyles } from "./styles";
 import { FONTS } from "@/constants/fonts";
 import { TabBarIcon } from "../TabBarIcon";

@@ -21,7 +21,7 @@ import {
   handleCloseDetailsModal,
   selectBookingLoading,
 } from "@/features/bookings/bookings.slice";
-import { useColorScheme } from '@/hooks/useColorScheme'
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { generateBookingStyles } from "./styles";
 import RendererHOC from "@/components/common/renderer.hoc";
 import { FONTS } from "@/constants/fonts";

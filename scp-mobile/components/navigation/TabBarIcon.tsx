@@ -38,7 +38,7 @@ export function TabBarIcon({
       name={name}
       style={[
         {
-          marginBottom: -3,
+          // marginBottom: -3,
           marginLeft: auth ? 8 : 0,
         },
         style,
