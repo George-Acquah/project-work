@@ -2,6 +2,7 @@ import { BASE_URL } from "./root";
 import { callApi } from "./shared";
 
 const AUTH_BASE_URL = `${BASE_URL}/auth`;
+const USER_BASE_URL = `${BASE_URL}/users`;
 // const AUTH_BASE_URL = `https://api.developbetterapps.com`;
 
 
@@ -25,10 +26,6 @@ export interface RegisterResponse {
     id: string;
     role: string;
   };
-}
-
-interface _IRefresh {
-  tokens: _ITokens;
 }
 
 export async function loginUser(params: LoginParams) {
@@ -58,6 +55,15 @@ export async function refreshToken() {
   };
 
   return callApi<_IRefresh>(config);
+}
+
+export async function verifyuser() {
+  const config: _IApiConfig = {
+    url: `${USER_BASE_URL}/me-mobile`,
+    method: "GET",
+  };
+
+  return callApi<_IVerifyUser>(config);
 }
 
 export async function updateUser(params: any) {

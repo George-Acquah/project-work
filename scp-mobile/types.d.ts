@@ -18,6 +18,15 @@ interface _IAxiosHeaders {
   [key: string]: string;
 }
 
+interface _IAccount {
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  state?: string;
+  area?: string;
+  pincode?: string;
+}
+
 interface _IAddress {
   _id: string;
   city: string;
@@ -112,6 +121,10 @@ interface _IQuery {
   num_pages: string;
 }
 
+interface _IRefresh {
+  tokens: _ITokens;
+}
+
 interface _ISlot {
   _id: string;
   slot_name: string;
@@ -199,6 +212,18 @@ interface _IVehicle {
   hasSlot: boolean;
   images: Array<_TVehicleImage>;
   driver: string;
+}
+
+interface _IVerifyUser {
+  _id: string;
+  email: string;
+  user_image: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  phonenumber: string | null;
+  area: string | null;
+  state: string | null;
+  pincode: string | null;
 }
 
 interface _IUser {
