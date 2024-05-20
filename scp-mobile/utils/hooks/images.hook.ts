@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
 
 const secureDir = FileSystem.documentDirectory + "secure/";
 
-const ensureDirExists = async (dirPath) => {
+const ensureDirExists = async (dirPath: string) => {
   const dirInfo = await FileSystem.getInfoAsync(dirPath);
   if (!dirInfo.exists) {
     await FileSystem.makeDirectoryAsync(dirPath, { intermediates: true });
@@ -14,8 +14,6 @@ const ensureDirExists = async (dirPath) => {
 
 const useImageManager = () => {
   const [images, setImages] = useState<string[]>([]);
-
-  // Removed unnecessary useEffect and loadImages
 
   const checkStorageSpace = async () => {
     try {
@@ -34,7 +32,9 @@ const useImageManager = () => {
     }
   };
 
-  const selectImage = async (useLibrary: boolean) => {
+  const selectImage = async (
+    useLibrary: boolean
+  ) => {
     try {
       let result: ImagePicker.ImagePickerResult;
       const options: ImagePicker.ImagePickerOptions = {
@@ -53,26 +53,50 @@ const useImageManager = () => {
 
       if (!result.canceled) {
         await checkStorageSpace(); // Check storage before saving
-        await moveToSecureStorage(result.assets[0].uri);
+        return await moveToSecureStorage(result.assets[0].uri);
       }
+
+      // return result;
     } catch (error) {
       console.log(error);
+      return null;
     }
   };
 
   const moveToSecureStorage = async (uri: string) => {
-    const filename = uri.split("/").pop();
+    const filename = uri.split("/").pop() ?? "";
     const newUri = `${secureDir}${filename}`;
     await ensureDirExists(secureDir);
-    await FileSystem.moveAsync({ from: uri, to: newUri });
-    const content = await FileSystem.readAsStringAsync(newUri);
-    await SecureStore.setItemAsync(filename, content);
-    await FileSystem.deleteAsync(uri); // Delete original after moving
+
+    try {
+      // Move the file to secure storage
+      await FileSystem.moveAsync({ from: uri, to: newUri });
+
+      // Read content from the new location
+      const content = await FileSystem.readAsStringAsync(newUri);
+
+      // Store content securely
+      await SecureStore.setItemAsync(filename, content);
+    } catch (error) {
+      console.error("Error moving file to secure storage:", error);
+    }
+
+    // Check if the original file exists before deleting
+    const fileInfo = await FileSystem.getInfoAsync(uri);
+    if (fileInfo.exists) {
+      try {
+        await FileSystem.deleteAsync(uri); // Delete original after moving
+      } catch (error) {
+        console.error("Error deleting original file:", error);
+      }
+    }
+
+    return newUri;
   };
 
   const deleteImage = async (uri: string) => {
     try {
-      await SecureStore.deleteItemAsync(uri.split("/").pop()); // Delete from secure storage
+      await SecureStore.deleteItemAsync(uri.split("/").pop() ?? ""); // Delete from secure storage
       await FileSystem.deleteAsync(uri); // Delete local file if exists (optional)
       setImages(images.filter((image) => image !== uri));
     } catch (error) {
@@ -87,10 +111,8 @@ const useImageManager = () => {
     // deleteLocalCopy(uri);
   };
 
-  // Removed unnecessary deleteLocalCopy function
-
   return {
-    images: [], // No need to store images in state anymore
+    images, // No need to store images in state anymore
     selectImage,
     moveToSecureStorage,
     deleteImage,

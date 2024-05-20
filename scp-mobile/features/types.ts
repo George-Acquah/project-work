@@ -9,6 +9,7 @@ interface _IPermission extends _IRootState {
 }
 interface _IAuthState extends _IRootState {
   isAuthenticated: boolean | null;
+  exp: number;
   tokens: _ITokens | null;
   user: {
     id: string;

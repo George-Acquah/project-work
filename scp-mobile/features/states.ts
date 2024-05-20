@@ -8,6 +8,7 @@ const rootState: _IRootState = {
 };
 const authInitialState: _IAuthState = {
   isAuthenticated: false,
+  exp: 0,
   tokens: null,
   isLoading: false,
   message: null,

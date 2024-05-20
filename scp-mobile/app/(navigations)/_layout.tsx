@@ -38,6 +38,9 @@ export default function NavigationsLayout() {
               : DARK_THEME.contentSecondary,
         },
       }}
+      sceneContainerStyle={{
+        
+      }}
     >
       <Tabs.Screen
         name={SCREENS.EXPLORE}
@@ -72,7 +75,7 @@ export default function NavigationsLayout() {
               >
                 <View style={{ top: 12 }}>
                   <TabBarIcon
-                    fontProvider={MaterialIcons}
+                    fontProvider={Ionicons}
                     name="code-slash"
                     size={28}
                     color={
@@ -119,7 +122,7 @@ export default function NavigationsLayout() {
                 <View style={{ top: 12 }}>
                   <TabBarIcon
                     fontProvider={MaterialIcons}
-                    name="garage"
+                    name="local-parking"
                     size={28}
                     color={
                       focused

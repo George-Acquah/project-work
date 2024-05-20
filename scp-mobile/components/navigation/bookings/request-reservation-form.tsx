@@ -17,7 +17,7 @@ import { TabBarIcon } from "../TabBarIcon";
 import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import Button from "@/components/common/button";
 import RendererHOC from "@/components/common/renderer.hoc";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { generateBookingStyles } from "./styles";
 import { SIZES } from "@/constants/styles";
 import { ThemedText } from "@/components/common/ThemedText";

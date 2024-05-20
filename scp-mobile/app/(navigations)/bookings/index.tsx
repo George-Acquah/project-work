@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import BookingsComponent from "@/components/navigation/bookings/bookings";
 import { LIGHT_THEME, DARK_THEME } from "@/constants/Colors";
 

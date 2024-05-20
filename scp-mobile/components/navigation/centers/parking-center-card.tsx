@@ -26,7 +26,7 @@ import { TabBarIcon } from "../TabBarIcon";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import CustomBottomSheetModal from "@/components/common/custom-bottom-sheet-modal";
 import { MotiView } from "moti";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import RequestReservationForm from "../bookings/request-reservation-form";
 interface _ICenterCard {
   center: _IParkingCenter; //To be Changes later
@@ -50,8 +50,6 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
   const handleReservation = async (data: any) => {
     const { duration } = data;
     const req_href = `/parking-lots/${_id}?start_time=${startTime}&duration=${duration}`;
-    console.log(duration);
-    console.log(typeof duration);
 
     const result = unwrapResult(
       await dispatch(
@@ -66,7 +64,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
 
     if (result && result.statusCode === 200) {
       if (requestReservationModalRef.current) {
-        dispatch(setDuration(parseInt(duration)));
+        dispatch(setDuration(duration));
         requestReservationModalRef.current.dismiss();
       }
       if (req_href) {

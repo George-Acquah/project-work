@@ -3,7 +3,7 @@ import { Pressable, PressableProps, View, Text, TouchableOpacity } from "react-n
 import {FontAwesome } from "@expo/vector-icons"
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { generateStyles } from "./styles";
-import { useColorScheme } from "@/hooks/useColorScheme"
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { FONTS } from "@/constants/fonts";
 
 interface _IButton extends PressableProps {

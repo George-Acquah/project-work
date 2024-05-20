@@ -16,7 +16,7 @@ import React from "react";
 import { bg_colors } from "./styles";
 import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { SIZES } from "@/constants/styles";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 
 interface _ICheckbox extends TouchableOpacityProps {

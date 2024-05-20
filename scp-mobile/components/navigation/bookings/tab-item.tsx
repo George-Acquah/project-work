@@ -1,5 +1,5 @@
 import { Text, Pressable, GestureResponderEvent, useWindowDimensions } from "react-native";
-import { useColorScheme } from "@/hooks/useColorScheme"
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { generateBookingStyles } from "./styles";
 
 interface _ITabItem {

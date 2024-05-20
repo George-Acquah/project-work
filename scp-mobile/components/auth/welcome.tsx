@@ -5,7 +5,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import AuthModal from "./modal";
 import { MotiView, useAnimationState } from "moti";
 import { useLocalSearchParams } from "expo-router";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 
 
 interface _IWelcomeParams extends SearchParamsKeys {

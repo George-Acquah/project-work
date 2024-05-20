@@ -4,7 +4,7 @@ import { ThemedView as View } from "@/components/common/ThemedView";
 import { ThemedText as Text } from "@/components/common/ThemedText";
 import { TextInput, TextInputProps } from 'react-native'
 import { Control, Controller, FieldValues } from 'react-hook-form';
-import { useColorScheme } from "@/hooks/useColorScheme"
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { LIGHT_THEME, DARK_THEME, SHARED_COLORS } from '@/constants/Colors';
 import { FONTS } from '@/constants/fonts';
 import { SIZES } from '@/constants/styles';
@@ -50,7 +50,7 @@ const FormInputs = React.forwardRef<TextInputRef, _IFormInput>(
     } = props;
     const colorScheme = useColorScheme()
     return (
-      <Controller  control={control} name={name} render={({field: { value, onChange, onBlur}, fieldState: { error }}) => (
+      <Controller control={control} name={name} render={({field: { value, onChange, onBlur}, fieldState: { error }}) => (
         <View style={[{ ...rootContainerStyles }]}>
         {/* Label */}
         {label !== "" && (
@@ -102,8 +102,8 @@ const FormInputs = React.forwardRef<TextInputRef, _IFormInput>(
               autoComplete={autoComplete}
               maxLength={maxLength}
               onPressIn={onPressIn}
-                editable={editable}
-                onBlur={onBlur}
+              editable={editable}
+              onBlur={onBlur}
             />
             {appendComponent}
           </View>

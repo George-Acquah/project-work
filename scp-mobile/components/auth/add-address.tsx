@@ -45,16 +45,16 @@ const AddAddress = ({ setSelectedScreen, hideModal }: _IAddress) => {
   const { load, storageError } = useStorageHook();
 
   const tester = async () => {
-    try {
-      if (storageError) {
-        throw new Error(storageError)
-      }
-      setLoading(true);
-      dispatch(refreshTokens());
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   if (storageError) {
+    //     throw new Error(storageError)
+    //   }
+    //   setLoading(true);
+    //   dispatch(refreshTokens());
+    //   setLoading(false);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   const fetchVehicles = async() => {

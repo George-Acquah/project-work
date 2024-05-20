@@ -1,7 +1,7 @@
 import { Text } from "react-native";
 import LoadingComponent from "../skeletons/loading";
 import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 
 interface _IRenderer {
   loading: boolean;

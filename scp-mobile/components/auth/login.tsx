@@ -14,7 +14,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { router } from "expo-router";
 import { Checkbox } from "./helpers";
 import { SIZES } from "@/constants/styles";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
 import { TabBarIcon } from "../navigation/TabBarIcon";
@@ -167,7 +167,7 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
         enableOnAndroid={true}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps={"handled"}
-        extraScrollHeight={-300}
+        extraScrollHeight={250}
         contentContainerStyle={{
           flexGrow: 1,
           marginTop: SIZES.radius,

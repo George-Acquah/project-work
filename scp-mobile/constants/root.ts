@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 const APP_NAME = "Smart Car Parking";
 const TOKEN_KEY = "jwt";
 const USER_KEY = "logged_user";
+const EXP = 'exp-t'
 
 const ids = {
   VEHICLE: "656117b8bc100d9f24baed06",
@@ -13,6 +14,7 @@ const ids = {
 const keys = {
   USER_KEY,
   TOKEN_KEY,
+  EXP,
 }
 const AXIOS_ERRORS = {
   NETWORK_ERROR: "Network Error",
@@ -70,6 +72,17 @@ const AUTH_MODALS = {
   ADDRESS: "add-address",
 };
 
+const ACCOUNT_MODALS = {
+  MANAGE: "manage-account",
+  MONETIZING: "monetizing",
+  MESSAGES: "messages",
+  SETTINGS: "settings",
+  LEGAL: "legal",
+  ACTIVITY: "activity",
+  PAYMENTS: "payment",
+  HELP: "help",
+};
+
 const NAVIGATION_MODALS = {
   REQUEST_RESERVATION: 'request-reservation'
 }
@@ -86,5 +99,6 @@ export {
   searchParamsKeys,
   pathname_helper,
   AUTH_MODALS,
+  ACCOUNT_MODALS,
 NAVIGATION_MODALS,
 }

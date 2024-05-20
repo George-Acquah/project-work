@@ -40,10 +40,6 @@ export async function callApi<T, D = any>(
       method: config.method,
       data: config.data,
       withCredentials: true,
-      // headers: {
-      //   Accept: "application/json",
-      //   "Content-Type": "application/json",
-      // },
     });
 
     // Check if the server response indicates an error

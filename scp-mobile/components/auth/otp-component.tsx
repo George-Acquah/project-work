@@ -9,7 +9,7 @@ import { OtpInput } from "react-native-otp-entry";
 import { Entypo } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { TouchableOpacity } from "react-native";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { SIZES } from "@/constants/styles";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";

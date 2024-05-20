@@ -9,7 +9,7 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { store } from "@/store";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { KeyboardAvoidingView, Platform } from "react-native";
@@ -46,10 +46,11 @@ export default function RootLayout() {
         <Provider store={store}>
           <BottomSheetModalProvider>
             <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              // behavior={Platform.OS === "ios" ? "padding" : "height"}
+              enabled={true}
               style={{ flex: 1 }}
             >
-              <SafeAreaProvider>
+              <SafeAreaProvider style={{ backgroundColor: "black" }}>
                 <Stack screenOptions={{ headerShown: false }} />
               </SafeAreaProvider>
             </KeyboardAvoidingView>

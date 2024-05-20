@@ -36,9 +36,6 @@ const useImagePicker = () => {
         const { uri } = result.assets[0];
         setImageUri(uri);
 
-        // Optional: Local storage (use with caution due to security concerns)
-        // await storeImageLocally(uri); // Implement your local storage logic
-
         // Optional: Secure storage of image URI (consider alternative secure storage solutions)
         await storeImageUriSecurely(uri); // Implement secure storage logic
       }
@@ -52,18 +49,18 @@ const useImagePicker = () => {
 
   // Optional: Local storage function (replace with your preferred storage approach)
   const storeImageLocally = async (uri: string) => {
-    const filename = uri.split("/").pop();
-    const newPath = FileSystem.documentDirectory + filename;
+    const filename = uri.split("/").pop() ?? '';
+    const newPath = FileSystem?.documentDirectory + filename;
     await FileSystem.copyAsync({ from: uri, to: newPath });
   };
 
   // Optional: Secure storage function for image URI (replace with your preferred secure storage solution)
   const storeImageUriSecurely = async (uri: string) => {
-    const filename = uri.split("/").pop();
+    const filename = uri.split("/").pop() ?? '';
     await SecureStore.setItemAsync(filename, uri); // Consider alternative secure storage methods
   };
 
-  return { imageUri, error, isPicking, pickImage };
+  return { imageUri, error, isPicking, pickImage, storeImageLocally };
 };
 
 export default useImagePicker;
