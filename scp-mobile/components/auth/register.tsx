@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectAuthLoading } from "@/features/auth/auth.slice";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { SIZES } from "@/constants/styles";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
@@ -246,7 +246,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
         enableOnAndroid={true}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps={"handled"}
-        extraScrollHeight={-300}
+        extraScrollHeight={250}
         contentContainerStyle={{
           flexGrow: 1,
           marginTop: SIZES.radius,

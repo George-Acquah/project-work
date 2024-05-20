@@ -18,7 +18,7 @@ import { bg_colors } from "./styles";
 import ForgotPassword from "./forgot-password";
 import AddVehicle from "./add-vehicle";
 import AddAddress from "./add-address";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { SIZES } from "@/constants/styles";
 import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
@@ -103,7 +103,7 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
           transition={
             {
               type: "timing",
-              duration: 500,
+              duration: 100,
             } as any
           }
         >

@@ -13,7 +13,7 @@ import { TabBarIcon } from "../navigation/TabBarIcon";
 import { SIZES } from "@/constants/styles";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import AuthSchema from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
