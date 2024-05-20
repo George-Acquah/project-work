@@ -6,7 +6,7 @@ import { SIZES } from "@/constants/styles";
 import { selectCentersFilter, setCentersFilter } from "@/features/root.slice";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { FlatList, TouchableOpacity } from "react-native";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 
 const data = ["Available", "Nearby", "Popular"];
 //TODO receive data as props to have dynamic filtering

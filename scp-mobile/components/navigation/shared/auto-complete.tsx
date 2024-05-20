@@ -4,7 +4,7 @@ import { EAutoComplete } from "@/utils/enums/auto-complete";
 import { useAppDispatch } from "@/utils/hooks/useRedux";
 import { useRouter } from "expo-router";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import {useColorScheme } from '@/hooks/useColorScheme'
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 
 interface _IAutoComplete {
   type: EAutoComplete;

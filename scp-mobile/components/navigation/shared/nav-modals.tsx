@@ -12,7 +12,7 @@ import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typesc
 import { Entypo } from "@expo/vector-icons";
 import { MotiView } from "moti";
 import { NAVIGATION_MODALS } from "@/constants/root";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { SIZES } from "@/constants/styles";
 import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
 import { TabBarIcon } from "../TabBarIcon";

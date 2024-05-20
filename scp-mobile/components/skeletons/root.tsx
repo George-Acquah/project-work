@@ -1,7 +1,7 @@
 import { StyleSheet, Pressable, View } from "react-native";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
-import { useColorScheme } from "@/hooks/useColorScheme"
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 
 export default function HelloWorld() {
   const colorMode = useColorScheme() ?? 'dark';
