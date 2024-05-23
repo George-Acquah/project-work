@@ -1,0 +1,17 @@
+declare namespace NodeJS {
+  export interface ProcessEnv {
+    NEXTAUTH_URL: string;
+    NEXTAUTH_SECRET: string;
+    NEXT_PUBLIC_API_URL: string;
+    NODE_ENV: string;
+    AUTHORIZE_ADMIN: string;
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: string;
+    NEXT_PUBLIC_REQUEST_RESERVATION: string;
+    NEXT_PUBLIC_REQUEST_RESERVATION_DATA: string;
+    NEXT_PUBLIC_REQUEST_RESERVATION_STATUS: string;
+    NEXT_PUBLIC_REQUEST_RESERVATION_PAYLOAD: string;
+    NEXT_PUBLIC_AVAILABLE_SLOTS: string;
+    NEXT_PUBLIC_LIST_VAL: string;
+    NEXT_PUBLIC_THEME: string;
+  }
+}

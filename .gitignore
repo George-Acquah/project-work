@@ -65,6 +65,15 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
+creds.json
+*creds.json
+
+next-auth.d.ts
+*next-auth.d.ts
+
+# Yarn
+.yarn/*
+
 # Yarn Integrity file
 .yarn-integrity
 
