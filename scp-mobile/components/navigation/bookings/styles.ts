@@ -1,4 +1,4 @@
-import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { SIZES } from "@/constants/styles";
 import { StyleSheet } from "react-native";
 
@@ -60,17 +60,17 @@ const generateBookingStyles = (colorScheme: "light" | "dark") => {
       fontSize: 20, // Font size
     },
     duration_input: {
-      marginTop: 10, // Margin top of 10 pixels
       width: 300, // Width of 300 pixels
-      fontSize: 17, // Font size of 17 pixels
-      color: "gray",
+      color: colorScheme === "light"
+          ? LIGHT_THEME.contentPrimary
+          : DARK_THEME.contentPrimary,
     },
     duration_container: {
       flexDirection: "row", // Arrange children in a row
       alignItems: "center", // Align children vertically at the center
       backgroundColor:
         colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray900, // Background color
-      paddingVertical: 5, // Vertical padding of 5px
+      paddingVertical: 10, // Vertical padding of 5px
       borderRadius: 8, // Rounded corners
       marginTop: 30, // Top margin of 30px
     },
@@ -80,7 +80,7 @@ const generateBookingStyles = (colorScheme: "light" | "dark") => {
       fontSize: 17, // Font size of 17px
     },
     container: {
-      flex: 1, // Flex grow to fill available space
+      flex: 1,
       flexDirection: "row", // Arrange children in a row
       alignItems: "center", // Align children vertically at the center
       backgroundColor:

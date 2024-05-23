@@ -118,8 +118,8 @@ const BookingsComponent = () => {
                 index={2}
                 bg={
                   colorScheme === "light"
-                    ? LIGHT_THEME.backgroundSecondary
-                    : "#151518"
+                    ? "#D0D0D0"
+                    : "#353636"
                 }
                 indicatorBg={
                   colorScheme === "light"
