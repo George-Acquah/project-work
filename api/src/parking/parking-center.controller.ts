@@ -12,6 +12,8 @@ import {
   ParseFilePipe,
   UploadedFiles,
   Query,
+  ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParkingCenterService } from './parking-center.service';
 import { SlotService } from './slots.service';
@@ -24,6 +26,7 @@ import { UploadService } from 'src/storage/uploads.service';
 import { ReservationRequestDto } from './dtos/reservation-requests.dto';
 import { _IAddCenterAddress, _IReserveSlot } from 'src/shared/interfaces/slot.interface';
 import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
+import { TransformDateInterceptor } from 'src/shared/interceptors/transform-date.interceptor';
 
 @UseGuards(JwtAuthGuard)
 @Controller('owner/parking-center')
@@ -89,7 +92,9 @@ export class ParkingCenterController {
       );
       return new ApiResponse(200, 'Fetched Available Parking Centers', centers);
     } catch (error) {
-      this.logger.error(`Error getting available parking centers: ${error.message}`);
+      this.logger.error(
+        `Error getting available parking centers: ${error.message}`
+      );
       throw error;
     }
   }
@@ -346,7 +351,10 @@ export class ParkingCenterController {
         center_id,
         ...data
       };
-      const address = await this.parkingService.updateCenterAddress(arg, address_id);
+      const address = await this.parkingService.updateCenterAddress(
+        arg,
+        address_id
+      );
 
       return new ApiResponse(200, 'Address Added Succesfully', address);
     } catch (error) {
@@ -356,30 +364,30 @@ export class ParkingCenterController {
   }
 
   @Post(':center_id/available-slots')
+  @UseInterceptors(TransformDateInterceptor)
   async requestReservation(
     @Param('center_id') centerId: string,
-    @Query('currentPage') currentPage: number,
-    @Query('size') size: number,
+    @Query('currentPage', new ParseIntPipe()) currentPage,
+    @Query('size', new ParseIntPipe()) size,
     @Body() data: ReservationRequestDto
   ) {
     try {
-      this.logger.log(`All Available Slots `);
       const { start_time, reservation_duration } = data;
-      const slots = await this.slotService.findAvailableSlots(
+      const slotsWithPages = await this.slotService.findAvailableSlots(
         centerId,
-        new Date(start_time),
+        start_time,
         reservation_duration,
         currentPage,
         size
       );
-      const totalPages = await this.slotService.fetchSlotsPage(centerId, size);
-      return new ApiResponse(200, 'Fetched Available Slots', {
-        slots,
-        totalPages
-      });
+      // const totalPages = await this.slotService.fetchSlotsPage(centerId, size);
+      return new ApiResponse(200, 'Fetched Available Slots', slotsWithPages);
     } catch (error) {
-      this.logger.error(`Error getting all available slots: ${error.message}`);
-      throw error;
+      return new ApiResponse(
+        error.statusCode || 402,
+        `Error getting all available slots: ${error.message}`,
+        {}
+      );
     }
   }
 

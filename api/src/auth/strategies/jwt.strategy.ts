@@ -14,10 +14,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, strategies.JWT) {
       ignoreExpiration: false,
       secretOrKey: process.env.SECRET_KEY,
       jwtFromRequest: (request: Request) => {
-        console.log(request.headers);
         const authHeader = request.headers.authorization;
         if (authHeader && authHeader.split(' ')[0] === 'Bearer') {
-          console.log(authHeader.split(' ')[1]);
           return authHeader.split(' ')[1];
         }
         return undefined;
@@ -32,7 +30,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, strategies.JWT) {
       throw new ApiResponse(402, 'User does not exist', {});
     }
 
-    console.log(user);
     return user;
   }
 }

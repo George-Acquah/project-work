@@ -14,6 +14,7 @@ import {
   _IDbSlotImage,
   _ISlotImage
 } from 'src/shared/interfaces/images.interface';
+import { _ILookup } from 'src/shared/interfaces/responses.interface';
 import {
   _IAddSlot,
   _IAddSlotAddress,
@@ -62,27 +63,57 @@ export class SlotService {
     duration: number,
     currentPage = 1,
     size = 5
-  ): Promise<_ISlot[]> {
+  ) {
     try {
       const endTime = new Date(startTime.getTime() + duration * 60000); // Calculate end time
+      const lookups: _ILookup[] = [
+        {
+          from: 'slotdatas',
+          as: 'slot_data',
+          foreignField: 'slot_id'
+        },
+        {
+          from: 'slotimages',
+          as: 'slot_images',
+          foreignField: 'slot_id'
+        },
+        {
+          from: 'slotaddresses',
+          as: 'slot_address',
+          foreignField: 'slot_id'
+        }
+      ];
+      const unwind_fields = ['slot_data', 'slot_address'];
 
       const availableSlots =
-        await this.aggregationService.fetchAvailableDocuments(
+        await this.aggregationService.availableDocumentsPipeline<_IDbSlot>(
           this.slotModel,
-          center_id,
+          lookups,
+          unwind_fields,
           startTime,
           endTime,
           currentPage,
           size,
-          { center_id, isAvailable: false }
+          { isAvailable: false }
         );
+      // const availableSlots =
+      //   await this.aggregationService.fetchAvailableDocuments(
+      //     this.slotModel,
+      //     center_id,
+      //     startTime,
+      //     endTime,
+      //     currentPage,
+      //     size,
+      //     { center_id, isAvailable: false }
+      //   );
 
-      const populatedAvailableSlots = await this.populateSlotsFields(
-        availableSlots,
-        'slot_data slot_images'
-      );
+      // const populatedAvailableSlots = await this.populateSlotsFields(
+      //   availableSlots.documents,
+      //   'slot_data slot_images'
+      // );
 
-      return sanitizeSlots(populatedAvailableSlots);
+      // return sanitizeSlots(populatedAvailableSlots);
+      return availableSlots;
     } catch (error) {
       throw new Error(error.message || 'Error finding available slots');
     }
@@ -94,7 +125,7 @@ export class SlotService {
     query = ''
   ): Promise<number> {
     try {
-      const fieldNames = [];
+      const fieldNames = [''];
       const totalPages = await this.aggregationService.pageNumbersPipeline(
         this.slotModel,
         fieldNames,
@@ -105,8 +136,7 @@ export class SlotService {
 
       return totalPages;
     } catch (error) {
-      console.error('Database Error:', error);
-      throw new Error('Failed to fetch applicants.');
+      throw new Error(error.message);
     }
   }
 
