@@ -7,6 +7,11 @@ export interface _IReservationParams {
   start_time: Date;
   reservation_duration: number;
 }
+
+interface _IRequestReservationResponse {
+  documents: _ISlot[];
+  totalPages: number;
+}
 // :center_id/slots/:slot_id/reserve-slot
 export async function RequestReservation(
   center_id: string,
@@ -20,7 +25,7 @@ export async function RequestReservation(
     data: params,
   };
 
-  return callApi<_ISlot[], typeof params>(config);
+  return callApi<_IRequestReservationResponse, typeof params>(config);
 }
 
 export async function reserveSlot(
