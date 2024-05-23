@@ -228,7 +228,6 @@ export class AggregationService {
 
       return totalPages;
     } catch (error) {
-      console.error('Database Error:', error);
       throw new Error(error.message);
     }
   }
@@ -358,6 +357,98 @@ export class AggregationService {
     } catch (error) {
       console.error('Error in returnIdPipeline:', error);
       throw error; // Rethrow the error
+    }
+  }
+
+  async availableDocumentsPipeline<T extends Document>(
+    model: Model<T>,
+    lookup_data: _ILookup[],
+    unwind_fields: string[],
+    startTime: Date,
+    endTime: Date,
+    currentPage = 1,
+    items = 5,
+    options: object
+  ): Promise<{ documents: T[]; totalPages: number }> {
+    const offset = (currentPage - 1) * items;
+
+    try {
+      const lookups: PipelineStage.Lookup[] = lookup_data.map((data) => ({
+        $lookup: {
+          from: data.from,
+          as: data.as,
+          localField: '_id',
+          foreignField: data.foreignField
+        }
+      }));
+
+      // Selectively unwind only the fields that need to be single objects
+      const unwinds: PipelineStage.Unwind[] = unwind_fields.map((field) => ({
+        $unwind: {
+          path: `$${field}`,
+          preserveNullAndEmptyArrays: true
+        }
+      }));
+      // Step 1: Use aggregation to calculate total matching documents and fetch paginated results
+      const result = await model.aggregate([
+        {
+          $match: {
+            ...options
+            // $or: [
+            //   {
+            //     $and: [
+            //       { start_time: { $lt: startTime } },
+            //       { end_time: { $gt: startTime } }
+            //     ]
+            //   },
+            //   {
+            //     $and: [
+            //       { start_time: { $lt: endTime } },
+            //       { end_time: { $gt: endTime } }
+            //     ]
+            //   },
+            //   {
+            //     $and: [
+            //       { start_time: { $gte: startTime } },
+            //       { end_time: { $lte: endTime } }
+            //     ]
+            //   }
+            // ]
+          }
+        },
+        {
+          $facet: {
+            totalCount: [{ $count: 'total_slots' }],
+            paginatedResults: [
+              { $skip: offset },
+              ...lookups,
+              ...unwinds,
+              { $limit: items }
+            ]
+          }
+        },
+        {
+          $addFields: {
+            totalPages: {
+              $ceil: {
+                $divide: [
+                  { $arrayElemAt: ['$totalCount.total_slots', 0] },
+                  items
+                ]
+              }
+            }
+          }
+        }
+      ]);
+
+      const documents = result[0].paginatedResults as T[];
+      const totalPages = result[0].totalPages;
+      console.log(documents[0]);
+
+      // Return the documents and total pages
+      return { documents, totalPages };
+    } catch (error) {
+      throw new Error(`Error fetching filtered documents: ${error.message}`);
     }
   }
 }
