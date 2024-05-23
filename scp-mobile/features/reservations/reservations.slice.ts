@@ -66,10 +66,12 @@ const reservationSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAvailableSlots.fulfilled, (state, action) => {
+        console.log(action.payload.data.documents[0])
         state.isLoading = false;
         state.error = null;
         state.message = action.payload.message;
-        state.availableSlots = action.payload.data;
+        state.availableSlots = action.payload.data.documents;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchAvailableSlots.pending, (state) => {
         state.isLoading = true;

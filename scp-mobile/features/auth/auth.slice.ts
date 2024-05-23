@@ -11,8 +11,8 @@ import axios from "axios";
 import { RootState } from "@/store";
 import { _IAuthState } from "../types";
 import { authInitialState } from "../states";
-import { load, save } from "@/utils/functions/storage";
-import { async_save } from "@/utils/functions/async-storage";
+import { load, remove, save } from "@/utils/functions/storage";
+import { async_remove, async_save } from "@/utils/functions/async-storage";
 
 // Define interfaces for login and register user data
 interface _ILoginUserData {
@@ -77,7 +77,8 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   try {
     // Call logout API endpoint
     const response = await logoutUser();
-    console.warn(response.message);
+    // console.warn(response.message);
+    console.log(response)
     return response;
   } catch (error) {
     throw error;
@@ -189,6 +190,15 @@ const authSlice = createSlice({
         state.user = null; // Clear user data
         state.tokens = null; // Clear tokens
         state.error = null; // Clear any errors
+        // Update default authorization header using Axios
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = undefined;
+
+        // Save updated tokens to storage
+        remove(keys.TOKEN_KEY);
+        // Save expiration time to async storage
+        async_remove(keys.EXP);
       })
 
       // Handling failed logout

@@ -1,23 +1,11 @@
-import { Center_Filter } from "@/utils/enums/global.enum";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { RootState } from "@/store";
-
-interface _InitialState {
-  showOnboarding: boolean;
-  viewMap: boolean;
-  nearbyMap: boolean;
-  centersFilter: string | null;
-}
-const initialState: _InitialState = {
-  showOnboarding: true,
-  viewMap: false,
-  nearbyMap: true,
-  centersFilter: Center_Filter.AVAILABLE,
-}
+import { rootInitialState } from "./states";
+import { Center_Filter } from "@/utils/enums/global.enum";
 
 const rootSlice = createSlice({
   name: "root",
-  initialState,
+  initialState: rootInitialState,
   reducers: {
     disableShowOnboarding: (state) => {
       state.showOnboarding = false;
@@ -34,9 +22,9 @@ const rootSlice = createSlice({
     hideNearbyMap: (state) => {
       state.nearbyMap = false;
     },
-    setCentersFilter: (state, action: PayloadAction<string>) => {
+    setCentersFilter: (state, action: PayloadAction<Center_Filter>) => {
       state.centersFilter = action.payload;
-    }
+    },
   },
 });
 

@@ -17,9 +17,10 @@ import {
 
 export const fetchPopularSlots = createAsyncThunk(
   "center/fetchPopularSlots",
-  async () => {
+  async (slotParams: _ISlotParams) => {
     try {
-      const response = await popularSlots();
+      const { slots = "", currentPage = 1, pageSize = 5 } = slotParams;
+      const response = await popularSlots(slots, currentPage, pageSize);
       return response;
     } catch (error) {
       throw error;
@@ -28,10 +29,11 @@ export const fetchPopularSlots = createAsyncThunk(
 );
 
 export const fetchNearbySlot = createAsyncThunk(
-  "center/fetchNearbySlot",
-  async () => {
+  "slots/fetchNearbySlots",
+  async (slotParams: _ISlotParams) => {
     try {
-      const response = await nearbySlots();
+      const { slots = "", currentPage = 1, pageSize = 5 } = slotParams;
+      const response = await nearbySlots(slots, currentPage, pageSize);
       return response;
     } catch (error) {
       throw error;
@@ -39,11 +41,11 @@ export const fetchNearbySlot = createAsyncThunk(
   }
 );
 
-export const fetchFilteredSlots = createAsyncThunk(
-  "center/fetchFilteredCenter",
-  async (centerParams: _ISlotParams) => {
+export const fetchAvailableSlots = createAsyncThunk(
+  "slots/fetchAvailableSlots",
+  async (slotParams: _ISlotParams) => {
     try {
-      const { slots = "", currentPage = 1, pageSize = 5 } = centerParams;
+      const { slots = "", currentPage = 1, pageSize = 5 } = slotParams;
       const response = await filteredSlots(slots, currentPage, pageSize);
 
       return response;
@@ -54,7 +56,7 @@ export const fetchFilteredSlots = createAsyncThunk(
 );
 
 export const fetchSingleCenter = createAsyncThunk(
-  "center/fetchSingleCenter",
+  "slots/fetchSingleCenter",
   async (center_id: string) => {
     try {
       const response = await singleSlot(center_id);
@@ -129,17 +131,17 @@ const slotsSlice = createSlice({
         state.nearbyError = action.error.message!;
       })
 
-      .addCase(fetchFilteredSlots.fulfilled, (state, action) => {
-        state.filteredSlots = action.payload.data;
+      .addCase(fetchAvailableSlots.fulfilled, (state, action) => {
+        state.availableSlots = action.payload.data;
         state.isLoading = false;
         state.message = action.payload.message;
         state.error = null;
       })
-      .addCase(fetchFilteredSlots.pending, (state) => {
+      .addCase(fetchAvailableSlots.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchFilteredSlots.rejected, (state, action) => {
+      .addCase(fetchAvailableSlots.rejected, (state, action) => {
         state.isLoading = false;
         state.message = null;
         state.error = action.error.message!;
@@ -185,6 +187,8 @@ export const selectPopularSlots = (state: RootState) => state.slot.popularSlots;
 
 export const selectNearbySlots = (state: RootState) => state.slot.nearbySlot;
 
+export const selectAvailableSlots = (state: RootState) => state.slot.availableSlots;
+
 export const selectSelectedSlotString = (state: RootState) =>
   state.slot.selectedSlot;
 
@@ -198,21 +202,23 @@ export const selectMemoedNearbySlot = createSelector(
   (nearbySlot) => nearbySlot.map((slot) => slot._id)
 );
 
-export const selectFilteredSlots = (state: RootState) =>
-  state.slot.filteredSlots;
+export const selectMemoedAvailableSlot = createSelector(
+  [selectAvailableSlots],
+  (availableSlots) => availableSlots.map((slot) => slot._id)
+);
 
 export const selectFetchedSlot = (state: RootState) => state.slot.fetchedSlot;
 
 export const selectSelectedSlot = (id: string) =>
   createSelector(
-    [selectNearbySlots, selectFilteredSlots, selectPopularSlots],
+    [selectNearbySlots, selectAvailableSlots, selectPopularSlots],
     (slots) => {
       return slots.find((slot) => slot._id === id);
     }
   );
 
 export const selectMemoedMergedSlots = createSelector(
-  [selectFilteredSlots, selectNearbySlots, selectPopularSlots],
+  [selectAvailableSlots, selectNearbySlots, selectPopularSlots],
   (slots) => slots.map((slot) => slot._id)
 );
 

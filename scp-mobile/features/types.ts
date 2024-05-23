@@ -1,7 +1,17 @@
+import { Center_Filter } from "@/utils/enums/global.enum";
+
 interface _IRootState {
   isLoading: boolean;
   message: string | null;
   error: string | null;
+}
+
+interface _IRoots extends _IRootState {
+  showOnboarding: boolean;
+  viewMap: boolean;
+  nearbyMap: boolean;
+  centersFilter: Center_Filter | null;
+  slotsFilter: Center_Filter | null;
 }
 
 interface _IPermission extends _IRootState {
@@ -48,7 +58,7 @@ interface _IVehicles extends _IRootState {
 interface _ISlots extends _IRootState {
   popularSlots: _ISlot[];
   nearbySlot: _ISlot[];
-  filteredSlots: _ISlot[];
+  availableSlots: _ISlot[];
   fetchedSlot: _ISlot | null;
   selectedSlot: string | null;
   savedSlot: number | null;
@@ -59,6 +69,7 @@ interface _ISlots extends _IRootState {
 
 interface _IResrvations extends _IRootState {
   availableSlots: _ISlot[] | null;
+  totalPages: number | null;
   reservedSlot: _ISlotReservation | null;
   reservation_loading: boolean;
   reservation_error: string | null;
@@ -74,4 +85,4 @@ interface _IMapState {
   // mapRef: React.MutableRefObject<BottomSheetModal>;
 }
 
-export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles };
+export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots };
