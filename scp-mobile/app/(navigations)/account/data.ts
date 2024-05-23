@@ -90,8 +90,15 @@ const mainRoutes: _IMainRoute[] = [
   },
 ];
 
+const logout = {
+  name: "Logout",
+  icon: "logout",
+  fontProvider: MaterialIcons,
+};
+
 export { 
   cardRoutes,
   accountOptions,
-  mainRoutes
+  mainRoutes,
+  logout
 }

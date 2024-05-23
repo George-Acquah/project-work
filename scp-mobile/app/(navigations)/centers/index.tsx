@@ -12,6 +12,7 @@ import FiltersTab from "@/components/navigation/shared/filters-tab";
 import ParkingCentersCard from "@/components/navigation/centers/parking-center-card";
 import { FONTS } from "@/constants/fonts";
 import { text_colors } from "@/components/auth/styles";
+import SearchComp from "@/components/common/search";
 
 interface _ISearchParams extends SearchParamsKeys {
   centers: string;
@@ -33,8 +34,7 @@ const ParkingCentersScreen = () => {
   const searchParams = useLocalSearchParams<_ISearchParams>();
   const data = useAppSelector(select_data);
   const loading = useAppSelector(select_loading);
-  console.log(loading)
-  console.log(data);
+
   const dispatch = useAppDispatch();
 
   //TODO Avoiding making use effect run elsewhere when center_type is changed elsewhere
@@ -64,11 +64,11 @@ const ParkingCentersScreen = () => {
       </View>
       <>
         <View style={{ marginTop: 20 }}>
-          {/* <SearchComp
+          <SearchComp
             entityType={searchParamsKeys.centers}
             searchLoading={loading}
             placeholder="Search For Centers"
-          /> */}
+          />
         </View>
         <View style={{ marginTop: 20 }}>
           <FiltersTab />

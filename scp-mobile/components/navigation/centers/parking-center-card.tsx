@@ -36,17 +36,16 @@ interface _ICenterCard {
 }
 const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
   const colorScheme = useColorScheme() ?? "light";
-  const { _id, center_name } = center;
+  const { _id, center_name, location, slots } = center;
   const requestReservationModalRef = useRef<BottomSheetModal>(null);
   const startTime = useAppSelector(selectStartTIme);
+  const saved = useAppSelector(selectSavedCenter);
   const dispatch = useAppDispatch();
 
   const router = useRouter();
-  const test_images = [
-    "https://randomuser.me/api/portraits/men/1.jpg",
-    "https://images.pexels.com/photos/7630190/pexels-photo-7630190.jpeg?auto=compress&cs=tinysrgb&w=800images/tip1.jpg",
-  ];
+
   const href = `/parking-lots/${_id}` as any;
+
   const handleReservation = async (data: any) => {
     const { duration } = data;
     const req_href = `/parking-lots/${_id}?start_time=${startTime}&duration=${duration}`;
@@ -72,7 +71,6 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
       }
     }
   };
-  const saved = useAppSelector(selectSavedCenter);
 
   return (
     <TouchableOpacity style={styles.cardContainer}>
@@ -98,19 +96,19 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
       </View>
       <Pressable onPress={() => router.push(href)} style={styles.infoContainer}>
         <View style={styles.myJustify}>
-          <Text style={styles.nameText}>{center.center_name}</Text>
+          <Text style={styles.nameText}>{center_name}</Text>
           <TabBarIcon
             fontProvider={AntDesign}
             name="hearto"
             color={saved === index ? LIGHT_THEME.primary400 : "black"}
-            onPress={() => dispatch(saveFavoriteCenter(center._id))}
+            onPress={() => dispatch(saveFavoriteCenter(_id))}
           />
         </View>
         <View style={styles.myJustify}>
           <View style={styles.detailsRow}>
             <TabBarIcon fontProvider={Entypo} name="location" size={16} />
             <Text style={styles.distanceText}>
-              {center.location.description} mi
+              {location.description} mi
             </Text>
           </View>
           <View style={styles.detailsRow}>
@@ -119,7 +117,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
               name="no-crash"
               size={16}
             />
-            <Text style={styles.distanceText}>{center.slots.length}</Text>
+            <Text style={styles.distanceText}>{slots.length}</Text>
           </View>
         </View>
       </Pressable>
@@ -147,7 +145,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
               duration: 50,
             } as any
           }
-          style={{ width: "100%" }}
+          style={{ width: "100%", flex: 1 }}
         >
           {/* Your modal content */}
           <RequestReservationForm handleReservation={handleReservation} />

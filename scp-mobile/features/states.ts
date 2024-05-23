@@ -1,22 +1,32 @@
 import { tabData } from "@/constants/root";
-import { _IAuthState, _IBookingState, _ICenters, _IMapState, _IPermission, _IResrvations, _IRootState, _ISlots, _IVehicles } from "./types";
+import { _IAuthState, _IBookingState, _ICenters, _IMapState, _IPermission, _IResrvations, _IRootState, _IRoots, _ISlots, _IVehicles } from "./types";
+import { Center_Filter } from "@/utils/enums/global.enum";
 
 const rootState: _IRootState = {
   isLoading: false,
   error: null,
   message: null,
 };
+
+const rootInitialState: _IRoots = {
+  ...rootState,
+  showOnboarding: true,
+  viewMap: false,
+  nearbyMap: true,
+  centersFilter: Center_Filter.AVAILABLE,
+  slotsFilter: Center_Filter.AVAILABLE,
+};
+
 const authInitialState: _IAuthState = {
+  ...rootState,
   isAuthenticated: false,
   exp: 0,
   tokens: null,
-  isLoading: false,
-  message: null,
-  error: null,
   user: null,
 };
 
 const bookingsInitialState: _IBookingState = {
+  ...rootState,
   selectedTab: tabData[0],
   showDetailsModal: false,
   openMap: false,
@@ -24,9 +34,6 @@ const bookingsInitialState: _IBookingState = {
   upcomingBookings: [],
   bookingHistory: [],
   favoriteParkingCenters: [],
-  isLoading: false,
-  error: null,
-  message: null,
 };
 
 const centersInitialState: _ICenters = {
@@ -54,7 +61,7 @@ const slotsInitialState: _ISlots = {
   ...rootState,
   fetchedSlot: null,
   selectedSlot: null,
-  filteredSlots: [],
+  availableSlots: [],
   popularSlots: [],
   nearbySlot: [],
   savedSlot: null,
@@ -66,6 +73,7 @@ const slotsInitialState: _ISlots = {
 const initialReservationState: _IResrvations = {
   ...rootState,
   availableSlots: null,
+  totalPages: null,
   reservedSlot: null,
   reservation_loading: false,
   reservation_error: null,
@@ -86,5 +94,5 @@ const mapInitialState: _IMapState = {
 };
 
 export {
-  authInitialState, bookingsInitialState, mapInitialState, centersInitialState, permissionsInitialState, slotsInitialState, initialReservationState, vehiclesInitialState
+  authInitialState, bookingsInitialState, mapInitialState, centersInitialState, permissionsInitialState, slotsInitialState, initialReservationState, vehiclesInitialState, rootInitialState
 };

@@ -450,7 +450,7 @@ const ManageAccountScreen = ({}) => {
     return (
       <RNView
         style={{
-          paddingHorizontal: SIZES.padding,
+          marginHorizontal: SIZES.padding,
           paddingBottom: SIZES.padding * 0.6,
           backgroundColor: "transparent",
         }}

@@ -1,7 +1,5 @@
-import { StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
-import { ThemedView as View } from "@/components/common/ThemedView";
-import { ThemedText as Text } from "@/components/common/ThemedText";
 import { router, useLocalSearchParams } from "expo-router";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
@@ -12,17 +10,17 @@ import {
   selectSelectedSlotString,
   testSlots,
 } from "@/features/slots/parking-slots.slice";
-import { Slot_Type } from "@/utils/enums/global.enum";
 import Button from "@/components/common/button";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { slotReservation } from "@/features/reservations/reservations.slice";
 import { ids } from "@/constants/root";
 import RendererHOC from "@/components/common/renderer.hoc";
-import { bg_colors, text_colors } from "@/components/auth/styles";
-import { FONTS } from "@/constants/fonts";
-import { SIZES } from "@/constants/styles";
-import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import SlotMap from "@/components/navigation/centers/slot-map";
+import { ThemedView } from "@/components/common/ThemedView";
+import { bg_colors } from "@/components/auth/styles";
+import { SIZES } from "@/constants/styles";
+import { FONTS } from "@/constants/fonts";
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 
 interface _ICenterParams {
   [key: string]: string;
@@ -39,15 +37,15 @@ const ParkingCenterDetails = () => {
   const loading = useAppSelector(selectNearbySlotLoading);
   const error = useAppSelector(selectNearbySlotError);
   const slotId = useAppSelector(selectSelectedSlotString);
-  const selectedSlot = useAppSelector(selectSelectedSlot(slotId ?? ""));
+  const selectedSlot = useAppSelector(selectSelectedSlot(slotId ?? ''));
 
   useEffect(() => {
     dispatch(testSlots());
   }, []);
 
   const handleBookSlot = async (id_for_slot: string) => {
-    const start_date = new Date(start_time ?? "");
-    const reservation_duration = parseInt(duration ?? "0");
+    const start_date = new Date(start_time ?? '');
+    const reservation_duration = parseInt(duration ?? '');
     const vehicle_id = ids.VEHICLE;
     const slot_id = ids.SLOT;
     const center = ids.CENTER;
@@ -71,7 +69,7 @@ const ParkingCenterDetails = () => {
 
   return (
     <RendererHOC loading={loading} error={error}>
-      <View style={{ height: "100%" }} {...bg_colors.main}>
+      <ThemedView style={{ height: "100%" }} {...bg_colors.main}>
         <View style={{ height: "50%", position: "relative" }}>
           <SlotMap />
           <Entypo
@@ -92,12 +90,10 @@ const ParkingCenterDetails = () => {
         <View style={{ height: "50%", paddingTop: 20, paddingHorizontal: 20 }}>
           <Text
             style={{
+              marginVertical: SIZES.padding,
               ...FONTS.h3,
               textAlign: "center",
-              letterSpacing: 1.005,
-              marginVertical: SIZES.base * 0.6,
             }}
-            {...text_colors.title}
           >
             Details of your selected slot
           </Text>
@@ -106,7 +102,7 @@ const ParkingCenterDetails = () => {
               <View
                 style={[
                   styles.details_content,
-                  { marginVertical: SIZES.base * 0.6 },
+                  { marginVertical: SIZES.padding },
                 ]}
               >
                 <TabBarIcon
@@ -115,12 +111,18 @@ const ParkingCenterDetails = () => {
                   color="black"
                   style={{ marginRight: 10 }}
                 />
-                <Text style={{ ...FONTS.b1 }}>{selectedSlot.slot_name}</Text>
+                <Text
+                  style={{
+                    ...FONTS.ps3,
+                  }} //TODO
+                >
+                  {selectedSlot.slot_name}
+                </Text>
               </View>
               <View
                 style={[
                   styles.details_content,
-                  { marginVertical: SIZES.base * 0.6 },
+                  { marginVertical: SIZES.padding },
                 ]}
               >
                 <TabBarIcon
@@ -129,12 +131,18 @@ const ParkingCenterDetails = () => {
                   color="black"
                   style={{ marginRight: 10 }}
                 />
-                <Text style={{ ...FONTS.b1 }}>{selectedSlot.type}</Text>
+                <Text
+                  style={{
+                    ...FONTS.ps3,
+                  }} //TODO
+                >
+                  {selectedSlot.type}
+                </Text>
               </View>
               <View
                 style={[
                   styles.details_content,
-                  { marginVertical: SIZES.base * 0.6 },
+                  { marginVertical: SIZES.padding },
                 ]}
               >
                 <TabBarIcon
@@ -143,14 +151,18 @@ const ParkingCenterDetails = () => {
                   color="black"
                   style={{ marginRight: 10 }}
                 />
-                <Text style={{ ...FONTS.b1 }}>
+                <Text
+                  style={{
+                    ...FONTS.ps3,
+                  }} //TODO
+                >
                   {selectedSlot.slot_data?.total_bookings || 0}
                 </Text>
               </View>
               <View
                 style={[
                   styles.details_content,
-                  { marginVertical: SIZES.base * 0.6 },
+                  { marginVertical: SIZES.padding },
                 ]}
               >
                 <TabBarIcon
@@ -159,7 +171,10 @@ const ParkingCenterDetails = () => {
                   color="black"
                   style={{ marginRight: 10 }}
                 />
-                <Text style={{ ...FONTS.b1 }}>
+                <Text style={{
+                    ...FONTS.ps3,
+                }} //TODO
+                >
                   {selectedSlot.contact || "+233 551363571"}
                 </Text>
               </View>
@@ -183,7 +198,7 @@ const ParkingCenterDetails = () => {
             </View>
           )}
         </View>
-      </View>
+      </ThemedView>
     </RendererHOC>
   );
 };

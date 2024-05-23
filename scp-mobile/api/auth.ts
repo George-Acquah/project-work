@@ -77,10 +77,11 @@ export async function updateUser(params: any) {
 }
 
 export async function logoutUser() {
-  const config: _IApiConfig = {
-    url: `${AUTH_BASE_URL}/users`,
-    method: "POST",
-  };
+  // const config: _IApiConfig = {
+  //   url: `${AUTH_BASE_URL}/users`,
+  //   method: "POST",
+  // };
 
-  return callApi<ILogoutResponse>(config);
+  // return callApi<ILogoutResponse>(config);
+  return 'Logged Out';
 }
