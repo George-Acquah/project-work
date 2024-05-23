@@ -9,7 +9,7 @@ export default function ParkingLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      {/* <Stack.Screen name="[center_id]/(overview)" /> */}
+      <Stack.Screen name="[center_id]/(overview)" />
     </Stack>
   );
 }

@@ -22,6 +22,7 @@ import { bg_colors, text_colors } from "@/components/auth/styles";
 import { FONTS } from "@/constants/fonts";
 import { SIZES } from "@/constants/styles";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import SlotMap from "@/components/navigation/centers/slot-map";
 
 interface _ICenterParams {
   [key: string]: string;
@@ -72,7 +73,7 @@ const ParkingCenterDetails = () => {
     <RendererHOC loading={loading} error={error}>
       <View style={{ height: "100%" }} {...bg_colors.main}>
         <View style={{ height: "50%", position: "relative" }}>
-          {/* <SlotMap slot_type={Slot_Type.NEARBY} /> */}
+          <SlotMap />
           <Entypo
             name="chevron-left"
             size={20}

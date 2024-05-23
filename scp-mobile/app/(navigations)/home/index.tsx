@@ -15,7 +15,7 @@ import Button from "@/components/common/button";
 import { router } from "expo-router";
 import { FONTS } from "@/constants/fonts";
 import { SIZES } from "@/constants/styles";
-import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
+import { SHARED_COLORS } from "@/constants/Colors";
 import { text_colors } from "@/components/auth/styles";
 import FiltersTab from "@/components/navigation/shared/filters-tab";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
