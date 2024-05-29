@@ -16,7 +16,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserType } from 'src/shared/enums/users.enum';
+import { DbUserType, UserType } from 'src/shared/enums/users.enum';
 import { ApiResponse } from 'src/shared/services/api-responses';
 import {
   _IUpdatedUserRes,
@@ -39,6 +39,24 @@ export class UsersController {
     private readonly transactionService: TransactionService,
     @InjectConnection() private readonly connection: Connection // Injecting the Connection object
   ) {}
+
+  @Get('roles')
+  getRoles(): ApiResponse<DbUserType[]> {
+    return new ApiResponse(200, 'Success', [
+      DbUserType.CUSTOMER,
+      DbUserType.PARK_OWNER
+    ]);
+  }
+
+  @Get('admin/roles')
+  getAllRoles(): ApiResponse<UserType[]> {
+    return new ApiResponse(200, 'SUccess', [
+      UserType.CUSTOMER,
+      UserType.PARK_OWNER,
+      UserType.ADMIN,
+      UserType.MODERATOR
+    ]);
+  }
 
   @Post('set-image')
   @UseGuards(JwtAuthGuard)
@@ -121,6 +139,20 @@ export class UsersController {
         error.message ?? 'Your query was not successful',
         {}
       );
+    }
+  }
+
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  async fetchUserProfiles(@User() user) {
+    try {
+      const user_profile = await this.usersService.fetchUserProfile(
+        user._id,
+        true
+      );
+      return new ApiResponse(200, 'Your query was successful', user_profile);
+    } catch (error) {
+      return new ApiResponse(error.statusCode || 500, error.message, {});
     }
   }
 
@@ -225,16 +257,6 @@ export class UsersController {
         {}
       );
     }
-  }
-
-  @Get('admin/roles')
-  getAllRoles(): ApiResponse<UserType[]> {
-    return new ApiResponse(200, 'SUccess', [
-      UserType.CUSTOMER,
-      UserType.PARK_OWNER,
-      UserType.ADMIN,
-      UserType.MODERATOR
-    ]);
   }
 
   //TODO implement update user and admin

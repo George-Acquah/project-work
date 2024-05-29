@@ -90,7 +90,7 @@ interface _ICenterData {
   center_id: string;
 }
 
-interface _IAddress {
+export interface _IAddress {
   city: string;
   latitude: number;
   longitude: number;

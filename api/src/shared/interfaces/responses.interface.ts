@@ -10,4 +10,5 @@ export interface _ILookup {
   from: string;
   foreignField: string;
   as: string;
+  localField?: string;
 }

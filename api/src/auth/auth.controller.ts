@@ -2,10 +2,7 @@ import { Body, Controller, Logger, Post, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/create-users.dto';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
-import {
-  _ISanitizedParkOwner,
-  _TSanitizedUser
-} from 'src/shared/interfaces/users.interface';
+import { _TSanitizedUser } from 'src/shared/interfaces/users.interface';
 import { ApiResponse } from 'src/shared/services/api-responses';
 import { LoginUserDto } from 'src/users/dtos/login-users.dtos';
 import { RefreshJwtAuthGuard } from 'src/shared/guards/refreshJwt.guard';
@@ -23,8 +20,9 @@ export class AuthController {
   async registerCustomer(@Body() data: CreateUserDto) {
     this.logger.warn(data);
     try {
-      console.log(data);
-      const customer = await this.userService.createCustomer(data);
+      const result = await this.userService.createCustomer(data);
+      const { _id, ...customer } = result;
+      this.logger.warn(_id);
 
       if (customer) {
         return new ApiResponse(
@@ -37,30 +35,37 @@ export class AuthController {
       console.log(error);
       return new ApiResponse(
         error.status ?? 400,
-        error.message ?? 'Something Bad Occured while logging in',
+        error.message ?? 'Something Bad Occured while creating your account',
         {}
       );
     }
   }
 
   @Post('users/owner')
-  async registerOwner(
-    @Body() data: CreateUserDto
-  ): Promise<ApiResponse<_ISanitizedParkOwner>> {
-    this.logger.warn(data);
-    const owner = await this.userService.createOwner(data);
+  async registerOwner(@Body() data: CreateUserDto) {
+    try {
+      this.logger.warn(data);
+      const result = await this.userService.createOwner(data);
+      const { _id, ...owner } = result;
+      this.logger.warn(_id);
 
-    return new ApiResponse(
-      200,
-      'You have successfully created an acount',
-      owner
-    );
+      return new ApiResponse(
+        200,
+        `You have successfully created an acount with ${owner.email}`,
+        owner
+      );
+    } catch (error) {
+      return new ApiResponse(
+        error.status ?? 400,
+        error.message ?? 'Something Bad Occured while creating your account',
+        {}
+      );
+    }
   }
 
   // @UseGuards(LocalJwtAuthGuard)
   @Post('login')
   async login(@Body() userDto: LoginUserDto) {
-    console.log('received');
     try {
       const data = await this.authService.login(userDto);
 

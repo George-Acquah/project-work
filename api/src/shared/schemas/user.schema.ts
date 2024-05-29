@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Document, Schema as MongooseSchema } from 'mongoose';
+import { HydratedDocument, Document } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { DbUserType } from '../enums/users.enum';
+import { UserType } from '../enums/users.enum';
 import { ParkOwner } from './owner.schema';
 import { Customer } from './customer.schema';
 
@@ -19,20 +19,24 @@ export class User extends Document {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ type: String, required: true, enum: [Customer.name, ParkOwner.name] })
-  userType: DbUserType;
+  @Prop({ required: true })
+  phone_number: string;
 
-  @Prop({
-    type: MongooseSchema.Types.ObjectId,
-    ref: 'Profile'
-  })
-  profile: MongooseSchema.Types.ObjectId;
+  @Prop({ type: String, required: true, enum: [Customer.name, ParkOwner.name] })
+  userType: UserType;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.virtual('image', {
   ref: 'UserImage',
+  localField: '_id',
+  foreignField: 'userId',
+  justOne: true
+});
+
+UserSchema.virtual('profile', {
+  ref: 'Profile',
   localField: '_id',
   foreignField: 'userId',
   justOne: true

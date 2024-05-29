@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import mongoose, {
   Model,
   Document,
@@ -6,7 +10,7 @@ import mongoose, {
   PipelineStage,
   ClientSession
 } from 'mongoose';
-import { SORT } from './shared/enums/general.enum';
+import { CREATE_PIPELINE, SORT } from './shared/enums/general.enum';
 import { _ILookup } from './shared/interfaces/responses.interface';
 import { _IUpdatedUserRes } from './shared/interfaces/users.interface';
 
@@ -447,6 +451,162 @@ export class AggregationService {
 
       // Return the documents and total pages
       return { documents, totalPages };
+    } catch (error) {
+      throw new Error(`Error fetching filtered documents: ${error.message}`);
+    }
+  }
+
+  //GET Pipelines
+  async fetchDocumentPipeline<T extends Document, S>(
+    model: Model<T>,
+    projectFields: string[],
+    matcher: Partial<Record<keyof T, any>>,
+    errHelper: string
+  ): Promise<S> {
+    try {
+      // Build the projection object
+      const project = projectFields.reduce((acc, field) => {
+        acc[field] = 1;
+        return acc;
+      }, {});
+
+      // Build the pipeline
+      const pipeline = await model.aggregate([
+        { $match: { ...matcher } },
+        { $project: project }
+      ]);
+
+      return pipeline[0] as S;
+    } catch (error) {
+      throw new Error(`Error fetching ${errHelper}: ${error.message}`);
+    }
+  }
+
+  //Create pipelines
+  async createDocumentPipeline<T extends Document, S>(
+    model: Model<T>,
+    projectFields: string[],
+    data: Partial<T>,
+    uniqueFields: Partial<Record<keyof T, any>>,
+    errHelper: string[],
+    type?: CREATE_PIPELINE,
+    sanitizeFn?: (doc: T) => S
+  ): Promise<S> {
+    try {
+      if (type === CREATE_PIPELINE.USER) {
+        // Check for existing document
+        const existingDoc = await model.findOne(uniqueFields);
+        if (existingDoc) {
+          throw new ConflictException(`${errHelper[0]} already exists`);
+        }
+      }
+
+      if (type === CREATE_PIPELINE.SLOT) {
+        // Check for existing document
+        const existingDoc = await model.findOne(uniqueFields);
+        if (!existingDoc) {
+          throw new NotFoundException(`This ${errHelper[0]} does not exists`);
+        }
+      }
+
+      // Create new document
+      const newDoc = new model(data);
+      await newDoc.save();
+
+      // Build the projection object
+      const project = projectFields.reduce((acc, field) => {
+        acc[field] = 1;
+        return acc;
+      }, {});
+
+      // Build the pipeline
+      const pipeline = await model.aggregate([
+        { $match: { _id: newDoc._id } },
+        { $project: project }
+      ]);
+
+      if (sanitizeFn) {
+        // Sanitize and return the document
+        return sanitizeFn(pipeline[0]);
+      }
+      return pipeline[0];
+    } catch (error) {
+      throw new Error(`Error creating ${errHelper[1]}: ${error.message}`);
+    }
+  }
+
+  //Refined Pipelines
+  //Dynamic documents
+  async dynamicDocumentsPipeline<T extends Document, S>(
+    model: Model<T>,
+    project_fields: string[],
+    matcher: Partial<Record<keyof T, any>>,
+    lookup_data?: _ILookup[],
+    unwind_fields?: string[],
+    currentPage?: number,
+    items?: number
+  ): Promise<S> {
+    try {
+      const pipeline: PipelineStage[] = [];
+
+      // Match stage
+      pipeline.push({ $match: { ...matcher } });
+
+      // Pagination stages
+      //Skipping Stage
+      if (currentPage && items) {
+        const offset = (currentPage - 1) * items;
+        pipeline.push({ $skip: offset });
+      }
+
+      // Lookup stages
+      if (lookup_data && lookup_data.length > 0) {
+        const lookups: PipelineStage.Lookup[] = lookup_data.map((data) => ({
+          $lookup: {
+            from: data.from,
+            as: data.as,
+            localField: data?.localField ?? '_id',
+            foreignField: data.foreignField
+          }
+        }));
+        pipeline.push(...lookups);
+      }
+
+      //Limitting Stage
+      if (items) {
+        pipeline.push({ $limit: items });
+      }
+
+      // Unwind stages
+      if (unwind_fields && unwind_fields.length > 0) {
+        const unwinds: PipelineStage.Unwind[] = unwind_fields.map((field) => ({
+          $unwind: {
+            path: `$${field}`,
+            preserveNullAndEmptyArrays: true
+          }
+        }));
+        pipeline.push(...unwinds);
+      }
+
+      // Project stage
+      if (project_fields && project_fields.length > 0) {
+        const project = project_fields.reduce((acc, field) => {
+          acc[field] = 1;
+          return acc;
+        }, {} as Record<string, 1>);
+        pipeline.push({ $project: project });
+      }
+
+      // Execute pipeline
+      const result = await model.aggregate(pipeline);
+      console.log(typeof result);
+
+      // Return result based on type of S
+      if (Array.isArray(result)) {
+        return result as unknown as S;
+      } else {
+        return result[0] as S;
+      }
     } catch (error) {
       throw new Error(`Error fetching filtered documents: ${error.message}`);
     }

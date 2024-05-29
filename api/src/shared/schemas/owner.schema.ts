@@ -1,22 +1,18 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { OwnerRankings } from './rankings.schema';
-import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
-import { DbUserType } from '../enums/users.enum';
+import { Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+import { UserType } from '../enums/users.enum';
 
 export type ParkOwnerDocument = HydratedDocument<ParkOwner>;
 
 @Schema({ _id: false })
 export class ParkOwner {
-  userType: DbUserType;
+  userType: UserType;
 
   password: string;
 
   email: string;
 
-  profile: MongooseSchema.Types.ObjectId;
-
-  @Prop()
-  rankings: OwnerRankings;
+  phone_number: string;
 }
 
 export const ParkOwnerSchema = SchemaFactory.createForClass(ParkOwner);
@@ -25,5 +21,19 @@ ParkOwnerSchema.virtual('centers', {
   ref: 'ParkingCenter',
   localField: '_id',
   foreignField: 'owner',
-  justOne: false,
+  justOne: false
+});
+
+ParkOwnerSchema.virtual('rankings', {
+  ref: 'OwnerRankings',
+  localField: '_id',
+  foreignField: 'owner',
+  justOne: true
+});
+
+ParkOwnerSchema.virtual('profile', {
+  ref: 'Profile',
+  localField: '_id',
+  foreignField: 'owner',
+  justOne: true
 });
