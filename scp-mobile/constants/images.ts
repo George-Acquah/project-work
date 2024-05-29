@@ -4,7 +4,9 @@ export const IMAGES = {
 };
 
 const success = require("../assets/icons/success.png");
+const empty = require("../assets/images/empty.png");
 
 export default {
   success,
+  empty,
 };

@@ -684,12 +684,14 @@ const slots: _ISlot[] = [
     updatedAt: new Date().toDateString(),
     isVerified: false,
     contact: "",
-    location: {
-      location: {
-        lat: 37.7749,
-        lng: -122.4194,
-      },
-      description: "San Francisco, CA",
+    slot_address: {
+      _id: "6564827f2cbf180fcb3aaf42",
+      latitude: 37.7749,
+      longitude: -122.4194,
+      state: "San Francisco, CA",
+      center_id: "656482722cbf180fcb3aaf3d",
+      city: "",
+      country: "",
     },
   },
   {
@@ -748,12 +750,14 @@ const slots: _ISlot[] = [
     updatedAt: new Date().toDateString(),
     isVerified: false,
     contact: "",
-    location: {
-      location: {
-        lat: 37.7849,
-        lng: -122.4192,
-      },
-      description: "San Francisco, CA",
+    slot_address: {
+      _id: "6564827f2cbf180fcb3aaf41",
+      latitude: 37.7849,
+      longitude: -122.4192,
+      state: "San Francisco, CA",
+      center_id: "656482722cbf180fcb3aaf3d",
+      city: "",
+      country: "",
     },
   },
   {
@@ -812,12 +816,14 @@ const slots: _ISlot[] = [
     updatedAt: new Date().toDateString(),
     isVerified: false,
     contact: "",
-    location: {
-      location: {
-        lat: 37.7849,
-        lng: -122.3892,
-      },
-      description: "San Francisco, CA",
+    slot_address: {
+      _id: "6564827f2cbf180fcb3aaf41",
+      latitude: 37.7849,
+      longitude: -122.3892,
+      state: "San Francisco, CA",
+      center_id: "656482722cbf180fcb3aaf3d",
+      city: "",
+      country: "",
     },
   },
   {
@@ -876,12 +882,14 @@ const slots: _ISlot[] = [
     updatedAt: new Date().toDateString(),
     isVerified: false,
     contact: "",
-    location: {
-      location: {
-        lat: 37.7819,
-        lng: -122.4094,
-      },
-      description: "San Francisco, CA",
+    slot_address: {
+      _id: "6564827f2cbf180fcb3aaf41",
+      latitude: 37.7819,
+      longitude: -122.4094,
+      state: "San Francisco, CA",
+      center_id: "656482722cbf180fcb3aaf3d",
+      city: "",
+      country: "",
     },
   },
 ];

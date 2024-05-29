@@ -2,7 +2,7 @@ import { ThemedView as View } from "@/components/common/ThemedView";
 import { ThemedText as Text } from "@/components/common/ThemedText";
 import { FONTS } from "@/constants/fonts";
 import { Alert, TextInput, TouchableOpacity } from "react-native";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import Button from "@/components/common/button";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -21,17 +21,30 @@ import AuthSchema from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FieldValues } from "react-hook-form";
 import FormInputs from "../common/input-form";
+import Callout from "../common/callout";
+import { UserType } from "@/utils/enums/global.enum";
 
 interface _IRegister {
+  usertype: UserType | null;
   setSelectedScreen: Dispatch<SetStateAction<string>>;
   hideModal: () => void;
 }
-const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
+const Register = ({ usertype, setSelectedScreen, hideModal }: _IRegister) => {
 
   const colorScheme = useColorScheme() ?? 'light';
   const phoneNumberRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [type, setType] = useState<'customer' | 'owner'>('customer');
+  console.log(type);
+  
+  useEffect(() => {
+    if (usertype) {
+      usertype === UserType.CUSTOMER ? setType('customer') : setType('owner')
+    }
+  }, [usertype])
 
     const registerSchema = AuthSchema;
     const { control, handleSubmit } = useForm<FieldValues>({
@@ -43,17 +56,18 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
       resolver: zodResolver(registerSchema),
     });
 
-  const [isVisible, setIsVisible] = useState(false);
   const dispatch = useAppDispatch();
   const registerLoading = useAppSelector(selectAuthLoading);
 
   const handleRegister = async (data: any) => {
     try {
-      const {email, password } = data;
+      const { email, password, phone_number } = data;
       const result = await dispatch(
         register({
           email,
           password,
+          phone_number,
+          type,
         })
       );
       const user = unwrapResult(result);
@@ -156,7 +170,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
 
   const renderTermsAndPolicies = () => {
     return (
-      <View style={{ marginTop: SIZES.padding, alignItems: "center" }}>
+      <View style={{ marginVertical: SIZES.padding, alignItems: "center" }}>
         <Text style={{ ...FONTS.ps2 }} {...text_colors.signup_label}>
           By registering, you agree to our
         </Text>
@@ -184,7 +198,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
 
   const renderFooter = () => {
     return (
-      <View>
+      <>
         {/* Sign Up Label */}
         <View
           style={{
@@ -236,7 +250,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
             </Text>
           </RendererHOC>
         </Button>
-      </View>
+      </>
     );
   };
 
@@ -247,6 +261,7 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps={"handled"}
         extraScrollHeight={250}
+        showsVerticalScrollIndicator= {false}
         contentContainerStyle={{
           flexGrow: 1,
           marginTop: SIZES.radius,
@@ -254,6 +269,12 @@ const Register = ({ setSelectedScreen, hideModal }: _IRegister) => {
       >
         {/* Title And Descriptions */}
         {renderTitle()}
+
+        {/* Render Call Out */}
+        <Callout
+          message={`You are creating an account as a ${usertype === UserType.CUSTOMER ? 'Driver' : 'Center Owner'}`}
+          style= {{ marginTop: SIZES.padding}}
+        />
 
         {/* Form Inputs */}
         {renderFormInputs()}

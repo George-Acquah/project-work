@@ -22,12 +22,17 @@ import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { TabBarIcon } from "../navigation/TabBarIcon";
 import { SIZES } from "@/constants/styles";
 import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
+import UserTypeModal from "./select-usertype";
+import { UserType } from "@/utils/enums/global.enum";
+
 
 
 type Ref = BottomSheetModal;
 interface _IAuthModal {
   selectedScreen: string;
+  usertype: UserType | null;
   setSelectedScreen: Dispatch<SetStateAction<string>>;
+  setUsertype: Dispatch<SetStateAction<UserType | null>>;
   hideModal: () => void;
 }
 
@@ -37,7 +42,7 @@ interface _IRenderMotiModals {
   num: number;
 }
 const AuthModal = forwardRef<Ref, _IAuthModal>(
-  ({ selectedScreen, setSelectedScreen, hideModal }, ref) => {
+  ({ selectedScreen, usertype, setSelectedScreen, setUsertype, hideModal }, ref) => {
     // variables
     const snapPoints = useMemo(() => {
       if (Platform.OS === "ios") return ["93%"];
@@ -100,12 +105,12 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
             left: selectedScreen === screen_type ? 0 : num,
             opacity: selectedScreen === screen_type ? 1 : 0,
           }}
-          transition={
-            {
-              type: "timing",
-              duration: 100,
-            } as any
-          }
+          // transition={
+          //   {
+          //     // type: "timing",
+          //     // duration: 100,
+          //   } as any
+          // }
         >
           {children}
         </MotiView>
@@ -146,6 +151,7 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
             {/* SIGN UP */}
             <RenderMotiModals screen_type={AUTH_MODALS.SIGNUP} num={100}>
               <Register
+                usertype={usertype}
                 setSelectedScreen={setSelectedScreen}
                 hideModal={hideModal}
               />
@@ -180,6 +186,15 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
               <AddAddress
                 setSelectedScreen={setSelectedScreen}
                 hideModal={hideModal}
+              />
+            </RenderMotiModals>
+
+            {/* Render Request Reservation */}
+            <RenderMotiModals screen_type={AUTH_MODALS.USER_TYPE} num={100}>
+              <UserTypeModal
+                setSelectedScreen={setSelectedScreen}
+                usertype={usertype}
+                setUsertype={setUsertype}
               />
             </RenderMotiModals>
           </View>

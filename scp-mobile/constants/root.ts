@@ -70,6 +70,7 @@ const AUTH_MODALS = {
   FORGOT: "Forgotpassword-Modal",
   VEHICLES: "add-vehicles",
   ADDRESS: "add-address",
+  USER_TYPE: "select-usertype",
 };
 
 const ACCOUNT_MODALS = {

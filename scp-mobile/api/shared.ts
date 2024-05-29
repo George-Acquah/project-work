@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "./api.interceptor";
 
 function switchErrRes(
   status: number,
@@ -35,7 +35,7 @@ export async function callApi<T, D = any>(
   config: _IApiConfig<D>
 ): Promise<_IApiResponse<T>> {
   try {
-    const response = await axios<_IApiResponse<T>>({
+    const response = await axiosInstance<_IApiResponse<T>>({
       url: config.url,
       method: config.method,
       data: config.data,
@@ -59,6 +59,7 @@ export async function callApi<T, D = any>(
     }
     return response.data;
   } catch (error) {
+    console.log(error);
     handleApiError(error);
     throw error;
   }

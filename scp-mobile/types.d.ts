@@ -48,7 +48,7 @@ interface _ICenterAddress extends _IAddress {
   center_id: string;
 }
 
-interface _ICenterData {
+interface _ICenterData { 
   _id: string;
   total_daily_bookings: number;
   total_weekly_bookings: number;
@@ -90,7 +90,16 @@ interface _IId {
 
 interface _ILoginResponse {
   tokens: _ITokens;
-  user: _IUser;
+  user: _ILogin;
+}
+
+interface _IRegisterResponse {
+  email: string;
+  userType: string;
+}
+
+interface _ILogin extends _IRegisterResponse {
+  _id: string;
 }
 
 interface _IParkingCenter {
@@ -103,7 +112,7 @@ interface _IParkingCenter {
   createdAt: Date;
   updatedAt: Date;
   contact: string;
-  location: _IDestination;
+  // location: _IDestination;
   isAvailable: boolean;
   isVerified: boolean;
   center_images: Array<_IParkingCenterImage>;
@@ -137,7 +146,7 @@ interface _ISlot {
   createdAt: Date;
   updatedAt: Date;
   contact: string;
-  location: _IDestination;
+  // location: _IDestination;
   isVerified: boolean;
   center_id: string;
 }
@@ -220,7 +229,7 @@ interface _IVerifyUser {
   user_image: string | null;
   first_name: string | null;
   last_name: string | null;
-  phonenumber: string | null;
+  phone_number: string | null;
   area: string | null;
   state: string | null;
   pincode: string | null;
@@ -229,7 +238,7 @@ interface _IVerifyUser {
 interface _IUser {
   _id: string;
   email: string;
-  userType: any;
+  userType: _TUserType;
   image: any;
   createdAt: Date;
   updatedAt: Date;
@@ -238,6 +247,8 @@ interface _IUser {
   vehicles: any[];
   centers: any[];
 }
+
+type _TUserType = 'Customer' | 'ParkOwner';
 
 interface _Image {
   _id: string;

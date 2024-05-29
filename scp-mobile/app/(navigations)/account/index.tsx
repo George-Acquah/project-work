@@ -15,6 +15,7 @@ import Button from "@/components/common/button";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch } from "@/utils/hooks/useRedux";
 import { logout } from "@/features/auth/auth.slice";
+import useRoles from "@/utils/hooks/useRoles.hook";
 
 const AccountProfileScreen = () => {
   const colorScheme = useColorScheme() ?? "light";
@@ -22,10 +23,10 @@ const AccountProfileScreen = () => {
   const username = "George Acquah"; // Replace with actual username
   const userdp = "https://randomuser.me/api/portraits/men/1.jpg"; // Replace with actual image URL
   const dispatch = useAppDispatch();
+  const { role } = useRoles();
 
   const handleLogout = async () => {
     try {
-      console.log('clicked')
       await dispatch(logout());
       router.replace('/')
     } catch (error) {

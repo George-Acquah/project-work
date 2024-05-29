@@ -1,5 +1,5 @@
 import { tabData } from "@/constants/root";
-import { _IAuthState, _IBookingState, _ICenters, _IMapState, _IPermission, _IResrvations, _IRootState, _IRoots, _ISlots, _IVehicles } from "./types";
+import { _IAuthState, _IBookingState, _ICenters, _IMapState, _IPermission, _IResrvations, _IRootState, _IRoots, _ISessionState, _ISlots, _IVehicles } from "./types";
 import { Center_Filter } from "@/utils/enums/global.enum";
 
 const rootState: _IRootState = {
@@ -20,6 +20,7 @@ const rootInitialState: _IRoots = {
 const authInitialState: _IAuthState = {
   ...rootState,
   isAuthenticated: false,
+  reg_details: null,
   exp: 0,
   tokens: null,
   user: null,
@@ -72,7 +73,7 @@ const slotsInitialState: _ISlots = {
 
 const initialReservationState: _IResrvations = {
   ...rootState,
-  availableSlots: null,
+  availableSlots: [],
   totalPages: null,
   reservedSlot: null,
   reservation_loading: false,
@@ -93,6 +94,11 @@ const mapInitialState: _IMapState = {
   selected: null,
 };
 
+const sessionInitialState: _ISessionState = {
+  showModal: false,
+  callbackUrl: null,
+};
+
 export {
-  authInitialState, bookingsInitialState, mapInitialState, centersInitialState, permissionsInitialState, slotsInitialState, initialReservationState, vehiclesInitialState, rootInitialState
+  authInitialState, bookingsInitialState, mapInitialState, centersInitialState, permissionsInitialState, slotsInitialState, initialReservationState, vehiclesInitialState, rootInitialState, sessionInitialState
 };

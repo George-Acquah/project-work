@@ -1,7 +1,6 @@
-import { BASE_URL } from "./root";
 import { callApi } from "./shared";
 
-const CENTER_BASE_URL = `${BASE_URL}/owner/parking-center`;
+const CENTER_BASE_URL = `owner/parking-center`;
 
 export async function filteredCenters(
   centers: string = "",
@@ -33,7 +32,6 @@ export async function availableCenters(
 export async function singleCenter(
   centers_id: string
 ) {
-  // const { centers, currentPage, pageSize } = params;
   const config: _IApiConfig = {
     url: `${CENTER_BASE_URL}/${centers_id}`,
     method: "GET",

@@ -6,7 +6,6 @@ import React from "react";
 
 const Index = () => {
   const { auth } = useTokenRotation();
-
   // Render loading state while waiting for auth status to be determined
   if (auth === null) {
     return (

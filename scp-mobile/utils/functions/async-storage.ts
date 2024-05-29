@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { decrypt, encrypt } from "./security";
+import { UserType } from "../enums/global.enum";
 
 const async_save = async <T>(key: string, value: T) => {
   try {
@@ -25,6 +27,7 @@ const async_load = async <T>(
           return null; // Return null for invalid JSON
         }
       } else {
+        console.log(value)
         return value;
       }
     } else {
@@ -67,6 +70,38 @@ const async_remove = async (key: string) => {
     await AsyncStorage.removeItem(key);
   } catch (error) {
     console.error("Error removing from secure storage:", error);
+  }
+};
+
+export const encryptAndSaveUserType = async (
+  userType: UserType
+): Promise<void> => {
+  try {
+    // Encrypt the userType
+    const encryptedUserType = encrypt(userType);
+
+    // Save the encrypted userType to AsyncStorage
+    await AsyncStorage.setItem("userType", encryptedUserType);
+  } catch (error) {
+    console.error("Error encrypting and saving userType:", error);
+  }
+};
+
+export const getUserType = async (): Promise<UserType | null> => {
+  try {
+    // Retrieve the encrypted userType from AsyncStorage
+    const encryptedUserType = await AsyncStorage.getItem("userType");
+    if (!encryptedUserType) {
+      return null;
+    }
+
+    // Decrypt the userType
+    const decryptedUserType = decrypt(encryptedUserType);
+
+    return decryptedUserType;
+  } catch (error) {
+    console.error("Error retrieving and decrypting userType:", error);
+    return null;
   }
 };
 

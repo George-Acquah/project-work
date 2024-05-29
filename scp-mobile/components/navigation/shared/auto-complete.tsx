@@ -9,8 +9,9 @@ import { useColorScheme } from "@/utils/hooks/useColorScheme";
 interface _IAutoComplete {
   type: EAutoComplete;
   placeholder: string;
+  disableScroll: boolean;
 }
-const PlacesAutoComplete = ({ type = EAutoComplete.ORIGIN, placeholder = "Where are you" }: _IAutoComplete) => {
+const PlacesAutoComplete = ({ type = EAutoComplete.ORIGIN, placeholder = "Where are you", disableScroll = false }: _IAutoComplete) => {
   const colorScheme = useColorScheme() ?? 'light';
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -27,17 +28,17 @@ const PlacesAutoComplete = ({ type = EAutoComplete.ORIGIN, placeholder = "Where 
               })
             );
             dispatch(setDestination(null));
-
-            router.push("/map/");
-          } else {
+            // router.push("/map/");
+          } else if (type === EAutoComplete.DESTINATION) {
             dispatch(
               setDestination({
                 location: details.geometry.location,
                 description: data.description,
               })
-            );
-
+            )
             // router.push("/account/settings/");
+          } else {
+            // Handle Other types here 
           }
         }
       }}
@@ -47,6 +48,7 @@ const PlacesAutoComplete = ({ type = EAutoComplete.ORIGIN, placeholder = "Where 
       onFail={(error) => console.error(error)}
       minLength={2}
       enablePoweredByContainer={false}
+      disableScroll= {disableScroll}
       styles={{
         container: {
           flex: 0,

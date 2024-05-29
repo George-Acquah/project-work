@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { setSelectedSlot } from "@/features/slots/parking-slots.slice";
-import { useSlotFilter } from '@/utils/hooks/useFilter'
+import { useSlotFilter } from "@/utils/hooks/useFilter";
 
 const SlotMap = () => {
   const dispatch = useAppDispatch();
@@ -14,8 +14,8 @@ const SlotMap = () => {
   useEffect(() => {
     if (slots.length > 0) {
       const coordinates = slots.map((slot) => ({
-        latitude: slot.location.location.lat,
-        longitude: slot.location.location.lng,
+        latitude: slot.slot_address?.latitude ?? 0,
+        longitude: slot.slot_address?.longitude ?? 0,
       }));
       const edgePadding = { top: 100, right: 100, bottom: 100, left: 100 }; // Adjust padding as needed
       mapRef.current?.fitToCoordinates(coordinates, {
@@ -42,11 +42,11 @@ const SlotMap = () => {
         <Marker
           key={index}
           coordinate={{
-            latitude: slot.location.location.lat,
-            longitude: slot.location.location.lng,
+            latitude: slot.slot_address?.latitude ?? 0,
+            longitude: slot.slot_address?.longitude ?? 0,
           }}
           title={slot.slot_name}
-          description={slot.description}
+          description={slot.slot_address?.state}
           onPress={() => {
             dispatch(setSelectedSlot(slot._id));
           }}

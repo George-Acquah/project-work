@@ -78,6 +78,59 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
     );
   };
 
+  const renderFormInputs = () => (
+    <>
+      {/* Phone Number */}
+      <FormInputs
+        ref={phoneNumberRef}
+        control={control as any}
+        name="email"
+        rootContainerStyles={{ marginTop: SIZES.padding * 2 }}
+        label="Phone Number / Email"
+        placeholder="Enter phone number or email"
+        prependComponent={
+          <TabBarIcon
+            fontProvider={FontAwesome}
+            name="mobile-phone"
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
+            size={34}
+            style={{ marginRight: SIZES.base }}
+          />
+        }
+      />
+      {/* Password */}
+      <FormInputs
+        ref={passwordRef}
+        control={control as any}
+        name="password"
+        rootContainerStyles={{ marginTop: SIZES.padding }}
+        label="Password"
+        placeholder="Enter your password"
+        secureTextEntry={!isVisible}
+        prependComponent={
+          <TabBarIcon
+            fontProvider={FontAwesome}
+            name="lock"
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
+            size={24}
+            style={{ marginRight: SIZES.base }}
+          />
+        }
+        appendComponent={
+          <TouchableOpacity style={{ justifyContent: "center" }}>
+            <TabBarIcon
+              fontProvider={FontAwesome}
+              name={isVisible ? "eye-slash" : "eye"}
+              color={LIGHT_THEME.primary700}
+              size={24}
+              onPress={() => setIsVisible(!isVisible)}
+            />
+          </TouchableOpacity>
+        }
+      />
+    </>
+  );
+
   const renderRememberMeAndForgotPassword = () => {
     return (
       <View
@@ -177,55 +230,7 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
         {renderTitle()}
 
         {/* Form Inputs */}
-        {/* Phone Number */}
-        <FormInputs
-          ref={phoneNumberRef}
-          control={control as any}
-          name="email"
-          rootContainerStyles={{ marginTop: SIZES.padding * 2 }}
-          label="Phone Number / Email"
-          placeholder="Enter phone number or email"
-          prependComponent={
-            <TabBarIcon
-              fontProvider={FontAwesome}
-              name="mobile-phone"
-              color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
-              size={34}
-              style={{ marginRight: SIZES.base }}
-            />
-          }
-        />
-
-        {/* Password */}
-        <FormInputs
-          ref={passwordRef}
-          control={control as any}
-          name="password"
-          rootContainerStyles={{ marginTop: SIZES.padding }}
-          label="Password"
-          placeholder="Enter your password"
-          secureTextEntry={!isVisible}
-          prependComponent={
-            <TabBarIcon
-              fontProvider={FontAwesome}
-              name="lock"
-              color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
-              size={24}
-              style={{ marginRight: SIZES.base }}
-            />
-          }
-          appendComponent={
-            <TouchableOpacity style={{ justifyContent: "center" }}>
-              <TabBarIcon
-                fontProvider={FontAwesome}
-                name={isVisible ? "eye-slash" : "eye"}
-                color={LIGHT_THEME.primary700}
-                size={24}
-                onPress={() => setIsVisible(!isVisible)}
-              />
-            </TouchableOpacity>
-          }
-        />
+        {renderFormInputs()}
 
         {/* Remember Me and Forgot Passwords */}
         {renderRememberMeAndForgotPassword()}

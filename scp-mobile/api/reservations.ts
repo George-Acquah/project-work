@@ -1,7 +1,7 @@
 import { BASE_URL } from "./root";
 import { callApi } from "./shared";
 
-const CENTER_BASE_URL = `${BASE_URL}/owner/parking-center`;
+const CENTER_BASE_URL = `owner/parking-center`;
 
 export interface _IReservationParams {
   start_time: Date;
