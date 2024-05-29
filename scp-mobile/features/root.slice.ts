@@ -37,4 +37,7 @@ export const selectViewMap = (state: RootState) => state.root.viewMap;
 export const selectNearbyMap = (state: RootState) => state.root.nearbyMap;
 export const selectCentersFilter = (state: RootState) => state.root.centersFilter;
 
+export const selectSlotsFilter = (state: RootState) =>
+  state.root.slotsFilter;
+
 export default rootSlice.reducer;

@@ -1,4 +1,4 @@
-import { selectCentersFilter } from "@/features/root.slice";
+import { selectCentersFilter, selectSlotsFilter } from "@/features/root.slice";
 import { useAppSelector } from "./useRedux";
 import { useMemo } from "react";
 import { Center_Filter } from "../enums/global.enum";
@@ -19,7 +19,8 @@ import {
   selectNearbyCenters,
   selectPopularCenters,
 } from "@/features/centers/centers.slice";
-import { fetchAvailableSlots, fetchNearbySlot, fetchPopularSlots, selectAvailableSlots, selectMemoedAvailableSlot, selectMemoedNearbySlot, selectMemoedPopularSlot, selectNearbySlotError, selectNearbySlotLoading, selectNearbySlots, selectPopularSlots, selectSlotError, selectSlotLoading } from "@/features/slots/parking-slots.slice";
+import { fetchAvailableSlots, fetchNearbySlot, fetchPopularSlots, selectMemoedNearbySlot, selectMemoedPopularSlot, selectNearbySlotError, selectNearbySlotLoading, selectNearbySlots, selectPopularSlots, selectSlotError, selectSlotLoading } from "@/features/slots/parking-slots.slice";
+import { selectAvailableSlots, selectAvailableSlotsLoading, selectIsAvailableSlotsError, selectMemoedAvailableSlots } from "@/features/reservations/reservations.slice";
 
 
 const useCenterFilter = () => {
@@ -105,7 +106,8 @@ const select_data = useMemo(() => {
 };
 
 export const useSlotFilter = () => {
-  const slot_type = useAppSelector(selectCentersFilter);
+  const slot_type = useAppSelector(selectSlotsFilter);
+  console.log(slot_type);
 
   const dispatch_data = (data: _ISlotParams) =>
     useMemo(() => {
@@ -124,7 +126,7 @@ export const useSlotFilter = () => {
   const select_data = useMemo(() => {
     switch (slot_type) {
       case Center_Filter.AVAILABLE:
-        return selectAvailableSlots;
+        return selectNearbySlots;
       case Center_Filter.POPULAR:
         return selectPopularSlots;
       case Center_Filter.NEARBY:
@@ -138,7 +140,7 @@ export const useSlotFilter = () => {
   const select_data_ids = useMemo(() => {
     switch (slot_type) {
       case Center_Filter.AVAILABLE:
-        return selectMemoedAvailableSlot;
+        return selectMemoedNearbySlot;
       case Center_Filter.POPULAR:
         return selectMemoedPopularSlot;
       case Center_Filter.NEARBY:
@@ -151,7 +153,7 @@ export const useSlotFilter = () => {
   const select_loading = useMemo(() => {
     switch (slot_type) {
       case Center_Filter.AVAILABLE:
-        return selectSlotLoading;
+        return selectAvailableSlotsLoading;
       case Center_Filter.POPULAR:
         return selectSlotLoading;
       case Center_Filter.NEARBY:
@@ -164,7 +166,7 @@ export const useSlotFilter = () => {
   const select_error = useMemo(() => {
     switch (slot_type) {
       case Center_Filter.AVAILABLE:
-        return selectSlotError;
+        return selectIsAvailableSlotsError;
       case Center_Filter.POPULAR:
         return selectSlotError;
       case Center_Filter.NEARBY:

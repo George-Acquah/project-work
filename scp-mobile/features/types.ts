@@ -21,6 +21,7 @@ interface _IAuthState extends _IRootState {
   isAuthenticated: boolean | null;
   exp: number;
   tokens: _ITokens | null;
+  reg_details: _IRegisterResponse | null;
   user: {
     id: string;
     role: string;
@@ -68,7 +69,7 @@ interface _ISlots extends _IRootState {
 }
 
 interface _IResrvations extends _IRootState {
-  availableSlots: _ISlot[] | null;
+  availableSlots: _ISlot[];
   totalPages: number | null;
   reservedSlot: _ISlotReservation | null;
   reservation_loading: boolean;
@@ -84,5 +85,9 @@ interface _IMapState {
   selected: _ITestCenters | null;
   // mapRef: React.MutableRefObject<BottomSheetModal>;
 }
+interface _ISessionState {
+  showModal: boolean;
+  callbackUrl: string | null;
+}
 
-export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots };
+export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots, _ISessionState };

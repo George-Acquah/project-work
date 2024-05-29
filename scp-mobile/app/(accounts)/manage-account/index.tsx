@@ -30,7 +30,7 @@ import { keys } from "@/constants/root";
 import useStorageHook from "@/utils/hooks/storage.hooks";
 import * as FileSystem from "expo-file-system";
 import AccountSchema from "@/schemas/user.schema";
-import { verifyuser } from "@/api/auth";
+import { userDetails } from "@/api/auth";
 
 const ManageAccountScreen = ({}) => {
   const colorScheme = useColorScheme() ?? "light";
@@ -65,7 +65,6 @@ const ManageAccountScreen = ({}) => {
 
   //Caluculate height
   const calc_height = height - headerHeight;
-  console.log("height: ", headerHeight);
 
   //Use Forms
   const ManageAccountSchema = AccountSchema;
@@ -87,15 +86,14 @@ const ManageAccountScreen = ({}) => {
     const fetchUserDetails = async () => {
       setLoading(true); // Set loading state to true while fetching
       try {
-        const response = await verifyuser();
-        console.log(response);
+        const response = await userDetails();
         const data = response.data;
 
         setEmail(data.email); // Assuming email is in the response
         setId(data._id);
         setFirstname(data.first_name ?? ""); // Assuming firstName is in the response
         setLastname(data.last_name ?? ""); // Assuming lastName is in the response
-        setPhonenumber(data.phonenumber ?? ""); // Assuming phoneNumber is in the response
+        setPhonenumber(data.phone_number ?? ""); // Assuming phoneNumber is in the response
         setState(data.state ?? ""); // Assuming state is in the response
         setArea(data.area ?? ""); // Assuming area is in the response
         setPincode(data.pincode ?? ""); // Assuming pincode is in the response
@@ -117,7 +115,6 @@ const ManageAccountScreen = ({}) => {
 
   const updateUser = async (data: _IAccount) => {
     try {
-      console.log(data);
       setLoading(true);
       // Load tokens from storage
       const tokens = (await load<_ITokens>(

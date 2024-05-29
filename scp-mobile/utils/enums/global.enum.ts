@@ -10,6 +10,11 @@ enum CenterTypes {
   TYPE_C = "Class C",
 }
 
+enum UserType {
+  CUSTOMER = "Customer",
+  PARK_OWNER = "ParkOwner",
+}
+
 enum Center_Type {
   NEARBY = "nearby-centers",
   POPULAR = "popular-centers",
@@ -34,5 +39,5 @@ enum Center_Filter {
 }
 
 export {
-  Center_Type, Slot_Type, Merged_Types, Center_Filter
+  Center_Type, Slot_Type, Merged_Types, Center_Filter, UserType 
 }

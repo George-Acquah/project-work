@@ -56,8 +56,8 @@ const generateStyles = (colorScheme: 'light' | 'dark') => {
     defaultText: {
       color:
         colorScheme === "light"
-          ? LIGHT_THEME.contentInversePrimary
-          : LIGHT_THEME.contentInversePrimary,
+          ? LIGHT_THEME.contentPrimary
+          : DARK_THEME.contentPrimary,
     },
     destructiveText: {
       color: "#FFFFFF",

@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { initialReservationState } from "../states";
 import {
   RequestReservation,
@@ -66,7 +66,7 @@ const reservationSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAvailableSlots.fulfilled, (state, action) => {
-        console.log(action.payload.data.documents[0])
+        console.log(action.payload.data.documents)
         state.isLoading = false;
         state.error = null;
         state.message = action.payload.message;
@@ -107,6 +107,11 @@ export const { setDuration, setStartTime } = reservationSlice.actions;
 export const selectAvailableSlots = (state: RootState) =>
   state.reservation.availableSlots;
 
+export const selectMemoedAvailableSlots = createSelector(
+  [selectAvailableSlots],
+  (availableSlots) => availableSlots.map((slot) => slot._id)
+);
+
 export const selectStartTIme = (state: RootState) =>
   state.reservation.start_time;
 export const selectDuration = (state: RootState) => state.reservation.duration;
@@ -119,8 +124,10 @@ export const selectIsAvailableSlotsError = (state: RootState) =>
 
 export const selectReservationError = (state: RootState) =>
   state.reservation.reservation_error;
+
 export const selectReservationLoading = (state: RootState) =>
   state.reservation.reservation_loading;
+
 export const selectReservedSlot = (state: RootState) =>
   state.reservation.reservedSlot;
 export default reservationSlice.reducer;

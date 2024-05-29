@@ -1,14 +1,11 @@
 import { keys } from "@/constants/root";
-import { refreshTokens } from "@/features/auth/auth.slice";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { isTokenExpired, getExpiry } from "../functions/shared";
 import { load } from "../functions/storage";
-import { useAppDispatch } from "./useRedux";
 
 const useTokenRotation = () => {
     const [auth, setAuth] = useState<boolean | null>(null);
-    const dispatch = useAppDispatch();
+    const authorization = axios.defaults.headers.common["Authorization"];
 
     const tokens = async () => {
       return (await load(keys.TOKEN_KEY, "json")) as unknown as _ITokens;
@@ -17,16 +14,21 @@ const useTokenRotation = () => {
     useEffect(() => {
       const fetchTokens = async () => {
         try {
-          if (isTokenExpired(await getExpiry(keys.EXP))) {
-            dispatch(refreshTokens());
-            setAuth(true);
-          } else {
-            const { access_token } = await tokens();
+          const { access_token } = await tokens();
+          if (!authorization) {
             if (access_token) {
               axios.defaults.headers.common[
                 "Authorization"
               ] = `Bearer ${access_token}`;
               setAuth(true);
+            } else {
+              setAuth(false);
+            }
+          } else {
+            if (access_token) {
+              setAuth(true);
+            } else {
+              setAuth(false);
             }
           }
         } catch (error) {

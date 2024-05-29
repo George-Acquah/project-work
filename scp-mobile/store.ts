@@ -8,21 +8,9 @@ import rootSlice from "@/features/root.slice";
 import { Reducer, UnknownAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import reservationsSlice from "@/features/reservations/reservations.slice";
 import vehiclesSlice from "@/features/vehicles/vehicles.slice";
-import { _IAuthState, _IBookingState, _ICenters, _IMapState, _IPermission, _IResrvations, _IRoots, _ISlots, _IVehicles } from "./features/types";
+import { _IAuthState, _IBookingState, _ICenters, _IMapState, _IPermission, _IResrvations, _IRoots, _ISessionState, _ISlots, _IVehicles } from "./features/types";
+import sessionSlice from "./features/session/session.slice";
 
-// export const store = configureStore({
-//   reducer: {
-//     auth: authSlice,
-//     booking: bookingsSlice,
-//     map: mapSlice,
-//     center: centersSlice,
-//     vehicle: vehiclesSlice,
-//     slot: slotsSlice,
-//     root: rootSlice,
-//     permission: permissionsSlice,
-//     reservation: reservationsSlice,
-//   },
-// });
 export interface RootState {
   auth: _IAuthState;
   booking: _IBookingState;
@@ -33,6 +21,7 @@ export interface RootState {
   root: _IRoots;
   permission: _IPermission;
   reservation: _IResrvations;
+  session: _ISessionState;
 }
 
 const appReducer = combineReducers({
@@ -45,6 +34,7 @@ const appReducer = combineReducers({
   root: rootSlice,
   permission: permissionsSlice,
   reservation: reservationsSlice,
+  session: sessionSlice
 });
 
 const rootReducer: Reducer = (state: RootState, action: UnknownAction) => {

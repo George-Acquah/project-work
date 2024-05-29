@@ -12,7 +12,8 @@ import { RootState } from "@/store";
 import { _IAuthState } from "../types";
 import { authInitialState } from "../states";
 import { load, remove, save } from "@/utils/functions/storage";
-import { async_remove, async_save } from "@/utils/functions/async-storage";
+import { async_remove, async_save, encryptAndSaveUserType } from "@/utils/functions/async-storage";
+import { UserType } from "@/utils/enums/global.enum";
 
 // Define interfaces for login and register user data
 interface _ILoginUserData {
@@ -23,6 +24,8 @@ interface _ILoginUserData {
 interface _IRegisterUserData {
   email: string;
   password: string;
+  phone_number: string;
+  type: 'owner' | 'customer';
 }
 
 // Define login thunk action creator
@@ -41,7 +44,7 @@ export const login = createAsyncThunk(
 // Define refresh tokens thunk action creator
 export const refreshTokens = createAsyncThunk("auth/refresh", async () => {
   try {
-    const tokens = (await load<_ITokens>(
+    const { refresh_token } = (await load<_ITokens>(
       keys.TOKEN_KEY,
       "json"
     )) as unknown as _ITokens;
@@ -49,12 +52,13 @@ export const refreshTokens = createAsyncThunk("auth/refresh", async () => {
     // Update authorization header for token refresh
     axios.defaults.headers.common[
       "Authorization"
-    ] = `Refresh ${tokens.refresh_token}`;
+    ] = `Refresh ${refresh_token}`;
 
     // Call refresh token API endpoint
     const response = await refreshToken();
     return response;
   } catch (error) {
+    console.log('err: ',error)
     throw error;
   }
 });
@@ -64,7 +68,8 @@ export const register = createAsyncThunk(
   "auth/register",
   async (userData: _IRegisterUserData) => {
     try {
-      const response = await registerUser(userData);
+      const { type, ...params } = userData;
+      const response = await registerUser(params, type);
       return response;
     } catch (error) {
       throw error;
@@ -136,6 +141,8 @@ const authSlice = createSlice({
         save<_ITokens>(keys.TOKEN_KEY, action.payload.data.tokens);
         // Save expiration time to async storage
         async_save<number>(keys.EXP, action.payload.data.tokens.expiresIn);
+        // Save role to async storage
+        encryptAndSaveUserType(action.payload.data.user.userType as UserType);
       })
 
       // Handling failed login
@@ -214,8 +221,9 @@ const authSlice = createSlice({
       })
 
       // Handling successful registration
-      .addCase(register.fulfilled, (state) => {
+      .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false; // Set loading state
+        state.reg_details = action.payload.data
       })
 
       // Handling failed registration

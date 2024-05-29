@@ -36,7 +36,7 @@ interface _ICenterCard {
 }
 const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
   const colorScheme = useColorScheme() ?? "light";
-  const { _id, center_name, location, slots } = center;
+  const { _id, center_name, slots } = center;
   const requestReservationModalRef = useRef<BottomSheetModal>(null);
   const startTime = useAppSelector(selectStartTIme);
   const saved = useAppSelector(selectSavedCenter);
@@ -48,7 +48,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
 
   const handleReservation = async (data: any) => {
     const { duration } = data;
-    const req_href = `/parking-lots/${_id}?start_time=${startTime}&duration=${duration}`;
+    const req_href = `/parking-lots/${_id}/slots/reserve-slot?start_time=${startTime}&duration=${duration}`;
 
     const result = unwrapResult(
       await dispatch(
@@ -108,7 +108,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
           <View style={styles.detailsRow}>
             <TabBarIcon fontProvider={Entypo} name="location" size={16} />
             <Text style={styles.distanceText}>
-              {location.description} mi
+              {center.center_address?.state ?? 20} mi
             </Text>
           </View>
           <View style={styles.detailsRow}>
@@ -121,6 +121,8 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
           </View>
         </View>
       </Pressable>
+
+      {/* Reservation Modal */}
       <CustomBottomSheetModal
         points={["85%", "90%"]}
         index={1}
