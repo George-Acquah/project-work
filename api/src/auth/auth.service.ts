@@ -1,4 +1,4 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   _IPayload,
   _ITokens,
@@ -14,6 +14,7 @@ import {
   getExpirationTime,
   sanitizeUser
 } from 'src/shared/utils/users.utils';
+import { sanitizeLoginUserFn } from 'src/shared/helpers/users.sanitizers';
 
 @Injectable()
 export class AuthService {
@@ -40,10 +41,10 @@ export class AuthService {
     const isValidPassword = await compare(password, user.password);
 
     if (user && isValidPassword) {
-      return sanitizeUser(user);
+      return sanitizeLoginUserFn(user);
     }
 
-    throw new UnauthorizedException('Wrong Password');
+    throw new Error('Wrong Password');
   }
 
   async refreshToken(user: _TSanitizedUser) {
@@ -58,17 +59,17 @@ export class AuthService {
     const access_token = await this.signPayload(
       payload,
       process.env.SECRET_KEY,
-      '2h'
+      '1m'
     );
 
     const u_id = appendRandomTextAndLength(user._id);
     const refresh_token = await this.signPayload(
       payload,
       process.env.REFRESH_KEY,
-      '2d'
+      '5m'
     );
 
-    const expiresIn = getExpirationTime(45);
+    const expiresIn = getExpirationTime(5);
 
     const tokens: _ITokens = {
       access_token,
@@ -97,17 +98,17 @@ export class AuthService {
     const access_token = await this.signPayload(
       payload,
       process.env.SECRET_KEY,
-      '10h'
+      '1m'
     );
 
     const u_id = appendRandomTextAndLength(user._id);
     const refresh_token = await this.signPayload(
       payload,
       process.env.REFRESH_KEY,
-      '2d'
+      '5m'
     );
 
-    const expiresIn = getExpirationTime(5);
+    const expiresIn = getExpirationTime(1);
 
     const tokens: _ITokens = {
       access_token,
@@ -135,12 +136,4 @@ export class AuthService {
 
     return sanitizeUser(user);
   }
-
-  // async verifyUser(token: string) {
-  //   const payload = await this.verifyToken(token, process.env.SECRET_KEY);
-  //   console.log(payload);
-  //   const user = await this.findByPayload(payload);
-
-  //   return sanitizeUser(user);
-  // }
 }

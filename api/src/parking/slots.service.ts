@@ -6,8 +6,9 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
+import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
 import { SlotTypes } from 'src/shared/enums/slots.enum';
 import {
   _ICloudRes,
@@ -17,7 +18,7 @@ import {
 import { _ILookup } from 'src/shared/interfaces/responses.interface';
 import {
   _IAddSlot,
-  _IAddSlotAddress,
+  _IAddress,
   _IDbSlot,
   _IDbSlotAddress,
   _IDbSlotData,
@@ -25,7 +26,6 @@ import {
   _INewSlot,
   _IReserveSlot,
   _ISlot,
-  _ISlotAddress,
   _ISlotData
   // _ISlotReservation,
 } from 'src/shared/interfaces/slot.interface';
@@ -37,12 +37,17 @@ import { Slot } from 'src/shared/schemas/slot.schema';
 import {
   determineSlotType,
   sanitizeSlot,
-  sanitizeSlotAddress,
   sanitizeSlotData,
   sanitizeSlotImages,
   sanitizeSlots
 } from 'src/shared/utils/slots.utils';
 
+export interface _ITest {
+  _id: string;
+  latitude: number;
+  longitude: number;
+  city: string;
+}
 @Injectable()
 export class SlotService {
   private logger = new Logger(SlotService.name);
@@ -96,23 +101,7 @@ export class SlotService {
           size,
           { isAvailable: false }
         );
-      // const availableSlots =
-      //   await this.aggregationService.fetchAvailableDocuments(
-      //     this.slotModel,
-      //     center_id,
-      //     startTime,
-      //     endTime,
-      //     currentPage,
-      //     size,
-      //     { center_id, isAvailable: false }
-      //   );
 
-      // const populatedAvailableSlots = await this.populateSlotsFields(
-      //   availableSlots.documents,
-      //   'slot_data slot_images'
-      // );
-
-      // return sanitizeSlots(populatedAvailableSlots);
       return availableSlots;
     } catch (error) {
       throw new Error(error.message || 'Error finding available slots');
@@ -292,22 +281,38 @@ export class SlotService {
     }
   }
 
-  async addSlotAddress(data: _IAddSlotAddress): Promise<_ISlotAddress> {
+  async createSlotAddress(slot_id: string, data: _IAddress): Promise<_ITest> {
     try {
-      const { slot_id } = data;
+      console.log(slot_id, data);
+      const slotId = '656482912cbf180fcb3aaf4d';
 
-      const slot = await this.slotModel.findById(new Types.ObjectId(slot_id));
+      const uniqueFields = { _id: slotId };
+      const project_fields = ['city', 'latitude', 'longitude'];
+      const err_helper = ['slot', 'slot address'];
+      // Create address near Elmina Castle
+      const address_sample = {
+        city: 'Elmina',
+        latitude: 5.085,
+        longitude: -1.351,
+        state: 'Central Region',
+        country: 'Ghana',
+        slot_id: slotId
+      };
 
-      if (!slot) {
-        throw new NotFoundException(
-          'Can not add an address to a non existent parking slot'
-        );
-      }
+      // Create slot address in the database
+      const address = await this.aggregationService.createDocumentPipeline<
+        _IDbSlotAddress,
+        _ITest
+      >(
+        this.slotAddressModel,
+        project_fields,
+        address_sample,
+        uniqueFields,
+        err_helper,
+        CREATE_PIPELINE.SLOT
+      );
 
-      // Create center data in the database
-      const address = await this.slotAddressModel.create(data);
-
-      return sanitizeSlotAddress(address);
+      return address;
     } catch (error) {
       throw new Error(error.message || 'Could not add address');
     }

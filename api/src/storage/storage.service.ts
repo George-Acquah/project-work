@@ -24,7 +24,6 @@ export class StorageService {
       this.configService.get('GCPStorageConfig');
 
     this.tokenPath = getPath(path);
-    console.debug(this.tokenPath);
 
     // this.url = url;
 

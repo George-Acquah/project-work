@@ -12,11 +12,14 @@ interface _IDbProfile extends Document {
   city: string | null;
   state: string | null;
   pinCode: string | null;
+  user: string;
 }
 interface _ICustomer extends Document<Types.ObjectId> {
   email: string;
   userType: UserType;
+  phone_number: string;
   readonly password: string;
+  isVerified: boolean;
   profile: _IDbProfile;
   image: _IDbUserImage;
   vehicles: _IDbVehicle[];
@@ -26,6 +29,7 @@ interface _IParkOwner extends Document<Types.ObjectId> {
   email: string;
   userType: UserType;
   image: _IDbUserImage;
+  isVerified: boolean;
   readonly password: string;
   profile: _IDbProfile;
   centers: _IParkingCenter[]; // to be changed to parking center interface
@@ -41,11 +45,14 @@ interface _ISanitizedProfile {
   city: string | null;
   state: string | null;
   pinCode: string | null;
+  user: string;
 }
 interface _ISanitizedCustomer {
   _id: string;
   email: string;
+  phone_number: string;
   userType: UserType;
+  isVerified: boolean;
   image?: _IUserImage;
   profile: _ISanitizedProfile;
   vehicles: _IVehicle[];
@@ -57,6 +64,7 @@ interface _ISanitizedParkOwner {
   email: string;
   userType: UserType;
   image?: _IUserImage;
+  isVerified: boolean;
   profile: _ISanitizedProfile;
   centers: _IParkingCenter[]; // to be changed to parking center interface
   rankings: _IOwnerRankings;
@@ -67,11 +75,11 @@ interface _ICustomerLocation {
   current_loc: string;
 }
 
-interface _ICustomerRankings {
+export interface _ICustomerRankings {
   id: string;
 }
 
-interface _IOwnerRankings {
+export interface _IOwnerRankings {
   id: string;
 }
 
@@ -88,13 +96,16 @@ interface _ICommonUser extends Document<Types.ObjectId> {
   email: string;
   userType: UserType;
   readonly password: string;
+  isVerified: boolean;
   profile: _IDbProfile;
   image: _IDbUserImage;
+  phone_number: string;
 }
 
 interface _ISanitizedCommonUser {
   _id: string;
   userType: UserType;
+  isVerified: boolean;
   email: string;
   profile: _ISanitizedProfile;
   image?: _IUserImage;

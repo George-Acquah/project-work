@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
@@ -16,8 +16,8 @@ export class RefreshStrategy extends PassportStrategy(
       ignoreExpiration: false,
       secretOrKey: process.env.REFRESH_KEY,
       jwtFromRequest: (request: Request) => {
-        console.log(request.headers);
         const authHeader = request.headers.authorization;
+        console.log(authHeader);
         if (authHeader && authHeader.split(' ')[0] === 'Refresh') {
           return authHeader.split(' ')[1];
         }
@@ -30,7 +30,7 @@ export class RefreshStrategy extends PassportStrategy(
     const user = await this.authService.verifyUser(payload);
 
     if (!user) {
-      throw new Error('Reservation with ID not found');
+      throw new NotFoundException('User not found');
     }
 
     return user;

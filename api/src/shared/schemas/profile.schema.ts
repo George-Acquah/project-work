@@ -1,7 +1,8 @@
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { UserConstraints } from '../enums/users.enum';
 import { AddressConstraints } from '../enums/general.enum';
+import { User } from './user.schema';
 
 export type ProfileDocument = HydratedDocument<Profile>;
 
@@ -57,6 +58,9 @@ export class Profile {
       AddressConstraints.PINCODE_MAXLENGTH
     ];
   };
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
+  user: User;
 }
 
 @Schema()

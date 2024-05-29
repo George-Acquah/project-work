@@ -1,13 +1,13 @@
 enum DbUserType {
   CUSTOMER = 'customers',
-  PARK_OWNER = 'parkowners',
+  PARK_OWNER = 'parkowners'
 }
 
 enum UserType {
   CUSTOMER = 'Customer',
   PARK_OWNER = 'ParkOwner',
   ADMIN = 'Admin',
-  MODERATOR = 'Moderator>',
+  MODERATOR = 'Moderator'
 }
 
 enum UserConstraints {
@@ -22,7 +22,7 @@ enum UserConstraints {
   FIRSTNAME_MAXVALUE = 50,
 
   LASTNAME_MAXLENGTH = 'Max supported length of lastname is 50',
-  LASTNAME_MAXVALUE = 50,
+  LASTNAME_MAXVALUE = 50
 }
 
 export { UserConstraints, DbUserType, UserType };

@@ -18,6 +18,7 @@ import {
   _IDbCenterImage,
   _IDbVehicleImage
 } from 'src/shared/interfaces/images.interface';
+import { _ILookup } from 'src/shared/interfaces/responses.interface';
 import {
   _IAddCenterData,
   _IAddParkingCenter,
@@ -470,6 +471,43 @@ export class ParkingCenterService {
       return sanitizeCenterAddress(address);
     } catch (error) {
       throw new Error(error.message || 'Could not add address');
+    }
+  }
+
+  //Aggregation
+  async getSingleParkingCenterByAggregatiom(id: string): Promise<_IParkingCenter> {
+    try {
+            const lookups: _ILookup[] = [
+              {
+                from: 'slots',
+                as: 'slots',
+                foreignField: 'center_id'
+              },
+              {
+                from: 'centerimages',
+                as: 'center_images',
+                foreignField: 'center_id'
+              },
+              {
+                from: 'centeraddresses',
+                as: 'center_address',
+                foreignField: 'center_id'
+              }
+            ];
+            const unwind_fields = ['center_address'];
+      const parkingCenter = await this.aggregationService.dynamicDocumentsPipeline<_IDbParkingCenter, _IParkingCenter>(
+        this.parkingCenterModel,
+        [''],
+        { _id: id },
+        lookups,
+        unwind_fields
+      )
+
+      return parkingCenter;
+      // return sanitizeCenter(populatedCenter);
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
     }
   }
 }

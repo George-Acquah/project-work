@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   Logger,
+  NotAcceptableException,
   NotFoundException,
   UnauthorizedException
 } from '@nestjs/common';
@@ -31,10 +32,17 @@ import {
 } from 'src/shared/interfaces/images.interface';
 import { AggregationService } from 'src/aggregation.service';
 import { TransactionService } from 'src/transaction.service';
+import {
+  _INewProfile,
+  _IRegisterResponse
+} from 'src/shared/interfaces/refactored/user.interface';
+import { sanitizeUserFn } from 'src/shared/helpers/users.sanitizers';
+import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
 
 @Injectable()
 export class UsersService {
   private logger = new Logger(UsersService.name);
+  private projectCreateFields = ['email', 'userType'];
   constructor(
     @InjectModel('User') private userModel: Model<_TUser>,
     @InjectModel(Customer.name) private customerModel: Model<_ICustomer>,
@@ -92,110 +100,105 @@ export class UsersService {
     }
   }
 
-  async newCustomer(userDetails: CreateUserDto): Promise<_ICustomer> {
-    const profile = new this.profileModel();
-    const newUser = new this.customerModel(userDetails);
-
-    await profile.save();
-    newUser.profile = profile;
-
-    return newUser;
-  }
-
-  async newOwner(userDetails: CreateUserDto): Promise<_IParkOwner> {
-    const profile = new this.profileModel();
-    const newUser = new this.parkOwnerModel(userDetails);
-
-    await profile.save();
-    newUser.profile = profile;
-
-    return newUser;
-  }
-
   async createCustomer(
     userDetails: CreateUserDto
-  ): Promise<_ISanitizedCustomer> {
-    const { email } = userDetails;
-    const existingCustomer = await this.userModel.findOne({ email });
+  ): Promise<_IRegisterResponse> {
+    const uniqueFields = { email: userDetails.email };
 
-    if (existingCustomer) {
-      throw new ConflictException('Email is already used');
-    }
+    const sanitizedCustomer =
+      await this.aggregationService.createDocumentPipeline<
+        _ICustomer,
+        _IRegisterResponse
+      >(
+        this.customerModel,
+        this.projectCreateFields,
+        userDetails,
+        uniqueFields,
+        ['Email', 'Account'],
+        CREATE_PIPELINE.USER,
+        sanitizeUserFn
+      );
 
-    const newCustomer = await this.newCustomer(userDetails);
-
-    // Save the new user to the database
-    await newCustomer.save();
-
-    // Sanitize and return the user
-    return sanitizeUser(newCustomer) as _ISanitizedCustomer;
+    await this.createProfile(sanitizedCustomer._id);
+    return sanitizedCustomer;
   }
 
-  async createOwner(userDetails: CreateUserDto): Promise<_ISanitizedParkOwner> {
-    const { email } = userDetails;
-    this.logger.log('email: ', email);
-    const existingOwner = await this.userModel.findOne({ email });
-    this.logger.log('user: ', existingOwner);
-
-    if (existingOwner) {
-      throw new ConflictException('Email is already used');
+  async createProfile(user_id: string) {
+    try {
+      const existingProfile = await this.profileModel.findOne({
+        user: user_id
+      });
+      if (existingProfile) {
+        throw new ConflictException(`This user already has a profile exists`);
+      }
+      const profile = new this.profileModel({ user: user_id });
+      await profile.save();
+    } catch (error) {
+      throw new Error(error.message);
     }
+  }
 
-    const newOwner = await this.newOwner(userDetails);
+  async createOwner(userDetails: CreateUserDto): Promise<_IRegisterResponse> {
+    const uniqueFields = { email: userDetails.email };
 
-    // Save the new user to the database
-    await newOwner.save();
-
-    // Sanitize and return the user
-    return sanitizeUser(newOwner) as _ISanitizedParkOwner;
+    const sanitizedOwner = await this.aggregationService.createDocumentPipeline<
+      _IParkOwner,
+      _IRegisterResponse
+    >(
+      this.parkOwnerModel,
+      this.projectCreateFields,
+      userDetails,
+      uniqueFields,
+      ['Email', 'Account'],
+      CREATE_PIPELINE.USER,
+      sanitizeUserFn
+    );
+    await this.createProfile(sanitizedOwner._id);
+    return sanitizedOwner;
   }
 
   async findByLogin(loginData: LoginUserDto) {
     const { email, password } = loginData;
     try {
       const user = await this.userModel.findOne({ email });
+      if (!user) {
+        throw new NotFoundException('Incorrect email');
+      }
 
       if (await bcrypt.compare(password, user.password)) {
         return sanitizeUser(user);
       } else {
         // Passwords don't match, throw UnauthorizedException
-        throw new UnauthorizedException('Incorrect username or password');
+        throw new NotAcceptableException('Incorrect password');
       }
     } catch (error) {
       // Entity not found or other error occurred, throw appropriate error
-      throw new UnauthorizedException('Incorrect username or password');
+      throw new Error(error.message);
     }
   }
 
   /* used by  modules to search user by email */
   async findUser(email: string): Promise<_TUser> {
-    const user = await this.userModel
-      .findOne({ email })
-      .populate({
-        path: 'image profile vehicles centers',
-        strictPopulate: false,
-        populate: {
-          path: 'images center_images',
-          strictPopulate: false
-        }
-      })
-      .exec();
+    try {
+      const user = await this.userModel
+        .findOne({ email })
+        .populate({
+          path: 'image profile vehicles centers',
+          strictPopulate: false,
+          populate: {
+            path: 'images center_images',
+            strictPopulate: false
+          }
+        })
+        .exec();
 
-    if (!user) {
-      throw new Error(`User with email ${email} does not exist.`);
-    } else {
-      return user;
-    }
-  }
-
-  /* used by  modules to search user by email */
-  async findUserById(userId: string) {
-    const user: _TUser = await this.userModel.findOne({ _id: userId }).exec();
-
-    if (!user) {
-      throw new Error(`User does not exist.`);
-    } else {
-      return user;
+      if (!user) {
+        throw new NotFoundException(`User with email ${email} does not exist.`);
+      } else {
+        return user;
+      }
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 
@@ -402,6 +405,54 @@ export class UsersService {
     } catch (error) {
       console.error('Database Error:', error);
       throw new Error('Failed to fetch applicants.');
+    }
+  }
+
+  async fetchUserProfile(user_id: string, extra: boolean) {
+    try {
+      const user = await this.userModel
+        .findById(new Types.ObjectId(user_id))
+        .populate({
+          path: 'image',
+          strictPopulate: false
+        })
+        .exec();
+
+      if (!user) {
+        throw new NotFoundException('This user does not exist');
+      }
+
+      const profile = await this.aggregationService.fetchDocumentPipeline<
+        _IDbProfile,
+        _INewProfile
+      >(
+        this.profileModel,
+        [
+          'first_name',
+          'last_name',
+          'contact_no',
+          'area',
+          'city',
+          'state',
+          'pinCode'
+        ],
+        { user: user_id },
+        'user profile'
+      );
+
+      if (extra) {
+        return {
+          ...profile,
+          _id: user._id.toString(),
+          user_image: user?.image?.file_id ?? null,
+          phone_number: user.phone_number,
+          email: user.email
+        };
+      }
+
+      return profile;
+    } catch (error) {
+      throw new Error(error.message);
     }
   }
 

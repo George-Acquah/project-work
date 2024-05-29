@@ -1,8 +1,11 @@
 import { UserType } from '../enums/users.enum';
 import { _IDbUserImage, _IUserImage } from '../interfaces/images.interface';
+import { _IParkingCenter } from '../interfaces/slot.interface';
 import {
   _ICustomer,
+  _ICustomerRankings,
   _IDbProfile,
+  _IOwnerRankings,
   _IParkOwner,
   _ISanitizedCustomer,
   _ISanitizedParkOwner,
@@ -33,20 +36,26 @@ function sanitizeProfile(profile: _IDbProfile): _ISanitizedProfile {
     area: profile.area || null,
     city: profile.city || null,
     state: profile.state || null,
-    pinCode: profile.pinCode || null
+    pinCode: profile.pinCode || null,
+    user: profile.user
   };
 }
 
 export function sanitizeUser(user: any): _TSanitizedUser {
   if (user.userType === UserType.CUSTOMER) {
-    const { _id, email, profile, userType, rankings } = user as _ICustomer;
+    const { _id, email, phone_number, userType, isVerified } =
+      user as _ICustomer;
     const image = user?.image as _IDbUserImage;
     const vehicles = user?.vehicles as _IDbVehicle[];
+    const profile = user?.profile as _IDbProfile;
+    const rankings = user?.rankings as _ICustomerRankings;
     const sanitizedUser: _ISanitizedCustomer = {
       _id: _id.toString(),
       email,
       userType,
-      profile: sanitizeProfile(profile),
+      isVerified,
+      phone_number,
+      profile: profile ? sanitizeProfile(profile) : null,
       vehicles: vehicles ? sanitizeVehicles(vehicles) : [],
       rankings,
       image: image ? sanitizeUserImage(image) : null
@@ -54,14 +63,17 @@ export function sanitizeUser(user: any): _TSanitizedUser {
     return sanitizedUser;
   }
 
-  const { _id, email, profile, userType, centers, rankings } =
-    user as _IParkOwner;
+  const { _id, email, userType, isVerified } = user as _IParkOwner;
   const image = user?.image;
+  const profile = user?.profile as _IDbProfile;
+  const rankings = user?.rankings as _IOwnerRankings;
+  const centers = user?.centers as _IParkingCenter[];
   const sanitizedUser: _ISanitizedParkOwner = {
     _id: _id.toString(),
     email,
     userType,
-    profile: sanitizeProfile(profile),
+    isVerified,
+    profile: profile ? sanitizeProfile(profile) : null,
     centers,
     rankings,
     image: image ? sanitizeUserImage(image) : null
@@ -91,17 +103,6 @@ export function appendRandomTextAndLength(parameter: string) {
   const { text, length } = generateRandomTextAndLength();
   return `${text}/${parameter}%${length}`;
 }
-
-// export const getMoment = (duration: number) => {
-//   const currentTime = moment();
-//   console.log('moment on server: ', currentTime.valueOf());
-
-//   const futureTime = currentTime.add(duration, 'minutes');
-
-//   const expiresIn = futureTime.valueOf();
-
-//   return expiresIn;
-// };
 
 function getExpirationTime(minutes: number) {
   const currentTime = new Date().getTime();

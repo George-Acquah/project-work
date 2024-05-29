@@ -9,6 +9,11 @@ enum SORT {
   ASCENDING = 'ascending'
 }
 
+enum CREATE_PIPELINE {
+  USER = 'user',
+  SLOT = 'slot'
+}
+
 enum AddressConstraints {
   CONTACTNO_MAXLENGTH = 'Max supported length of contact is 10',
   CONTACTNO_MAXVALUE = 10,
@@ -61,5 +66,6 @@ export {
   AddressConstraints,
   SlotConstraints,
   VehicleConstraints,
-  SORT
+  SORT,
+  CREATE_PIPELINE
 };

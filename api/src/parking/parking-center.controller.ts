@@ -27,8 +27,8 @@ import { ReservationRequestDto } from './dtos/reservation-requests.dto';
 import { _IAddCenterAddress, _IReserveSlot } from 'src/shared/interfaces/slot.interface';
 import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 import { TransformDateInterceptor } from 'src/shared/interceptors/transform-date.interceptor';
+import { CreateSlotAddressDto } from './dtos/create-slot-address.dto';
 
-@UseGuards(JwtAuthGuard)
 @Controller('owner/parking-center')
 export class ParkingCenterController {
   private logger = new Logger(ParkingCenterController.name);
@@ -157,6 +157,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Put()
   async updateCenter(@Body() data: any) {
     try {
@@ -169,6 +170,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Post('add-slot/:center_id')
   async addSlot(
     @UploadedFiles(
@@ -207,6 +209,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Put('update-slot')
   async updateSlot(@Body() data: any) {
     try {
@@ -219,6 +222,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Post('add-center-image/:center_id')
   async addParkingCenterImage(
     @UploadedFiles(
@@ -246,6 +250,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Post('add-slot-image/:slot_id')
   async addSlotImage(
     @UploadedFiles(
@@ -272,6 +277,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Post('add-slot-data')
   async addSlotData(@Body() data: any) {
     try {
@@ -284,6 +290,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Put('update-slot-data')
   async updateSlotData(@Body() data: any) {
     try {
@@ -299,8 +306,9 @@ export class ParkingCenterController {
   @Get(':center_id')
   async getParkingCenter(@Param('center_id') centerId: string) {
     try {
-      const center = await this.parkingService.getSingleParkingCenter(centerId);
       this.logger.error(`Get A Parking Center: ${centerId}`);
+      const center =
+        await this.parkingService.getSingleParkingCenterByAggregatiom(centerId);
       return new ApiResponse(200, 'Fetched Center Successfully', center);
     } catch (error) {
       this.logger.error(`Error getting parking center: ${error.message}`);
@@ -321,6 +329,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Post(':center_id/add-address')
   async addCenterAddress(
     @Param('center_id') center_id: string,
@@ -340,6 +349,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Put(':center_id/update-address')
   async updateCenterAddress(
     @Param('center_id') center_id: string,
@@ -363,6 +373,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':center_id/available-slots')
   @UseInterceptors(TransformDateInterceptor)
   async requestReservation(
@@ -417,6 +428,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(ParkingCenterGuard)
   @Post(':center_id/slots/:slot_id/reserve-slot')
   async reserveSlot(
     @Param('center_id') center_id: string,
@@ -445,6 +457,30 @@ export class ParkingCenterController {
       );
     } catch (error) {
       this.logger.error(`Error getting slot bookings: ${error.message}`);
+      return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
+
+  @UseGuards(ParkingCenterGuard)
+  @Post(':center_id/slots/:slot_id/add-address')
+  async addSlotAddress(
+    @Param('center_id') center_id: string,
+    @Param('slot_id') slot_id: string,
+    @Body() data: CreateSlotAddressDto
+  ) {
+    try {
+      this.logger.error(`Add slot address: ${center_id} ${slot_id}`);
+
+      const response = await this.slotService.createSlotAddress(slot_id, data);
+      this.logger.warn(response);
+
+      return new ApiResponse(
+        200,
+        'You have successfully reserved this slot',
+        response
+      );
+    } catch (error) {
+      this.logger.error(`${error.message}`);
       return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
@@ -482,6 +518,7 @@ export class ParkingCenterController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':center_id/slots/:slot_id/data')
   async getSlotData(
     @Param('center_id') centerId: string,
