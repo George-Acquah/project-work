@@ -412,16 +412,6 @@ const addCenterDetails: _ICommonInputComp[] = [
     disabled: false,
     tooltip: false,
   },
-  // {
-  //   id: "description",
-  //   placeholder: "Enter Description For Center",
-  //   label: "Description",
-  //   icon: KeyIcon,
-  //   type: "text",
-  //   required: true,
-  //   mt: true,
-  //   minLenght: 4,
-  // },
 ];
 
 const requestReservationDetails: _ILoginInputComp[] = [
