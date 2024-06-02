@@ -8,7 +8,6 @@ import Button from "@/components/common/button";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { text_colors } from "./styles";
 import { AUTH_MODALS } from "@/constants/root";
-import { router } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectAuthLoading } from "@/features/auth/auth.slice";

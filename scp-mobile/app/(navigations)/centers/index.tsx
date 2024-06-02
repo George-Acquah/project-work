@@ -17,6 +17,7 @@ import useRoles from "@/utils/hooks/useRoles.hook";
 import { FontAwesome } from "@expo/vector-icons";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { UserType } from "@/utils/enums/global.enum";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface _ISearchParams extends SearchParamsKeys {
   centers: string;
@@ -54,7 +55,7 @@ const ParkingCentersScreen = () => {
   }, [center, pageSize, center_type]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View>
         <Text
           style={{
@@ -121,7 +122,7 @@ const ParkingCentersScreen = () => {
           onPress={() => router.navigate("/parking-lots/add")}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

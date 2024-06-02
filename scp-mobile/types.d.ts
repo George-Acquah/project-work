@@ -2,6 +2,8 @@ interface _IApiConfig<T = any> {
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   data?: T | null;
+  toast?: boolean;
+  callbackUrl?: string;
   // headers?: _IAxiosHeaders;
 }
 
@@ -59,6 +61,11 @@ interface _ICenterData {
   center_id: string;
 }
 
+interface _ICenterDetailsParams {
+  [key: string]: string;
+  center_id: string;
+}
+
 interface _ICenterParams {
   centers: string;
   currentPage: number;
@@ -86,6 +93,10 @@ interface _IFetchRes<T> {
 
 interface _IId {
   id: string;
+}
+
+interface _Item {
+  item: string;
 }
 
 interface _ILoginResponse {
@@ -151,6 +162,12 @@ interface _ISlot {
   center_id: string;
 }
 
+interface _ISlotDetailsParams {
+  [key: string]: string;
+  center_id: string;
+  slot_id: string;
+}
+
 interface _ISlotAddress extends _IAddress {
   center_id: string;
 }
@@ -205,6 +222,12 @@ interface _ITipsData {
   title: string;
   description: string;
   image: string;
+}
+
+interface _IToast {
+  id: string;
+  message: string;
+  type: "success" | "error" | "info" | "warning";
 }
 
 interface _ITokens {

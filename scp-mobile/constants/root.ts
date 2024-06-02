@@ -20,6 +20,9 @@ const AXIOS_ERRORS = {
   NETWORK_ERROR: "Network Error",
 }
 
+const SHOW_TOAST = "x-show-toast";
+const SCREEN_ROUTE = "Screen-Route";
+
 const tipsData: _ITipsData[] = [
   {
     title: "Find Parking Easily",
@@ -101,5 +104,7 @@ export {
   pathname_helper,
   AUTH_MODALS,
   ACCOUNT_MODALS,
-NAVIGATION_MODALS,
+  NAVIGATION_MODALS,
+  SHOW_TOAST,
+SCREEN_ROUTE
 }

@@ -23,11 +23,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import FormInputs from "../common/input-form";
 import { LoginParams } from "@/api/auth";
+import { showErrorModal } from "@/features/error/error.slice";
 
 interface _ILogin {
+  callbackUrl: string | undefined;
   setSelectedScreen: Dispatch<SetStateAction<string>>;
 }
-const Login = ({ setSelectedScreen }: _ILogin) => {
+const Login = ({ setSelectedScreen, callbackUrl }: _ILogin) => {
   const phoneNumberRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
@@ -56,10 +58,13 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
       );
       const user = unwrapResult(result);
       if (user && user.data.tokens) {
-        router.replace("/");
+        callbackUrl !== undefined
+          ? router.replace(callbackUrl)
+          : router.replace("/");
       }
     } catch (error: any) {
-      Alert.alert(error.message);
+      dispatch(showErrorModal({ message: error.message, button_label: 'Close'}));
+      // Alert.alert(error.message);
     }
   };
 
@@ -194,7 +199,6 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            color: SHARED_COLORS.gray50,
           }}
           type="opacity"
           onPress={handleSubmit(handleLogin)}

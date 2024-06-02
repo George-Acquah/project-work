@@ -5,13 +5,28 @@ import { Image } from "react-native";
 import { FONTS } from "@/constants/fonts";
 import { SIZES } from "@/constants/styles";
 import { text_colors } from "../auth/styles";
+import { Entypo } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
+import { SHARED_COLORS } from "@/constants/Colors";
+
 
 interface _INoItemFound {
   description: string;
+  title?: string;
 }
-const NoItemFound = ({ description }: _INoItemFound) => {
+const NoItemFound = ({ description, title }: _INoItemFound) => {
+  const colorScheme = useColorScheme() ?? "light";
+
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+      }}
+    >
       {/* Success Image */}
       <Image
         source={images.empty}
@@ -28,7 +43,7 @@ const NoItemFound = ({ description }: _INoItemFound) => {
         }}
         {...text_colors.title}
       >
-        No item found
+        {title ?? "No item found"}
       </Text>
 
       {/* Description */}
@@ -42,6 +57,25 @@ const NoItemFound = ({ description }: _INoItemFound) => {
       >
         {description}
       </Text>
+
+      <Entypo
+        name="chevron-left"
+        size={20}
+        color={colorScheme === "light" ? "white" : "black"}
+        style={{
+          padding: 10,
+          backgroundColor:
+            colorScheme === "light"
+              ? SHARED_COLORS.gray700
+              : SHARED_COLORS.gray100,
+          width: 40,
+          position: "absolute",
+          left: 10,
+          top: 35,
+          borderRadius: 30,
+        }}
+        onPress={() => router.back()}
+      />
     </View>
   );
 }

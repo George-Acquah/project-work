@@ -1,30 +1,25 @@
-import React, { useEffect, useRef } from "react";
-import { Modal, View, Text } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { hideModal } from "@/features/session/session.slice";
+import React from "react";
+import { Modal, View } from "react-native";
+import { hideModal, selectCallbackUrl, selectShowSessionModal } from "@/features/session/session.slice";
 import { useRouter } from "expo-router";
 import { AUTH_MODALS } from "@/constants/root";
 import Button from "./common/button";
-import { ThemedText } from "./common/ThemedText";
+import { ThemedText as Text } from "./common/ThemedText";
 import { text_colors } from "./auth/styles";
 import { FONTS } from "@/constants/fonts";
 import { logout } from "@/features/auth/auth.slice";
-import { useAppDispatch } from "@/utils/hooks/useRedux";
-import { SHARED_COLORS } from "@/constants/Colors";
+import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
-import DetachedModal from "./common/detached-modal";
-import { SIZES, height } from "@/constants/styles";
-import BottomSheet from "@gorhom/bottom-sheet";
+import { SIZES } from "@/constants/styles";
+import { generateErrorModalStyles } from "./styles";
 
 const SessionModal = () => {
   const colorScheme = useColorScheme() ?? "light";
+  const styles = generateErrorModalStyles(colorScheme);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const sessionModalRef = useRef<BottomSheet>(null);
-  const { showModal, callbackUrl } = useSelector(
-    (state: RootState) => state.session
-  );
+  const showModal = useAppSelector(selectShowSessionModal);
+  const callbackUrl = useAppSelector(selectCallbackUrl);
 
   console.log(showModal, callbackUrl);
 
@@ -36,59 +31,33 @@ const SessionModal = () => {
     );
   };
 
-  useEffect(() => {
-    if (showModal) {
-      sessionModalRef.current?.expand()
-    }
-  }, [showModal])
-
-    // useEffect(() => {
-    //   sessionModalRef.current?.expand();
-    // }, []);
-
-  return (
-    <DetachedModal
-      ref={sessionModalRef}
-        height={height * 0.6}
-        style={{
-          marginHorizontal: 50,
-          borderRadius: SIZES.radius * 1.5,
-        }}
-        backgroundStyle={{
-          backgroundColor:
-            colorScheme === "light"
-              ? SHARED_COLORS.gray200
-              : SHARED_COLORS.gray700,
-        }}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <View
-          style={{
-            width: 300,
-            padding: 20,
-            backgroundColor:
-              colorScheme === "light"
-                ? SHARED_COLORS.gray200
-                : SHARED_COLORS.gray700,
-            borderRadius: 10,
-          }}
-        >
-          <ThemedText style={{ ...FONTS.h3 }} {...text_colors.title}>
-            Your session has expired.
-          </ThemedText>
-          <ThemedText style={{ ...FONTS.ps3 }} {...text_colors.title}>
-            Please log in again. 
-          </ThemedText>
-          <Button title="Go to Login" onPress={handleLoginRedirect} />
+    return (
+      <Modal visible={showModal} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text
+              style={[styles.errorMessage, { ...FONTS.h3 }]}
+              {...text_colors.title}
+            >
+              Your session has expired.
+            </Text>
+            <Text
+              style={[
+                {
+                  ...FONTS.ps2,
+                  textAlign: "center",
+                  marginBottom: SIZES.padding * 0.4,
+                },
+              ]}
+              {...text_colors.title}
+            >
+              Please log in again.
+            </Text>
+            <Button title="Go to login" onPress={handleLoginRedirect} />
+          </View>
         </View>
-      </View>
-    </DetachedModal>
-  );
+      </Modal>
+    );
 };
 
 export default SessionModal;

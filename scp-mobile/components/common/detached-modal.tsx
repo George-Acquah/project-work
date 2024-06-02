@@ -21,7 +21,7 @@ const DetachedModal = React.forwardRef<Ref, _IDetached>(
           {...props}
           disappearsOnIndex={-1}
           appearsOnIndex={0}
-          opacity={0.3}
+          opacity={0.8}
           pressBehavior="close"
         />
       ),

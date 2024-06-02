@@ -1,15 +1,16 @@
-// src/api/interceptors.ts
 import { load, remove, save } from "@/utils/functions/storage";
-import { keys } from "@/constants/root";
+import { SCREEN_ROUTE, SHOW_TOAST, keys } from "@/constants/root";
 import { async_remove, async_save } from "@/utils/functions/async-storage";
 import axiosInstance from "./root";
 import { store } from "@/store";
 import { showModal } from "@/features/session/session.slice";
+import { addToast } from "@/features/toast/toast.slice";
+import { showErrorModal } from "@/features/error/error.slice";
 
 let isRefreshing = false;
 let flag = false;
 let failedQueue: any[] = [];
-let originalRequestUrl: string | null = null;
+let callbackUrl: string | undefined = undefined;
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
@@ -23,8 +24,30 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
+axiosInstance.interceptors.request.use(
+  (config) => {
+    if (config.headers[SHOW_TOAST]) {
+      config.showToast = config.headers[SHOW_TOAST];
+      delete config.headers[SHOW_TOAST];
+    }
+    // Capture and store the screen route in the config
+    if (config.headers[SCREEN_ROUTE]) {
+      config.callbackUrl = config.headers[SCREEN_ROUTE];
+      delete config.headers[SCREEN_ROUTE];
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 axiosInstance.interceptors.response.use(
   (response) => {
+    if (response.config.showToast) {
+      const successMessage = response.data.message || "Request succeeded!";
+      store.dispatch(addToast({ message: successMessage, type: "success" }));
+    }
     return response;
   },
   async (error) => {
@@ -54,13 +77,15 @@ axiosInstance.interceptors.response.use(
         async_remove(keys.EXP);
         isRefreshing = false;
         flag = false;
-        // Use the stored original request URL
-        store.dispatch(showModal(originalRequestUrl || originalRequest.url));
+        // Use the stored screen route for the modal
+        store.dispatch(
+          showModal(callbackUrl)
+        );
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
-      originalRequestUrl = originalRequest.url; // Store the original request URL
+      callbackUrl = originalRequest.callbackUrl; // Store the original screen route
 
       const tokens = (await load(keys.TOKEN_KEY, "json")) as _ITokens;
       const { refresh_token } = tokens;
@@ -97,8 +122,20 @@ axiosInstance.interceptors.response.use(
       });
     }
 
+    // Handle network error or timeout error
     if (!error.response) {
-      return Promise.reject({ message: "Network error. Please try again." });
+      const errorMessage = error.message.includes("timeout")
+        ? "Network timeout. Please try again."
+        : "Network error. Please check your internet connection.";
+
+      store.dispatch(showErrorModal({ message: errorMessage, button_label: 'Go to Login'}));
+
+      return Promise.reject({ message: errorMessage });
+    }
+
+    if (originalRequest.showToast) {
+      const errorMessage = error.response?.data?.message || "Request failed!";
+      store.dispatch(addToast({ message: errorMessage, type: "error" }));
     }
 
     return Promise.reject(error.response.data);

@@ -1,3 +1,4 @@
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ViewProps } from "react-native";
 
@@ -31,7 +32,7 @@ const Callout: React.FC<CalloutProps> = ({
       <Text style={styles.message}>{message}</Text>
       {onClose && (
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>X</Text>
+          <AntDesign name="closecircle" size={24} color={'white'}/>
         </TouchableOpacity>
       )}
     </View>

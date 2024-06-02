@@ -16,7 +16,7 @@ const useStorageHook = () => {
     }
   };
 
-  const load = async <T>(key: string, type: "json" | "string"): Promise<T | string> => {
+  const load = async <T>(key: string, type: "json" | "string"): Promise<T | string | null> => {
     try {
       const value = await SecureStore.getItemAsync(key);
       if (value) {

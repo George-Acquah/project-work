@@ -1,3 +1,4 @@
+import { Reducer, UnknownAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import authSlice from "@/features/auth/auth.slice";
 import bookingsSlice from "@/features/bookings/bookings.slice";
 import centersSlice from "@/features/centers/centers.slice";
@@ -5,11 +6,12 @@ import slotsSlice from "@/features/slots/parking-slots.slice";
 import mapSlice from "@/features/map/map.slice";
 import permissionsSlice from "@/features/permissions/permissions.slice";
 import rootSlice from "@/features/root.slice";
-import { Reducer, UnknownAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import reservationsSlice from "@/features/reservations/reservations.slice";
 import vehiclesSlice from "@/features/vehicles/vehicles.slice";
-import { _IAuthState, _IBookingState, _ICenters, _IMapState, _IPermission, _IResrvations, _IRoots, _ISessionState, _ISlots, _IVehicles } from "./features/types";
 import sessionSlice from "./features/session/session.slice";
+import toastSlice from "./features/toast/toast.slice";
+import errorSlice from "./features/error/error.slice";
+import { _IAuthState, _IBookingState, _ICenters, _IErrorState, _IMapState, _IPermission, _IResrvations, _IRoots, _ISessionState, _ISlots, _IToastState, _IVehicles } from "./features/types";
 
 export interface RootState {
   auth: _IAuthState;
@@ -22,6 +24,8 @@ export interface RootState {
   permission: _IPermission;
   reservation: _IResrvations;
   session: _ISessionState;
+  toast: _IToastState;
+  error: _IErrorState;
 }
 
 const appReducer = combineReducers({
@@ -34,7 +38,9 @@ const appReducer = combineReducers({
   root: rootSlice,
   permission: permissionsSlice,
   reservation: reservationsSlice,
-  session: sessionSlice
+  session: sessionSlice,
+  toast: toastSlice,
+  error: errorSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: UnknownAction) => {

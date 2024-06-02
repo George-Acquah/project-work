@@ -14,6 +14,11 @@ interface _IRoots extends _IRootState {
   slotsFilter: Center_Filter | null;
 }
 
+
+interface _IToastState {
+  toasts: _IToast[];
+}
+
 interface _IPermission extends _IRootState {
   currentLocation: _IDestination | null
 }
@@ -69,6 +74,7 @@ interface _ISlots extends _IRootState {
 }
 
 interface _IResrvations extends _IRootState {
+  reservations: _ISlotReservation[];
   availableSlots: _ISlot[];
   totalPages: number | null;
   reservedSlot: _ISlotReservation | null;
@@ -87,7 +93,14 @@ interface _IMapState {
 }
 interface _ISessionState {
   showModal: boolean;
-  callbackUrl: string | null;
+  callbackUrl: string | undefined;
 }
 
-export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots, _ISessionState };
+interface _IErrorState {
+  message: string | null;
+  visible: boolean;
+  button_label: undefined | string;
+  description: undefined | string;
+}
+
+export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots, _ISessionState, _IToastState, _IErrorState };

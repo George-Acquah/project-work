@@ -228,6 +228,7 @@ const ParkingCenterForm = ({ center }: { center?: _IParkingCenter }) => {
     setLatitude(45.5);
     setLongitude(-2.98);
   }, 5000); // TODO to be deleted, was just for testing 😀😀
+  
   return (
     <ThemedView>
       <KeyboardAwareScrollView
