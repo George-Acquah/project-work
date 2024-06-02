@@ -13,6 +13,7 @@ export class UploadService {
 
     for (const file of files) {
       const filename = getUniqueFilename(file.originalname);
+      console.log(file.mimetype);
 
       if (file.mimetype === 'application/pdf') {
         uploadedFiles.push(

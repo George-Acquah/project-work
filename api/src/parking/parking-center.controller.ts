@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Controller,
   Logger,
@@ -13,7 +12,7 @@ import {
   UploadedFiles,
   Query,
   ParseIntPipe,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { ParkingCenterService } from './parking-center.service';
 import { SlotService } from './slots.service';
@@ -24,7 +23,10 @@ import { AddCenterDto, AddSlotDto } from './dtos/add-center.dto';
 import { ParkingCenterGuard } from 'src/shared/guards/centers.guard';
 import { UploadService } from 'src/storage/uploads.service';
 import { ReservationRequestDto } from './dtos/reservation-requests.dto';
-import { _IAddCenterAddress, _IReserveSlot } from 'src/shared/interfaces/slot.interface';
+import {
+  _IAddCenterAddress,
+  _IReserveSlot
+} from 'src/shared/interfaces/slot.interface';
 import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 import { TransformDateInterceptor } from 'src/shared/interceptors/transform-date.interceptor';
 import { CreateSlotAddressDto } from './dtos/create-slot-address.dto';
@@ -223,34 +225,6 @@ export class ParkingCenterController {
   }
 
   @UseGuards(ParkingCenterGuard)
-  @Post('add-center-image/:center_id')
-  async addParkingCenterImage(
-    @UploadedFiles(
-      new ParseFilePipe({
-        validators: [
-          // ... Set of file validator instances here
-          new MaxFileSizeValidator({ maxSize: 2000 * 1024 })
-        ]
-      })
-    )
-    files: Express.Multer.File[],
-    @Param() { center_id }: { center_id: string }
-  ) {
-    try {
-      const images = await this.uploadService.uploadFilesToDrive(files);
-      if (images.length < 1) {
-        return new ApiResponse(400, 'No images were uploaded.', {});
-      }
-
-      await this.parkingService.addCenterImages(images, center_id);
-      return new ApiResponse(200, 'Center images added successfully', {});
-    } catch (error) {
-      this.logger.error(`Error adding center image: ${error.message}`);
-      throw error;
-    }
-  }
-
-  @UseGuards(ParkingCenterGuard)
   @Post('add-slot-image/:slot_id')
   async addSlotImage(
     @UploadedFiles(
@@ -326,6 +300,35 @@ export class ParkingCenterController {
     } catch (error) {
       this.logger.error(`Error getting center images: ${error.message}`);
       return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
+
+  @UseGuards(ParkingCenterGuard)
+  @Post(':center_id/add-center-image')
+  async addParkingCenterImage(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          // ... Set of file validator instances here
+          new MaxFileSizeValidator({ maxSize: 2000 * 1024 })
+        ]
+      })
+    )
+    files: Express.Multer.File[],
+    @Param() { center_id }: { center_id: string }
+  ) {
+    try {
+      console.log('entered');
+      const images = await this.uploadService.uploadFilesToDrive(files);
+      if (images.length < 1) {
+        return new ApiResponse(400, 'No images were uploaded.', {});
+      }
+
+      await this.parkingService.addCenterImages(images, center_id);
+      return new ApiResponse(200, 'Center images added successfully', {});
+    } catch (error) {
+      this.logger.error(`Error adding center image: ${error.message}`);
+      throw error;
     }
   }
 
@@ -429,6 +432,7 @@ export class ParkingCenterController {
   }
 
   @UseGuards(ParkingCenterGuard)
+  @UseInterceptors(TransformDateInterceptor)
   @Post(':center_id/slots/:slot_id/reserve-slot')
   async reserveSlot(
     @Param('center_id') center_id: string,
@@ -437,14 +441,14 @@ export class ParkingCenterController {
     @Body() data: ReservationRequestDto
   ) {
     try {
-      this.logger.error(
+      this.logger.warn(
         `Get Slot Images: ${center_id} ${slot_id} ${vehicle_id}`
       );
       const reservation_data: _IReserveSlot = {
         center_id,
         slot_id,
         vehicle_id,
-        start_time: new Date(data.start_time),
+        start_time: data.start_time,
         reservation_duration: data.reservation_duration
       };
       const reservation = await this.slotService.reserveParkingSlot(

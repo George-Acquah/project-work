@@ -31,9 +31,9 @@ import { ParkingCenterStrategy } from './strategies/parking-center.strategy';
     VehicleStrategy,
     VehicleAuthGuard,
     ParkingCenterGuard,
-    ParkingCenterStrategy,
+    ParkingCenterStrategy
   ],
-  exports: [],
+  exports: []
 })
 export class AuthModule {
   constructor() {

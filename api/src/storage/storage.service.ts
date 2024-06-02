@@ -1,6 +1,6 @@
-/* eslint-disable prettier/prettier */
 import { DownloadResponse, Storage, SaveOptions } from '@google-cloud/storage';
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Response } from 'express';
 import { StorageFile } from './storage.config';
 import { _ICloudRes } from 'src/shared/interfaces/images.interface';
 import { ConfigService } from '@nestjs/config';
@@ -13,7 +13,6 @@ export class StorageService {
   private tokenPath: string;
   private cache: Map<string, { url: string; expiresAt: number }>; // In-memory cache for signed URLs
   private cacheExpiry: number; // Cache expiration time in seconds
-  // private url: string;
 
   constructor(private readonly configService: ConfigService) {
     const {
@@ -45,8 +44,7 @@ export class StorageService {
       const isExpired = Date.now() > cachedUrl.expiresAt;
       if (!isExpired) {
         return cachedUrl.url; // Use cached URL if not expired
-      }
-      else {
+      } else {
         this.clearCache(fileName);
       }
     }
@@ -84,7 +82,6 @@ export class StorageService {
       await file.save(buffer, options);
 
       const publicUrl = await this.getSignedUrl(file.name);
-      console.log(publicUrl);
 
       // Optionally, you can store metadata in a database
       const fileInfo: _ICloudRes = {
@@ -122,6 +119,34 @@ export class StorageService {
     return storageFile;
   }
 
+  // Add a new method to stream the image directly
+  async streamFileToResponse(
+    fileName: string,
+    response: Response
+  ): Promise<void> {
+    try {
+      const file = this.storage.bucket(this.bucket).file(fileName);
+
+      // Check if the file exists
+      const [exists] = await file.exists();
+      if (!exists) {
+        throw new BadRequestException('File not found.');
+      }
+
+      // Get the file metadata to set the correct content type
+      const [metadata] = await file.getMetadata();
+      response.set('Content-Type', metadata.contentType);
+
+      // Stream the file to the response
+      file.createReadStream().pipe(response);
+    } catch (error) {
+      console.error('Error streaming file:', error);
+      throw new BadRequestException(
+        error.message || 'Error streaming file. Please try again.'
+      );
+    }
+  }
+
   async getWithMetaData(path: string): Promise<StorageFile> {
     const [bucketObj] = await this.storage
       .bucket(this.bucket)
@@ -147,24 +172,3 @@ export class StorageService {
     this.cache.delete(fileName);
   }
 }
-
-// private getFullFilePath(destination: string, uploadedFile: _IFile): string {
-//   return this.setDestination(destination) + this.setFilename(uploadedFile);
-// }
-
-//   private setDestination(destination: string): string {
-//   let escDestination = '';
-//   escDestination += destination
-//     .replace(/^\.+/g, '')
-//     .replace(/^\/+|\/+$/g, '');
-//   if (escDestination !== '') escDestination = escDestination + '/';
-//   return escDestination;
-// }
-
-// private setFilename(uploadedFile: _IFile): string {
-//   const fileName = parse(uploadedFile.originalname);
-//   return `${fileName.name}-${Date.now()}${fileName.ext}`
-//     .replace(/^\.+/g, '')
-//     .replace(/^\/+/g, '')
-//     .replace(/\r|\n/g, '_');
-// }

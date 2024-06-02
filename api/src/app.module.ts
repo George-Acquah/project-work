@@ -9,6 +9,7 @@ import { RootMongooseModule } from './database/database.config';
 import { UsersModule } from './users/users.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
 import { StorageService } from './storage/storage.service';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { StorageService } from './storage/storage.service';
     AuthModule,
     ParkingModule,
     UsersModule,
-    VehiclesModule
+    VehiclesModule,
+    ImagesModule
   ],
   controllers: [AppController],
   providers: [AppService, StorageService]
