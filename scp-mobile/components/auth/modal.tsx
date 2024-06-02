@@ -31,6 +31,7 @@ type Ref = BottomSheetModal;
 interface _IAuthModal {
   selectedScreen: string;
   usertype: UserType | null;
+  callbackUrl: string | undefined;
   setSelectedScreen: Dispatch<SetStateAction<string>>;
   setUsertype: Dispatch<SetStateAction<UserType | null>>;
   hideModal: () => void;
@@ -42,7 +43,7 @@ interface _IRenderMotiModals {
   num: number;
 }
 const AuthModal = forwardRef<Ref, _IAuthModal>(
-  ({ selectedScreen, usertype, setSelectedScreen, setUsertype, hideModal }, ref) => {
+  ({ selectedScreen, callbackUrl, usertype, setSelectedScreen, setUsertype, hideModal }, ref) => {
     // variables
     const snapPoints = useMemo(() => {
       if (Platform.OS === "ios") return ["93%"];
@@ -145,7 +146,7 @@ const AuthModal = forwardRef<Ref, _IAuthModal>(
           <View style={{ flex: 1 }}>
             {/* LOGIN */}
             <RenderMotiModals screen_type={AUTH_MODALS.LOGIN} num={-100}>
-              <Login setSelectedScreen={setSelectedScreen} />
+              <Login setSelectedScreen={setSelectedScreen} callbackUrl={ callbackUrl } />
             </RenderMotiModals>
 
             {/* SIGN UP */}

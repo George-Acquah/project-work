@@ -11,7 +11,7 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, usePathname } from "expo-router";
 import { bg_colors, text_colors } from "@/components/auth/styles";
 import Button from "@/components/common/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +34,7 @@ import { userDetails } from "@/api/auth";
 
 const ManageAccountScreen = ({}) => {
   const colorScheme = useColorScheme() ?? "light";
+  const url = usePathname();
 
   //Use Image Manager Hook
   // Image Manager Hook
@@ -86,7 +87,7 @@ const ManageAccountScreen = ({}) => {
     const fetchUserDetails = async () => {
       setLoading(true); // Set loading state to true while fetching
       try {
-        const response = await userDetails();
+        const response = await userDetails(url ?? undefined);
         const data = response.data;
 
         setEmail(data.email); // Assuming email is in the response

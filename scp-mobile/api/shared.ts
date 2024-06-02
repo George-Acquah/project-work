@@ -1,3 +1,4 @@
+import { SCREEN_ROUTE, SHOW_TOAST } from "@/constants/root";
 import axiosInstance from "./api.interceptor";
 
 function switchErrRes(
@@ -38,6 +39,10 @@ export async function callApi<T, D = any>(
     const response = await axiosInstance<_IApiResponse<T>>({
       url: config.url,
       method: config.method,
+      headers: {
+        [SHOW_TOAST]: config.toast || undefined, // Only set if truthy
+        [SCREEN_ROUTE]: config.callbackUrl || undefined
+      },
       data: config.data,
       withCredentials: true,
     });
@@ -59,7 +64,6 @@ export async function callApi<T, D = any>(
     }
     return response.data;
   } catch (error) {
-    console.log(error);
     handleApiError(error);
     throw error;
   }

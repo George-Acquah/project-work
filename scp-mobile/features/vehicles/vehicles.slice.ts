@@ -1,5 +1,4 @@
 import {
-  PayloadAction,
   createAsyncThunk,
   createSelector,
   createSlice,

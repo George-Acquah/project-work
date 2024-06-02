@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-export default function ParkingLayout() {
+export default function ParkingCenterImagesLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />

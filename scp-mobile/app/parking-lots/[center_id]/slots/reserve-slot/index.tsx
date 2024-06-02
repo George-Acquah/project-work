@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, usePathname } from "expo-router";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import {
@@ -35,9 +35,9 @@ interface _ICenterParams {
   start_time: string;
 }
 const ReserveSlotScreen = () => {
+  const url = usePathname();
   //Get Params
   const params = useLocalSearchParams<_ICenterParams>();
-  console.log(params);
   const { center_id, duration, start_time } = params;
 
   //Define Color Scheme
@@ -73,13 +73,15 @@ const ReserveSlotScreen = () => {
           start_time: start_date,
           reservation_duration,
           vehicle_id,
+          callbackUrl: url
         })
       )
     );
 
     if (result && result.statusCode === 200) {
-      const req_href = `/reservation/?reservation_id=${result?.data?.reservationId}`;
-      router.push(req_href as any);
+      router.navigate(
+        `/success/?title=${"Your reservation was successful"}&description=${"You have successfully booked your slot. We look forward to having you"}&btnLabel=${"Go to home"}&route=${"/(navigations)/home"}&secBtnLabel=${"View your reservations"}&secRoute=${"/reservations"}`
+      );
     }
   };
 

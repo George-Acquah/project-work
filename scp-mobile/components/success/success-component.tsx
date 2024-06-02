@@ -2,7 +2,7 @@ import { ThemedView as View } from "@/components/common/ThemedView";
 import { ThemedText as Text } from "@/components/common/ThemedText";
 import { FONTS } from "@/constants/fonts";
 import { router } from "expo-router";
-import { Image } from "react-native";
+import { Image, TouchableOpacity } from "react-native";
 import Button from "@/components/common/button";
 import { SIZES } from "@/constants/styles";
 import { SHARED_COLORS } from "@/constants/Colors";
@@ -14,6 +14,8 @@ interface _ISuccess {
   description: string;
   btnLabel: string;
   route: string;
+  secBtnLabel?: string;
+  secRoute?: string;
   action?: string;
 }
 const SuccessComponent = ({
@@ -21,7 +23,9 @@ const SuccessComponent = ({
   description,
   btnLabel,
   route,
-  action = "",
+  action,
+  secBtnLabel,
+  secRoute
 }: _ISuccess) => {
   return (
     <View
@@ -29,7 +33,7 @@ const SuccessComponent = ({
         flex: 1,
         paddingHorizontal: SIZES.padding,
       }}
-      { ...bg_colors.main}
+      {...bg_colors.main}
     >
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         {/* Success Image */}
@@ -64,11 +68,25 @@ const SuccessComponent = ({
         </Text>
       </View>
       {/* Footer */}
+      {secBtnLabel !== undefined && secRoute !== undefined && (
+        <TouchableOpacity
+          onPress={() => {
+            router.navigate(secRoute);
+          }}
+        >
+          <Text
+            style={{ ...FONTS.ps2, textAlign: "center" }}
+            {...text_colors.terms}
+          >
+            {secBtnLabel}
+          </Text>
+        </TouchableOpacity>
+      )}
       <Button
         additionalStyles={{
           borderRadius: SIZES.radius,
           marginTop: SIZES.padding,
-          marginBottom: SIZES.padding
+          marginBottom: SIZES.padding,
         }}
         additionalTextStyles={{
           ...FONTS.l2,
@@ -77,8 +95,9 @@ const SuccessComponent = ({
         title={btnLabel}
         type="opacity"
         onPress={() => {
-          console.log("clicked");
-          router.navigate(`${route}?action=${action}`);
+          action !== undefined
+            ? router.navigate(`${route}?action=${action}`)
+            : router.navigate(route);
         }}
       />
     </View>

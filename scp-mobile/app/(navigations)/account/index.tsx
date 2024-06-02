@@ -109,6 +109,7 @@ const AccountProfileScreen = () => {
         </ThemedView>
       </ThemedView>
 
+      
       <ThemedView style={{ marginVertical: 20, marginHorizontal: 10 }}>
         {mainRoutes.map((route, i) => (
           <Link href={`/(accounts)/${route.route}/` as any} key={i}>
@@ -167,6 +168,7 @@ const AccountProfileScreen = () => {
         ))}
       </ThemedView>
 
+      {/* Log out button */}
       <ThemedView style={{ margin: 20 }}>
         <ThemedView
           style={{

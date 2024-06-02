@@ -14,7 +14,7 @@ interface _IWelcomeParams extends SearchParamsKeys {
 }
 const Welcome = () => {
   const { action, callbackUrl } = useLocalSearchParams<_IWelcomeParams>();
-  console.log(callbackUrl);
+  console.log('callback: ', callbackUrl);
 
   // Modal
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -89,6 +89,7 @@ const Welcome = () => {
           setSelectedScreen={setSelectedScreen}
           setUsertype={setUsertype}
           usertype={usertype}
+          callbackUrl={callbackUrl}
         />
       </MotiView>
     </View>

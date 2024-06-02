@@ -2,6 +2,11 @@ import { useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
+import { keys } from "@/constants/root";
+import { BASE_URL } from "@/api/root";
+import useStorageHook from "./storage.hooks";
+import { useAppDispatch } from "./useRedux";
+import { showModal } from "@/features/session/session.slice";
 
 const secureDir = FileSystem.documentDirectory + "secure/";
 
@@ -12,8 +17,13 @@ const ensureDirExists = async (dirPath: string) => {
   }
 };
 
-const useImageManager = () => {
-  const [images, setImages] = useState<string[]>([]);
+const useImageManager = (callbackUrl?: string) => {
+  const [imagesToUpload, setImagesToUpload] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [libraryLoading, setLibraryLoading] = useState(false);
+  const [captureLoading, setCaptureLoading] = useState(false);
+  const { load, storageError } = useStorageHook();
+  const dispatch = useAppDispatch();
 
   const checkStorageSpace = async () => {
     try {
@@ -32,9 +42,7 @@ const useImageManager = () => {
     }
   };
 
-  const selectImage = async (
-    useLibrary: boolean
-  ) => {
+  const selectImage = async (useLibrary: boolean) => {
     try {
       let result: ImagePicker.ImagePickerResult;
       const options: ImagePicker.ImagePickerOptions = {
@@ -45,12 +53,16 @@ const useImageManager = () => {
       };
 
       if (useLibrary) {
+        setLibraryLoading(true);
         result = await ImagePicker.launchImageLibraryAsync(options);
       } else {
+        setCaptureLoading(true);
         await ImagePicker.requestCameraPermissionsAsync();
         result = await ImagePicker.launchCameraAsync(options);
       }
 
+      setLibraryLoading(false);
+      setCaptureLoading(false);
       if (!result.canceled) {
         await checkStorageSpace(); // Check storage before saving
         return await moveToSecureStorage(result.assets[0].uri);
@@ -91,6 +103,7 @@ const useImageManager = () => {
       }
     }
 
+    setImagesToUpload([...imagesToUpload, newUri]);
     return newUri;
   };
 
@@ -98,21 +111,60 @@ const useImageManager = () => {
     try {
       await SecureStore.deleteItemAsync(uri.split("/").pop() ?? ""); // Delete from secure storage
       await FileSystem.deleteAsync(uri); // Delete local file if exists (optional)
-      setImages(images.filter((image) => image !== uri));
+      setImagesToUpload(imagesToUpload.filter((image) => image !== uri));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const uploadImage = async (uri: string) => {
-    // Implement your upload logic here (not shown in this hook)
-    // Utilize `fetch` with `FormData` or a library like Axios
-    // After successful upload, consider deleting the local copy:
-    // deleteLocalCopy(uri);
+  const uploadImage = async <T>(
+    url: string,
+    method: FileSystem.FileSystemAcceptedUploadHttpMethod | undefined,
+    fileUri: string,
+    data?: Record<keyof T, string>
+  ) => {
+    try {
+      console.log("hello");
+      setLoading(true);
+      // Load tokens from storage
+      const tokens = (await load<_ITokens>(
+        keys.TOKEN_KEY,
+        "json"
+      )) as unknown as _ITokens;
+
+      const response = await FileSystem.uploadAsync(
+        `${BASE_URL}${url}`,
+        fileUri,
+        {
+          httpMethod: method,
+          uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+          parameters: data ?? undefined,
+          fieldName: "files",
+          headers: {
+            Authorization: `Bearer ${tokens.access_token}`,
+          },
+        }
+      );
+
+      console.log(response);
+      if (response.status === 401) {
+        dispatch(showModal(callbackUrl ?? undefined));
+      }
+      deleteImage(fileUri); 
+      return response;
+    } catch (error) {
+      console.log("An unexpected error occured: ", error);
+      console.log("storage error: ", storageError);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
-    images, // No need to store images in state anymore
+    imagesToUpload, // No need to store images in state anymore
+    libraryLoading,
+    captureLoading,
+    loading,
     selectImage,
     moveToSecureStorage,
     deleteImage,

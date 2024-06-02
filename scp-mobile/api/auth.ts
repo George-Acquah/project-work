@@ -5,7 +5,6 @@ const AUTH_BASE_URL = `auth`;
 const USER_BASE_URL = `users`;
 // const AUTH_BASE_URL = `https://api.developbetterapps.com`;
 
-
 export interface LoginParams {
   email: string;
   password: string;
@@ -39,7 +38,10 @@ export async function loginUser(params: LoginParams) {
   return callApi<_ILoginResponse, typeof params>(config);
 }
 
-export async function registerUser(params: RegisterParams, type: 'owner' | 'customer') {
+export async function registerUser(
+  params: RegisterParams,
+  type: "owner" | "customer"
+) {
   const config: _IApiConfig<typeof params> = {
     url: `${AUTH_BASE_URL}/users/${type}`,
     method: "POST",
@@ -57,10 +59,11 @@ export async function refreshToken() {
   return callApi<_IRefresh>(config);
 }
 
-export async function userDetails() {
+export async function userDetails(callbackUrl?: string) {
   const config: _IApiConfig = {
     url: `${USER_BASE_URL}/profile`,
     method: "GET",
+    callbackUrl,
   };
 
   return callApi<_IVerifyUser>(config);
@@ -77,11 +80,5 @@ export async function updateUser(params: any) {
 }
 
 export async function logoutUser() {
-  // const config: _IApiConfig = {
-  //   url: `${AUTH_BASE_URL}/users`,
-  //   method: "POST",
-  // };
-
-  // return callApi<ILogoutResponse>(config);
-  return 'Logged Out';
+  return "Logged Out";
 }

@@ -165,16 +165,16 @@ const slotsSlice = createSlice({
 
       .addCase(testSlots.fulfilled, (state, action) => {
         state.nearbySlot = action.payload;
-        state.isLoading = false;
+        state.nearbyLoading = false;
         state.message = "Success";
         state.error = null;
       })
       .addCase(testSlots.pending, (state) => {
-        state.isLoading = true;
+        state.nearbyLoading = true;
         state.error = null;
       })
       .addCase(testSlots.rejected, (state, action) => {
-        state.isLoading = false;
+        state.nearbyLoading = false;
         state.message = null;
         state.error = action.error.message!;
       });

@@ -17,7 +17,7 @@ import {
   fetchAvailableSlots,
   setDuration,
 } from "@/features/reservations/reservations.slice";
-import { useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -35,6 +35,7 @@ interface _ICenterCard {
   height?: number;
 }
 const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
+  const url = usePathname();
   const colorScheme = useColorScheme() ?? "light";
   const { _id, center_name, slots } = center;
   const requestReservationModalRef = useRef<BottomSheetModal>(null);
@@ -57,6 +58,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
           pageSize: 20,
           start_time: new Date(startTime),
           reservation_duration: duration,
+          callbackUrl: url
         })
       )
     );
@@ -78,7 +80,6 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
         <Button
           additionalStyles={{
             borderRadius: 30,
-            // marginTop: SIZES.padding,
             position: "absolute",
             zIndex: 20,
             paddingHorizontal: 8,
@@ -126,6 +127,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
       <CustomBottomSheetModal
         points={["85%", "90%"]}
         index={1}
+        pressBehavior={'none'}
         bg={
           colorScheme === "light"
             ? SHARED_COLORS.gray300

@@ -24,6 +24,7 @@ export async function availableCenters(
   const config: _IApiConfig = {
     url: `${CENTER_BASE_URL}/available?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
     method: "GET",
+    toast: true
   };
 
   return callApi<_IParkingCenter[]>(config);
@@ -48,6 +49,7 @@ export async function popularCenters(
   const config: _IApiConfig = {
     url: `${CENTER_BASE_URL}/popular?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
     method: "GET",
+    toast: true,
   };
   return callApi<_IParkingCenter[]>(config);
 }
@@ -60,6 +62,7 @@ export async function nearbyCenters(
   const config: _IApiConfig = {
     url: `${CENTER_BASE_URL}/nearby?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
     method: "GET",
+    toast: true,
   };
   return callApi<_IParkingCenter[]>(config);
 }

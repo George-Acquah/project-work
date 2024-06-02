@@ -21,10 +21,11 @@ export const fetchAvailableSlots = createAsyncThunk(
   "reservation/availableSlots",
   async (params: _IFetchAvailableSlots) => {
     try {
-      const { start_time, reservation_duration, center_id, pageSize } = params;
+      const { start_time, reservation_duration, center_id, pageSize, callbackUrl } = params;
       return await RequestReservation(center_id, pageSize, {
         start_time,
         reservation_duration,
+        callbackUrl
       });
     } catch (error) {
       throw error;
@@ -41,10 +42,12 @@ export const slotReservation = createAsyncThunk(
         center_id,
         slot_id,
         vehicle_id,
+        callbackUrl
       } = params;
       return await reserveSlot(center_id, slot_id, vehicle_id, {
         start_time,
         reservation_duration,
+        callbackUrl
       });
     } catch (error) {
       throw error;
@@ -127,6 +130,8 @@ export const selectReservationError = (state: RootState) =>
 
 export const selectReservationLoading = (state: RootState) =>
   state.reservation.reservation_loading;
+
+export const selectReservations = (state: RootState) => state.reservation.reservations;
 
 export const selectReservedSlot = (state: RootState) =>
   state.reservation.reservedSlot;
