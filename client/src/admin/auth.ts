@@ -16,32 +16,31 @@ export const { auth, signIn, signOut } = NextAuth({
         const { email, password } = credentials;
         console.log(email, password);
 
-          const response = await fetch(`${API}/auth/login`, {
-            method: "POST",
-            body: JSON.stringify({
-              email,
-              password,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+        const response = await fetch(`${API}/auth/login`, {
+          method: "POST",
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-          if (!response.ok) return null;
+        if (!response.ok) return null;
         const resJson = await response.json();
         const user = resJson.data;
 
-
-        // if (user.user.userType === process.env.AUTHORIZE_ADMIN) {
-        //   return user;
-        // }
-        // return null;
-        return user;
+        if (user.user.userType === process.env.AUTHORIZE_ADMIN) {
+          return user;
         }
+        return null;
+        // return user;
+      },
     }),
   ],
   callbacks: {
-    async jwt({token, user}) {
+    async jwt({ token, user }) {
       if (user) {
         return { ...token, ...user };
       }
@@ -53,10 +52,10 @@ export const { auth, signIn, signOut } = NextAuth({
       return await refreshToken(token);
     },
 
-    async session({session, token}) {
+    async session({ session, token }) {
       session.user = token.user;
       session.access_token = token.tokens.access_token;
-      
+
       return session;
     },
   },
