@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Model, Types } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
 import { SORT } from 'src/shared/enums/general.enum';
 import { CenterTypes } from 'src/shared/enums/slots.enum';
@@ -494,15 +494,23 @@ export class ParkingCenterService {
                 foreignField: 'center_id'
               }
             ];
-            const unwind_fields = ['center_address'];
-      const parkingCenter = await this.aggregationService.dynamicDocumentsPipeline<_IDbParkingCenter, _IParkingCenter>(
-        this.parkingCenterModel,
-        [''],
-        { _id: id },
-        lookups,
-        unwind_fields
-      )
+            const unwind_fields = [
+              'center_address'
+            ] as (keyof _IDbParkingCenter)[];
+      const parkingCenter =
+        await this.aggregationService.dynamicDocumentsPipeline<
+          _IDbParkingCenter,
+          _IParkingCenter
+        >(
+          this.parkingCenterModel,
+          true,
+          [],
+          { _id: new mongoose.Types.ObjectId(id) },
+          lookups,
+          unwind_fields
+        );
 
+      console.log(parkingCenter);
       return parkingCenter;
       // return sanitizeCenter(populatedCenter);
     } catch (error) {

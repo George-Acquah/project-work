@@ -539,38 +539,42 @@ export class AggregationService {
   //Dynamic documents
   async dynamicDocumentsPipeline<T extends Document, S>(
     model: Model<T>,
-    project_fields: string[],
+    return_as_object: boolean,
+    project_fields: (keyof T)[],
     matcher: Partial<Record<keyof T, any>>,
     lookup_data?: _ILookup[],
-    unwind_fields?: string[],
-    currentPage?: number,
-    items?: number
+    unwind_fields?: (keyof T)[],
+    currentPage = 1,
+    items = 10
   ): Promise<S> {
     try {
-      const pipeline: PipelineStage[] = [];
+      if (currentPage < 1 || items < 1) {
+        throw new Error('currentPage and items must be positive integers');
+      }
 
-      // Match stage
-      pipeline.push({ $match: { ...matcher } });
+      const pipeline: PipelineStage[] = [{ $match: matcher }];
 
       // Pagination stages
       //Skipping Stage
-      if (currentPage && items) {
-        const offset = (currentPage - 1) * items;
-        pipeline.push({ $skip: offset });
-      }
+      // if (currentPage && items) {
+      //   const offset = (currentPage - 1) * items;
+      //   pipeline.push({ $skip: offset });
+      // }
+      // Pagination stages
+      const offset = (currentPage - 1) * items;
+      pipeline.push({ $skip: offset }, { $limit: items });
 
       // Lookup stages
-      if (lookup_data && lookup_data.length > 0) {
-        const lookups: PipelineStage.Lookup[] = lookup_data.map((data) => ({
+      lookup_data?.forEach((data) => {
+        pipeline.push({
           $lookup: {
             from: data.from,
             as: data.as,
-            localField: data?.localField ?? '_id',
+            localField: data.localField ?? '_id',
             foreignField: data.foreignField
           }
-        }));
-        pipeline.push(...lookups);
-      }
+        });
+      });
 
       //Limitting Stage
       if (items) {
@@ -578,34 +582,34 @@ export class AggregationService {
       }
 
       // Unwind stages
-      if (unwind_fields && unwind_fields.length > 0) {
-        const unwinds: PipelineStage.Unwind[] = unwind_fields.map((field) => ({
+      unwind_fields?.forEach((field) => {
+        pipeline.push({
           $unwind: {
-            path: `$${field}`,
+            path: `$${String(field)}`,
             preserveNullAndEmptyArrays: true
           }
-        }));
-        pipeline.push(...unwinds);
-      }
+        });
+      });
 
       // Project stage
-      if (project_fields && project_fields.length > 0) {
-        const project = project_fields.reduce((acc, field) => {
-          acc[field] = 1;
-          return acc;
-        }, {} as Record<string, 1>);
+      if (project_fields.length > 0) {
+        const project: Record<string, 1> = {};
+        project_fields.forEach((field) => {
+          project[String(field)] = 1;
+        });
         pipeline.push({ $project: project });
       }
 
       // Execute pipeline
       const result = await model.aggregate(pipeline);
-      console.log(typeof result);
 
-      // Return result based on type of S
-      if (Array.isArray(result)) {
-        return result as unknown as S;
+      // Return based on the 'returnAsArray' flag
+      if (return_as_object) {
+        console.log('not array');
+        return result[0] as unknown as S;
       } else {
-        return result[0] as S;
+        console.log('array');
+        return result as unknown as S;
       }
     } catch (error) {
       throw new Error(`Error fetching filtered documents: ${error.message}`);

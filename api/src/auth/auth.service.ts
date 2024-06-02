@@ -59,14 +59,14 @@ export class AuthService {
     const access_token = await this.signPayload(
       payload,
       process.env.SECRET_KEY,
-      '1m'
+      '1h'
     );
 
     const u_id = appendRandomTextAndLength(user._id);
     const refresh_token = await this.signPayload(
       payload,
       process.env.REFRESH_KEY,
-      '5m'
+      '12h'
     );
 
     const expiresIn = getExpirationTime(5);
@@ -98,14 +98,14 @@ export class AuthService {
     const access_token = await this.signPayload(
       payload,
       process.env.SECRET_KEY,
-      '1m'
+      '1h'
     );
 
     const u_id = appendRandomTextAndLength(user._id);
     const refresh_token = await this.signPayload(
       payload,
       process.env.REFRESH_KEY,
-      '5m'
+      '12h'
     );
 
     const expiresIn = getExpirationTime(1);

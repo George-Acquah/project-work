@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod
+} from '@nestjs/common';
 import { ParkingsGateway } from './parking.gateway';
 import { ParkingCenterController } from './parking-center.controller';
 import { ParkingCenterService } from './parking-center.service';
@@ -42,6 +47,7 @@ import {
   SlotAddress,
   SlotAddressSchema
 } from 'src/shared/schemas/slot-address.schema';
+import { UploadMiddleware } from 'src/shared/middlewares/uploads.middleware';
 
 @Module({
   imports: [
@@ -74,4 +80,11 @@ import {
   controllers: [ParkingCenterController],
   exports: []
 })
-export class ParkingModule {}
+export class ParkingModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(UploadMiddleware).forRoutes({
+      path: 'owner/parking-center/:center_id/add-center-image',
+      method: RequestMethod.POST
+    });
+  }
+}
