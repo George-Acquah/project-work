@@ -65,9 +65,6 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
-creds.json
-*creds.json
-
 next-auth.d.ts
 *next-auth.d.ts
 
@@ -84,8 +81,8 @@ next-auth.d.ts
 *.env
 *.env.test
 
-creds.json
-*creds.json
+next-auth.d.ts
+*next-auth.d.ts
 
 # private files
 */private
@@ -122,3 +119,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Expo 
+/.expo
+*/.expo
+/.expo*
