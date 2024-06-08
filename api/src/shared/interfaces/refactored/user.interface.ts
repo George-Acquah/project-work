@@ -71,11 +71,33 @@ interface _IUpdatedUserRes {
   user_image: string | null;
 }
 
+interface _IExtraUsers {
+  vehicles_count: number;
+  centers_count: number;
+}
+
+interface _IUsersTable {
+  _id: string;
+  email: string;
+  userType: UserType | 'Park Owner';
+  fullname: string;
+  contact: string;
+  location: string;
+  vehicles: number;
+  centers: number;
+  createdAt: string;
+  updatedAt: string;
+  isVerified: string;
+  image: string | null;
+}
+
 export {
   _ICustomerLocation,
   _IUpdatedUserRes,
   _INewCustomer,
   _INewParkOwner,
   _INewProfile,
-  _TNewUser
+  _TNewUser,
+  _IUsersTable,
+  _IExtraUsers
 };

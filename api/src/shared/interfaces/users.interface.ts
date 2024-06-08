@@ -97,8 +97,10 @@ interface _ICommonUser extends Document<Types.ObjectId> {
   userType: UserType;
   readonly password: string;
   isVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
   profile: _IDbProfile;
-  image: _IDbUserImage;
+  user_image: _IDbUserImage;
   phone_number: string;
 }
 
@@ -108,7 +110,7 @@ interface _ISanitizedCommonUser {
   isVerified: boolean;
   email: string;
   profile: _ISanitizedProfile;
-  image?: _IUserImage;
+  user_image?: _IUserImage;
 }
 
 interface _IUpdatedUserRes {

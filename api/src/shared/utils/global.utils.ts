@@ -1,5 +1,6 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import { UserType } from '../enums/users.enum';
 
 function readJsonFile(fileName: string) {
   // Get the absolute path to the JSON file in the root directory
@@ -36,4 +37,32 @@ function extractToken(prefix: string, authHeader: string | undefined) {
   return 'invalid-token';
 }
 
-export { extractToken, readJsonFile, getPath };
+const convertDateToString = (dateString: string, locale = 'en-US') => {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return dateString;
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  };
+  const formatter = new Intl.DateTimeFormat(locale, options);
+  return formatter.format(date);
+};
+
+function formatUserType(type: UserType) {
+  if (type === UserType.PARK_OWNER) {
+    return 'Park Owner';
+  }
+  return type;
+}
+
+export {
+  extractToken,
+  readJsonFile,
+  getPath,
+  convertDateToString,
+  formatUserType
+};

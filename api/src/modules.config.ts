@@ -6,10 +6,10 @@ const JwtAuthModule = JwtModule.registerAsync({
   useFactory: async (configService: ConfigService) => ({
     secret: configService.get<string>('JWT_SECRET'),
     signOptions: {
-      expiresIn: parseInt(configService.get<string>('JWT_EXPIRATION')),
-    },
+      expiresIn: parseInt(configService.get<string>('JWT_EXPIRATION'))
+    }
   }),
-  inject: [ConfigService],
+  inject: [ConfigService]
 });
 
 export { JwtAuthModule };
