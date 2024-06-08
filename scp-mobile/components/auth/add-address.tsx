@@ -18,10 +18,6 @@ import useStorageHook from "@/utils/hooks/storage.hooks";
 import { fetchAllVehicles, selectAllVehicles, selectVehiclesLoading } from "@/features/vehicles/vehicles.slice";
 import RendererHOC from "../common/renderer.hoc";
 
-interface _Item {
-  item: string;
-}
-
 interface _IAddress {
   setSelectedScreen: Dispatch<SetStateAction<string>>;
   hideModal: () => void;
@@ -43,19 +39,6 @@ const AddAddress = ({ setSelectedScreen, hideModal }: _IAddress) => {
   const dispatch = useAppDispatch();
   const vehicleLoading = useAppSelector(selectVehiclesLoading)
   const { load, storageError } = useStorageHook();
-
-  const tester = async () => {
-    try {
-      if (storageError) {
-        throw new Error(storageError)
-      }
-      setLoading(true);
-      dispatch(refreshTokens());
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const fetchVehicles = async() => {
     try {
@@ -182,7 +165,7 @@ const AddAddress = ({ setSelectedScreen, hideModal }: _IAddress) => {
               fontProvider={Ionicons}
               name="trash"
               color="white"
-              onPress={() => tester()}
+              onPress={() => {}}
             />
           </Button>
         </View>

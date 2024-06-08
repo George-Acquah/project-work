@@ -21,7 +21,7 @@ import {
   handleCloseDetailsModal,
   selectBookingLoading,
 } from "@/features/bookings/bookings.slice";
-import { useColorScheme } from '@/hooks/useColorScheme'
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { generateBookingStyles } from "./styles";
 import RendererHOC from "@/components/common/renderer.hoc";
 import { FONTS } from "@/constants/fonts";
@@ -118,8 +118,8 @@ const BookingsComponent = () => {
                 index={2}
                 bg={
                   colorScheme === "light"
-                    ? LIGHT_THEME.backgroundSecondary
-                    : "#151518"
+                    ? "#D0D0D0"
+                    : "#353636"
                 }
                 indicatorBg={
                   colorScheme === "light"

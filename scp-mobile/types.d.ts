@@ -2,6 +2,8 @@ interface _IApiConfig<T = any> {
   url: string;
   method: "GET" | "POST" | "PUT" | "DELETE";
   data?: T | null;
+  toast?: boolean;
+  callbackUrl?: string;
   // headers?: _IAxiosHeaders;
 }
 
@@ -16,6 +18,15 @@ interface _IApiResponse<T> extends _IPostApiResponse {
 
 interface _IAxiosHeaders {
   [key: string]: string;
+}
+
+interface _IAccount {
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  state?: string;
+  area?: string;
+  pincode?: string;
 }
 
 interface _IAddress {
@@ -39,7 +50,7 @@ interface _ICenterAddress extends _IAddress {
   center_id: string;
 }
 
-interface _ICenterData {
+interface _ICenterData { 
   _id: string;
   total_daily_bookings: number;
   total_weekly_bookings: number;
@@ -47,6 +58,11 @@ interface _ICenterData {
   total_monthly_bookings: number;
   total_yearly_bookings: number;
   total_slots: number;
+  center_id: string;
+}
+
+interface _ICenterDetailsParams {
+  [key: string]: string;
   center_id: string;
 }
 
@@ -79,9 +95,22 @@ interface _IId {
   id: string;
 }
 
+interface _Item {
+  item: string;
+}
+
 interface _ILoginResponse {
   tokens: _ITokens;
-  user: _IUser;
+  user: _ILogin;
+}
+
+interface _IRegisterResponse {
+  email: string;
+  userType: string;
+}
+
+interface _ILogin extends _IRegisterResponse {
+  _id: string;
 }
 
 interface _IParkingCenter {
@@ -94,7 +123,7 @@ interface _IParkingCenter {
   createdAt: Date;
   updatedAt: Date;
   contact: string;
-  location: _IDestination;
+  // location: _IDestination;
   isAvailable: boolean;
   isVerified: boolean;
   center_images: Array<_IParkingCenterImage>;
@@ -112,6 +141,10 @@ interface _IQuery {
   num_pages: string;
 }
 
+interface _IRefresh {
+  tokens: _ITokens;
+}
+
 interface _ISlot {
   _id: string;
   slot_name: string;
@@ -124,9 +157,15 @@ interface _ISlot {
   createdAt: Date;
   updatedAt: Date;
   contact: string;
-  location: _IDestination;
+  // location: _IDestination;
   isVerified: boolean;
   center_id: string;
+}
+
+interface _ISlotDetailsParams {
+  [key: string]: string;
+  center_id: string;
+  slot_id: string;
 }
 
 interface _ISlotAddress extends _IAddress {
@@ -185,6 +224,12 @@ interface _ITipsData {
   image: string;
 }
 
+interface _IToast {
+  id: string;
+  message: string;
+  type: "success" | "error" | "info" | "warning";
+}
+
 interface _ITokens {
   access_token: string;
   u_id: string;
@@ -201,10 +246,22 @@ interface _IVehicle {
   driver: string;
 }
 
+interface _IVerifyUser {
+  _id: string;
+  email: string;
+  user_image: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  phone_number: string | null;
+  area: string | null;
+  state: string | null;
+  pincode: string | null;
+}
+
 interface _IUser {
   _id: string;
   email: string;
-  userType: any;
+  userType: _TUserType;
   image: any;
   createdAt: Date;
   updatedAt: Date;
@@ -213,6 +270,8 @@ interface _IUser {
   vehicles: any[];
   centers: any[];
 }
+
+type _TUserType = 'Customer' | 'ParkOwner';
 
 interface _Image {
   _id: string;

@@ -15,7 +15,6 @@ COPY . .
 # RUN npm dedupe
 RUN npm run build
 
-#Expose
 EXPOSE 8001
 
 CMD ["npm", "start"]

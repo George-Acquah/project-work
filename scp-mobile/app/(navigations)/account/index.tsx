@@ -1,38 +1,53 @@
-import React, { useRef } from "react";
-import {
-  Animated,
-  FlatList,
-  Pressable,
-  Image,
-} from "react-native";
+import React from "react";
+import { FlatList, Pressable } from "react-native";
 import { accountOptions, cardRoutes, mainRoutes } from "./data";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { ThemedView } from "@/components/common/ThemedView";
 import { SHARED_COLORS } from "@/constants/Colors";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { useColorScheme } from '@/hooks/useColorScheme'
-import { generateAccountIndexStyles } from "./styles";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
+import { bg_styles, generateAccountIndexStyles, text_styles } from "./styles";
 import { FONTS } from "@/constants/fonts";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/common/ThemedText";
-import { Ionicons } from "@expo/vector-icons";
+import UserHeader from "@/components/navigation/profile/user-header";
+import Button from "@/components/common/button";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useAppDispatch } from "@/utils/hooks/useRedux";
+import { logout } from "@/features/auth/auth.slice";
+import useRoles from "@/utils/hooks/useRoles.hook";
 
-const ScrollViewScreen = () => {
-  const scrollOffsetY = useRef(new Animated.Value(0)).current;
-  const colorScheme = useColorScheme() ?? 'light';
+const AccountProfileScreen = () => {
+  const colorScheme = useColorScheme() ?? "light";
   const styles = generateAccountIndexStyles(colorScheme);
+  const username = "George Acquah"; // Replace with actual username
+  const userdp = "https://randomuser.me/api/portraits/men/1.jpg"; // Replace with actual image URL
+  const dispatch = useAppDispatch();
+  const { role } = useRoles();
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logout());
+      router.replace('/')
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    // <ThemedView style={{ height: "100%" }} {...bg_colors.main}>
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
-      headerImage={
-        <Ionicons size={310} name="code-slash" style={styles.headerImage} />
-      }
+      headerContent={<UserHeader username={username} userdp={userdp} />}
+      header_height={250}
+      scroll_ratio={0.27}
     >
       <ThemedView style={{ paddingHorizontal: 10, gap: 8 }}>
         <ThemedView
           style={{
-            borderBottomColor: SHARED_COLORS.gray400,
+            borderBottomColor:
+              colorScheme === "light"
+                ? SHARED_COLORS.gray400
+                : SHARED_COLORS.gray600,
             borderBottomWidth: 1,
             paddingBottom: 20,
           }}
@@ -42,31 +57,50 @@ const ScrollViewScreen = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
-              <ThemedView style={styles.card} key={index}>
-                <TabBarIcon
-                  fontProvider={item.fontProvider}
-                  name={item.icon}
-                  color="black"
-                  size={34}
-                />
-                <ThemedText style={styles.subtitle}>{item.name}</ThemedText>
-              </ThemedView>
+              <Link
+                href={`/(accounts)/${item.route}/` as any}
+                key={index}
+                style={{ marginTop: 10, marginHorizontal: 10 }}
+              >
+                <ThemedView style={[styles.card, {}]} {...bg_styles.container}>
+                  <TabBarIcon
+                    fontProvider={item.fontProvider}
+                    name={item.icon}
+                    color={colorScheme === "light" ? "black" : "white"}
+                    size={34}
+                  />
+                  <ThemedText
+                    style={styles.subtitle}
+                    {...text_styles.container}
+                  >
+                    {item.name}
+                  </ThemedText>
+                </ThemedView>
+              </Link>
             )}
           />
 
           <ThemedView style={{ marginTop: 20 }}>
             {accountOptions.map((option, i) => (
               <Pressable style={styles.option} key={i}>
-                <ThemedView style={{ width: "70%" }}>
-                  <ThemedText style={{ ...FONTS.b1 }}>{option.name}</ThemedText>
-                  <ThemedText style={{ ...FONTS.b1 }}>
+                <ThemedView style={{ width: "80%" }}>
+                  <ThemedText
+                    style={{ ...FONTS.h3 }}
+                    {...text_styles.container}
+                  >
+                    {option.name}
+                  </ThemedText>
+                  <ThemedText
+                    style={{ ...FONTS.pr3 }}
+                    {...text_styles.container}
+                  >
                     {option.description}
                   </ThemedText>
                 </ThemedView>
                 <TabBarIcon
                   fontProvider={option.fontProvider}
                   name={option.icon}
-                  color="black"
+                  color={colorScheme === "light" ? "black" : "white"}
                   size={48}
                 />
               </Pressable>
@@ -75,21 +109,25 @@ const ScrollViewScreen = () => {
         </ThemedView>
       </ThemedView>
 
-      <ThemedView style={{ marginTop: 20, marginHorizontal: 10 }}>
+      
+      <ThemedView style={{ marginVertical: 20, marginHorizontal: 10 }}>
         {mainRoutes.map((route, i) => (
-          <Link href={`/(navigations)/account/${route.route}` as any} key={i}>
+          <Link href={`/(accounts)/${route.route}/` as any} key={i}>
             <ThemedView
               style={{
-                paddingVertical: 14,
+                paddingVertical: 10,
+                paddingHorizontal: 10,
                 flexDirection: "row",
                 justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <TabBarIcon
                 fontProvider={route.fontProvider}
                 name={route.icon}
-                color="black"
+                color={colorScheme === "light" ? "black" : "white"}
                 size={24}
+                style={{ marginBottom: undefined }}
               />
               <ThemedView
                 style={{
@@ -100,32 +138,78 @@ const ScrollViewScreen = () => {
               >
                 <ThemedText
                   style={{
-                    letterSpacing: 1.2,
-                    ...FONTS.b1,
+                    ...FONTS.pr1,
                   }}
+                  {...text_styles.container}
                 >
                   {route.name}
                 </ThemedText>
-                {route?.sub && (
-                  <ThemedView style={{ marginTop: 8 }}>
-                    <ThemedText
-                      style={{
-                        letterSpacing: 1.2,
-                        ...FONTS.b1,
-                      }}
-                    >
-                      {route.sub}
-                    </ThemedText>
-                  </ThemedView>
-                )}
               </ThemedView>
             </ThemedView>
+            {route?.sub && (
+              <ThemedView
+                style={{
+                  marginLeft: 80,
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                }}
+              >
+                <ThemedText
+                  style={{
+                    ...FONTS.b1,
+                  }}
+                  {...text_styles.sub}
+                >
+                  {route.sub}
+                </ThemedText>
+              </ThemedView>
+            )}
           </Link>
         ))}
       </ThemedView>
+
+      {/* Log out button */}
+      <ThemedView style={{ margin: 20 }}>
+        <ThemedView
+          style={{
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderRadius: 10,
+          }}
+          {...bg_styles.container}
+        >
+          <Button
+            additionalStyles={{
+              backgroundColor: undefined,
+              borderColor: undefined,
+              borderWidth: 0,
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+            }}
+            type="opacity"
+            onPress={handleLogout}
+          >
+            <TabBarIcon
+              fontProvider={MaterialIcons}
+              name={"logout"}
+              color={colorScheme === "light" ? "black" : "white"}
+              size={24}
+              style={{ marginBottom: undefined }}
+            />
+            <ThemedText
+              style={{
+                ...FONTS.ps1,
+              }}
+              {...text_styles.container}
+            >
+              Logout
+            </ThemedText>
+          </Button>
+        </ThemedView>
+      </ThemedView>
     </ParallaxScrollView>
-    // </ThemedView>
   );
 };
 
-export default ScrollViewScreen;
+export default AccountProfileScreen;

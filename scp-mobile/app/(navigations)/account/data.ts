@@ -1,6 +1,6 @@
 import { _IFont } from "@/components/navigation/TabBarIcon";
+import { ACCOUNT_MODALS } from "@/constants/root";
 import {
-  AntDesign,
   Ionicons,
   MaterialIcons,
   FontAwesome,
@@ -24,19 +24,19 @@ interface _IOptions extends _IFont {
 const cardRoutes: _IRoutes[] = [
   {
     name: "Help",
-    route: "help",
+    route: ACCOUNT_MODALS.HELP,
     icon: "help-with-circle",
     fontProvider: Entypo,
   },
   {
     name: "Payments",
-    route: "payments",
+    route: ACCOUNT_MODALS.PAYMENTS,
     icon: "payments",
     fontProvider: MaterialIcons,
   },
   {
     name: "Activity",
-    route: "activity",
+    route: ACCOUNT_MODALS.ACTIVITY,
     icon: "local-activity",
     fontProvider: MaterialIcons,
   },
@@ -60,39 +60,45 @@ const accountOptions: _IOptions[] = [
 const mainRoutes: _IMainRoute[] = [
   {
     name: "Settings",
-    route: "settings",
+    route: ACCOUNT_MODALS.SETTINGS,
     icon: "settings-sharp",
     fontProvider: Ionicons,
   },
   {
     name: "Messages",
-    route: "messages",
+    route: ACCOUNT_MODALS.MESSAGES,
     icon: "message",
     fontProvider: MaterialIcons,
-    sub: "trsting"
   },
   {
     name: "Become a center owner",
-    route: "monetizing",
+    route: ACCOUNT_MODALS.MONETIZING,
     icon: "monetization-on",
     fontProvider: MaterialIcons,
   },
   {
     name: "Manage Account",
-    route: "manage-account",
+    route: ACCOUNT_MODALS.MANAGE,
     icon: "manage-accounts",
     fontProvider: MaterialIcons,
   },
   {
     name: "Legal",
-    route: "legal",
+    route: ACCOUNT_MODALS.LEGAL,
     icon: "legal",
     fontProvider: FontAwesome,
   },
 ];
 
+const logout = {
+  name: "Logout",
+  icon: "logout",
+  fontProvider: MaterialIcons,
+};
+
 export { 
   cardRoutes,
   accountOptions,
-  mainRoutes
+  mainRoutes,
+  logout
 }

@@ -5,18 +5,21 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import AuthModal from "./modal";
 import { MotiView, useAnimationState } from "moti";
 import { useLocalSearchParams } from "expo-router";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { UserType } from "@/utils/enums/global.enum";
 
 
 interface _IWelcomeParams extends SearchParamsKeys {
   action: string;
+  callbackUrl: string;
 }
 const Welcome = () => {
-  const { action } = useLocalSearchParams<_IWelcomeParams>();
+  const { action, callbackUrl } = useLocalSearchParams<_IWelcomeParams>();
+  console.log('callback: ', callbackUrl);
 
   // Modal
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [selectedScreen, setSelectedScreen] = useState("");
+  const [usertype, setUsertype] = useState<UserType | null>(null);
 
   //MOTI
   const scaleAnimationState = useAnimationState({
@@ -76,7 +79,7 @@ const Welcome = () => {
         {renderImage()}
 
         {/* //Render Login Details */}
-        {renderLoginDetails(showModal, scaleAnimationState)}
+        {renderLoginDetails(showModal, scaleAnimationState, usertype)}
 
         {/* Auth Modals */}
         <AuthModal
@@ -84,6 +87,9 @@ const Welcome = () => {
           hideModal={hideModal}
           selectedScreen={selectedScreen}
           setSelectedScreen={setSelectedScreen}
+          setUsertype={setUsertype}
+          usertype={usertype}
+          callbackUrl={callbackUrl}
         />
       </MotiView>
     </View>

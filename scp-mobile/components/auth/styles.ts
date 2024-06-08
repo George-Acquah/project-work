@@ -37,4 +37,8 @@ export const bg_colors = {
     lightColor: LIGHT_THEME.backgroundPrimary,
     darkColor: DARK_THEME.backgroundPrimary,
   },
+  scroll_view: {
+    lightColor: "#D0D0D0",
+    darkColor: "#353636",
+  },
 };

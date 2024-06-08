@@ -1,7 +1,22 @@
+import { Center_Filter } from "@/utils/enums/global.enum";
+
 interface _IRootState {
   isLoading: boolean;
   message: string | null;
   error: string | null;
+}
+
+interface _IRoots extends _IRootState {
+  showOnboarding: boolean;
+  viewMap: boolean;
+  nearbyMap: boolean;
+  centersFilter: Center_Filter | null;
+  slotsFilter: Center_Filter | null;
+}
+
+
+interface _IToastState {
+  toasts: _IToast[];
 }
 
 interface _IPermission extends _IRootState {
@@ -9,7 +24,9 @@ interface _IPermission extends _IRootState {
 }
 interface _IAuthState extends _IRootState {
   isAuthenticated: boolean | null;
+  exp: number;
   tokens: _ITokens | null;
+  reg_details: _IRegisterResponse | null;
   user: {
     id: string;
     role: string;
@@ -47,7 +64,7 @@ interface _IVehicles extends _IRootState {
 interface _ISlots extends _IRootState {
   popularSlots: _ISlot[];
   nearbySlot: _ISlot[];
-  filteredSlots: _ISlot[];
+  availableSlots: _ISlot[];
   fetchedSlot: _ISlot | null;
   selectedSlot: string | null;
   savedSlot: number | null;
@@ -57,7 +74,9 @@ interface _ISlots extends _IRootState {
 }
 
 interface _IResrvations extends _IRootState {
-  availableSlots: _ISlot[] | null;
+  reservations: _ISlotReservation[];
+  availableSlots: _ISlot[];
+  totalPages: number | null;
   reservedSlot: _ISlotReservation | null;
   reservation_loading: boolean;
   reservation_error: string | null;
@@ -72,5 +91,16 @@ interface _IMapState {
   selected: _ITestCenters | null;
   // mapRef: React.MutableRefObject<BottomSheetModal>;
 }
+interface _ISessionState {
+  showModal: boolean;
+  callbackUrl: string | undefined;
+}
 
-export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles };
+interface _IErrorState {
+  message: string | null;
+  visible: boolean;
+  button_label: undefined | string;
+  description: undefined | string;
+}
+
+export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots, _ISessionState, _IToastState, _IErrorState };

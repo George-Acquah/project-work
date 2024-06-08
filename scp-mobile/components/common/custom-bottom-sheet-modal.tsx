@@ -1,11 +1,13 @@
-import React, { forwardRef, useMemo } from "react";
+import React, { forwardRef, useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
 import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
+  BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
 import { MotiView } from "moti";
+import { BackdropPressBehavior, BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
 
 // Define the type for the BottomSheetModal ref
 type Ref = BottomSheetModal;
@@ -15,6 +17,7 @@ interface _ICustomModalProps {
   index: number;
   bg: string;
   indicatorBg: string;
+  pressBehavior: BackdropPressBehavior;
   children: React.ReactNode;
 }
 
@@ -25,6 +28,7 @@ const CustomBottomSheetModal = forwardRef<Ref, _ICustomModalProps>(
       index = 0,
       bg = "white",
       indicatorBg = "black",
+      pressBehavior = 'none',
       children,
     },
     ref
@@ -32,17 +36,29 @@ const CustomBottomSheetModal = forwardRef<Ref, _ICustomModalProps>(
     // Use useMemo to memoize snapPoints array
     const snapPoints = useMemo(() => points, [points]);
 
+        const renderBackdrop = useCallback(
+          (props: BottomSheetDefaultBackdropProps) => (
+            <BottomSheetBackdrop
+              {...props}
+              disappearsOnIndex={-1}
+              appearsOnIndex={0}
+              opacity={0.8}
+              pressBehavior={ pressBehavior }
+            />
+          ),
+          []
+        );
+
     return (
       <BottomSheetModal
         ref={ref}
         index={index}
         snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
         backgroundStyle={{ backgroundColor: bg }}
         handleIndicatorStyle={{ backgroundColor: indicatorBg }}
       >
-        <BottomSheetView style={styles.contentContainer}>
-          {children}
-        </BottomSheetView>
+        <BottomSheetView style={{ flex: 1 }}>{children}</BottomSheetView>
       </BottomSheetModal>
     );
   }
@@ -50,7 +66,7 @@ const CustomBottomSheetModal = forwardRef<Ref, _ICustomModalProps>(
 
 const styles = StyleSheet.create({
   contentContainer: {
-    flex: 1,
+    
   },
 });
 

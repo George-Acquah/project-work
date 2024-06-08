@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { initialReservationState } from "../states";
 import {
   RequestReservation,
@@ -21,10 +21,11 @@ export const fetchAvailableSlots = createAsyncThunk(
   "reservation/availableSlots",
   async (params: _IFetchAvailableSlots) => {
     try {
-      const { start_time, reservation_duration, center_id, pageSize } = params;
+      const { start_time, reservation_duration, center_id, pageSize, callbackUrl } = params;
       return await RequestReservation(center_id, pageSize, {
         start_time,
         reservation_duration,
+        callbackUrl
       });
     } catch (error) {
       throw error;
@@ -41,10 +42,12 @@ export const slotReservation = createAsyncThunk(
         center_id,
         slot_id,
         vehicle_id,
+        callbackUrl
       } = params;
       return await reserveSlot(center_id, slot_id, vehicle_id, {
         start_time,
         reservation_duration,
+        callbackUrl
       });
     } catch (error) {
       throw error;
@@ -66,10 +69,12 @@ const reservationSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAvailableSlots.fulfilled, (state, action) => {
+        console.log(action.payload.data.documents)
         state.isLoading = false;
         state.error = null;
         state.message = action.payload.message;
-        state.availableSlots = action.payload.data;
+        state.availableSlots = action.payload.data.documents;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchAvailableSlots.pending, (state) => {
         state.isLoading = true;
@@ -105,6 +110,11 @@ export const { setDuration, setStartTime } = reservationSlice.actions;
 export const selectAvailableSlots = (state: RootState) =>
   state.reservation.availableSlots;
 
+export const selectMemoedAvailableSlots = createSelector(
+  [selectAvailableSlots],
+  (availableSlots) => availableSlots.map((slot) => slot._id)
+);
+
 export const selectStartTIme = (state: RootState) =>
   state.reservation.start_time;
 export const selectDuration = (state: RootState) => state.reservation.duration;
@@ -117,8 +127,12 @@ export const selectIsAvailableSlotsError = (state: RootState) =>
 
 export const selectReservationError = (state: RootState) =>
   state.reservation.reservation_error;
+
 export const selectReservationLoading = (state: RootState) =>
   state.reservation.reservation_loading;
+
+export const selectReservations = (state: RootState) => state.reservation.reservations;
+
 export const selectReservedSlot = (state: RootState) =>
   state.reservation.reservedSlot;
 export default reservationSlice.reducer;

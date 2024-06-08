@@ -17,7 +17,7 @@ import { FormInputs } from "@/components/auth/helpers";
 import { SIZES } from "@/constants/styles";
 import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "@/components/common/renderer.hoc";
-import { useColorScheme } from "@/hooks/useColorScheme"
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 
 const ResetPasswordScreen = () => {
   const passwordRef = useRef<TextInput>(null);

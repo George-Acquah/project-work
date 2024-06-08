@@ -16,8 +16,9 @@ import React from "react";
 import { bg_colors } from "./styles";
 import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { SIZES } from "@/constants/styles";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { TabBarIcon } from "../navigation/TabBarIcon";
+import { UserType } from "@/utils/enums/global.enum";
 
 interface _ICheckbox extends TouchableOpacityProps {
   isSelected: boolean;
@@ -189,7 +190,8 @@ const renderImage = () => {
 
 const renderLoginDetails = (
   showModal: (screen: string) => void,
-  animationState: any
+  animationState: any,
+  usertype: UserType | null
 ) => {
   return (
     <View
@@ -227,9 +229,9 @@ const renderLoginDetails = (
           title="Continue With Phone Number"
           type="opacity"
           onPress={() => {
-            setTimeout(() => {
-              animationState.transitionTo("scaleDown");
-            }, 100);
+            // setTimeout(() => {
+            //   animationState.transitionTo("scaleDown");
+            // }, 100);
             showModal(AUTH_MODALS.LOGIN);
           }}
         />
@@ -251,9 +253,9 @@ const renderLoginDetails = (
           title="Continue With Google"
           type="opacity"
           onPress={() => {
-            setTimeout(() => {
-              animationState.transitionTo("scaleDown");
-            }, 100);
+            // setTimeout(() => {
+            //   animationState.transitionTo("scaleDown");
+            // }, 100);
             showModal(AUTH_MODALS.ADDRESS);
           }}
         />
@@ -275,9 +277,9 @@ const renderLoginDetails = (
           title="Continue With Github"
           type="opacity"
           onPress={() => {
-            setTimeout(() => {
-              animationState.transitionTo("scaleDown");
-            }, 100);
+            // setTimeout(() => {
+            //   animationState.transitionTo("scaleDown");
+            // }, 100);
             showModal(AUTH_MODALS.VEHICLES);
           }}
         />
@@ -304,10 +306,14 @@ const renderLoginDetails = (
           title="Create An Account"
           type="opacity"
           onPress={() => {
-            setTimeout(() => {
-              animationState.transitionTo("scaleDown");
-            }, 100);
-            showModal(AUTH_MODALS.SIGNUP);
+            // setTimeout(() => {
+            //   animationState.transitionTo("scaleDown");
+            // }, 100);
+            if (usertype === null) {
+              showModal(AUTH_MODALS.USER_TYPE);
+            } else {
+              showModal(AUTH_MODALS.SIGNUP);
+            }
           }}
         />
       </View>

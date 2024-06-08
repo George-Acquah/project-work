@@ -1,35 +1,18 @@
-import { keys } from "@/constants/root";
-import { loadSync } from "@/utils/functions/storage";
-import axios from "axios";
+import { text_colors } from "@/components/auth/styles";
+import { ThemedText } from "@/components/common/ThemedText";
+import useTokenRotation from "@/utils/hooks/rotate-tokens.hooks";
 import { Redirect } from "expo-router";
 import React from "react";
-import { useEffect, useState } from "react";
 
 const Index = () => {
-  const [auth, setAuth] = useState(false);
-  const tokens = loadSync(keys.TOKEN_KEY, "json") as unknown as _ITokens;
-
-  useEffect(() => {
-    const fetchTokens = async () => {
-      try {
-        if (tokens && tokens.access_token) {
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${tokens.access_token}`;
-          setAuth(true);
-        }
-      } catch (error) {
-        // Handle error occurred during token loading
-        console.error("Error loading tokens:", error);
-      }
-    };
-
-    fetchTokens();
-  }, []);
-
+  const { auth } = useTokenRotation();
   // Render loading state while waiting for auth status to be determined
   if (auth === null) {
-    return <div>Loading...</div>;
+    return (
+      <ThemedText style={{ textAlign: "center" }} {...text_colors.title}>
+        Loading...
+      </ThemedText>
+    );
   }
 
   // Render based on auth status

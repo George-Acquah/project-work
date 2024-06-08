@@ -1,4 +1,5 @@
-import axios from "axios";
+import { SCREEN_ROUTE, SHOW_TOAST } from "@/constants/root";
+import axiosInstance from "./api.interceptor";
 
 function switchErrRes(
   status: number,
@@ -35,15 +36,15 @@ export async function callApi<T, D = any>(
   config: _IApiConfig<D>
 ): Promise<_IApiResponse<T>> {
   try {
-    const response = await axios<_IApiResponse<T>>({
+    const response = await axiosInstance<_IApiResponse<T>>({
       url: config.url,
       method: config.method,
+      headers: {
+        [SHOW_TOAST]: config.toast || undefined, // Only set if truthy
+        [SCREEN_ROUTE]: config.callbackUrl || undefined
+      },
       data: config.data,
       withCredentials: true,
-      // headers: {
-      //   Accept: "application/json",
-      //   "Content-Type": "application/json",
-      // },
     });
 
     // Check if the server response indicates an error

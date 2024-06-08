@@ -1,4 +1,4 @@
-import { selectCentersFilter } from "@/features/root.slice";
+import { selectCentersFilter, selectSlotsFilter } from "@/features/root.slice";
 import { useAppSelector } from "./useRedux";
 import { useMemo } from "react";
 import { Center_Filter } from "../enums/global.enum";
@@ -19,6 +19,8 @@ import {
   selectNearbyCenters,
   selectPopularCenters,
 } from "@/features/centers/centers.slice";
+import { fetchAvailableSlots, fetchNearbySlot, fetchPopularSlots, selectMemoedNearbySlot, selectMemoedPopularSlot, selectNearbySlotError, selectNearbySlotLoading, selectNearbySlots, selectPopularSlots, selectSlotError, selectSlotLoading } from "@/features/slots/parking-slots.slice";
+import { selectAvailableSlots, selectAvailableSlotsLoading, selectIsAvailableSlotsError, selectMemoedAvailableSlots } from "@/features/reservations/reservations.slice";
 
 
 const useCenterFilter = () => {
@@ -96,6 +98,87 @@ const select_data = useMemo(() => {
   return {
     select_data_ids,
     center_type,
+    dispatch_data,
+    select_data,
+    select_loading,
+    select_error,
+  };
+};
+
+export const useSlotFilter = () => {
+  const slot_type = useAppSelector(selectSlotsFilter);
+  console.log(slot_type);
+
+  const dispatch_data = (data: _ISlotParams) =>
+    useMemo(() => {
+      switch (slot_type) {
+        case Center_Filter.AVAILABLE:
+          return fetchAvailableSlots(data);
+        case Center_Filter.POPULAR:
+          return fetchPopularSlots(data);
+        case Center_Filter.NEARBY:
+          return fetchNearbySlot(data);
+        default:
+          throw new Error(`Unexpected slot_type: ${slot_type}`);
+      }
+    }, [slot_type]);
+
+  const select_data = useMemo(() => {
+    switch (slot_type) {
+      case Center_Filter.AVAILABLE:
+        return selectNearbySlots;
+      case Center_Filter.POPULAR:
+        return selectPopularSlots;
+      case Center_Filter.NEARBY:
+        return selectNearbySlots;
+      default:
+        // Handle unexpected center_type, for example:
+        throw new Error(`Unexpected slot_type: ${slot_type}`);
+    }
+  }, [slot_type]);
+
+  const select_data_ids = useMemo(() => {
+    switch (slot_type) {
+      case Center_Filter.AVAILABLE:
+        return selectMemoedNearbySlot;
+      case Center_Filter.POPULAR:
+        return selectMemoedPopularSlot;
+      case Center_Filter.NEARBY:
+        return selectMemoedNearbySlot;
+      default:
+        throw new Error(`Unexpected center_type: ${slot_type}`);
+    }
+  }, [slot_type]);
+
+  const select_loading = useMemo(() => {
+    switch (slot_type) {
+      case Center_Filter.AVAILABLE:
+        return selectAvailableSlotsLoading;
+      case Center_Filter.POPULAR:
+        return selectSlotLoading;
+      case Center_Filter.NEARBY:
+        return selectNearbySlotLoading;
+      default:
+        throw new Error(`Unexpected slot_type: ${slot_type}`);
+    }
+  }, [slot_type]);
+
+  const select_error = useMemo(() => {
+    switch (slot_type) {
+      case Center_Filter.AVAILABLE:
+        return selectIsAvailableSlotsError;
+      case Center_Filter.POPULAR:
+        return selectSlotError;
+      case Center_Filter.NEARBY:
+        return selectNearbySlotError;
+      default:
+        throw new Error(`Unexpected slot_type: ${slot_type}`);
+    }
+  }, [slot_type]);
+
+  return {
+    select_data_ids,
+    slot_type,
     dispatch_data,
     select_data,
     select_loading,

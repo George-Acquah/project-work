@@ -14,7 +14,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import { router } from "expo-router";
 import { Checkbox } from "./helpers";
 import { SIZES } from "@/constants/styles";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import RendererHOC from "../common/renderer.hoc";
 import { TabBarIcon } from "../navigation/TabBarIcon";
@@ -23,11 +23,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import FormInputs from "../common/input-form";
 import { LoginParams } from "@/api/auth";
+import { showErrorModal } from "@/features/error/error.slice";
 
 interface _ILogin {
+  callbackUrl: string | undefined;
   setSelectedScreen: Dispatch<SetStateAction<string>>;
 }
-const Login = ({ setSelectedScreen }: _ILogin) => {
+const Login = ({ setSelectedScreen, callbackUrl }: _ILogin) => {
   const phoneNumberRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
@@ -56,10 +58,13 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
       );
       const user = unwrapResult(result);
       if (user && user.data.tokens) {
-        router.replace("/");
+        callbackUrl !== undefined
+          ? router.replace(callbackUrl)
+          : router.replace("/");
       }
     } catch (error: any) {
-      Alert.alert(error.message);
+      dispatch(showErrorModal({ message: error.message, button_label: 'Close'}));
+      // Alert.alert(error.message);
     }
   };
 
@@ -77,6 +82,59 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
       </View>
     );
   };
+
+  const renderFormInputs = () => (
+    <>
+      {/* Phone Number */}
+      <FormInputs
+        ref={phoneNumberRef}
+        control={control as any}
+        name="email"
+        rootContainerStyles={{ marginTop: SIZES.padding * 2 }}
+        label="Phone Number / Email"
+        placeholder="Enter phone number or email"
+        prependComponent={
+          <TabBarIcon
+            fontProvider={FontAwesome}
+            name="mobile-phone"
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
+            size={34}
+            style={{ marginRight: SIZES.base }}
+          />
+        }
+      />
+      {/* Password */}
+      <FormInputs
+        ref={passwordRef}
+        control={control as any}
+        name="password"
+        rootContainerStyles={{ marginTop: SIZES.padding }}
+        label="Password"
+        placeholder="Enter your password"
+        secureTextEntry={!isVisible}
+        prependComponent={
+          <TabBarIcon
+            fontProvider={FontAwesome}
+            name="lock"
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
+            size={24}
+            style={{ marginRight: SIZES.base }}
+          />
+        }
+        appendComponent={
+          <TouchableOpacity style={{ justifyContent: "center" }}>
+            <TabBarIcon
+              fontProvider={FontAwesome}
+              name={isVisible ? "eye-slash" : "eye"}
+              color={LIGHT_THEME.primary700}
+              size={24}
+              onPress={() => setIsVisible(!isVisible)}
+            />
+          </TouchableOpacity>
+        }
+      />
+    </>
+  );
 
   const renderRememberMeAndForgotPassword = () => {
     return (
@@ -141,7 +199,6 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
           }}
           additionalTextStyles={{
             ...FONTS.l2,
-            color: SHARED_COLORS.gray50,
           }}
           type="opacity"
           onPress={handleSubmit(handleLogin)}
@@ -167,7 +224,7 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
         enableOnAndroid={true}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps={"handled"}
-        extraScrollHeight={-300}
+        extraScrollHeight={250}
         contentContainerStyle={{
           flexGrow: 1,
           marginTop: SIZES.radius,
@@ -177,55 +234,7 @@ const Login = ({ setSelectedScreen }: _ILogin) => {
         {renderTitle()}
 
         {/* Form Inputs */}
-        {/* Phone Number */}
-        <FormInputs
-          ref={phoneNumberRef}
-          control={control as any}
-          name="email"
-          rootContainerStyles={{ marginTop: SIZES.padding * 2 }}
-          label="Phone Number / Email"
-          placeholder="Enter phone number or email"
-          prependComponent={
-            <TabBarIcon
-              fontProvider={FontAwesome}
-              name="mobile-phone"
-              color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
-              size={34}
-              style={{ marginRight: SIZES.base }}
-            />
-          }
-        />
-
-        {/* Password */}
-        <FormInputs
-          ref={passwordRef}
-          control={control as any}
-          name="password"
-          rootContainerStyles={{ marginTop: SIZES.padding }}
-          label="Password"
-          placeholder="Enter your password"
-          secureTextEntry={!isVisible}
-          prependComponent={
-            <TabBarIcon
-              fontProvider={FontAwesome}
-              name="lock"
-              color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
-              size={24}
-              style={{ marginRight: SIZES.base }}
-            />
-          }
-          appendComponent={
-            <TouchableOpacity style={{ justifyContent: "center" }}>
-              <TabBarIcon
-                fontProvider={FontAwesome}
-                name={isVisible ? "eye-slash" : "eye"}
-                color={LIGHT_THEME.primary700}
-                size={24}
-                onPress={() => setIsVisible(!isVisible)}
-              />
-            </TouchableOpacity>
-          }
-        />
+        {renderFormInputs()}
 
         {/* Remember Me and Forgot Passwords */}
         {renderRememberMeAndForgotPassword()}

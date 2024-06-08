@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Link, useLocalSearchParams, usePathname } from "expo-router";
 import { generatePagination } from "@/utils/functions/pagination";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { generatePaginationStyles } from "./styles";
  

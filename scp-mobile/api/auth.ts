@@ -1,9 +1,9 @@
 import { BASE_URL } from "./root";
 import { callApi } from "./shared";
 
-const AUTH_BASE_URL = `${BASE_URL}/auth`;
+const AUTH_BASE_URL = `auth`;
+const USER_BASE_URL = `users`;
 // const AUTH_BASE_URL = `https://api.developbetterapps.com`;
-
 
 export interface LoginParams {
   email: string;
@@ -13,6 +13,7 @@ export interface LoginParams {
 export interface RegisterParams {
   password: string;
   email: string;
+  phone_number: string;
 }
 
 export interface ILogoutResponse {
@@ -27,10 +28,6 @@ export interface RegisterResponse {
   };
 }
 
-interface _IRefresh {
-  tokens: _ITokens;
-}
-
 export async function loginUser(params: LoginParams) {
   const config: _IApiConfig<typeof params> = {
     url: `${AUTH_BASE_URL}/login`,
@@ -41,14 +38,17 @@ export async function loginUser(params: LoginParams) {
   return callApi<_ILoginResponse, typeof params>(config);
 }
 
-export async function registerUser(params: RegisterParams) {
+export async function registerUser(
+  params: RegisterParams,
+  type: "owner" | "customer"
+) {
   const config: _IApiConfig<typeof params> = {
-    url: `${AUTH_BASE_URL}/users/customer`,
+    url: `${AUTH_BASE_URL}/users/${type}`,
     method: "POST",
     data: params,
   };
 
-  return callApi<_IPostApiResponse, typeof params>(config);
+  return callApi<_IRegisterResponse, typeof params>(config);
 }
 
 export async function refreshToken() {
@@ -56,8 +56,17 @@ export async function refreshToken() {
     url: `${AUTH_BASE_URL}/refresh`,
     method: "POST",
   };
-
   return callApi<_IRefresh>(config);
+}
+
+export async function userDetails(callbackUrl?: string) {
+  const config: _IApiConfig = {
+    url: `${USER_BASE_URL}/profile`,
+    method: "GET",
+    callbackUrl,
+  };
+
+  return callApi<_IVerifyUser>(config);
 }
 
 export async function updateUser(params: any) {
@@ -71,10 +80,5 @@ export async function updateUser(params: any) {
 }
 
 export async function logoutUser() {
-  const config: _IApiConfig = {
-    url: `${AUTH_BASE_URL}/users`,
-    method: "POST",
-  };
-
-  return callApi<ILogoutResponse>(config);
+  return "Logged Out";
 }

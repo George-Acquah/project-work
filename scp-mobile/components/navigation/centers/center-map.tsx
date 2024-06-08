@@ -12,8 +12,8 @@ const CenterMap = () => {
   useEffect(() => {
     if (parkingCenters.length > 0) {
       const coordinates = parkingCenters.map((center) => ({
-        latitude: center.location.location.lat,
-        longitude: center.location.location.lng,
+        latitude: center.center_address?.latitude ?? 0,
+        longitude: center.center_address?.longitude ?? 0,
       }));
       const edgePadding = { top: 100, right: 100, bottom: 100, left: 100 }; // Adjust padding as needed
       mapRef.current?.fitToCoordinates(coordinates, {
@@ -40,11 +40,11 @@ const CenterMap = () => {
         <Marker
           key={index}
           coordinate={{
-            latitude: center.location.location.lat,
-            longitude: center.location.location.lng,
+            latitude: center.center_address?.latitude ?? 0,
+            longitude: center.center_address?.longitude ?? 0,
           }}
           title={center.center_name}
-          description={center.description}
+          description={center.center_address?.state}
         />
       ))}
     </MapView>
