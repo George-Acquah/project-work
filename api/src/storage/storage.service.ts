@@ -143,26 +143,26 @@ export class StorageService {
     }
   }
 
-  async getWithMetaData(path: string): Promise<StorageFile> {
-    const [bucketObj] = await this.storage
-      .bucket(this.bucket)
-      .file(path)
-      .getMetadata();
-    const { metadata } = bucketObj;
-    const fileResponse: DownloadResponse = await this.storage
-      .bucket(this.bucket)
-      .file(path)
-      .download();
-    const [buffer] = fileResponse;
+  // async getWithMetaData(path: string): Promise<StorageFile> {
+  //   const [bucketObj] = await this.storage
+  //     .bucket(this.bucket)
+  //     .file(path)
+  //     .getMetadata();
+  //   const { metadata } = bucketObj;
+  //   const fileResponse: DownloadResponse = await this.storage
+  //     .bucket(this.bucket)
+  //     .file(path)
+  //     .download();
+  //   const [buffer] = fileResponse;
 
-    const storageFile = new StorageFile();
-    storageFile.buffer = buffer;
-    storageFile.metadata = new Map<string, string>(
-      Object.entries(metadata || {})
-    );
-    storageFile.contentType = storageFile.metadata.get('contentType');
-    return storageFile;
-  }
+  //   const storageFile = new StorageFile();
+  //   storageFile.buffer = buffer;
+  //   storageFile.metadata = new Map<string, string>(
+  //     Object.entries(metadata || {})
+  //   );
+  //   storageFile.contentType = storageFile.metadata.get('contentType');
+  //   return storageFile;
+  // }
 
   clearCache(fileName: string) {
     this.cache.delete(fileName);
