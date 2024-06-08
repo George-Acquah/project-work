@@ -89,6 +89,21 @@ interface _IFormattedUser {
   image: string | null;
 }
 
+interface _IRegisterResponse {
+  email: string;
+  userType: _TUserType;
+}
+
+interface _ILogin extends _IRegisterResponse {
+  image: string;
+  _id: string;
+}
+
+interface _ILoginResponse {
+  tokens: _ITokens;
+  user: _ILogin;
+}
+
 interface _IFormattedCenter {
   [key: string]: string | number | null;
   _id: string;
@@ -407,15 +422,84 @@ interface _ISlotImage extends _Image {
   slot_id: string;
 }
 
+interface _ISessionContext {
+  /** A boolean to show whether session modal is opened or closed */
+  isSessionModalOpen: boolean;
+  /**  A callback url incase of an error */
+  callbackUrl?: string;
+  /** A void function that opens the session modal */
+  openSessionModal: (cb?: string) => void;
+  /** A void function that closes the session modal */
+  closeSessionModal: () => void;
+}
+
+interface _IShowErrorModal {
+  message: string;
+  button_label: string;
+  description?: string;
+}
+interface _IErrorModalContext {
+  message: string | undefined;
+  visible: boolean;
+  button_label: undefined | string;
+  description: undefined | string;
+  /** A void function that opens the session modal */
+  openErrorModal: (data: _IShowErrorModal) => void;
+  /** A void function that closes the session modal */
+  closeErrorModal: () => void;
+}
+
 interface _IParkingCenterImage extends _Image {
   center_id: string;
 }
+
+interface _IRefresh {
+  tokens: _ITokens;
+}
+
+interface _IThemeContext {
+  themes: string[];
+  toggleTheme?: () => void;
+  forcedTheme?: string;
+  setTheme: (theme: string) => void;
+  theme?: string;
+  /** If `enableSystem` is true and the active theme is "system", this returns whether the system preference resolved to "dark" or "light". Otherwise, identical to `theme` */
+  resolvedTheme?: string;
+  /** If enableSystem is true, returns the System theme preference ("dark" or "light"), regardless what the active theme is */
+  systemTheme?: _IThemeType;
+}
+interface _ThemeProviderProps {
+  /** List of all available theme names */
+  themes?: string[];
+  /** Forced theme name for the current page */
+  forcedTheme?: string;
+  /** Whether to switch between dark and light themes based on prefers-color-scheme */
+  enableSystem?: boolean;
+  /** Disable all CSS transitions when switching themes */
+  disableTransitionOnChange?: boolean;
+  /** Whether to indicate to browsers which color scheme is used (dark or light) for built-in UI like inputs and buttons */
+  enableColorScheme?: boolean;
+  /** Key used to store theme setting in localStorage */
+  storageKey?: string;
+  /** Default theme name (for v0.0.12 and lower the default was light). If `enableSystem` is false, the default theme is light */
+  defaultTheme?: string;
+  /** HTML attribute modified based on the active theme. Accepts `class` and `data-*` (meaning any data attribute, `data-mode`, `data-color`, etc.) */
+  attribute?: string | "class";
+  /** Mapping of theme name to HTML attribute value. Object where key is the theme name and value is the attribute value */
+  value?: ValueObject | undefined;
+  /** Nonce string to pass to the inline script for CSP headers */
+  nonce?: string;
+  children?: React.ReactNode;
+}
+
 type _TVehicleImage = _Image;
 
 type _TableRowType = _IFormattedCenter | _IFormattedUser | _IFormattedSlot;
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";
 type _TFields = "text" | "radio" | "select" | "email";
+type _IThemeType = "light" | "dark";
+type ValueObject = Record<string, string>;
 
 type _TUpdateEntityFunction<T> = (
   id: string,

@@ -10,6 +10,8 @@ import { dashboardRoutes } from "./routes";
 import { redirect } from "next/navigation";
 import { AdminSchema, ApplicantSchema } from "./z-validations";
 import { clientCookiesKeys, clientCookiesValues } from "./constants";
+import { AuthError } from "next-auth";
+import { AUTH_ERRORS } from "@/constants/errors.constants";
 
 const UpdateApplicant = ApplicantSchema.omit({ id: true });
 
@@ -36,15 +38,14 @@ async function refreshToken(token: JWT): Promise<JWT> {
   };
 }
 
-async function authenticate(prevState: string | undefined, formData: FormData) {
-  console.log(formData);
+async function authenticate(prevState: void, formData: FormData) {
   try {
     await signIn("credentials", Object.fromEntries(formData));
   } catch (error) {
-    if ((error as Error).message.includes("CredentialsSignin")) {
-      return "CredentialSignin";
+    const error_url = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
+    if (error instanceof AuthError) {
+      redirect(error_url);
     }
-    throw error;
   }
 }
 
@@ -59,18 +60,17 @@ async function setLightCookies() {
 async function deleteUser(id: string) {
   const url = `${endpoints.USERS.DELETE_USER}/${id}`;
   try {
-    const response = await fetcher( url, "DELETE" );
+    const response = await fetcher(url, "DELETE");
     revalidatePath(dashboardRoutes.USERS.BASE);
     return response;
-  }
-  catch (error: any) {
+  } catch (error: any) {
     console.log(error.message);
   }
 }
 
 async function deleteCustomer(id: string) {
   const url = `${endpoints.USERS.DELETE_USER}/${id}`;
-  
+
   try {
     const response = await fetcher(url, "DELETE");
     revalidatePath(dashboardRoutes.USERS.CUSTOMERS.BASE);
@@ -109,24 +109,20 @@ async function updateUser(
     };
   }
   const url = `${endpoints.USERS.GET_SINGLE_USER}/${id}`;
-    try {
-      await fetcher(url, "PUT", "no-cache", validatedFields.data);
-    } catch (error: any) {
-      console.log(error.message);
-      return {
-        message: error.message
-      };
+  try {
+    await fetcher(url, "PUT", "no-cache", validatedFields.data);
+  } catch (error: any) {
+    console.log(error.message);
+    return {
+      message: error.message,
+    };
   }
 
   revalidatePath(dashboardRoutes.USERS.CUSTOMERS.BASE);
   redirect(dashboardRoutes.USERS.CUSTOMERS.BASE);
 }
 
-async function updateAdmin(
-  id: string,
-  prevState: any,
-  formData: FormData
-) {
+async function updateAdmin(id: string, prevState: any, formData: FormData) {
   console.log(formData);
   const validatedFields = UpdateAdmin.safeParse({
     email: formData.get("email"),

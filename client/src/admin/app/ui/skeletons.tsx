@@ -61,6 +61,33 @@ export function InvoiceSkeleton() {
   );
 }
 
+// Skeleton loader for a filter block with animations
+const FilterBlockSkeleton = ({ len }: { len: number }) => (
+  <div className="mb-4">
+    <div className="mb-1 h-6 w-40 bg-gray-200 rounded-md animate-pulse"></div> {/* Placeholder for title */}
+    <div className="space-y-1">
+      {Array.from({ length: len }).map((_, index) => (
+        <div key={index} className="flex items-center gap-2 p-2 animate-pulse">
+          <div className="h-8 w-8 bg-gray-200 rounded-full"></div> {/* Placeholder for icon */}
+          <div className="h-5 w-32 bg-gray-200 rounded-md"></div> {/* Placeholder for item text */}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+
+// Skeleton loader for all filter blocks
+export const FilterSkeleton = () => {
+  return (
+    <div>
+      <FilterBlockSkeleton len={3} />
+      <FilterBlockSkeleton len={2} />
+      <FilterBlockSkeleton len={2} />
+    </div>
+  );
+};
+
 export function LatestInvoicesSkeleton() {
   return (
     <div

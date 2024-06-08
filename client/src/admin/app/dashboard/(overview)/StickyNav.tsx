@@ -1,9 +1,10 @@
 'use client'
 import UserMenu from "@/app/ui/dashboard/user-menu";
 import { textColor } from "@/app/ui/themes";
+import { _ISessionUser } from "@/next-auth";
 import { useState, useEffect } from "react";
 
-export const StickyNav = ({ user }: { user?: _IUser }) => {
+export const StickyNav = ({ user }: { user?: _ISessionUser }) => {
   // Sticky Navbar
   const [sticky, setSticky] = useState(false);
   const handleStickyNavbar = () => {
