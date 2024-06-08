@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { SocketIOAdapter } from './socket-io-adapter';
+// import { SocketIOAdapter } from './socket-io-adapter';
 
 async function bootstrap() {
   const logger = new Logger();
@@ -21,7 +21,7 @@ async function bootstrap() {
     origin: `*`
   });
 
-  app.useWebSocketAdapter(new SocketIOAdapter(app, configService));
+  // app.useWebSocketAdapter(new SocketIOAdapter(app, configService));
 
   await app.listen(port, () => {
     logger.log(`Server is running on port ${port}`);

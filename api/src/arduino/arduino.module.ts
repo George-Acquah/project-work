@@ -4,7 +4,7 @@ import { ArduinoController } from './arduino.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   ArduinoData,
-  ArduinoDataSchema,
+  ArduinoDataSchema
 } from 'src/shared/schemas/arduino-data.schema';
 
 @Module({
@@ -12,8 +12,8 @@ import {
   providers: [ArduinoService],
   imports: [
     MongooseModule.forFeature([
-      { name: ArduinoData.name, schema: ArduinoDataSchema },
-    ]),
-  ],
+      { name: ArduinoData.name, schema: ArduinoDataSchema }
+    ])
+  ]
 })
 export class ArduinoModule {}

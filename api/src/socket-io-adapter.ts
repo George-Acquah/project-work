@@ -10,7 +10,7 @@ export class SocketIOAdapter extends IoAdapter {
   private logger = new Logger(SocketIOAdapter.name);
   constructor(
     private app: INestApplication,
-    private configService: ConfigService,
+    private configService: ConfigService
   ) {
     super(app);
   }
@@ -21,18 +21,18 @@ export class SocketIOAdapter extends IoAdapter {
     const cors = {
       origin: [
         `http://localhost:${clientPort}`,
-        new RegExp(`^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$`),
-      ],
+        new RegExp(`^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$`)
+      ]
     };
 
     this.logger.log(
       'Configuring SocketIO Server with Custom CORS option',
-      cors,
+      cors
     );
 
     const optionsWithCors: ServerOptions = {
       ...options,
-      cors,
+      cors
     };
 
     const jwtService = this.app.get(JwtService);
