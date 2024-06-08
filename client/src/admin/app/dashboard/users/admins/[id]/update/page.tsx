@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { dashboardRoutes } from "@/app/lib/routes";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
 import EditApplicantForm from "@/app/ui/users/users/edit-form";
-import { fetchApplicantById, fetchRoles } from "@/app/lib/requests";
+import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
 
 export const metadata: Metadata = {
   title: "Edit Applicant",
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 export default async function Page({ params }: _IdParams) {
   const id = params.id;
   const [applicant, roles] = await Promise.all([
-    fetchApplicantById(id),
-    fetchRoles(),
+    fetchUserById(id),
+    fetchUserTypes(),
   ]);
 
   console.log(applicant);
@@ -29,16 +29,16 @@ export default async function Page({ params }: _IdParams) {
         breadcrumbs={[
           {
             label: "Applicants",
-            href: `${dashboardRoutes.USERS.APPLICANTS.BASE}`,
+            href: `${dashboardRoutes.USERS.ADMINS.BASE}`,
           },
           {
             label: "Update Applicant",
-            href: `${dashboardRoutes.USERS.APPLICANTS.BASE}/${id}/update`,
+            href: `${dashboardRoutes.USERS.ADMINS.BASE}/${id}/update`,
             active: true,
           },
         ]}
       />
-      <EditApplicantForm applicant={applicant} roles={roles} />
+      <EditApplicantForm id={""} fields={[]} updateEntity={undefined} entityData={undefined} selecteds={undefined}  />
     </main>
   );
 }

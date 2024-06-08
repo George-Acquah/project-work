@@ -12,7 +12,8 @@ import {
 const DEV = process.env.NEXT_PUBLIC_API_URL;
 const PROD = "prod-base-url";
 
-export const API = process.env.NODE_ENV === "development" ? DEV : PROD;
+export const API = DEV;
+// export const API = process.env.NODE_ENV === "development" ? DEV : PROD;
 
 export function switchErrRes(
   status: number,
