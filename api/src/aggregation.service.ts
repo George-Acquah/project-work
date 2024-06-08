@@ -8,7 +8,8 @@ import mongoose, {
   Document,
   FilterQuery,
   PipelineStage,
-  ClientSession
+  ClientSession,
+  AnyExpression
 } from 'mongoose';
 import { CREATE_PIPELINE, SORT } from './shared/enums/general.enum';
 import { _ILookup } from './shared/interfaces/responses.interface';
@@ -544,8 +545,10 @@ export class AggregationService {
     matcher: Partial<Record<keyof T, any>>,
     lookup_data?: _ILookup[],
     unwind_fields?: (keyof T)[],
+    countFields?: string[], // New parameter to specify fields to count
     currentPage = 1,
-    items = 10
+    items = 10,
+    sanitizeFn?: (doc: T) => AnyExpression
   ): Promise<S> {
     try {
       if (currentPage < 1 || items < 1) {
@@ -553,16 +556,6 @@ export class AggregationService {
       }
 
       const pipeline: PipelineStage[] = [{ $match: matcher }];
-
-      // Pagination stages
-      //Skipping Stage
-      // if (currentPage && items) {
-      //   const offset = (currentPage - 1) * items;
-      //   pipeline.push({ $skip: offset });
-      // }
-      // Pagination stages
-      const offset = (currentPage - 1) * items;
-      pipeline.push({ $skip: offset }, { $limit: items });
 
       // Lookup stages
       lookup_data?.forEach((data) => {
@@ -576,11 +569,6 @@ export class AggregationService {
         });
       });
 
-      //Limitting Stage
-      if (items) {
-        pipeline.push({ $limit: items });
-      }
-
       // Unwind stages
       unwind_fields?.forEach((field) => {
         pipeline.push({
@@ -592,24 +580,37 @@ export class AggregationService {
       });
 
       // Project stage
-      if (project_fields.length > 0) {
-        const project: Record<string, 1> = {};
-        project_fields.forEach((field) => {
-          project[String(field)] = 1;
-        });
+      const project: Record<string, any> = {};
+      project_fields.forEach((field) => {
+        project[String(field)] = 1;
+      });
+
+      // Add fields to count
+      countFields?.forEach((field) => {
+        project[`${String(field)}_count`] = { $size: `$${String(field)}` };
+      });
+
+      if (Object.keys(project).length > 0) {
         pipeline.push({ $project: project });
       }
 
+      // Pagination stages
+      const offset = (currentPage - 1) * items;
+      pipeline.push({ $skip: offset }, { $limit: items });
+
       // Execute pipeline
       const result = await model.aggregate(pipeline);
+      console.log(result);
 
-      // Return based on the 'returnAsArray' flag
+      // Return based on the 'return_as_object' flag
       if (return_as_object) {
         console.log('not array');
-        return result[0] as unknown as S;
+        return sanitizeFn ? (sanitizeFn(result[0]) as unknown as S) : result[0];
       } else {
         console.log('array');
-        return result as unknown as S;
+        return sanitizeFn
+          ? (result.map((item) => sanitizeFn(item)) as unknown as S)
+          : (result as unknown as S);
       }
     } catch (error) {
       throw new Error(`Error fetching filtered documents: ${error.message}`);

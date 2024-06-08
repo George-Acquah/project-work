@@ -9,6 +9,7 @@ import {
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -29,6 +30,7 @@ import { TransactionService } from 'src/transaction.service';
 import { Connection } from 'mongoose';
 import { UpdateUserDetailsDto } from './dtos/update-user.dto';
 import { InjectConnection } from '@nestjs/mongoose';
+import { _IUsersTable } from 'src/shared/interfaces/refactored/user.interface';
 
 @Controller('users')
 export class UsersController {
@@ -39,6 +41,30 @@ export class UsersController {
     private readonly transactionService: TransactionService,
     @InjectConnection() private readonly connection: Connection // Injecting the Connection object
   ) {}
+
+  @Get()
+  async getFilteredUsers(
+    @Query('users') query: string,
+    @Query('currentPage', new ParseIntPipe()) currentPage,
+    @Query('size', new ParseIntPipe()) size
+  ): Promise<ApiResponse<_IUsersTable[]>> {
+    try {
+      const filteredUsers = await this.usersService.fetchUsers(
+        query,
+        currentPage,
+        size
+      );
+
+      //TODO implement next page token
+      return new ApiResponse(200, 'Your query was successful', filteredUsers);
+    } catch (error) {
+      return new ApiResponse(
+        error.statusCode || 403,
+        error.message ?? 'Your query was not successful',
+        undefined
+      );
+    }
+  }
 
   @Get('roles')
   getRoles(): ApiResponse<DbUserType[]> {
@@ -107,7 +133,7 @@ export class UsersController {
     return new ApiResponse(200, 'User Verified', {
       _id: user._id,
       email: user.email,
-      user_image: user?.image?.file_id ?? null,
+      user_image: user?.user_image?.file_id ?? null,
       first_name: user.profile.first_name,
       phone_number: user.profile.contact_no,
       last_name: user.profile.last_name,
@@ -115,31 +141,6 @@ export class UsersController {
       area: user.profile.area,
       pincode: user.profile.pinCode
     });
-  }
-
-  @Get('admin')
-  async getFilteredUsers(
-    @Query('users') query: string,
-    @Query('currentPage') currentPage: number,
-    @Query('size') size: number
-  ): Promise<ApiResponse<_TSanitizedUser[] | object>> {
-    try {
-      const filteredUsers = await this.usersService.fetchFilteredUsers(
-        query,
-        currentPage,
-        size
-      );
-
-      //TODO implement next page token
-
-      return new ApiResponse(200, 'Your query was successful', filteredUsers);
-    } catch (error) {
-      return new ApiResponse(
-        error.statusCode || 403,
-        error.message ?? 'Your query was not successful',
-        {}
-      );
-    }
   }
 
   @Get('profile')

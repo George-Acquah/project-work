@@ -10,17 +10,19 @@ import { UsersModule } from './users/users.module';
 import { VehiclesModule } from './vehicles/vehicles.module';
 import { StorageService } from './storage/storage.service';
 import { ImagesModule } from './images/images.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({}),
+    ConfigModule.forRoot(),
     RootMongooseModule,
     ArduinoModule,
     AuthModule,
     ParkingModule,
     UsersModule,
     VehiclesModule,
-    ImagesModule
+    ImagesModule,
+    MailModule
   ],
   controllers: [AppController],
   providers: [AppService, StorageService]

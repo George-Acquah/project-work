@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { ClientSession, Model, Types } from 'mongoose';
+import { AnyExpression, ClientSession, Model, Types } from 'mongoose';
 import { CreateUserDto } from './dtos/create-users.dto';
 import { Customer } from 'src/shared/schemas/customer.schema';
 import { ParkOwner } from 'src/shared/schemas/owner.schema';
@@ -34,10 +34,15 @@ import { AggregationService } from 'src/aggregation.service';
 import { TransactionService } from 'src/transaction.service';
 import {
   _INewProfile,
-  _IRegisterResponse
+  _IRegisterResponse,
+  _IUsersTable
 } from 'src/shared/interfaces/refactored/user.interface';
-import { sanitizeUserFn } from 'src/shared/helpers/users.sanitizers';
+import {
+  sanitizeAdminUserFn,
+  sanitizeUserFn
+} from 'src/shared/helpers/users.sanitizers';
 import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
+import { FETCH_USERS_BY_ADMIN_AGGREGATION } from 'src/shared/constants/users.constants';
 
 @Injectable()
 export class UsersService {
@@ -391,6 +396,41 @@ export class UsersService {
     }
   }
 
+  async fetchUsers(
+    query = '',
+    currentPage: number,
+    items: number
+  ): Promise<_IUsersTable[]> {
+    try {
+      const {
+        project_fields,
+        lookups,
+        unwind_fields,
+        count_fields,
+        field_names
+      } = FETCH_USERS_BY_ADMIN_AGGREGATION;
+      const users = await this.aggregationService.dynamicDocumentsPipeline<
+        _TUser,
+        _IUsersTable[]
+      >(
+        this.userModel,
+        false,
+        project_fields,
+        {},
+        lookups,
+        unwind_fields,
+        count_fields,
+        currentPage,
+        items,
+        sanitizeAdminUserFn
+      );
+
+      return users;
+    } catch (error) {
+      throw new Error(error.message || 'Failed to fetch users.');
+    }
+  }
+
   async fetchUsersPage(query = '', items: number): Promise<number> {
     try {
       const fieldNames = ['email', 'userType'];
@@ -444,7 +484,7 @@ export class UsersService {
         return {
           ...profile,
           _id: user._id.toString(),
-          user_image: user?.image?.file_id ?? null,
+          user_image: user?.user_image?.file_id ?? null,
           phone_number: user.phone_number,
           email: user.email
         };
