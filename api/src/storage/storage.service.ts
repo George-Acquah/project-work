@@ -4,13 +4,11 @@ import { Response } from 'express';
 import { StorageFile } from './storage.config';
 import { _ICloudRes } from 'src/shared/interfaces/images.interface';
 import { ConfigService } from '@nestjs/config';
-import { getPath } from 'src/shared/utils/global.utils';
 
 @Injectable()
 export class StorageService {
   private storage: Storage;
   private bucket: string;
-  private tokenPath: string;
   private cache: Map<string, { url: string; expiresAt: number }>; // In-memory cache for signed URLs
   private cacheExpiry: number; // Cache expiration time in seconds
 
@@ -22,12 +20,10 @@ export class StorageService {
     }: { mediaBucket: string; path: string; url: string } =
       this.configService.get('GCPStorageConfig');
 
-    this.tokenPath = getPath(path);
-
     // this.url = url;
 
     this.storage = new Storage({
-      keyFilename: this.tokenPath
+      keyFilename: path
     });
 
     this.bucket = mediaBucket;
