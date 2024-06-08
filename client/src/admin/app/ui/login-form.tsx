@@ -1,8 +1,6 @@
-"use client";
-
+"use client"
 import { lusitana } from "@/app/ui/font";
 import { useFormState, useFormStatus } from "react-dom";
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import Button from "./button";
 import { authenticate } from "../lib/actions";
@@ -60,16 +58,6 @@ export default function LoginForm() {
                 Sign up
               </Link>
             </p>
-            <div className="flex h-8 items-end space-x-1">
-              {state === "CredentialSignin" && (
-                <>
-                  <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-                  <p aria-live="polite" className="text-sm text-red-500">
-                    Invalid credentials
-                  </p>
-                </>
-              )}
-            </div>
           </div>
         </div>
       </div>
@@ -91,21 +79,21 @@ function LoginButton() {
 }
 
 const GithubButton = () => (
-  <button className={`w-full ${providerBtnClass}`}>
+  <div className={`w-full ${providerBtnClass} cursor-pointer`} onClick={undefined}>
     <span className="mr-3">
       <SvgGithub />
     </span>
     Sign in with Github
-  </button>
+  </div>
 );
 
 const GoogleButton = () => (
-  <button className={`w-full ${providerBtnClass}`}>
+ <div className={`w-full ${providerBtnClass} cursor-pointer`} onClick={undefined}>
     <span className="mr-3">
       <SvgGoogle />
     </span>
     Sign in with Google
-  </button>
+  </div>
 );
 
 const RememberMe = () => (

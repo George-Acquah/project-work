@@ -1,21 +1,22 @@
-import { cookies } from "next/headers";
-import React, { memo } from "react";
-import { clientCookiesKeys } from "../lib/constants";
-import { DarkIcon, LightIcon } from "./theme-icons";
+"use client";
+import React from "react";
 import { bgColor } from "./themes";
+import { useTheme } from "@/utils/contexts/theme.context";
+import { SvgSun, SvgMoon } from "./icons";
+const themeClass = `fixed bottom-4 right-4 cursor-pointer flex items-center justify-center rounded-full z-50 w-8 h-8 ${bgColor}`;
 
-export const ToggleTheme = memo(() => {
-    const cookieStore = cookies();
-    const themeCookie = cookieStore.get(clientCookiesKeys.THEME);
-    const theme = themeCookie?.value;
-
+const ThemeToggler = () => {
+  const { theme, setTheme } = useTheme();
   return (
-    <div
-      className={`fixed bottom-4 right-4 cursor-pointer flex items-center justify-center rounded-full z-50 w-8 h-8 ${bgColor}`}
+    <button
+      aria-label="theme toggler"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className={themeClass}
     >
-      {theme === "dark" ? <LightIcon /> : <DarkIcon />}
-    </div>
+      <SvgSun />
+      <SvgMoon />
+    </button>
   );
-});
+};
 
-export default ToggleTheme;
+export default ThemeToggler;

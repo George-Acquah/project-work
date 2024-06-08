@@ -26,7 +26,6 @@ const formatTitles = (key: string): string => {
 const convertDateToString = (dateString: string, locale: string = "en-US") => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
-    // Invalid date, return the original string or handle the error accordingly
     return dateString;
   }
 
@@ -121,8 +120,8 @@ function formatusersTable(users: _IUser[]): _IFormattedUser[] {
     fullname: `${user?.profile?.first_name ?? "Update"} ${
       user?.profile?.last_name ?? "Profile"
     }`,
-    contact: user.profile.contact_no ?? "Update Profile",
-    location: user.profile.area ?? "Update Profile",
+    contact: user?.profile?.contact_no ?? "Update Profile",
+    location: user?.profile?.area ?? "Update Profile",
     vehicles: user?.vehicles?.length ?? 0,
     centers: user?.centers?.length ?? 0,
     userType: formatUserType(user.userType),

@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import "@/app/ui/globals.css";
 import { inter } from "@/app/ui/font";
 import { bodyBg } from "./ui/themes";
-import ToggleTheme from "./ui/toggle-theme";
 import { cookies } from "next/headers";
-import { clientCookiesKeys } from "./lib/constants";
+import { themeKey } from "@/constants/theme.constants";
+import { Providers } from "./providers";
+import ThemeToggler from "./ui/toggle-theme";
+import SessionModal from "./ui/modals/session.modal";
+import { Suspense } from "react";
+import ErrorModal from "./ui/modals/error.modal";
 
 export const metadata: Metadata = {
   title: {
@@ -16,15 +20,23 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: _IChildren) {
-  const cookieStore = cookies();
-  const themeCookie = cookieStore.get(clientCookiesKeys.THEME);
-  const theme = themeCookie?.value;
+    const cookieStore = cookies();
+    const themeCookie = cookieStore.get(themeKey);
+    const theme = themeCookie?.value;
 
   return (
-    <html lang="en" className={theme}>
+    <html suppressHydrationWarning lang="en">
       <body className={`${inter.className} antialiased ${bodyBg}`}>
-        {children}
-        <ToggleTheme />
+        <Providers theme={theme!}>
+          <Suspense fallback={<p> Loading ....</p>}>
+            <SessionModal />
+          </Suspense>
+          <Suspense fallback={<p> Loading ....</p>}>
+            <ErrorModal />
+          </Suspense>
+          {children}
+          <ThemeToggler />
+        </Providers>
       </body>
     </html>
   );

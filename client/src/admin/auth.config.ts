@@ -7,21 +7,21 @@ export const authConfig = {
     newUser: "auth/register"
   },
   
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard =
-        nextUrl.pathname.startsWith("/dashboard") ||
-        nextUrl.pathname.startsWith("/admin");
-      if (isOnDashboard) {
-        if (isLoggedIn) return true;
-        return false; 
-      } else if (isLoggedIn) {
-        return Response.redirect(
-          new URL("http://localhost:3000/dashboard", nextUrl)
-        );
-      }
-      return true;
-    },
-  },
+  // callbacks: {
+  //   authorized({ auth, request: { nextUrl } }) {
+  //     const isLoggedIn = !!auth?.user;
+  //     const isOnDashboard =
+  //       nextUrl.pathname.startsWith("/dashboard") ||
+  //       nextUrl.pathname.startsWith("/admin");
+  //     if (isOnDashboard) {
+  //       if (isLoggedIn) return true;
+  //       return false; 
+  //     } else if (isLoggedIn) {
+  //       return Response.redirect(
+  //         new URL("http://localhost:3000/dashboard", nextUrl)
+  //       );
+  //     }
+  //     return true;
+  //   },
+  // },
 } satisfies NextAuthConfig;

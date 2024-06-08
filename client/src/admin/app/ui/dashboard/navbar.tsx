@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { Bars3Icon, PowerIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,9 +26,10 @@ import {
   hoverTexts,
   hoverBg,
 } from "../themes";
+import { _ISessionUser } from "@/next-auth";
 
 interface IProps {
-  user: _IUser | undefined;
+  user: _ISessionUser | undefined;
 }
 
 function NavlinksComponent({ pathname, data, title, rem }: _INavProps) {
@@ -45,7 +46,7 @@ function NavlinksComponent({ pathname, data, title, rem }: _INavProps) {
         const LinkIcon = item.icon;
         return (
           <Link href={item.href} key={item.name}>
-            <Disclosure.Button
+            <DisclosureButton
               as="div"
               className={classNames(
                 pathname === item.href
@@ -71,7 +72,7 @@ function NavlinksComponent({ pathname, data, title, rem }: _INavProps) {
                 }`}
               />
               <p>{item.name}</p>
-            </Disclosure.Button>
+            </DisclosureButton>
           </Link>
         );
       })}
@@ -93,7 +94,7 @@ export default function Navbar({ user }: IProps) {
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex items-center">
-                <Disclosure.Button as="div">
+                <DisclosureButton as="div">
                   <Link
                     href={loginCallbackUrl}
                     className="flex flex-shrink-0 items-center"
@@ -101,11 +102,11 @@ export default function Navbar({ user }: IProps) {
                   >
                     <LinklessLogo />
                   </Link>
-                </Disclosure.Button>
+                </DisclosureButton>
               </div>
               <UserMenu user={user} />
               <div className="-mr-2 flex items-center sm:hidden">
-                <Disclosure.Button
+                <DisclosureButton
                   className={`inline-flex items-center justify-center rounded-md p-2 ${textColor} focus:outline-none focus:ring-2 ${focusTheme}  ${bgColor}`}
                 >
                   <span className="sr-only">Open main menu</span>
@@ -114,12 +115,12 @@ export default function Navbar({ user }: IProps) {
                   ) : (
                     <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                   )}
-                </Disclosure.Button>
+                </DisclosureButton>
               </div>
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden h-screen">
+          <DisclosurePanel className="sm:hidden h-screen">
             <div className="space-y-1 pt-2 pb-3">
               <NavlinksComponent
                 pathname={pathname}
@@ -179,7 +180,7 @@ export default function Navbar({ user }: IProps) {
                 </div>
               )}
             </div>
-          </Disclosure.Panel>
+          </DisclosurePanel>
         </>
       )}
     </Disclosure>

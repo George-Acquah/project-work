@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, Transition } from "@headlessui/react";
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
 import { signIn } from "next-auth/react";
 import React, { Fragment } from "react";
 import Image from "next/image";
@@ -10,9 +10,10 @@ import { navDropdownLinks } from "@/app/lib/constants";
 import Link from "next/link";
 import { signOutHelper } from "@/app/lib/actions";
 import { bodyBg, cardsBg, secHover, textColor } from "../themes";
+import { _ISessionUser } from "@/next-auth";
 
 type Props = {
-  user?: _IUser;
+  user?: _ISessionUser;
   home?: boolean;
 };
 
@@ -29,7 +30,7 @@ const UserMenu = ({ user, home }: Props) => {
     >
       <Menu as="div" className="relative ml-3">
         <div>
-          <Menu.Button
+          <MenuButton
             className={`flex rounded-full  text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 dark:focus:ring-gray-700 focus:ring-offset-2`}
           >
             <span className="sr-only">Open user menu</span>
@@ -40,7 +41,7 @@ const UserMenu = ({ user, home }: Props) => {
               width={32}
               alt="placeholder avatar"
             />
-          </Menu.Button>
+          </MenuButton>
         </div>
         <Transition
           as={Fragment}
@@ -51,12 +52,12 @@ const UserMenu = ({ user, home }: Props) => {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items
+          <MenuItems
             className={`absolute right-0 z-10 mt-2 px-2 w-48 origin-top-right rounded-md  py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ${cardsBg}`}
           >
             {user ? (
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <>
                     {navDropdownLinks.map((item) => {
                       const LinkIcon = item.icon;
@@ -64,7 +65,7 @@ const UserMenu = ({ user, home }: Props) => {
                         <div
                           key={`${item.name}__${item.href}`}
                           className={classNames(
-                            active ? bodyBg : "",
+                            focus ? bodyBg : "",
                             `flex items-center w-full px-4 py-2 ${textColor} rounded-md ${secHover}`
                           )}
                         >
@@ -77,7 +78,7 @@ const UserMenu = ({ user, home }: Props) => {
                     })}
                     <div
                       className={classNames(
-                        active ? "bg-gray-100" : "",
+                        focus ? "bg-gray-100" : "",
                         "flex items-center w-full px-4 py-2 text-white rounded-md bg-red-500 mt-2"
                       )}
                     >
@@ -93,13 +94,13 @@ const UserMenu = ({ user, home }: Props) => {
                     </div>
                   </>
                 )}
-              </Menu.Item>
+              </MenuItem>
             ) : (
-              <Menu.Item>
-                {({ active }) => (
+              <MenuItem>
+                {({ focus }) => (
                   <button
                     className={classNames(
-                      active ? "bg-gray-100" : "",
+                      focus ? "bg-gray-100" : "",
                       "flex w-full px-4 py-2 text-sm text-gray-700"
                     )}
                     onClick={() => signIn("github")}
@@ -107,9 +108,9 @@ const UserMenu = ({ user, home }: Props) => {
                     Sign in
                   </button>
                 )}
-              </Menu.Item>
+              </MenuItem>
             )}
-          </Menu.Items>
+          </MenuItems>
         </Transition>
       </Menu>
     </div>
