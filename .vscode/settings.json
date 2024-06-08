@@ -1,9 +1,5 @@
 {
   "editor.tabSize": 2,
-<<<<<<< Updated upstream
-  "editor.inlineSuggest.showToolbar": "onHover"
-=======
   "editor.inlineSuggest.showToolbar": "always",
   "CodeGPT.apiKey": "CodeGPT Plus Beta"
->>>>>>> Stashed changes
 }
