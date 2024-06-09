@@ -2,7 +2,6 @@
 
 import { lusitana } from "@/app/ui/font";
 import { useFormState, useFormStatus } from "react-dom";
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import Button from "./button";
 import { authenticate } from "../lib/actions";
@@ -13,13 +12,17 @@ import {
   providerBtnClass,
 } from "./themes";
 import { loginDetails } from "../lib/constants";
-import { LoginInput } from "./inputs";
 import { SvgCheck, SvgGithub, SvgGoogle } from "../lib/icons";
 import { HRWithText } from "../auth/layout";
 import Link from "next/link";
+import CommonInput from "./shared/common-inputs";
 
 export default function RegistrationForm() {
-  const [state, dispatch] = useFormState(authenticate, undefined);
+  const initialState: any = {
+    message: null,
+    errors: {},
+  };
+  const [state, dispatch] = useFormState(authenticate, initialState);
 
   return (
     <form action={dispatch} className="space-y-3">
@@ -41,17 +44,18 @@ export default function RegistrationForm() {
             <GoogleButton />
             <GithubButton />
             <HRWithText text="Or, register with your email" />
-            {loginDetails.map((details) => (
-              <LoginInput
-                key={details.id}
-                required={details?.required}
-                minLenght={details.minLenght}
-                id={details.id}
-                placeholder={details.placeholder}
-                label={details.label}
-                icon={details.icon}
-                type={details.type}
-                mt={details.mt}
+            {loginDetails.map((detail) => (
+              <CommonInput
+                key={`${String(detail.id)}__${detail.placeholder}`}
+                id={String(detail.id)}
+                placeholder={detail.placeholder}
+                label={detail.label}
+                icon={detail.icon}
+                type={detail.type}
+                errors={state.errors}
+                // required={detail?.required}
+                minLenght={detail.minLenght}
+                mt={detail.mt}
               />
             ))}
             <UserConsent />

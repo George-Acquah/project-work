@@ -1,5 +1,4 @@
 import SmartCarParkingAdminLogo from "@/app/ui/logos";
-import LoginForm from "@/app/ui/login-form";
 import { Metadata } from "next";
 import { secondaryBg, strongTextColor } from "@/app/ui/themes";
 import RegistrationForm from "@/app/ui/register-user-form";

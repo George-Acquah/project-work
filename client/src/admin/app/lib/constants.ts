@@ -332,7 +332,7 @@ const loginDetails: _ILoginInputComp[] = [
   },
 ];
 
-const editAdminProfileDetails: _ICommonInputComp[] = [
+const editAdminProfileDetails: _IDetail[] = [
   {
     id: "first_name",
     placeholder: "Enter Firstname",
@@ -353,7 +353,7 @@ const editAdminProfileDetails: _ICommonInputComp[] = [
   },
 ];
 
-const editAdminOtherDetails: _ICommonInputComp[] = [
+const editAdminOtherDetails: _IDetail[] = [
   {
     id: "createdAt",
     placeholder: "Creation Date",
@@ -374,7 +374,7 @@ const editAdminOtherDetails: _ICommonInputComp[] = [
   },
 ];
 
-const editAdminContactDetails: _ICommonInputComp[] = [
+const editAdminContactDetails: _IDetail[] = [
   {
     id: "contact_no",
     placeholder: "Enter Contact",

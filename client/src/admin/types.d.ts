@@ -297,6 +297,159 @@ interface _ISlotData {
   slot_id: string;
 }
 
+/**
+ * Interface representing the properties for the CommonDivComp component.
+ *
+ * @template T - The generic type representing the shape of the data object.
+ */
+interface CommonDivCompProps<T> {
+  /**
+   * The data object containing the values to be rendered.
+   * This object should have keys that match the `id` values in the `details` array.
+   *
+   * @type {T}
+   * @memberof CommonDivCompProps
+   */
+  data: T;
+
+  /**
+   * The title of the section to be displayed.
+   * This title will help categorize the inputs under a specific context.
+   *
+   * @type {string}
+   * @memberof CommonDivCompProps
+   */
+  title: string;
+
+  /**
+   * An array of detail configurations for rendering input fields.
+   * Each detail defines how an individual input should be displayed and populated.
+   *
+   * @type {Array<Detail<T>>}
+   * @memberof CommonDivCompProps
+   */
+  details: Array<Detail<T>>;
+
+  /**
+   * Optional errors object to indicate validation issues for the inputs.
+   * The keys should match the `id` values from the `details` array.
+   *
+   * @type {Record<string, string>}
+   * @memberof CommonDivCompProps
+   */
+  errors?: Record<string, string> | null;
+}
+
+/**
+ * Interface representing the configuration for an individual input field.
+ *
+ * @template T - The generic type representing the shape of the data object.
+ */
+interface _IDetail {
+  /**
+   * The key of the data object to be used for this input field.
+   * It should correspond to a property in the data object provided.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  id: string;
+
+  /**
+   * The placeholder text to be shown inside the input field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  placeholder: string;
+
+  /**
+   * The value to be shown inside the input field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  value?: string;
+
+  /**
+   * The label to be displayed alongside the input field.
+   * This provides a description or name for the field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  label: string;
+
+  /**
+   * Optional icon to be displayed within the input field.
+   * Can be used to visually represent the field's purpose.
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  icon?: any;
+
+  /**
+   * The type of the input field (e.g., "text", "password").
+   * Defines the kind of data the input field expects.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  type: string;
+
+  /**
+   * Whether the input field should be disabled.
+   * This can be used to prevent editing of certain fields.
+   *
+   * @type {boolean}
+   * @memberof Detail
+   */
+  disabled?: boolean;
+
+  /**
+   * Whether the input field is required or not.
+   * This can be used to prevent throwing errors for unattended fields.
+   *
+   * @type {boolean}
+   * @memberof Detail
+   */
+  required?: boolean;
+
+  /**
+   * Whether the input field is required or not.
+   * This can be used to prevent throwing errors for unattended fields.
+   *
+   * @type {number}
+   * @memberof Detail
+   */
+  minLenght?: number;
+
+  /**
+   * Whether the input field should be given a resonable margin top.
+   * @type {boolean}
+   * @memberof Detail
+   */
+  mt?: boolean;
+
+  /**
+   * Optional tooltip to provide additional information about the input field.
+   * Useful for giving users hints or guidance.
+   *
+   * @type {boolean}
+   * @memberof Detail
+   */
+  tooltip?: boolean;
+
+  /**
+   * Optional errors to show to the user
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  errors?: any;
+}
+
 interface _ISecurityLog {
   _id: string;
   // Add other properties relevant to security logs
