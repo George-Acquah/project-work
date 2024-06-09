@@ -1,4 +1,4 @@
-import { auth, update } from "@/auth";
+import { auth, unstable_update } from "@/auth";
 import { ErrorMessages } from "./constants";
 import {
   AuthRequiredError,
@@ -197,7 +197,7 @@ async function updateSession(accessToken: string, refreshToken: string) {
   const currentSession = await auth();
   console.log(currentSession)
   if (currentSession) {
-    await update({
+    await unstable_update({
       ...currentSession,
       access_token: accessToken,
       refresh_token: refreshToken,
