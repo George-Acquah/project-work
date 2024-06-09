@@ -4,13 +4,13 @@ import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/r
 import { signIn } from "next-auth/react";
 import React, { Fragment } from "react";
 import Image from "next/image";
-import { classNames } from "@/app/lib/utils";
+import { classNames } from "../../lib/utils";
 import { PowerIcon } from "@heroicons/react/24/solid";
-import { navDropdownLinks } from "@/app/lib/constants";
+import { navDropdownLinks } from "../../lib/constants";
 import Link from "next/link";
-import { signOutHelper } from "@/app/lib/actions";
+import { signOutHelper } from "../../lib/actions";
 import { bodyBg, cardsBg, secHover, textColor } from "../themes";
-import { _ISessionUser } from "@/next-auth";
+import { _ISessionUser } from "next-auth";
 
 type Props = {
   user?: _ISessionUser;
