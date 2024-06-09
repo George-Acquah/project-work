@@ -61,7 +61,7 @@ const AdminProfile = async () => {
     <main
       className={`md:max-w-2xl -mx-2 rounded md:mx-auto mt-8 p-4 md:p-8 ${cardsBg}`}
     >
-      <Title>{admin.email}'s Profile</Title>
+      <Title>{admin.email}&apos;s Profile</Title>
 
       {/* Profile Image and Edit Profile button */}
       <div className="flex items-center justify-between my-6">

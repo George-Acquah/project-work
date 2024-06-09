@@ -36,7 +36,7 @@ export default function RegistrationForm() {
             <p
               className={`${lusitana.className} mb-11 text-base font-medium text-custom-body-color text-center`}
             >
-              It's totally free and super easy
+              It&apos;s totally free and super easy
             </p>
             <GoogleButton />
             <GithubButton />
