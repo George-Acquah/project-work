@@ -20,7 +20,7 @@ export default auth((req) => {
 
     // If the user is authenticated but not on the dashboard, redirect to the dashboard
   if (!isOnDashboard && isAuthenticated) {
-      return NextResponse.rewrite(new URL("/dashboard", req.nextUrl.origin), {
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin), {
         status: 303
       });
     }
