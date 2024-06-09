@@ -80,6 +80,17 @@ async function deleteCustomer(id: string) {
   }
 }
 
+async function testEmail() {
+  const url = `mail`;
+  try {
+    const response = await fetcher(url, "POST");
+    console.log(response);
+    return response;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
+
 async function deleteOwner(id: string) {
   const url = `${endpoints.USERS.DELETE_USER}/${id}`;
   try {
@@ -173,4 +184,5 @@ export {
   deleteUser,
   updateUser,
   updateAdmin,
+  testEmail
 };

@@ -13,16 +13,7 @@ import {
 import { HelperIconTooltip } from "./details-helper";
 import Pagination from "../pagination";
 import { cardOutline, cardsBg } from "../themes";
-
-// const formatCurrency = Intl.NumberFormat("en-US", {
-//   style: "currency",
-//   currency: "USD",
-// });
-
-// const formatDate = Intl.DateTimeFormat("en-US", {
-//   dateStyle: "medium",
-//   timeStyle: "medium",
-// });
+import TestEmail from "./test";
 
 // const getDeltaType = (status: number): DeltaType => {
 //   // Order is Pending or Ready
@@ -54,6 +45,9 @@ export const Details = async ({ data }: any) => {
         currentPage={currentPage}
         data={applicants}
       /> */}
+
+      <TestEmail />
+      
 
       <Flex className="mt-5 w-full flex-wrap gap-2 space-x-10" justifyContent="center" alignItems="center">
         <Pagination totalPages={10} />
