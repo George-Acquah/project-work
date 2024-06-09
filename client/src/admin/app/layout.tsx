@@ -23,7 +23,6 @@ export default async function RootLayout({ children }: _IChildren) {
     const cookieStore = cookies();
     const themeCookie = cookieStore.get(themeKey);
   const theme = themeCookie?.value;
-  console.log(theme);
 
   return (
     <html suppressHydrationWarning lang="en">
