@@ -22,6 +22,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GCPStorageConfig } from 'src/storage/storage.config';
 import { AggregationService } from 'src/aggregation.service';
 import { TransactionService } from 'src/transaction.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   imports: [
@@ -54,7 +55,8 @@ import { TransactionService } from 'src/transaction.service';
     StorageService,
     ConfigService,
     AggregationService,
-    TransactionService
+    TransactionService,
+    MailService
   ],
   exports: [UsersService]
 })

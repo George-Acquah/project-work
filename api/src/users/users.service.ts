@@ -43,6 +43,7 @@ import {
 } from 'src/shared/helpers/users.sanitizers';
 import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
 import { FETCH_USERS_BY_ADMIN_AGGREGATION } from 'src/shared/constants/users.constants';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
@@ -56,7 +57,7 @@ export class UsersService {
     @InjectModel('Profile') private profileModel: Model<_IDbProfile>,
     @InjectModel('UserImage') private userImageModel: Model<_IDbUserImage>,
     private readonly aggregationService: AggregationService,
-    private readonly transactionService: TransactionService
+    private readonly mailService: MailService
   ) {}
 
   async populateUserFields<T>(
@@ -108,24 +109,30 @@ export class UsersService {
   async createCustomer(
     userDetails: CreateUserDto
   ): Promise<_IRegisterResponse> {
-    const uniqueFields = { email: userDetails.email };
+    try {
+      const uniqueFields = { email: userDetails.email };
 
-    const sanitizedCustomer =
-      await this.aggregationService.createDocumentPipeline<
-        _ICustomer,
-        _IRegisterResponse
-      >(
-        this.customerModel,
-        this.projectCreateFields,
-        userDetails,
-        uniqueFields,
-        ['Email', 'Account'],
-        CREATE_PIPELINE.USER,
-        sanitizeUserFn
-      );
+      const sanitizedCustomer =
+        await this.aggregationService.createDocumentPipeline<
+          _ICustomer,
+          _IRegisterResponse
+        >(
+          this.customerModel,
+          this.projectCreateFields,
+          userDetails,
+          uniqueFields,
+          ['Email', 'Account'],
+          CREATE_PIPELINE.USER,
+          sanitizeUserFn
+        );
 
-    await this.createProfile(sanitizedCustomer._id);
-    return sanitizedCustomer;
+      await this.createProfile(sanitizedCustomer._id);
+
+      await this.mailService.sendTest();
+      return sanitizedCustomer;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async createProfile(user_id: string) {
