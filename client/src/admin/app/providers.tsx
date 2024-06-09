@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeProvider } from "@/utils/contexts/theme-context";
+import { ThemeProvider } from "../utils/contexts/theme.context";
 
 interface _IProviders {
   children: React.ReactNode;
