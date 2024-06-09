@@ -14,11 +14,13 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    // origin: [
-    //   `http://192.168.43.198:${clientPort}`,
-    //   new RegExp(`^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):${clientPort}$`)
-    // ]
-    origin: `*`
+    origin: [
+      `https://admin-p4oeztn5a-georgeacquahs-projects.vercel.app`,
+      new RegExp(`^http:\/\/192\.168\.43\.([1-9]|[1-9]\d):${clientPort}$`),
+      new RegExp(
+        `^https:\/\/admin-p4oeztn5a-georgeacquahs-projects\.vercel\.app$`
+      )
+    ]
   });
 
   // app.useWebSocketAdapter(new SocketIOAdapter(app, configService));
