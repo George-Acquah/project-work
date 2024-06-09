@@ -6,7 +6,7 @@ import { API, switchErrRes } from "./app/lib/data";
 import { refreshToken } from "./app/lib/actions";
 import { credentials } from "./app/lib/constants";
 
-export const { auth, signIn, signOut, handlers, update } = NextAuth({
+export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -66,7 +66,15 @@ export const { auth, signIn, signOut, handlers, update } = NextAuth({
     },
 
     async session({ session, token }) {
-      session.user = token.user;
+      // Example: Adding a default value for emailVerified
+      const emailVerified = null; // Replace false with how you determine the verification status
+
+      // Now, extend the session.user with the emailVerified property
+      session.user = {
+        ...token.user,
+        emailVerified: emailVerified,
+      };
+      // session.user = token.user;
       session.access_token = token.tokens.access_token;
       session.refresh_token = token.tokens.refresh_token;
       return session;

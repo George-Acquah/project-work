@@ -280,6 +280,13 @@ interface _ISlot {
   center_id: string;
 }
 
+// Extend the User type with the properties you expect
+interface _ISessionUser {
+  id: string;
+  email: string;
+  userType: _TUserType;
+  image: string;
+}
 interface _ISlotData {
   _id: string;
   total_daily_bookings: number;

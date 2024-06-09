@@ -10,7 +10,6 @@ import { navDropdownLinks } from "../../lib/constants";
 import Link from "next/link";
 import { signOutHelper } from "../../lib/actions";
 import { bodyBg, cardsBg, secHover, textColor } from "../themes";
-import { _ISessionUser } from "next-auth";
 
 type Props = {
   user?: _ISessionUser;

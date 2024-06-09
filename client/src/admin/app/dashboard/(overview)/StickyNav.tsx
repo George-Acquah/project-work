@@ -1,7 +1,6 @@
-'use client'
+"use client";
 import UserMenu from "@/app/ui/dashboard/user-menu";
 import { textColor } from "@/app/ui/themes";
-import { _ISessionUser } from "@/next-auth";
 import { useState, useEffect } from "react";
 
 export const StickyNav = ({ user }: { user?: _ISessionUser }) => {

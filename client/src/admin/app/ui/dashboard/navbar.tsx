@@ -1,7 +1,11 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import { Bars3Icon, PowerIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,7 +30,6 @@ import {
   hoverTexts,
   hoverBg,
 } from "../themes";
-import { _ISessionUser } from "@/next-auth";
 
 interface IProps {
   user: _ISessionUser | undefined;
