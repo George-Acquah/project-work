@@ -11,11 +11,15 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = parseInt(configService.get('PORT')) ?? 8080;
   const clientPort = parseInt(configService.get('CLIENT_PORT'));
+  const adminUrl_1 = configService.get<string>('ADMIN_URL_1');
+  const adminUrl_2 = configService.get<string>('ADMIN_URL_2');
   app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
     origin: [
-      `https://admin-p4oeztn5a-georgeacquahs-projects.vercel.app`,
+      `${adminUrl_1}`,
+      `${adminUrl_2}`,
+      `localhost:${3000}`,
       new RegExp(`^http:\/\/192\.168\.43\.([1-9]|[1-9]\d):${clientPort}$`),
       new RegExp(
         `^https:\/\/admin-p4oeztn5a-georgeacquahs-projects\.vercel\.app$`
