@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import "@/app/ui/globals.css";
 import { inter } from "@/app/ui/font";
-import { bodyBg } from "./ui/themes";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
+import { bodyBg } from "./ui/themes";
 import { themeKey } from "@/constants/theme.constants";
 import { Providers } from "./providers";
 import ThemeToggler from "./ui/toggle-theme";
 import SessionModal from "./ui/modals/session.modal";
-import { Suspense } from "react";
 import ErrorModal from "./ui/modals/error.modal";
 
 export const metadata: Metadata = {

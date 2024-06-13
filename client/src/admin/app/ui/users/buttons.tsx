@@ -11,7 +11,7 @@ interface _IVerificationBtn {
 }
 
 const btnClasses = {
-  EDIT: "rounded-lg border p-2 md:py-1 md:px-2 bg-custom-primary/20 md:flex justify-between items-center gap-4 dark:bg-[#2C303B] dark:hover:border-custom-primary dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50 dark:border-custom-primary/70 cursor-pointer",
+  EDIT: "rounded-2xl border p-2 md:py-1 md:px-4 bg-custom-primary/20 md:flex justify-between items-center dark:bg-[#2C303B] dark:hover:border-custom-primary dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50 dark:border-custom-primary/70 cursor-pointer",
   VERIFY:
     "rounded-2xl border p-2 md:py-1 md:px-4 dark:hover:shadow-none w-fit cursor-pointer",
   DELETE: "bg-red-500 rounded-md border border-red-500 p-2 hover:bg-red-400",
@@ -80,7 +80,7 @@ function EditCustomer({ id }: _Id) {
       className={btnClasses.EDIT}
     >
       <p className="hidden md:flex text-base font-thin">Edit</p>
-      <PencilIcon className="w-5" />
+      <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
 }
@@ -92,7 +92,7 @@ function EditOwner({ id }: _Id) {
       className={btnClasses.EDIT}
     >
       <p className="hidden md:flex text-base font-thin">Edit</p>
-      <PencilIcon className="w-5" />
+      <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
 }
@@ -104,7 +104,7 @@ function EditSlot({ id }: _Id) {
       className={btnClasses.EDIT}
     >
       <p className="hidden md:flex text-base font-thin">Edit</p>
-      <PencilIcon className="w-5" />
+      <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
 }
@@ -115,8 +115,8 @@ function EditUser({ id }: _Id) {
       href={`${dashboardRoutes.USERS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base font-thin">Edit</p>
-      <PencilIcon className="w-5" />
+      <p className="hidden md:flex text-sm font-thin">Edit</p>
+      <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
 }
@@ -128,7 +128,7 @@ function EditCenter({ id }: _Id) {
       className={btnClasses.EDIT}
     >
       <p className="hidden md:flex text-base font-thin">Edit</p>
-      <PencilIcon className="w-5" />
+      <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
 }
