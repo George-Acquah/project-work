@@ -7,6 +7,7 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}",
   ],
+  mode: 'jit', // Enable JIT mode
   darkMode: "class",
   theme: {
     transparent: "transparent",

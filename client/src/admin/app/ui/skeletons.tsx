@@ -1,4 +1,4 @@
-import { bodyBg, cardsBg, textColor } from "./themes";
+import { bodyBg, cardsBg, secondaryBg, textColor } from "./themes";
 
 // Loading animation
 const shimmer =
@@ -172,6 +172,52 @@ export function TableRowSkeleton() {
         </div>
       </td>
     </tr>
+  );
+}
+
+export function LoginFormSkeleton() {
+  return (
+    <div
+      className={`space-y-3 p-6 max-w-[500px] mx-auto ${secondaryBg} ${textColor} rounded shadow-three`}
+    >
+      {/* Skeleton for Header */}
+      <div className={`mb-3 h-6 w-3/4 mx-auto rounded ${bodyBg}`}></div>
+
+      {/* Skeleton for Subheader */}
+      <div className={`mb-11 h-4 w-2/3 mx-auto rounded ${bodyBg}`}></div>
+
+      {/* Skeleton for Google Button */}
+      <div className={`h-12 w-full rounded ${bodyBg} mb-3`}></div>
+
+      {/* Skeleton for GitHub Button */}
+      <div className={`h-12 w-full rounded ${bodyBg} mb-5`}></div>
+
+      {/* Skeleton for Divider */}
+      <div className={`h-[1px] w-full bg-gray-200 my-4`}></div>
+
+      {/* Skeleton for Email Input */}
+      <div className={`h-12 w-full rounded ${bodyBg} mb-4`}></div>
+
+      {/* Skeleton for Password Input */}
+      <div className={`h-12 w-full rounded ${bodyBg} mb-6`}></div>
+
+      {/* Skeleton for Remember Me Checkbox */}
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center">
+          <div className={`h-5 w-5 rounded mr-2 ${bodyBg}`}></div>
+          <div className={`h-4 w-24 rounded ${bodyBg}`}></div>
+        </div>
+        <div className={`h-4 w-24 rounded ${bodyBg}`}></div>
+      </div>
+
+      {/* Skeleton for Login Button */}
+      <div className={`h-12 w-full rounded ${bodyBg} mb-8`}></div>
+
+      {/* Skeleton for Signup Link */}
+      <div className="flex justify-center">
+        <div className={`h-4 w-48 rounded ${bodyBg}`}></div>
+      </div>
+    </div>
   );
 }
 
