@@ -7,10 +7,9 @@ import { cookies } from "next/headers";
 import { endpoints } from "./endpoints";
 import { revalidatePath } from "next/cache";
 import { dashboardRoutes } from "./routes";
-import { redirect } from "next/navigation";
+import { RedirectType, permanentRedirect, redirect } from "next/navigation";
 import { AdminSchema, ApplicantSchema } from "./z-validations";
 import { clientCookiesKeys, clientCookiesValues } from "./constants";
-import { AuthError } from "next-auth";
 import { AUTH_ERRORS } from "@/constants/errors.constants";
 
 const UpdateApplicant = ApplicantSchema.omit({ id: true });
@@ -38,14 +37,33 @@ async function refreshToken(token: JWT): Promise<JWT> {
   };
 }
 
-async function authenticate(prevState: void, formData: FormData) {
+// Function to handle user authentication
+async function authenticate(prevState: any, formData: FormData) {
   try {
-    await signIn("credentials", Object.fromEntries(formData));
-  } catch (error) {
-    const error_url = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
-    if (error instanceof AuthError) {
-      redirect(error_url);
+    // Convert formData to an object
+    const credentials = Object.fromEntries(formData);
+
+    // Use NextAuth's signIn method to authenticate with credentials
+    const res = await signIn("credentials", {
+      redirect: false, // Prevent automatic redirection
+      ...credentials, // Spread the credentials into the signIn method
+    });
+
+    if (res.error) {
+      // Handle authentication errors
+      throw new Error(res.error);
     }
+
+    // On successful login, redirect to the dashboard or intended page
+    permanentRedirect("/dashboard", RedirectType.push);
+
+  } catch (error: any) {
+    // Handle different types of errors
+    if (error.message === "CredentialsSignin") {
+      const errorUrl = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
+      redirect(errorUrl); // Redirect to a generic error page
+    }
+    throw error;
   }
 }
 

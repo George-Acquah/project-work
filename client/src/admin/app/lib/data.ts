@@ -131,13 +131,13 @@ export async function fetcher<T>(
 
     return data;
   } catch (err: any) {
-    if (err.response.code === 401) {
+    if (err?.response?.code === 401 || err?.response?.status === 401) {
       try {
         // Attempt to refresh the token
         const newAccessToken = await refreshToken();
         // Retry the original request with the new access token
         options.headers = await authHeader();
-        console.log(options.headers)
+        console.log(options.headers);
         const retryRes = await fetch(fetchUrl, options);
         const retryData = (await retryRes.json()) as _IApiResponse<T>;
         if (retryData.statusCode !== 200) {
@@ -192,8 +192,6 @@ export const refreshHeader = async () => {
 // Implement the updateSession function to update the session with the new tokens
 async function updateSession(accessToken: string, refreshToken: string) {
   // Update the session storage or state with the new tokens
-  // This is just a placeholder; you'll need to implement this based on how you're managing session state
-  // For example:
   const currentSession = await auth();
   console.log(currentSession)
   if (currentSession) {

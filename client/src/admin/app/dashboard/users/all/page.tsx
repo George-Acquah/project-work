@@ -8,7 +8,7 @@ import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
 import UsersTable from "@/app/ui/users/tables";
-import Filters from "@/app/ui/users/filters";
+import Filters from "@/app/ui/shared/filters";
 import AllUsersFilter from "@/app/ui/users/all-users.filter";
 // import ApplicantsTable from "@/app/ui/users/applicants-table";
 // import { fetchApplicantsPage } from "@/app/lib/data-requests";
