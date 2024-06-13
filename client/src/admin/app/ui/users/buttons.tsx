@@ -11,9 +11,9 @@ interface _IVerificationBtn {
 }
 
 const btnClasses = {
-  EDIT: "rounded-2xl border p-2 md:py-1 md:px-4 bg-custom-primary/20 md:flex justify-between items-center dark:bg-[#2C303B] hover:border-custom-primary/70 dark:hover:border-custom-primary hover:bg-custom-primary/30 dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50  dark:border-custom-primary/70 cursor-pointer text-gray-900 dark:text-white",
+  EDIT: "rounded-2xl border p-2 md:py-1 md:px-4 bg-custom-primary/20 md:flex justify-between items-center dark:bg-[#2C303B] hover:border-custom-primary/70 dark:hover:border-custom-primary hover:bg-custom-primary/30 dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50  dark:border-custom-primary/70 cursor-pointer ",
   VERIFY:
-    "rounded-2xl border p-2 md:py-1 md:px-4 dark:hover:shadow-none w-fit cursor-pointer text-gray-900 dark:text-white",
+    "rounded-2xl border p-2 md:py-1 md:px-4 dark:hover:shadow-none w-fit cursor-pointer ",
   DELETE: "bg-red-500 rounded-md border border-red-500 p-2 hover:bg-red-400",
   ADD: "flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
 };
@@ -79,7 +79,7 @@ function EditCustomer({ id }: _Id) {
       href={`${dashboardRoutes.USERS.CUSTOMERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
+      <p className="hidden md:flex text-sm  font-normal">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -93,7 +93,7 @@ function EditOwner({ id }: _Id) {
       href={`${dashboardRoutes.USERS.OWNERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
+      <p className="hidden md:flex text-sm  font-normal">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -107,7 +107,7 @@ function EditSlot({ id }: _Id) {
       href={`${dashboardRoutes.SLOTS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
+      <p className="hidden md:flex text-sm  font-normal">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -121,7 +121,7 @@ function EditUser({ id }: _Id) {
       href={`${dashboardRoutes.USERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
+      <p className="hidden md:flex text-sm  font-normal">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -135,7 +135,7 @@ function EditCenter({ id }: _Id) {
       href={`${dashboardRoutes.PARKING_LOTS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-light">
+      <p className="hidden md:flex text-base  font-normal">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -231,7 +231,7 @@ async function VerificationButton({ id, status = false }: _IVerificationBtn) {
             : "bg-green-50 dark:hover:bg-green-500 dark:hover:bg-opacity-20 hover:bg-green-100 hover:border-green-500 border-green-500/70"
         }`}
       >
-        <p className="text-sm text-gray-900 dark:text-white font-light">
+        <p className="text-sm  font-normal">
           {status ? "Unverify" : "Verify"}
         </p>
       </button>
