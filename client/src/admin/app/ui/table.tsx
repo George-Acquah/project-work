@@ -12,7 +12,6 @@ import {
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
-import ApplicantStatus from "./users/status";
 import Image from "next/image";
 import { UserType } from "../lib/constants";
 import {
@@ -29,7 +28,9 @@ import {
   VerificationButton,
 } from "./users/buttons";
 import { cardBorder, cardsBg, providerBtnClass } from "./themes";
+import StatusBadge, { _IStatus } from "./users/status";
 
+// Reusable component for rendering the image cell
 const TableImage = ({ data }: { data: _TableRowType }) => (
   <div className="flex-shrink-0">
     <Image
@@ -37,17 +38,91 @@ const TableImage = ({ data }: { data: _TableRowType }) => (
       src={data?.image ?? "https://avatar.vercel.sh/leerob"}
       height={32}
       width={32}
-      alt={`user's avatar`}
+      alt="user's avatar"
     />
   </div>
 );
 
-export default function TableComponent({
+// Component to render individual table cells based on column type and entity type
+const renderCell = (
+  entityType: string,
+  column: string,
+  item: _TableRowType,
+  id: string,
+  type = UserType.ALL
+) => {
+  switch (column) {
+    case "image":
+      return <TableImage data={item} />;
+    case "isVerified":
+      return (
+        <div className="flex items-center gap-x-2">
+          <StatusBadge status={item[column] as unknown as _IStatus} />
+          <TableButtonHelper
+            id={id}
+            entityType={entityType}
+            type={type}
+            verify
+          />
+        </div>
+      );
+    case "isAvailable":
+      return <StatusBadge status={item[column] as unknown as _IStatus} />;
+    default:
+      const additionalClassName =
+        (entityType === "users" &&
+          (column === "vehicles" || column === "centers")) ||
+        (entityType === "centers" &&
+          (column === "slots" || column === "capacity")) ||
+        (entityType === "slots" &&
+          (column === "capacity" || column === "price"))
+          ? "text-center"
+          : "";
+      return <Text className={additionalClassName}>{item[column]}</Text>;
+  }
+};
+
+const TableButtonHelper = ({
+  id,
+  entityType,
+  type,
+  verify,
+  status,
+}: {
+  id: string;
+  entityType: string;
+  type?: string;
+  verify?: boolean;
+  status?: boolean;
+}) => {
+  const isVerification = verify && (
+    <VerificationButton id={id} status={status ?? false} action={undefined} />
+  );
+  const userActions = (
+    <div className="flex justify-end gap-3">
+      <EditUser id={id} />
+      <DeleteUser id={id} />
+    </div>
+  );
+
+  if (entityType === "users") {
+    if (type === UserType.ALL || type === UserType.CUSTOMER) {
+      return isVerification || userActions;
+    }
+  }
+
+  // Add more entity type cases as needed
+  // For now, let's default to user actions if no special cases match
+  return isVerification || userActions;
+};
+
+// Main table component
+const TableComponent = ({
   data,
   columnData,
   type,
   entityType,
-}: _ITableProps) {
+}: _ITableProps) => {
   const router = useRouter();
 
   return (
@@ -59,20 +134,20 @@ export default function TableComponent({
       >
         <TableRow>
           {columnData.map((column, index) => (
-            <TableHeaderCell key={`__${index}__${column}`} className="px-6 ">
+            <TableHeaderCell key={`__${index}__${column}`} className="px-6">
               {column}
             </TableHeaderCell>
           ))}
           <TableHeaderCell className="relative px-12">
-            <span className=" sr-only">Edit</span>
+            <span className="sr-only">Edit</span>
           </TableHeaderCell>
           <TableHeaderCell className="relative px-2">
-            <span className=" sr-only">Delete</span>
+            <span className="sr-only">Delete</span>
           </TableHeaderCell>
         </TableRow>
       </TableHead>
-      {data && data?.length > 0 ? (
-        <TableBody className="">
+      {data && data.length > 0 ? (
+        <TableBody>
           {data.map((item, index) => {
             const columns = Object.keys(item);
             return (
@@ -92,7 +167,7 @@ export default function TableComponent({
                   {item["role"] !== "admin" && (
                     <TableButtonHelper
                       type={type}
-                      id={item._id!}
+                      id={item._id}
                       entityType={entityType}
                     />
                   )}
@@ -104,7 +179,7 @@ export default function TableComponent({
       ) : (
         <TableBody>
           <TableRow className="h-60 text-center">
-            <TableCell colSpan={columnData.length} className="py-4">
+            <TableCell colSpan={columnData.length + 2} className="py-4">
               <FaceFrownIcon className="w-10 text-gray-400 pos__center" />
               <Title className="text-center mb-4">No Content Found</Title>
               <Title
@@ -119,122 +194,6 @@ export default function TableComponent({
       )}
     </Table>
   );
-}
-
-const renderCell = (
-  entityType: string,
-  column: string,
-  item: _TableRowType,
-  id: string,
-  type = UserType.ALL
-) => {
-  if (column === "image") {
-    return <TableImage data={item} />;
-  }
-
-  if (column === "isVerified") {
-    return (
-      <div className="flex items-center gap-x-2">
-        <ApplicantStatus entity={entityType} status={item[column] as string} />
-        <TableButtonHelper id={id} entityType={entityType} type={type} verify />
-      </div>
-    );
-  }
-
-  if (column === "isAvailable") {
-    return (
-      <ApplicantStatus entity={entityType} status={item[column] as string} />
-    );
-  }
-
-  const additionalClassName =
-    (entityType === "users" &&
-      (column === "vehicles" || column === "centers")) ||
-    (entityType === "centers" &&
-      (column === "slots" || column === "capacity")) ||
-    (entityType === "slots" && (column === "capacity" || column === "price"))
-      ? "text-center"
-      : "";
-
-  return <Text className={additionalClassName}>{item[column]}</Text>;
 };
 
-const TableButtonHelper = ({
-  id,
-  entityType,
-  type,
-  verify,
-  status,
-}: {
-  id: string;
-  entityType: string;
-  type?: string;
-  verify?: boolean;
-  status?: boolean;
-}) => {
-  return (
-    <>
-      {entityType === "users" ? (
-        type === UserType.ALL ? (
-          verify ? (
-            <div className="flex">
-              <VerificationButton id={id} status={status!} action={undefined} />
-            </div>
-          ) : (
-            <div className="flex justify-end gap-3">
-              <EditUser id={id} />
-              <DeleteUser id={id} />
-            </div>
-          )
-        ) : type === UserType.CUSTOMER ? (
-          verify ? (
-            <div className="flex">
-              <VerificationButton id={id} status={status!} action={undefined} />
-            </div>
-          ) : (
-            <div className="flex justify-end gap-3">
-              <EditUser id={id} />
-              <DeleteUser id={id} />
-            </div>
-          )
-        ) : verify ? (
-          <div className="flex">
-            <VerificationButton id={id} status={status!} action={undefined} />
-          </div>
-        ) : (
-          <div className="flex justify-end gap-3">
-            <EditUser id={id} />
-            <DeleteUser id={id} />
-          </div>
-        )
-      ) : entityType === "centers" ? (
-        verify ? (
-          <div className="flex">
-            <VerificationButton id={id} status={status!} action={undefined} />
-          </div>
-        ) : (
-          <div className="flex justify-end gap-3">
-            <EditUser id={id} />
-            <DeleteUser id={id} />
-          </div>
-        )
-      ) : entityType === "slots" ? (
-        verify ? (
-          <div className="flex">
-            <VerificationButton id={id} status={status!} action={undefined} />
-          </div>
-        ) : (
-          <div className="flex justify-end gap-3">
-            <EditUser id={id} />
-            <DeleteUser id={id} />
-          </div>
-        )
-      ) : (
-        // Add cases for other entity types as needed
-        <div className="flex justify-end gap-3">
-          {/* Add appropriate components for other entity types */}
-        </div>
-      )}
-    </>
-  );
-};
+export default TableComponent;
