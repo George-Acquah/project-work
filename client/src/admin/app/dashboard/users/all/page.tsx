@@ -40,9 +40,9 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <SearchApplicants entityType="users" />
         <Filters>
-          {/* <Suspense key={user} fallback={<FilterSkeleton />}> */}
+          <Suspense key={user} fallback={<FilterSkeleton />}>
             <AllUsersFilter />
-          {/* </Suspense> */}
+          </Suspense>
         </Filters>
         <AddUser />
       </div>

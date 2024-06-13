@@ -44,15 +44,15 @@ const SmartCarParkingAdminHome = () => {
             className="flex items-center gap-5 self-start rounded-lg custom px-6 py-3 text-sm font-medium text-white transition-colors bg-custom-button hover:bg-blue-400 md:text-base"
             passHref
           >
-            <span>Log in</span>
+            Log In
           </Link>
         </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
+        <div className="flex items-center justify-center ">
           <Image
             src="/hero-desktop.png"
             width={1000}
             height={760}
-            className="hidden md:block"
+            className="hidden md:block rounded-lg"
             alt="Screenshots of Dashboard project"
           />
           <Image
@@ -63,7 +63,6 @@ const SmartCarParkingAdminHome = () => {
             alt="Screenshots of Dashboard project"
           />
         </div>
-        ;
       </div>
     </main>
   );

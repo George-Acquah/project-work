@@ -3,6 +3,7 @@ import LoginForm from "@/app/ui/login-form";
 import { Metadata } from "next";
 import { secondaryBg, strongTextColor } from "@/app/ui/themes";
 import { Suspense } from "react";
+import { LoginFormSkeleton } from "@/app/ui/skeletons";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -20,7 +21,7 @@ export default function LoginPage() {
           </div>
           <p className="uppercase text-2xl ml-4">Smart Car Parking Admin</p>
         </div>
-        <Suspense fallback = { <p> Loading ....</p>}><LoginForm /></Suspense>
+        <Suspense fallback = { <LoginFormSkeleton />}><LoginForm /></Suspense>
       </div>
     </main>
   );
