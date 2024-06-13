@@ -11,9 +11,9 @@ interface _IVerificationBtn {
 }
 
 const btnClasses = {
-  EDIT: "rounded-sm border p-2 md:py-1 md:px-2 hover:bg-gray-100 md:flex justify-between items-center gap-4 dark:bg-[#2C303B] dark:hover:border-custom-primary dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50 dark:border-custom-primary/70 cursor-pointer",
+  EDIT: "rounded-lg border p-2 md:py-1 md:px-2 bg-custom-primary/20 md:flex justify-between items-center gap-4 dark:bg-[#2C303B] dark:hover:border-custom-primary dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50 dark:border-custom-primary/70 cursor-pointer",
   VERIFY:
-    "rounded-sm border p-2 md:py-1 md:px-2 dark:hover:shadow-none w-fit cursor-pointer",
+    "rounded-2xl border p-2 md:py-1 md:px-4 dark:hover:shadow-none w-fit cursor-pointer",
   DELETE: "bg-red-500 rounded-md border border-red-500 p-2 hover:bg-red-400",
   ADD: "flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
 };
@@ -215,7 +215,7 @@ async function VerificationButton({ id, status = false }: _IVerificationBtn) {
   return (
     <form action={deleteInvoiceWithId}>
       <button
-        className={`dark:bg-[#2C303B]   ${btnClasses.VERIFY} ${
+        className={`dark:bg-[#2C303B] ${btnClasses.VERIFY} ${
           status
             ? "bg-red-50 dark:hover:bg-red-500 dark:hover:bg-opacity-20 hover:bg-red-100 hover:border-red-500 border-red-500/70"
             : "bg-green-50 dark:hover:bg-green-500 dark:hover:bg-opacity-20 hover:bg-green-100 hover:border-green-500 border-green-500/70"

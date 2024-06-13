@@ -1,22 +1,13 @@
-import {
-  Menu,
-  MenuButton,
-  MenuItems,
-  Transition,
-} from "@headlessui/react";
-import {
-  FunnelIcon,
-} from "@heroicons/react/24/solid";
+import { Menu, MenuButton, MenuItems, Transition } from "@headlessui/react";
+import { FunnelIcon } from "@heroicons/react/24/solid";
 
-export default function Filter({children}: _IChildren) {
-
+export default function Filter({ children }: _IChildren) {
   return (
     <div className="">
       <Menu __demoMode>
         <MenuButton className="inline-flex h-10 items-center gap-2 rounded-md bg-gray-800 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white ">
           Filters
-          {/* <ChevronDownIcon className="h-4 fill-white/60" /> */}
-          <FunnelIcon className="h-4 fill-white/80"/>
+          <FunnelIcon className="h-4 fill-white/80" />
         </MenuButton>
         <Transition
           enter="transition ease-out duration-75"

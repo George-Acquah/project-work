@@ -30,11 +30,11 @@ import {
 } from "./users/buttons";
 import { cardBorder, cardsBg, providerBtnClass } from "./themes";
 
-const TableImage = ({ user }: { user: _TableRowType }) => (
+const TableImage = ({ data }: { data: _TableRowType }) => (
   <div className="flex-shrink-0">
     <Image
       className="h-8 w-8 rounded-full"
-      src={user?.image ?? "https://avatar.vercel.sh/leerob"}
+      src={data?.image ?? "https://avatar.vercel.sh/leerob"}
       height={32}
       width={32}
       alt={`user's avatar`}
@@ -126,23 +126,25 @@ const renderCell = (
   column: string,
   item: _TableRowType,
   id: string,
-  type = UserType.ALL,
+  type = UserType.ALL
 ) => {
   if (column === "image") {
-    return <TableImage user={item} />;
+    return <TableImage data={item} />;
   }
 
   if (column === "isVerified") {
     return (
       <div className="flex items-center gap-x-2">
-        <ApplicantStatus status={item[column] as string} />
-        <TableButtonHelper id={id} entityType={entityType} type={type} verify/>
+        <ApplicantStatus entity={entityType} status={item[column] as string} />
+        <TableButtonHelper id={id} entityType={entityType} type={type} verify />
       </div>
     );
   }
 
   if (column === "isAvailable") {
-    return <ApplicantStatus status={item[column] as string} />;
+    return (
+      <ApplicantStatus entity={entityType} status={item[column] as string} />
+    );
   }
 
   const additionalClassName =
@@ -167,8 +169,8 @@ const TableButtonHelper = ({
   id: string;
   entityType: string;
   type?: string;
-    verify?: boolean;
-    status?: boolean;
+  verify?: boolean;
+  status?: boolean;
 }) => {
   return (
     <>
@@ -176,11 +178,7 @@ const TableButtonHelper = ({
         type === UserType.ALL ? (
           verify ? (
             <div className="flex">
-              <VerificationButton
-                id={id}
-                status={status!}
-                action={undefined}
-              />
+              <VerificationButton id={id} status={status!} action={undefined} />
             </div>
           ) : (
             <div className="flex justify-end gap-3">
@@ -191,11 +189,7 @@ const TableButtonHelper = ({
         ) : type === UserType.CUSTOMER ? (
           verify ? (
             <div className="flex">
-              <VerificationButton
-                id={id}
-                status={status!}
-                action={undefined}
-              />
+              <VerificationButton id={id} status={status!} action={undefined} />
             </div>
           ) : (
             <div className="flex justify-end gap-3">
@@ -205,11 +199,7 @@ const TableButtonHelper = ({
           )
         ) : verify ? (
           <div className="flex">
-            <VerificationButton
-              id={id}
-              status={status!}
-              action={undefined}
-            />
+            <VerificationButton id={id} status={status!} action={undefined} />
           </div>
         ) : (
           <div className="flex justify-end gap-3">
@@ -220,11 +210,7 @@ const TableButtonHelper = ({
       ) : entityType === "centers" ? (
         verify ? (
           <div className="flex">
-            <VerificationButton
-              id={id}
-              status={status!}
-              action={undefined}
-            />
+            <VerificationButton id={id} status={status!} action={undefined} />
           </div>
         ) : (
           <div className="flex justify-end gap-3">
@@ -235,11 +221,7 @@ const TableButtonHelper = ({
       ) : entityType === "slots" ? (
         verify ? (
           <div className="flex">
-            <VerificationButton
-              id={id}
-              status={status!}
-              action={undefined}
-            />
+            <VerificationButton id={id} status={status!} action={undefined} />
           </div>
         ) : (
           <div className="flex justify-end gap-3">

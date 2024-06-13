@@ -6,25 +6,30 @@ export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
 
+// Routes that require authentication
+const loggedInRoutes = ["/dashboard"];
+const loggedOutRoutes = ["/auth/login"];
+
 // The main middleware function
 export default auth((req) => {
-    const isAuthenticated = !!req.auth; // Check if the user is authenticated
-    const isOnDashboard = req.nextUrl.pathname.startsWith("/dashboard"); // Check if the request is for the dashboard
+  const isAuthenticated = !!req.auth; // Check if the user is authenticated
+  const { pathname } = req.nextUrl;
 
-    // If the user is trying to access the dashboard without being authenticated
-    if (isOnDashboard && !isAuthenticated) {
-      // Redirect to login page
-      const loginUrl = new URL("/auth/login", req.nextUrl.origin);
-      return NextResponse.redirect(loginUrl);
-    }
+  // Rewrite unauthenticated users trying to access loggedInRoutes to login page
+  if (!isAuthenticated && loggedInRoutes.some(path => pathname.startsWith(path))) {
+    console.log('Rewriting to login: ');
+    NextResponse.rewrite(new URL(`/auth/login`, req.nextUrl));
+    return NextResponse.redirect(new URL(`/auth/login`, req.nextUrl));
+  }
 
-    // If the user is authenticated but not on the dashboard, redirect to the dashboard
-  if (!isOnDashboard && isAuthenticated) {
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin), {
-        status: 303
-      });
-    }
+  // Rewrite authenticated users trying to access loggedOutRoutes to dashboard
+  if (isAuthenticated && loggedOutRoutes.some(path => pathname.startsWith(path))) {
+    console.log('Rewriting to dashboard: ');
+    NextResponse.rewrite(new URL(`/dashboard`, req.nextUrl));
+    return NextResponse.redirect(new URL(`/dashboard`, req.nextUrl));
+  }
 
-    // Continue with the request if none of the above conditions are met
-    return NextResponse.next();
+  // If the request does not match any of the specific routes, continue with the request
+  console.log('Continuing with the request: ');
+  return NextResponse.next();
 });
