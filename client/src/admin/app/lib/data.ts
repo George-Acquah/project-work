@@ -103,35 +103,39 @@ export async function fetcher<T>(
   body?: any
 ): Promise<_IApiResponse<T>> {
   const fetchUrl = `${API}/${url}`;
+  const headers = await authHeader(); // Get authentication headers only once
 
   const options: RequestInit = {
     method: method ?? "GET",
     cache: cache ?? "default",
     credentials: "include",
     body: JSON.stringify(body) ?? null,
-    headers: await authHeader(),
+    headers,
   };
 
   try {
     const res = await fetch(fetchUrl, options);
-
     const data = (await res.json()) as _IApiResponse<T>;
 
     // Check if the server response indicates an error
+    // if (data.statusCode && data.statusCode !== 200) {
+    //   throw {
+    //     response: {
+    //       code: data.statusCode,
+    //       data: {
+    //         msg: data.message,
+    //       },
+    //     },
+    //   };
+    // }
+    // Handle error responses from the server
     if (data.statusCode && data.statusCode !== 200) {
-      throw {
-        response: {
-          code: data.statusCode,
-          data: {
-            msg: data.message,
-          },
-        },
-      };
+      throw new Error(data.message);
     }
 
     return data;
   } catch (err: any) {
-    if (err?.response?.code === 401 || err?.response?.status === 401) {
+    if (err?.response?.code === 401) {
       try {
         // Attempt to refresh the token
         const newAccessToken = await refreshToken();
@@ -140,8 +144,10 @@ export async function fetcher<T>(
         console.log(options.headers);
         const retryRes = await fetch(fetchUrl, options);
         const retryData = (await retryRes.json()) as _IApiResponse<T>;
+        
         if (retryData.statusCode !== 200) {
-          switchErrRes(retryData.statusCode, retryData.message);
+          // switchErrRes(retryData.statusCode, retryData.message);
+          throw new Error(retryData.message);
         }
         return retryData;
       } catch (refreshError) {
