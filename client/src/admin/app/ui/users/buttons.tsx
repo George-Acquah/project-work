@@ -11,9 +11,9 @@ interface _IVerificationBtn {
 }
 
 const btnClasses = {
-  EDIT: "rounded-2xl border p-2 md:py-1 md:px-4 bg-custom-primary/20 md:flex justify-between items-center dark:bg-[#2C303B] dark:hover:border-custom-primary dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50 dark:border-custom-primary/70 cursor-pointer",
+  EDIT: "rounded-2xl border p-2 md:py-1 md:px-4 bg-custom-primary/20 md:flex justify-between items-center dark:bg-[#2C303B] hover:border-custom-primary/70 dark:hover:border-custom-primary hover:bg-custom-primary/30 dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50  dark:border-custom-primary/70 cursor-pointer text-gray-900 dark:text-white",
   VERIFY:
-    "rounded-2xl border p-2 md:py-1 md:px-4 dark:hover:shadow-none w-fit cursor-pointer",
+    "rounded-2xl border p-2 md:py-1 md:px-4 dark:hover:shadow-none w-fit cursor-pointer text-gray-900 dark:text-white",
   DELETE: "bg-red-500 rounded-md border border-red-500 p-2 hover:bg-red-400",
   ADD: "flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
 };
@@ -77,9 +77,11 @@ function EditCustomer({ id }: _Id) {
   return (
     <Link
       href={`${dashboardRoutes.USERS.CUSTOMERS.BASE}/${id}/update`}
-      className={btnClasses.EDIT}
+      className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">Edit</p>
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
+        Edit
+      </p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -89,9 +91,9 @@ function EditOwner({ id }: _Id) {
   return (
     <Link
       href={`${dashboardRoutes.USERS.OWNERS.BASE}/${id}/update`}
-      className={btnClasses.EDIT}
+      className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -103,9 +105,9 @@ function EditSlot({ id }: _Id) {
   return (
     <Link
       href={`${dashboardRoutes.SLOTS.BASE}/${id}/update`}
-      className={btnClasses.EDIT}
+      className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -117,9 +119,9 @@ function EditUser({ id }: _Id) {
   return (
     <Link
       href={`${dashboardRoutes.USERS.BASE}/${id}/update`}
-      className={btnClasses.EDIT}
+      className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
