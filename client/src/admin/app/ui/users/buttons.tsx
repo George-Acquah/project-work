@@ -79,7 +79,7 @@ function EditCustomer({ id }: _Id) {
       href={`${dashboardRoutes.USERS.CUSTOMERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -93,7 +93,7 @@ function EditOwner({ id }: _Id) {
       href={`${dashboardRoutes.USERS.OWNERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -107,7 +107,7 @@ function EditSlot({ id }: _Id) {
       href={`${dashboardRoutes.SLOTS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -121,7 +121,7 @@ function EditUser({ id }: _Id) {
       href={`${dashboardRoutes.USERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-sm text-gray-900 dark:text-white font-light">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -135,7 +135,7 @@ function EditCenter({ id }: _Id) {
       href={`${dashboardRoutes.PARKING_LOTS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-light">
         Edit
       </p>
       <PencilIcon className="w-4 block md:hidden" />
@@ -213,7 +213,7 @@ function DeleteSlot({ id }: _Id) {
 function EditProfileButton({linkTo}: {linkTo: string}) {
   return (
     <Link href={linkTo} className={`flex  ${btnClasses.EDIT}`}>
-      <p className="text-base font-thin">Edit Profile</p>
+      <p className="text-base font-light">Edit Profile</p>
       <PencilSquareIcon className="w-4" />
     </Link>
   );
@@ -231,7 +231,7 @@ async function VerificationButton({ id, status = false }: _IVerificationBtn) {
             : "bg-green-50 dark:hover:bg-green-500 dark:hover:bg-opacity-20 hover:bg-green-100 hover:border-green-500 border-green-500/70"
         }`}
       >
-        <p className="text-sm text-gray-900 dark:text-white font-thin">
+        <p className="text-sm text-gray-900 dark:text-white font-light">
           {status ? "Unverify" : "Verify"}
         </p>
       </button>
