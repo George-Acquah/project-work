@@ -24,7 +24,7 @@ export default function Sidebar() {
   return (
     <>
       <div
-        className={`flex h-screen flex-col px-3 py-4 md:px-2 md:overflow-y-auto ${textColor} ${borderRight} md:pr-8`}
+        className={`flex h-screen flex-col px-3 py-4 md:px-2 md:overflow-y-auto ${textColor} ${borderRight} `}
       >
         <div className="mb-4 ml-2">
           <SmartCarParkingAdminLogo />

@@ -115,6 +115,11 @@ const config: Config = {
         "tremor-title": ["1.125rem", { lineHeight: "1.75rem" }],
         "tremor-metric": ["1.875rem", { lineHeight: "2.25rem" }],
       },
+      animation: {
+        bounce1: "bounce 1.4s infinite ease-in-out",
+        bounce2: "bounce 1.4s infinite ease-in-out -0.4667s",
+        bounce3: "bounce 1.4s infinite ease-in-out -0.9333s",
+      },
       screens: {
         md2: "770px",
       },

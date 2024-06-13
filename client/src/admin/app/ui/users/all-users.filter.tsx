@@ -31,7 +31,7 @@ const AllUsersFilter = async () => {
         { icon: UserGroupIcon, title: "Editor" }, // Represents an Editor role
         { icon: UserIcon, title: "Viewer" }, // Represents a Viewer role
       ],
-      500 // Simulating a 500ms delay for userTypes
+      50000 // Simulating a 500ms delay for userTypes
     ),
 
     fetchData<_IMenuItem[]>(

@@ -41,7 +41,7 @@ function NavlinksComponent({ pathname, data, title, rem }: _INavProps) {
             key={link.name}
             href={link.href}
             className={clsx(
-              `flex h-[48px] grow items-center justify-center gap-2 rounded-md ${cardsBg} p-3 text-sm font-medium ${cardHover}  md:flex-none md:justify-start md:p-2 md:px-3 ${
+              `flex h-[48px] grow items-center justify-center gap-2 rounded-md ${cardsBg} p-3 text-sm font-medium ${cardHover} md:flex-none md:justify-start md:p-2 md:px-3 ${
                 link.type === "red"
                   ? getRedLinkClassName(pathname, link.href)
                   : link.type === "green"
@@ -49,7 +49,7 @@ function NavlinksComponent({ pathname, data, title, rem }: _INavProps) {
                   : getLinkClassName(pathname, link.href)
               }`,
               {
-                "bg-sky-100  dark:bg-custom-primary ": pathname === link.href,
+                "force__bg dark:bg-custom-primary": pathname === link.href,
               }
             )}
           >
