@@ -31,7 +31,7 @@ const AllUsersFilter = async () => {
         { icon: UserGroupIcon, title: "Editor" }, // Represents an Editor role
         { icon: UserIcon, title: "Viewer" }, // Represents a Viewer role
       ],
-      50000 // Simulating a 500ms delay for userTypes
+      50 // Simulating a 500ms delay for userTypes
     ),
 
     fetchData<_IMenuItem[]>(
@@ -39,7 +39,7 @@ const AllUsersFilter = async () => {
         { icon: ShieldCheckIcon, title: "Verified" }, // Represents Verified status
         { icon: XCircleIcon, title: "Not Verified" }, // Represents Not Verified status
       ],
-      700 // Simulating a 700ms delay for verifiedStatus
+      70 // Simulating a 700ms delay for verifiedStatus
     ),
 
     fetchData<_IMenuItem[]>(
@@ -47,7 +47,7 @@ const AllUsersFilter = async () => {
         { icon: ClockIcon, title: "Recently Active" }, // Represents recent activity
         { icon: PauseIcon, title: "Inactive" }, // Represents inactivity
       ],
-      900 // Simulating a 900ms delay for otherFilters
+      90 // Simulating a 900ms delay for otherFilters
     ),
   ]);
 
