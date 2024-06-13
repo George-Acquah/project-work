@@ -79,7 +79,7 @@ function EditCustomer({ id }: _Id) {
       href={`${dashboardRoutes.USERS.CUSTOMERS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base font-thin">Edit</p>
+      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">Edit</p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -91,7 +91,9 @@ function EditOwner({ id }: _Id) {
       href={`${dashboardRoutes.USERS.OWNERS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base font-thin">Edit</p>
+      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+        Edit
+      </p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -103,7 +105,9 @@ function EditSlot({ id }: _Id) {
       href={`${dashboardRoutes.SLOTS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base font-thin">Edit</p>
+      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+        Edit
+      </p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -115,7 +119,9 @@ function EditUser({ id }: _Id) {
       href={`${dashboardRoutes.USERS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-sm font-thin">Edit</p>
+      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+        Edit
+      </p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -127,7 +133,9 @@ function EditCenter({ id }: _Id) {
       href={`${dashboardRoutes.PARKING_LOTS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base font-thin">Edit</p>
+      <p className="hidden md:flex text-base text-gray-900 dark:text-white font-thin">
+        Edit
+      </p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -221,7 +229,9 @@ async function VerificationButton({ id, status = false }: _IVerificationBtn) {
             : "bg-green-50 dark:hover:bg-green-500 dark:hover:bg-opacity-20 hover:bg-green-100 hover:border-green-500 border-green-500/70"
         }`}
       >
-        <p className="text-sm font-thin">{status ? "Unverify" : "Verify"}</p>
+        <p className="text-sm text-gray-900 dark:text-white font-thin">
+          {status ? "Unverify" : "Verify"}
+        </p>
       </button>
     </form>
   );
