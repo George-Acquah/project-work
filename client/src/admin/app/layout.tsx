@@ -20,13 +20,13 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: _IChildren) {
-    const cookieStore = cookies();
-    const themeCookie = cookieStore.get(themeKey);
+  const cookieStore = cookies();
+  const themeCookie = cookieStore.get(themeKey);
   const theme = themeCookie?.value;
 
   return (
     <html suppressHydrationWarning lang="en">
-      <body className={`${inter.className} antialiased ${bodyBg}`}>
+      <body className={`${inter.className} antialiased ${bodyBg} overflow-x-hidden`}>
         <Providers theme={theme!}>
           <Suspense fallback={<p> Loading ....</p>}>
             <SessionModal />

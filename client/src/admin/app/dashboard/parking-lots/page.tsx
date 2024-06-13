@@ -28,8 +28,8 @@ export default async function ParkingCenterPage({ searchParams }: ISearchParams)
   
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
+    <div className="">
+      <div className="flex items-center justify-between">
         <h1 className={`${lusitana.className} text-2xl`}>Parking Centers</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
