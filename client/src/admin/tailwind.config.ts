@@ -14,7 +14,6 @@ const config: Config = {
     current: "currentColor",
     extend: {
       colors: {
-        // // light mode
         tremor: {
           brand: {
             faint: "#eff6ff", // blue-50
@@ -36,16 +35,6 @@ const config: Config = {
           ring: {
             DEFAULT: "var(--border-primary)", // gray-200
           },
-          // outline: {
-          //   DEFAULT: "var(--border-primary)",
-          // },
-          // content: {
-          //   subtle: "#9ca3af", // gray-400
-          //   DEFAULT: "#6b7280", // gray-500
-          //   emphasis: "#374151", // gray-700
-          //   strong: "#111827", // gray-900
-          //   inverted: "#ffffff", // white
-          // },
         },
         custom: {
           background: {
