@@ -9,10 +9,10 @@ export const inputClass =
   "peer pl-10 border-stroke dark:shadow-two w-full border text-base outline-none transition-all duration-300 focus:border-custom-primary dark:border-custom-transparent dark:bg-[#2C303B] dark:focus:border-custom-primary dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark";
 
 const generateInputClass = (error: boolean) =>
-  `peer pl-10 dark:shadow-two w-full border text-base outline-none transition-all duration-300 dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark bg-[#f8f8f8] dark:bg-[#2C303B] ${
+  `peer pl-10 dark:shadow-two w-full border text-base outline-none transition-all duration-300 dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark bg-[#f8f8f8] dark:bg-[#2C303B] focus:ring-1 focus:ring-inset ${
     error
-      ? "accent-red-400 border-2 border-red-400 focus:border-red-400"
-      : "focus:border-custom-primary dark:focus:border-custom-primary dark:border-custom-transparent"
+      ? "accent-red-400 border-red-400 focus:border-red-400 focus:ring-red-400"
+      : "dark:border-gray-700 focus:border-custom-primary dark:focus:border-custom-primary"
   } `;
 
 
@@ -28,6 +28,7 @@ export default function CommonInputComp({
   tooltip,
 }: _ICommonInputComp) {
   const LinkIcon = icon;
+  const err_bool = errors && (errors[id]!! as unknown as boolean);
   return (
     <div className="mb-4 lg:mr-4">
       <label
@@ -52,9 +53,9 @@ export default function CommonInputComp({
           name={id}
           defaultValue={value}
           placeholder={placeholder}
-          className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${inputClass} ${bodyBg} ${
-            id === "email" ? "mt-[5px]" : ""
-          }`}
+          className={`px-6 py-3 text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${generateInputClass(
+            err_bool
+          )}`}
           type={type}
           disabled={disabled}
         />
@@ -62,15 +63,15 @@ export default function CommonInputComp({
       </div>
       {errors && errors[id] ? (
         <div
-          id="customer-error"
-          aria-live="polite"
-          className="mt-2 text-sm text-red-500 flex space-x-2"
+          id={`${id}-error`}
+          // aria-live="polite"
+          className="mt-2 text-sm text-red-500"
         >
-          <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
           {errors[id].map((error: string) => (
-            <Text className="text-red-500" key={error}>
-              {error}
-            </Text>
+            <div className="flex space-x-2" key={error}>
+              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+              <Text className="text-red-500">{error}</Text>
+            </div>
           ))}
         </div>
       ) : null}
