@@ -1,59 +1,65 @@
 "use client"
-import { lusitana } from "@/app/ui/font";
+import { inter } from "@/app/ui/font";
 import { useFormState, useFormStatus } from "react-dom";
-import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import Button from "./button";
 import { authenticate } from "../lib/actions";
-import { secondaryBg, textColor, strongTextColor, providerBtnClass } from "./themes";
+import {
+  secondaryBg,
+  textColor,
+  strongTextColor,
+  providerBtnClass,
+  loginBtnClass,
+} from "./themes";
 import { loginDetails } from "../lib/constants";
-import { LoginInput } from "./inputs";
 import { SvgCheck, SvgGithub, SvgGoogle } from "../lib/icons";
 import { HRWithText } from "../auth/layout";
 import Link from "next/link";
+import CommonInput from "./shared/common-inputs";
+import Loading from "./shared/loading";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export default function LoginForm() {
-  const initialState: any = {
+  const initialState = {
     type: undefined,
     message: null,
   };
-  const [state, dispatch] = useFormState(authenticate, initialState);
+  const [state, dispatch] = useFormState<ActionResult, FormData>(authenticate, initialState);
+  const [loading, setLoading] = useState(false);
 
   return (
-    <form action={dispatch} className="space-y-3">
+    <form action={dispatch} className="">
       <div className="w-full">
+        {loading && <Loading />}
         <div className="w-full">
           <div
-            className={`flex-1 rounded px-6 pb-4 pt-8 shadow-three mx-auto max-w-[500px]  ${secondaryBg} px-4 ${textColor}`}
+            className={`flex-1 rounded px-6 pb-4 pt-8 shadow-three mx-auto max-w-[420px]  ${secondaryBg} px-4 ${textColor}`}
           >
             <h1
-              className={`${lusitana.className} mb-3 text-2xl font-bold text-center ${strongTextColor}`}
+              className={`${inter.className} mb-3 text-2xl font-medium text-center ${strongTextColor}`}
             >
               Sign in to your account here
             </h1>
             <p
-              className={`${lusitana.className} mb-11 text-base font-medium text-custom-body-color text-center`}
+              className={`${inter.className} mb-11 text-base font-medium text-custom-body-color text-center`}
             >
-              Login to your account for a reservation now.
+              Login to your account as an admin.
             </p>
             <GoogleButton />
             <GithubButton />
             <HRWithText text="Or, sign in with your email" />
             {loginDetails.map((details) => (
-              <LoginInput
+              <CommonInput
                 key={details.id}
-                required={details?.required}
-                minLenght={details.minLenght}
                 id={details.id}
                 placeholder={details.placeholder}
                 label={details.label}
                 icon={details.icon}
                 type={details.type}
                 mt={details.mt}
-                errors={state?.errors ?? null}
+                errors={state?.type === "error" ? state?.errors : null}
               />
             ))}
             <RememberMe />
-            <LoginButton />
+            <LoginButton setLoading={setLoading} />
             <p className="text-center text-base font-medium text-custom-body-color">
               Don&apos;t you have an account?{" "}
               <Link
@@ -70,16 +76,22 @@ export default function LoginForm() {
   );
 }
 
-function LoginButton() {
+function LoginButton({
+  setLoading,
+}: {
+  setLoading: Dispatch<SetStateAction<boolean>>;
+}) {
   const { pending } = useFormStatus();
+  useEffect(() => {
+    setLoading(pending)
+  }, [pending, setLoading])
   return (
-    <Button
-      variant="default"
-      className="mb-8 w-full text-gray-50 py-6 text-xl font-thin"
+    <button
+      className={`w-full ${loginBtnClass} cursor-pointer`}
       aria-disabled={pending}
     >
-      Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
-    </Button>
+      {pending ? "Logging in ..." : "Log in"}
+    </button>
   );
 }
 

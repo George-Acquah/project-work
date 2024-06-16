@@ -42,8 +42,6 @@ async function refreshToken(token: JWT): Promise<JWT> {
 // Function to handle user authentication
 async function authenticate(prevState: ActionResult, payload: FormData) {
   try {
-    // Convert formData to an object
-    // const credentials = Object.fromEntries(formData);
     const validatedFields = Login.safeParse(
       Object.fromEntries(payload.entries())
     );
@@ -52,8 +50,6 @@ async function authenticate(prevState: ActionResult, payload: FormData) {
       return {
         type: "error" as const,
         errors: validatedFields.error.flatten().fieldErrors,
-        // errors: validatedFields.error.flatten().fieldErrors,
-        // message: "Missing Fields. Failed to Update User.",
       } satisfies ActionResult;
     }
 
@@ -66,6 +62,7 @@ async function authenticate(prevState: ActionResult, payload: FormData) {
     // On successful login, redirect to the dashboard or intended page
     permanentRedirect("/dashboard", RedirectType.replace);
   } catch (error: any) {
+    console.log(error);
     const errorUrl = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
     redirect(errorUrl); // Redirect to a generic error page
   }

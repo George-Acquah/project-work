@@ -17,13 +17,11 @@ export default auth((req) => {
 
   // Rewrite unauthenticated users trying to access loggedInRoutes to login page
   if (!isAuthenticated && loggedInRoutes.some(path => pathname.startsWith(path))) {
-    console.log('Rewriting to login: ');
     return NextResponse.redirect(new URL(`/auth/login`, req.nextUrl));
   }
 
   // Rewrite authenticated users trying to access loggedOutRoutes to dashboard
   if (isAuthenticated && loggedOutRoutes.some(path => pathname.startsWith(path))) {
-    console.log('Rewriting to dashboard: ');
     return NextResponse.redirect(new URL(`/dashboard`, req.nextUrl));
   }
 
