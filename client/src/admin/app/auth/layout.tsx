@@ -20,9 +20,9 @@ export const HRWithText = ({
   text: string;
 }) => (
   <div className="mb-8 flex items-center justify-center">
-    <span className="hidden h-[1px] w-full max-w-[70px] bg-custom-body-color/50 sm:block"></span>
-    <p className="w-full px-5 text-center text-base font-medium text-custom-body-color">{text}</p>
-    <span className="hidden h-[1px] w-full max-w-[70px] bg-custom-body-color/50 sm:block"></span>
+    <span className="hidden h-[1px] w-full max-w-[70px] bg-custom-body-color/50 sm:block" />
+    <p className="w-full px-2 text-center text-base font-medium text-custom-body-color">{text}</p>
+    <span className="hidden h-[1px] w-full max-w-[70px] bg-custom-body-color/50 sm:block" />
   </div>
 );
 

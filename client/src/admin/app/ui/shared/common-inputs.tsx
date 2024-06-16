@@ -1,35 +1,28 @@
 import { ExclamationCircleIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Icon, Text } from "@tremor/react";
-import { bodyBg, cardsBg } from "../themes";
+import { cardsBg } from "../themes";
 import { getValue } from "@/utils/functions/forms.functions";
-
-export const inputClass =
-  "peer pl-10 border-stroke dark:shadow-two w-full border text-base outline-none transition-all duration-300 focus:border-custom-primary dark:border-custom-transparent dark:bg-[#2C303B] dark:focus:border-custom-primary dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark";
+import { generateInputClass } from "@/utils/functions/styles.functions";
 
 interface _InputWithErrors {
   id: string;
   prependComponent: React.ReactNode;
-  errors?: any;
+  errors: Record<string, string[] | undefined>;
 }
-export const InputWithErrors = ({
+const InputErrors = ({
   errors,
   id,
   prependComponent,
 }: _InputWithErrors) => {
   return (
     <>
-      {prependComponent}
       {errors && errors[id] ? (
-        <div
-          id="customer-error"
-          aria-live="polite"
-          className="mt-2 text-sm text-red-500 flex space-x-2"
-        >
-          <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-          {errors[id].map((error: string) => (
-            <Text className="text-red-500" key={error}>
-              {error}
-            </Text>
+        <div id={`${id}-error`} className="mt-2 text-sm text-red-500">
+          {errors[id]?.map((error: string) => (
+            <div className="flex space-x-2" key={error}>
+              {prependComponent}
+              <Text className="text-red-500">{error}</Text>
+            </div>
           ))}
         </div>
       ) : null}
@@ -89,12 +82,11 @@ export default function CommonInput({
   label,
   type,
   disabled,
-  required,
-  minLenght,
   errors,
   tooltip,
 }: _IDetail) {
   const LinkIcon = icon;
+  const err_bool = errors && (errors[id]!! as unknown as boolean);
   return (
     <div className="mb-4 lg:mr-4">
       <label
@@ -119,30 +111,24 @@ export default function CommonInput({
           name={id}
           defaultValue={value}
           placeholder={placeholder}
-          className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${inputClass} ${bodyBg} ${
-            id === "email" ? "mt-[5px]" : ""
-          }`}
+          aria-describedby={`${id}-error`}
+          aria-labelledby={`${id}`}
           type={type}
+          className={generateInputClass(err_bool!!)}
+          autoComplete={"on"}
           disabled={disabled}
-          minLength={minLenght}
-          required={required}
         />
         <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
       </div>
-      {errors && errors[id] ? (
-        <div
-          id="customer-error"
-          aria-live="polite"
-          className="mt-2 text-sm text-red-500 flex space-x-2"
-        >
-          <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-          {errors[id].map((error: string) => (
-            <Text className="text-red-500" key={error}>
-              {error}
-            </Text>
-          ))}
-        </div>
-      ) : null}
+      {errors && (
+        <InputErrors
+          id={id}
+          errors={errors}
+          prependComponent={
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+          }
+        />
+      )}
     </div>
   );
 }
