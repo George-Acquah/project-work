@@ -1,9 +1,20 @@
-import { ExclamationCircleIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationCircleIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/24/outline";
 import { Icon, Text } from "@tremor/react";
 import { bodyBg, strongTextColor, textColor } from "./themes";
 
 export const inputClass =
   "peer pl-10 border-stroke dark:shadow-two w-full border text-base outline-none transition-all duration-300 focus:border-custom-primary dark:border-custom-transparent dark:bg-[#2C303B] dark:focus:border-custom-primary dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark";
+
+const generateInputClass = (error: boolean) =>
+  `peer pl-10 dark:shadow-two w-full border text-base outline-none transition-all duration-300 dark:focus:shadow-none placeholder:dark:text-custom-body-color-dark bg-[#f8f8f8] dark:bg-[#2C303B] ${
+    error
+      ? "accent-red-400 border-2 border-red-400 focus:border-red-400"
+      : "focus:border-custom-primary dark:focus:border-custom-primary dark:border-custom-transparent"
+  } `;
+
 
 export default function CommonInputComp({
   value,
@@ -79,6 +90,7 @@ export function LoginInput({
   errors,
 }: _ILoginInputComp) {
   const LinkIcon = icon;
+  const err_bool = errors && (errors[id]!! as unknown as boolean);
   return (
     <div className={mt ? "mt-4" : ""}>
       <label htmlFor={id} className="mb-3 mt-5 block text-sm font-medium">
@@ -90,9 +102,9 @@ export function LoginInput({
           name={id}
           placeholder={placeholder}
           type={type}
-          className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${inputClass}`}
-          required={required}
-          minLength={minLenght}
+          className={`px-6 py-3 text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${generateInputClass(
+            err_bool
+          )}`}
         />
         <LinkIcon
           className={`pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2  peer-focus:${strongTextColor} ${textColor}`}
@@ -100,15 +112,15 @@ export function LoginInput({
       </div>
       {errors && errors[id] ? (
         <div
-          id="customer-error"
-          aria-live="polite"
-          className="mt-2 text-sm text-red-500 flex space-x-2"
+          id={`${id}-error`}
+          // aria-live="polite"
+          className="mt-2 text-sm text-red-500"
         >
-          <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
           {errors[id].map((error: string) => (
-            <Text className="text-red-500" key={error}>
-              {error}
-            </Text>
+            <div className="flex space-x-2" key={error}>
+              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+              <Text className="text-red-500">{error}</Text>
+            </div>
           ))}
         </div>
       ) : null}

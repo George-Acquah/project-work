@@ -11,8 +11,10 @@ import { RedirectType, permanentRedirect, redirect } from "next/navigation";
 import { AdminSchema, ApplicantSchema } from "./z-validations";
 import { clientCookiesKeys, clientCookiesValues } from "./constants";
 import { AUTH_ERRORS } from "@/constants/errors.constants";
+import AuthSchema from "@/schemas/auth.schema";
 
 const UpdateApplicant = ApplicantSchema.omit({ id: true });
+const Login = AuthSchema.omit({ phone_number: true });
 
 const UpdateAdmin = AdminSchema.omit({ id: true, username: true });
 
@@ -38,32 +40,34 @@ async function refreshToken(token: JWT): Promise<JWT> {
 }
 
 // Function to handle user authentication
-async function authenticate(prevState: any, formData: FormData) {
+async function authenticate(prevState: ActionResult, payload: FormData) {
   try {
     // Convert formData to an object
-    const credentials = Object.fromEntries(formData);
+    // const credentials = Object.fromEntries(formData);
+    const validatedFields = Login.safeParse(
+      Object.fromEntries(payload.entries())
+    );
+
+    if (!validatedFields.success) {
+      return {
+        type: "error" as const,
+        errors: validatedFields.error.flatten().fieldErrors,
+        // errors: validatedFields.error.flatten().fieldErrors,
+        // message: "Missing Fields. Failed to Update User.",
+      } satisfies ActionResult;
+    }
 
     // Use NextAuth's signIn method to authenticate with credentials
-    const res = await signIn("credentials", {
+    await signIn("credentials", {
       redirect: false, // Prevent automatic redirection
-      ...credentials, // Spread the credentials into the signIn method
+      ...validatedFields.data, // Spread the credentials into the signIn method
     });
 
-    if (res.error) {
-      // Handle authentication errors
-      throw new Error(res.error);
-    }
-
     // On successful login, redirect to the dashboard or intended page
-    permanentRedirect("/dashboard", RedirectType.push);
-
+    permanentRedirect("/dashboard", RedirectType.replace);
   } catch (error: any) {
-    // Handle different types of errors
-    if (error.message === "CredentialsSignin") {
-      const errorUrl = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
-      redirect(errorUrl); // Redirect to a generic error page
-    }
-    throw error;
+    const errorUrl = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
+    redirect(errorUrl); // Redirect to a generic error page
   }
 }
 
@@ -138,7 +142,7 @@ async function updateUser(
       // errors: validatedFields.error.flatten().fieldErrors,
       // message: "Missing Fields. Failed to Update User.",
     } satisfies ActionResult;
-  };
+  }
   const url = `${endpoints.USERS.GET_SINGLE_USER}/${id}`;
   try {
     await fetcher(url, "PUT", "no-cache", validatedFields.data);
@@ -204,5 +208,5 @@ export {
   deleteUser,
   updateUser,
   updateAdmin,
-  testEmail
+  testEmail,
 };
