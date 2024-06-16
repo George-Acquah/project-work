@@ -12,7 +12,11 @@ import { HRWithText } from "../auth/layout";
 import Link from "next/link";
 
 export default function LoginForm() {
-  const [state, dispatch] = useFormState(authenticate, undefined);
+  const initialState: any = {
+    type: undefined,
+    message: null,
+  };
+  const [state, dispatch] = useFormState(authenticate, initialState);
 
   return (
     <form action={dispatch} className="space-y-3">
@@ -45,6 +49,7 @@ export default function LoginForm() {
                 icon={details.icon}
                 type={details.type}
                 mt={details.mt}
+                errors={state?.errors ?? null}
               />
             ))}
             <RememberMe />

@@ -62,6 +62,15 @@ const ApplicantSchema = z.object({
   }),
 });
 
+const LoginSchema = z.object({
+  userType: z.enum(["admin", "applicant", "moderator", "student", "user"], {
+    invalid_type_error: "Please select a user role.",
+  }),
+  isActive: z.enum(["true", "false"], {
+    invalid_type_error: "Please select an active status.",
+  }),
+});
+
 
 export {
     AdminSchema,
