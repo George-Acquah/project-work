@@ -337,7 +337,7 @@ interface CommonDivCompProps<T> {
    * @type {Record<string, string>}
    * @memberof CommonDivCompProps
    */
-  errors?: Record<string, string> | null;
+  errors: Record<string, string[] | undefined> | null;
 }
 
 /**
@@ -408,24 +408,6 @@ interface _IDetail {
   disabled?: boolean;
 
   /**
-   * Whether the input field is required or not.
-   * This can be used to prevent throwing errors for unattended fields.
-   *
-   * @type {boolean}
-   * @memberof Detail
-   */
-  required?: boolean;
-
-  /**
-   * Whether the input field is required or not.
-   * This can be used to prevent throwing errors for unattended fields.
-   *
-   * @type {number}
-   * @memberof Detail
-   */
-  minLenght?: number;
-
-  /**
    * Whether the input field should be given a resonable margin top.
    * @type {boolean}
    * @memberof Detail
@@ -447,7 +429,7 @@ interface _IDetail {
    * @type {any}
    * @memberof Detail
    */
-  errors?: any;
+  errors: Record<string, string[] | undefined> | null;
 }
 
 interface _ISecurityLog {
