@@ -4,7 +4,7 @@ import { FunnelIcon } from "@heroicons/react/24/solid";
 export default function Filter({ children }: _IChildren) {
   return (
     <div className="">
-      <Menu __demoMode>
+      <Menu>
         <MenuButton className="inline-flex h-10 items-center gap-2 rounded-md bg-gray-800 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-700 data-[open]:bg-gray-700 data-[focus]:outline-1 data-[focus]:outline-white ">
           Filters
           <FunnelIcon className="h-4 fill-white/80" />

@@ -123,7 +123,7 @@ async function deleteOwner(id: string) {
 async function updateUser(
   id: string,
   myrole: string,
-  prevState: any,
+  prevState: ActionResult,
   formData: FormData
 ) {
   const validatedFields = UpdateApplicant.safeParse({
@@ -133,10 +133,12 @@ async function updateUser(
 
   if (!validatedFields.success) {
     return {
+      type: "error" as const,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Update User.",
-    };
-  }
+      // errors: validatedFields.error.flatten().fieldErrors,
+      // message: "Missing Fields. Failed to Update User.",
+    } satisfies ActionResult;
+  };
   const url = `${endpoints.USERS.GET_SINGLE_USER}/${id}`;
   try {
     await fetcher(url, "PUT", "no-cache", validatedFields.data);
