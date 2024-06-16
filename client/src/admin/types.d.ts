@@ -652,6 +652,17 @@ interface _ThemeProviderProps {
   children?: React.ReactNode;
 }
 
+interface _ITableContext {
+  /** An array of all selected rows  */
+  selectedRows: string[];
+  /** A void function that selects a single checkbox in a row */
+  handleRowSelection: (id: string, checked: boolean) => void;
+  /** A void function that selects a single checkbox in a row */
+  isRowSelected: (id: string) => boolean;
+  /** A void function that selects all chechboxes in a row */
+  handleSelectAllRows: (allIds: string[], checked: boolean) => void;
+}
+
 type _TVehicleImage = _Image;
 
 type _TableRowType = _IFormattedCenter | _IFormattedUser | _IFormattedSlot;
@@ -660,6 +671,17 @@ type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";
 type _TFields = "text" | "radio" | "select" | "email";
 type _IThemeType = "light" | "dark";
 type ValueObject = Record<string, string>;
+
+type ActionResult =
+  | {
+      type: "success";
+      message: string;
+    }
+  | {
+      type: "error";
+      errors: Record<string, string[] | undefined>;
+    }
+  | { type: undefined; message: null };
 
 type _TUpdateEntityFunction<T> = (
   id: string,

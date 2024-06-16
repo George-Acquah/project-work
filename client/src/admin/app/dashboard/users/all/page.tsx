@@ -10,8 +10,6 @@ import { UserType } from "@/app/lib/constants";
 import UsersTable from "@/app/ui/users/tables";
 import Filters from "@/app/ui/shared/filters";
 import AllUsersFilter from "@/app/ui/users/all-users.filter";
-// import ApplicantsTable from "@/app/ui/users/applicants-table";
-// import { fetchApplicantsPage } from "@/app/lib/data-requests";
 
 export const metadata: Metadata = {
   title: "Users",
@@ -46,7 +44,11 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
         </Filters>
         <AddUser />
       </div>
-      <Suspense key={user + currentPage} fallback={<UsersTableSkeleton />}>
+      <Suspense
+        // Ensure this key only changes when fetching new data
+        key={`${user}-${currentPage}-${pageSize}`}
+        fallback={<UsersTableSkeleton />}
+      >
         <UsersTable
           query={user}
           currentPage={currentPage}
