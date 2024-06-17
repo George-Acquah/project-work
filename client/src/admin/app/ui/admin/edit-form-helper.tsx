@@ -9,9 +9,9 @@ import { ExclamationCircleIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Title, Text, Button } from "@tremor/react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import CommonInputComp from "../inputs";
 import { cardsBg, textColor } from "../themes";
 import { inputIcons } from "../users/constants";
+import CommonInput from "../shared/common-inputs";
 
 interface _InputWithErrors {
   id: string;
@@ -108,7 +108,7 @@ export default function CommonDivComp({
           {title === "User Details"
             ? editAdminDetails.map((detail) => {
                 return (
-                  <CommonInputComp
+                  <CommonInput
                     key={`${detail.id}__${detail.placeholder}`}
                     id={detail.id}
                     placeholder={detail.placeholder}
@@ -125,7 +125,7 @@ export default function CommonDivComp({
             : title === "Profile Details"
             ? editAdminProfileDetails.map((detail) => {
                 return (
-                  <CommonInputComp
+                  <CommonInput
                     key={`${detail.id}__${detail.placeholder}`}
                     id={detail.id}
                     placeholder={detail.placeholder}
@@ -141,7 +141,7 @@ export default function CommonDivComp({
             : title === "Contact Details"
             ? editAdminContactDetails.map((detail) => {
                 return (
-                  <CommonInputComp
+                  <CommonInput
                     key={`${detail.id}__${detail.placeholder}`}
                     id={detail.id}
                     placeholder={detail.placeholder}
@@ -156,7 +156,7 @@ export default function CommonDivComp({
               })
             : editAdminOtherDetails.map((detail) => {
                 return (
-                  <CommonInputComp
+                  <CommonInput
                     key={`${detail.id}__${detail.placeholder}`}
                     id={detail.id}
                     placeholder={detail.placeholder}
@@ -165,6 +165,7 @@ export default function CommonDivComp({
                     icon={detail.icon}
                     type={detail.type}
                     disabled={detail.disabled}
+                    errors={null}
                   />
                 );
               })}
