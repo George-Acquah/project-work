@@ -4,7 +4,7 @@ import React from "react";
 import { useFormState } from "react-dom";
 import { updateAdmin } from "@/app/lib/actions";
 import { formatAdminDetails } from "@/app/lib/utils";
-import CommonDivComp, { EditBtn, GlobalError } from "./edit-form-helper";
+import { EditBtn, GlobalError } from "./edit-form-helper";
 import { dashboardRoutes } from "@/app/lib/routes";
 import { InputGroup } from "../shared/common-inputs";
 import { editAdminContactDetails, editAdminDetails, editAdminOtherDetails, editAdminProfileDetails } from "@/app/lib/constants";
