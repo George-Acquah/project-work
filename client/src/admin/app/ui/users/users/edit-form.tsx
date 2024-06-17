@@ -12,7 +12,7 @@ import {
   RenderIcons,
 } from "../../admin/edit-form-helper";
 import { bodyBg, cardsBg, textColor } from "../../themes";
-import { inputClass } from "../../inputs";
+import { generateInputClass } from "@/utils/functions/styles.functions";
 
 export default function EditUserForm({
   fields,
@@ -115,10 +115,10 @@ export default function EditUserForm({
                   <input
                     id={field.key}
                     name={field.key}
-                    type="text"
+                    type="text" 
                     value={formData[field.key]}
                     placeholder={`Enter ${field.label.toLowerCase()}`}
-                    className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${inputClass} ${bodyBg}`}
+                    className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${generateInputClass(false)} ${bodyBg}`}
                     disabled={field.disabled}
                     onChange={(e) => handleChange(field.key, e.target.value)}
                   />
