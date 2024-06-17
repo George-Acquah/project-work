@@ -54,7 +54,7 @@ export default function RegistrationForm() {
                 type={detail.type}
                 errors={state.errors}
                 // required={detail?.required}
-                minLenght={detail.minLenght}
+                // minLenght={detail.minLenght}
                 mt={detail.mt}
               />
             ))}

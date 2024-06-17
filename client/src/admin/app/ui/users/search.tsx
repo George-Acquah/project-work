@@ -5,8 +5,8 @@ import { useTransition } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { searchParamsKeys } from "./constants";
 import { SvgSpinner } from "@/app/lib/icons";
-import { inputClass } from "../inputs";
 import { strongTextColor, textColor } from "../themes";
+import { generateInputClass } from "@/utils/functions/styles.functions";
 
 interface IProps {
   entityType: string; // Add entityType prop
@@ -43,7 +43,7 @@ export default function SearchApplicants({
         Search
       </label>
       <input
-        className={` dark:text-gray-400 rounded-lg ${inputClass}`}
+        className={` dark:text-gray-400 rounded-lg ${generateInputClass(false)}`}
         placeholder={placeholder}
         disabled={disabled}
         onChange={(e) => handleSearch(e.target.value)}
