@@ -341,6 +341,7 @@ const editAdminProfileDetails: _IDetail[] = [
     icon: UserCircleIcon,
     type: "text",
     disabled: false,
+    errors: null
   },
   {
     id: "last_name",
@@ -350,6 +351,7 @@ const editAdminProfileDetails: _IDetail[] = [
     icon: UserCircleIcon,
     type: "text",
     disabled: false,
+    errors: null
   },
 ];
 
@@ -362,6 +364,7 @@ const editAdminOtherDetails: _IDetail[] = [
     icon: CalendarDaysIcon,
     type: "text",
     disabled: true,
+    errors: null
   },
   {
     id: "updatedAt",
@@ -371,6 +374,7 @@ const editAdminOtherDetails: _IDetail[] = [
     icon: CalendarDaysIcon,
     type: "text",
     disabled: true,
+    errors: null
   },
 ];
 
@@ -383,6 +387,7 @@ const editAdminContactDetails: _IDetail[] = [
     icon: PhoneIcon,
     type: "text",
     disabled: false,
+    errors: null
   },
   {
     id: "area",
@@ -392,6 +397,7 @@ const editAdminContactDetails: _IDetail[] = [
     icon: MapPinIcon,
     type: "text",
     disabled: false,
+    errors: null
   },
   {
     id: "city",
@@ -401,6 +407,7 @@ const editAdminContactDetails: _IDetail[] = [
     icon: MapPinIcon, // You might want to use a different icon here
     type: "text",
     disabled: false,
+    errors: null
   },
   {
     id: "state",
@@ -410,6 +417,7 @@ const editAdminContactDetails: _IDetail[] = [
     icon: GlobeAltIcon, // You might want to use a different icon here
     type: "text",
     disabled: false,
+    errors: null
   },
   {
     id: "pinCode",
@@ -419,6 +427,7 @@ const editAdminContactDetails: _IDetail[] = [
     icon: IdentificationIcon, // You might want to use a different icon here
     type: "text",
     disabled: false,
+    errors: null
   },
 ];
 

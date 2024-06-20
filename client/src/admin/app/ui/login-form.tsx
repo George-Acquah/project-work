@@ -28,7 +28,7 @@ export default function LoginForm() {
   return (
     <form action={dispatch} className="">
       <div className="w-full">
-        {loading && <Loading />}
+        {loading && <Loading bg="gray-400" label="Logging In"/>}
         <div className="w-full">
           <div
             className={`flex-1 rounded px-6 pb-4 pt-8 shadow-three mx-auto max-w-[420px]  ${secondaryBg} px-4 ${textColor}`}
