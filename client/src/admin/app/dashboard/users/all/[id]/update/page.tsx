@@ -12,7 +12,7 @@ export default async function UserPage({ params }: _IdParams) {
   return (
     <UserUpdate
       id={id}
-      href={dashboardRoutes.USERS.BASE}
+      href={dashboardRoutes.USERS.ALL.BASE}
       label="User"
     />
   );

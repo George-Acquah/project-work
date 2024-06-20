@@ -23,7 +23,7 @@ interface ISearchParams {
   };
 }
 
-export default async function ApplicantsPage({ searchParams }: ISearchParams) {
+export default async function AllUsersPage({ searchParams }: ISearchParams) {
   const user = searchParams?.users || "";
   const currentPage = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.size) || 5;

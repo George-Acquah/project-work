@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
-import { lusitana } from '@/app/ui/font';
+import { inter } from '@/app/ui/font';
 import { strongTextColor } from './themes';
 
 interface Breadcrumb {
@@ -16,16 +16,22 @@ export default function Breadcrumbs({
 }) {
   return (
     <nav aria-label="Breadcrumb" className="mb-6 block">
-      <ol className={clsx(lusitana.className, 'flex text-xl md:text-2xl')}>
+      <ol className={clsx(inter.className, "flex text-xl md:text-2xl")}>
         {breadcrumbs.map((breadcrumb, index) => (
           <li
             key={breadcrumb.href}
             aria-current={breadcrumb.active}
             className={clsx(
-              breadcrumb.active ? strongTextColor : 'text-gray-500 dark:text-gray-300',
+              breadcrumb.active
+                ? strongTextColor
+                : "text-gray-400 dark:text-gray-400"
             )}
           >
-            <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
+            {breadcrumbs.length > 0 && breadcrumbs.length - 1 !== index ? (
+              <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
+            ) : (
+              <p className='cursor-default'>{breadcrumb.label}</p>
+            )}
             {index < breadcrumbs.length - 1 ? (
               <span className="mx-3 inline-block">/</span>
             ) : null}
