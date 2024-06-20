@@ -43,7 +43,9 @@ export default function SearchApplicants({
         Search
       </label>
       <input
-        className={` dark:text-gray-400 rounded-lg ${generateInputClass(false)}`}
+        className={` dark:text-gray-400 h-10 rounded-lg ${generateInputClass(
+          false
+        )}`}
         placeholder={placeholder}
         disabled={disabled}
         onChange={(e) => handleSearch(e.target.value)}
