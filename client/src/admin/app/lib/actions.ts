@@ -62,9 +62,13 @@ async function authenticate(prevState: ActionResult, payload: FormData) {
     // On successful login, redirect to the dashboard or intended page
     permanentRedirect("/dashboard", RedirectType.replace);
   } catch (error: any) {
-    console.log(error);
-    const errorUrl = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
-    redirect(errorUrl); // Redirect to a generic error page
+    if (error.message === "NEXT_REDIRECT") {
+      throw error; // Re-throw the redirect error
+    } else {
+      // Handle other errors here
+      const errorUrl = AUTH_ERRORS.NEXTAUTH_ERROR_URL;
+      redirect(errorUrl); // Redirect to a generic error page
+    }
   }
 }
 
