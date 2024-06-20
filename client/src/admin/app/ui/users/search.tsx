@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
@@ -44,7 +44,8 @@ export default function SearchApplicants({
       </label>
       <input
         className={` dark:text-gray-400 h-10 rounded-lg ${generateInputClass(
-          false
+          false,
+          "white"
         )}`}
         placeholder={placeholder}
         disabled={disabled}
