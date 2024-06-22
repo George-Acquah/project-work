@@ -8,6 +8,7 @@ import NotFound from "./update/not-found";
 import { EditProfileButton } from "@/app/ui/users/buttons";
 import { bodyBg, cardsBg, textColor } from "@/app/ui/themes";
 import { formatKey, formatTitles } from "@/app/lib/utils";
+import { SignOutBtn } from "@/app/ui/shared/server-buttons";
 interface _IProfileCard {
   title: string;
   data: Record<string, string>;
@@ -16,7 +17,7 @@ interface _IProfileDataItem {
   [key: string]: {
     [key: string]: string;
   };
-};
+}
 
 const ProfileCard = ({ title, data }: _IProfileCard) => {
   return (
@@ -59,14 +60,16 @@ const AdminProfile = async () => {
 
   return (
     <main
-      className={`md:max-w-2xl -mx-2 rounded md:mx-auto mt-8 p-4 md:p-8 ${cardsBg}`}
+      className={`md:max-w-4xl -mx-2 rounded md:mx-auto mt-8 p-4 md:p-8 ${cardsBg}`}
     >
-      <Title>{admin.email}&apos;s Profile</Title>
+      <div className="flex items-center justify-between">
+        <Title>{admin.email}&apos;s Profile</Title>
+        <EditProfileButton linkTo={dashboardRoutes.ADMIN.UPDATE} />
+      </div>
 
       {/* Profile Image and Edit Profile button */}
-      <div className="flex items-center justify-between my-6">
+      <div className="my-6">
         <AddProfileImage />
-        <EditProfileButton linkTo={dashboardRoutes.ADMIN.UPDATE} />
       </div>
 
       {adminProfileData.map((section, index) =>
@@ -77,16 +80,18 @@ const AdminProfile = async () => {
 
       {/* Change Password */}
       <section className="mb-6">
-        <h2 className="text-lg font-semibold mb-4">Change Password</h2>
+        <h2 className="text-lg font-semibold mb-4 text-red-500">Danger Zone</h2>
         {/* Add change password form or link to a change password page */}
-        <Link className="text-blue-500 hover:underline" href="#">
-          Change Password
-        </Link>
+        <div className={`${bodyBg} rounded-md p-4 space-y-2`}>
+          <Link className="text-blue-500 hover:underline" href="#">
+            Change Password
+          </Link>
+        </div>
       </section>
 
       {/* Logout button */}
-      <div>
-        <Button>Logout</Button>
+      <div className="flex justify-end">
+        <SignOutBtn />
       </div>
     </main>
   );

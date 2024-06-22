@@ -5,16 +5,12 @@ import { TagIcon } from "@heroicons/react/24/outline";
 import { useFormState } from "react-dom";
 import { Select, SelectItem } from "@tremor/react";
 import { dashboardRoutes } from "@/app/lib/routes";
-import {
-  EditBtn,
-  GlobalError,
-  InputWithErrors,
-  RenderIcons,
-} from "../../admin/edit-form-helper";
-import { bodyBg, cardsBg, textColor } from "../../themes";
+import { bodyBg, cardsBg, textColor } from "../themes";
 import { generateInputClass } from "@/utils/functions/styles.functions";
+import { GlobalError, InputErrors, RenderIcons } from "./common-inputs";
+import { EditBtn } from "./buttons";
 
-export default function EditUserForm({
+export default function EditForms({
   fields,
   updateEntity,
   entityData,
@@ -52,7 +48,7 @@ export default function EditUserForm({
               {field.label}
             </label>
             {field.type === "select" ? (
-              <InputWithErrors id={field.key} errors={state.errors ?? null}>
+              <>
                 <Select
                   id={field.key}
                   icon={TagIcon}
@@ -70,9 +66,10 @@ export default function EditUserForm({
                     </SelectItem>
                   ))}
                 </Select>
-              </InputWithErrors>
+                <InputErrors id={field.key} errors={state.errors ?? null} />
+              </>
             ) : field.type === "radio" ? (
-              <InputWithErrors id={field.key} errors={state.errors ?? null}>
+              <>
                 <fieldset className="mb-4 lg:w-1/2 ">
                   <div
                     className={` border border-gray-200 dark:border-gray-600 px-[14px] py-3 ${bodyBg}`}
@@ -94,7 +91,9 @@ export default function EditUserForm({
                           <label
                             htmlFor={item.id}
                             className={`ml-2 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ${
-                              item.id === "verified" ? textColor : "text-white/90"
+                              item.id === "verified"
+                                ? textColor
+                                : "text-white/90"
                             }  ${
                               item.value === "true"
                                 ? `${cardsBg}`
@@ -108,23 +107,27 @@ export default function EditUserForm({
                     </div>
                   </div>
                 </fieldset>
-              </InputWithErrors>
+                <InputErrors id={field.key} errors={state.errors ?? null} />
+              </>
             ) : (
-              <InputWithErrors id={field.key} errors={null}>
+              <>
                 <div className="relative">
                   <input
                     id={field.key}
                     name={field.key}
-                    type="text" 
+                    type="text"
                     value={formData[field.key]}
                     placeholder={`Enter ${field.label.toLowerCase()}`}
-                    className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${generateInputClass(false)} ${bodyBg}`}
+                    className={`px-6 py-3 bg-[#f8f8f8] text-custom-body-color dark:text-custom-body-color-dark rounded-sm ${generateInputClass(
+                      false
+                    )} ${bodyBg}`}
                     disabled={field.disabled}
                     onChange={(e) => handleChange(field.key, e.target.value)}
                   />
                   <RenderIcons helper={field.icon} />
                 </div>
-              </InputWithErrors>
+                {/* <InputErrors id={field.key} errors={null} /> */}
+              </>
             )}
           </div>
         ))}

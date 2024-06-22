@@ -1,7 +1,7 @@
 import { UsersTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import Breadcrumbs from "@/app/ui/breadcrumbs";
+import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 import { dashboardRoutes } from "@/app/lib/routes";
 
 export const metadata: Metadata = {

@@ -2,7 +2,7 @@
 
 import { signIn, signOut } from "@/auth";
 import { JWT } from "@auth/core/jwt";
-import { API, fetcher } from "./data";
+import { API, fetcher, refreshHeader } from "./data";
 import { cookies } from "next/headers";
 import { endpoints } from "./endpoints";
 import { revalidatePath } from "next/cache";
@@ -37,6 +37,22 @@ async function refreshToken(token: JWT): Promise<JWT> {
     ...token,
     ...res,
   };
+}
+
+// Add a function to refresh the token
+async function clientRefreshToken() {
+  const refreshResponse = await fetch(`${API}/auth/refresh`, {
+    method: "POST",
+    headers: await refreshHeader(),
+  });
+
+  if (!refreshResponse.ok) {
+    redirect(`/dashboard?${AUTH_ERRORS.SESSION}`);
+  }
+
+  const refreshData =
+    (await refreshResponse.json()) as _IApiResponse<_IRefresh>;
+  return refreshData;
 }
 
 // Function to handle user authentication
@@ -202,6 +218,7 @@ async function signOutHelper() {
 export {
   authenticate,
   refreshToken,
+  clientRefreshToken,
   signOutHelper,
   setLightCookies,
   deleteCustomer,

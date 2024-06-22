@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { lusitana } from "@/app/ui/font";
-import SearchApplicants from "@/app/ui/users/search";
+import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {
   title: "Unverified Applicants",
@@ -30,7 +30,7 @@ export default async function ApplicationsPage({
         </h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <SearchApplicants entityType={""} />
+        <Search entityType={""} />
         {/* <CreateInvoice /> */}
       </div>
       {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>

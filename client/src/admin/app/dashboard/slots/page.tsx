@@ -2,11 +2,11 @@ import { UsersTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { lusitana } from "@/app/ui/font";
-import SearchApplicants from "@/app/ui/users/search";
 import { AddSlot } from "@/app/ui/users/buttons";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { SlotsTable } from "@/app/ui/users/tables";
+import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {
   title: "Slots",
@@ -33,7 +33,7 @@ export default async function SlotsPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Slots</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <SearchApplicants entityType="slots" placeholder="Search by Slot Name"/>
+        <Search entityType="slots" placeholder="Search by Slot Name"/>
         <AddSlot />
       </div>
       <Suspense key={slot + currentPage} fallback={<UsersTableSkeleton />}>

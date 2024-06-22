@@ -2,7 +2,6 @@ import { UsersTableSkeleton, FilterSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { lusitana } from "@/app/ui/font";
-import SearchApplicants from "@/app/ui/users/search";
 import { AddUser } from "@/app/ui/users/buttons";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
@@ -10,6 +9,7 @@ import { UserType } from "@/app/lib/constants";
 import UsersTable from "@/app/ui/users/tables";
 import Filters from "@/app/ui/shared/filters";
 import AllUsersFilter from "@/app/ui/users/all-users.filter";
+import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {
   title: "Users",
@@ -36,7 +36,7 @@ export default async function AllUsersPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Users</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <SearchApplicants entityType="users" />
+        <Search entityType="users" />
         <Filters>
           <Suspense key={user} fallback={<FilterSkeleton />}>
             <AllUsersFilter />

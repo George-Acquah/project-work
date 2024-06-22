@@ -8,6 +8,8 @@ import {
   ServerError,
   NetworkError,
 } from "./exceptions";
+import { redirect } from "next/navigation";
+import { clientRefreshToken } from "./actions";
 
 const DEV = process.env.NEXT_PUBLIC_API_URL;
 const PROD = "prod-base-url";
@@ -48,17 +50,8 @@ function handleApiError(error: any): void {
 
 // Add a function to refresh the token
 async function refreshToken() {
-  const refreshResponse = await fetch(`${API}/auth/refresh`, {
-    method: "POST",
-    headers: await refreshHeader(),
-  });
-
-  if (!refreshResponse.ok) {
-    throw new Error("Failed to refresh token");
-  }
-
   const refreshData =
-    (await refreshResponse.json()) as _IApiResponse<_IRefresh>;
+    await clientRefreshToken()
   await updateSession(
     refreshData.data.tokens.access_token,
     refreshData.data.tokens.refresh_token
@@ -115,6 +108,13 @@ export async function fetcher<T>(
 
   try {
     const res = await fetch(fetchUrl, options);
+
+    if (!res.ok) {
+      throw new Error(res.statusText, {
+       cause: res.status
+      })
+    }
+
     const data = (await res.json()) as _IApiResponse<T>;
 
     // Check if the server response indicates an error
@@ -130,12 +130,14 @@ export async function fetcher<T>(
     // }
     // Handle error responses from the server
     if (data.statusCode && data.statusCode !== 200) {
-      throw new Error(data.message);
+      throw new Error(data.message, {
+        cause: data.statusCode
+      });
     }
 
     return data;
   } catch (err: any) {
-    if (err?.response?.code === 401) {
+    if (err?.cause === 401) {
       try {
         // Attempt to refresh the token
         const newAccessToken = await refreshToken();

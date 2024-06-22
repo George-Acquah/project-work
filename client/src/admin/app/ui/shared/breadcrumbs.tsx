@@ -1,7 +1,7 @@
-import { clsx } from 'clsx';
-import Link from 'next/link';
-import { inter } from '@/app/ui/font';
-import { strongTextColor } from './themes';
+import { clsx } from "clsx";
+import Link from "next/link";
+import { inter } from "@/app/ui/font";
+import { strongTextColor } from "../themes";
 
 interface Breadcrumb {
   label: string;
@@ -30,7 +30,7 @@ export default function Breadcrumbs({
             {breadcrumbs.length > 0 && breadcrumbs.length - 1 !== index ? (
               <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
             ) : (
-              <p className='cursor-default'>{breadcrumb.label}</p>
+              <p className="cursor-default">{breadcrumb.label}</p>
             )}
             {index < breadcrumbs.length - 1 ? (
               <span className="mx-3 inline-block">/</span>

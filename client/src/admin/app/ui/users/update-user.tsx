@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
-import Breadcrumbs from "@/app/ui/breadcrumbs";
-import EditUserForm from "@/app/ui/users/users/edit-form";
+import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
 import { updateUser } from "@/app/lib/actions";
+import EditForms from "../shared/edit-forms";
 
-export default async function UserUpdate({ id, label, href }: _IUpdate) {
-
+export default async function UpdateUser({ id, label, href }: _IUpdate) {
   const [user, userTypes] = await Promise.all([
     fetchUserById(id),
     fetchUserTypes(),
@@ -74,7 +73,7 @@ export default async function UserUpdate({ id, label, href }: _IUpdate) {
           },
         ]}
       />
-      <EditUserForm
+      <EditForms
         id={id}
         fields={userFields}
         updateEntity={updateUser}
