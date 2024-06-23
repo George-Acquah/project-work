@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut, unstable_update } from "@/auth";
 import { JWT } from "@auth/core/jwt";
 import { API, fetcher, refreshHeader } from "./data";
 import { cookies } from "next/headers";
@@ -31,28 +31,17 @@ async function refreshToken(token: JWT): Promise<JWT> {
     throw new Error("Your Session has Expired. Sign in again to continue.");
   }
 
-  const res: _ITokens = await response.json();
+  const res: _IApiResponse<_ITokens> = await response.json();
+  const tokens = res.data;
 
   return {
     ...token,
-    ...res,
+    ...tokens,
   };
 }
 
-// Add a function to refresh the token
-async function clientRefreshToken() {
-  const refreshResponse = await fetch(`${API}/auth/refresh`, {
-    method: "POST",
-    headers: await refreshHeader(),
-  });
-
-  if (!refreshResponse.ok) {
-    redirect(`/dashboard?${AUTH_ERRORS.SESSION}`);
-  }
-
-  const refreshData =
-    (await refreshResponse.json()) as _IApiResponse<_IRefresh>;
-  return refreshData;
+export async function expiredSession() {
+  redirect(`/dashboard?${AUTH_ERRORS.SESSION}`);
 }
 
 // Function to handle user authentication
@@ -218,7 +207,6 @@ async function signOutHelper() {
 export {
   authenticate,
   refreshToken,
-  clientRefreshToken,
   signOutHelper,
   setLightCookies,
   deleteCustomer,

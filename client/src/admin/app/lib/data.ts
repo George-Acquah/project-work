@@ -1,15 +1,15 @@
-import { auth, unstable_update } from "@/auth";
+''
+
+import { auth } from "@/auth";
 import { ErrorMessages } from "./constants";
 import {
-  AuthRequiredError,
   NotFoundError,
   UnauthorizedError,
   ValidationError,
   ServerError,
   NetworkError,
 } from "./exceptions";
-import { redirect } from "next/navigation";
-import { clientRefreshToken } from "./actions";
+import { expiredSession } from "./actions";
 
 const DEV = process.env.NEXT_PUBLIC_API_URL;
 const PROD = "prod-base-url";
@@ -46,17 +46,6 @@ function handleApiError(error: any): void {
   } else {
     throw { code: -1, message: "An unexpected error occurred" };
   }
-}
-
-// Add a function to refresh the token
-async function refreshToken() {
-  const refreshData =
-    await clientRefreshToken()
-  await updateSession(
-    refreshData.data.tokens.access_token,
-    refreshData.data.tokens.refresh_token
-  );
-  return refreshData.data.tokens.access_token;
 }
 
 export async function uploadFetcher(
@@ -137,29 +126,37 @@ export async function fetcher<T>(
 
     return data;
   } catch (err: any) {
-    if (err?.cause === 401) {
-      try {
-        // Attempt to refresh the token
-        const newAccessToken = await refreshToken();
-        // Retry the original request with the new access token
-        options.headers = await authHeader();
-        console.log(options.headers);
-        const retryRes = await fetch(fetchUrl, options);
-        const retryData = (await retryRes.json()) as _IApiResponse<T>;
+    // if (err?.cause === 401) {
+    //   try {
+    //     // Attempt to refresh the token
+    //     const newAccessToken = await clientRefreshToken();
+    //     // Retry the original request with the new access token
+    //     options.headers = await authHeader();
+    //     console.log(options.headers);
+    //     const retryRes = await fetch(fetchUrl, options);
+    //     const retryData = (await retryRes.json()) as _IApiResponse<T>;
         
-        if (retryData.statusCode !== 200) {
-          // switchErrRes(retryData.statusCode, retryData.message);
-          throw new Error(retryData.message);
-        }
-        return retryData;
-      } catch (refreshError) {
-        // Handle failed refresh here (e.g., redirect to login)
-        throw refreshError;
-      }
-    } else if (err.response.data.msg.toLowerCase() === "fetch failed") {
+    //     if (retryData.statusCode !== 200) {
+    //       // switchErrRes(retryData.statusCode, retryData.message);
+    //       throw new Error(retryData.message);
+    //     }
+    //     return retryData;
+    //   } catch (refreshError) {
+    //     // Handle failed refresh here (e.g., redirect to login)
+    //     throw refreshError;
+    //   }
+    // } else if (err.response.data.msg.toLowerCase() === "fetch failed") {
+    //   throw new NetworkError();
+    // }
+    // handleApiError(err);
+    // throw err;
+    if (err.cause === 401) {
+      await expiredSession()
+    }
+    if (err.message.toLowerCase() === "fetch failed") {
       throw new NetworkError();
     }
-    handleApiError(err);
+    // handleApiError(err);
     throw err;
   }
 }
@@ -196,17 +193,3 @@ export const refreshHeader = async () => {
 
   return headers;
 };
-
-// Implement the updateSession function to update the session with the new tokens
-async function updateSession(accessToken: string, refreshToken: string) {
-  // Update the session storage or state with the new tokens
-  const currentSession = await auth();
-  console.log(currentSession)
-  if (currentSession) {
-    await unstable_update({
-      ...currentSession,
-      access_token: accessToken,
-      refresh_token: refreshToken,
-    })
-  }
-}
