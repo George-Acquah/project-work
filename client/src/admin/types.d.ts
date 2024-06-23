@@ -6,7 +6,23 @@ interface _ITokens {
   expiresIn: number;
 }
 
+interface _IAddForm {
+  options: string[];
+  addFunction: _TUpdateEntityFunction;
+  type: string;
+  route: string;
+  // entityData: any;
+  // selecteds: any;
+}
+
 //BBBBBBB
+
+interface Breadcrumb {
+  label: string;
+  href: string;
+  active?: boolean;
+}
+
 interface _IBtn {
   href: string;
   text: string;
@@ -40,11 +56,19 @@ interface _IRadio {
 
 interface _IEditApplicantForm {
   id: string;
-  fields: _IField[];
-  updateEntity: _TUpdateEntityFunction;
+  // fields: _IField[];
+  // updateEntity: _TUpdateEntityFunction;
+  // entityData: any;
+  // selecteds: any;
+  // successMessage?: string;
+
+  options?: string[];
+  updateFunction: _TUpdateEntityFunction;
+  type: string;
+  route: string;
+  isVerified: boolean;
   entityData: any;
   selecteds: any;
-  successMessage?: string;
 }
 interface _IField {
   label: string;
@@ -361,7 +385,7 @@ interface _IDetail {
    * @type {string}
    * @memberof Detail
    */
-  placeholder: string;
+  placeholder?: string;
 
   /**
    * The value to be shown inside the input field.
@@ -380,6 +404,19 @@ interface _IDetail {
    */
   label: string;
 
+  width?: string;
+
+  bg?: string;
+
+  /**
+   * The label to be displayed alongside the input field.
+   * This provides a description or name for the field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  input_type?: "select" | "radio";
+
   /**
    * Optional icon to be displayed within the input field.
    * Can be used to visually represent the field's purpose.
@@ -388,6 +425,22 @@ interface _IDetail {
    * @memberof Detail
    */
   icon?: any;
+
+  /**
+   * Optional options to be rendered for select input field.
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  options?: string[];
+
+  /**
+   * Optional radios to be rendered for radio input field.
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  radio?: _IRadio[];
 
   /**
    * The type of the input field (e.g., "text", "password").
@@ -597,6 +650,19 @@ interface _IParkingCenterImage extends _Image {
 
 interface _IRefresh {
   tokens: _ITokens;
+}
+
+interface _ISearchParams {
+  SESSION: string;
+  ERROR: string;
+  ERR_MSG: string;
+  ERR_DESC: string;
+  BTN_LABEL: string;
+  APPLICANTS: string;
+  USERS: string;
+  CENTERS: string;
+  SLOTS: string;
+  ENTITY_TYPE: string;
 }
 
 interface _IThemeContext {

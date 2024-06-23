@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
 import { authConfig } from "./auth.config";
-import { API, switchErrRes } from "./app/lib/data";
+import { API } from "./app/lib/data";
 import { refreshToken } from "./app/lib/actions";
 import { credentials } from "./app/lib/constants";
 
@@ -46,24 +46,17 @@ export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         return { ...token, ...user };
       }
+      
 
-      // if (new Date().getTime() < token.tokens.expiresIn!) {
-      //   return token;
-      // }
-      // ***************************************************************
-      // added code
-      if (trigger === "update" && session) {
-        token = { ...token, user: session };
+      if (new Date().getTime() < token.tokens.expiresIn!) {
         return token;
       }
-      // **************************************************************
-      return token;
 
-      // return await refreshToken(token);
+      return await refreshToken(token);
     },
 
     async session({ session, token }) {
