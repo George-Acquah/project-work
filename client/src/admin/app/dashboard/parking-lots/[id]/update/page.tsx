@@ -2,9 +2,8 @@ import { notFound } from "next/navigation";
 
 import { Metadata } from "next";
 import { dashboardRoutes } from "@/app/lib/routes";
-import Breadcrumbs from "@/app/ui/breadcrumbs";
-// import EditApplicantForm from "@/app/ui/users/applicants/edit-form";
 import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
+import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Edit Applicant",

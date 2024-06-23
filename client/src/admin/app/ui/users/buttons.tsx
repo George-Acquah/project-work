@@ -1,5 +1,6 @@
 import { deleteCustomer, deleteOwner, deleteUser } from "@/app/lib/actions";
 import { dashboardRoutes } from "@/app/lib/routes";
+import { getAddbtnLabel } from "@/utils/functions/search.functions";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
@@ -73,6 +74,20 @@ function AddUser() {
   );
 }
 
+function CAddUser({ type }: { type: string }) {
+  const label = getAddbtnLabel(type);
+  if (label === undefined) return null;
+  return (
+    <Link
+      href={`${dashboardRoutes.USERS.BASE}/type/add`}
+      className={btnClasses.ADD}
+    >
+      <span className="hidden md:block capitalize">{`Add ${type}`}</span>
+      <PlusIcon className="h-5 md:ml-4" />
+    </Link>
+  );
+}
+
 //EDITS
 function EditCustomer({ id }: _Id) {
   return (
@@ -110,10 +125,10 @@ function EditSlot({ id }: _Id) {
   );
 }
 
-function EditUser({ id }: _Id) {
+function EditUser({ id, path }: _Id & { path: string}) {
   return (
     <Link
-      href={`${dashboardRoutes.USERS.ALL.BASE}/${id}/update`}
+      href={`${path}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
       <p className="hidden md:flex text-sm  font-normal">Edit</p>
@@ -246,4 +261,5 @@ export {
   DeleteUser,
   VerificationButton,
   EditProfileButton,
+  CAddUser
 };

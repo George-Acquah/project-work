@@ -10,7 +10,7 @@ import {
   Text,
   Title,
 } from "@tremor/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { UserType } from "../lib/constants";
@@ -100,13 +100,14 @@ const TableButtonHelper = ({
   type?: string;
   verify?: boolean;
   status?: boolean;
-}) => {
+  }) => {
+  const pathname = usePathname();
   const isVerification = verify && (
     <VerificationButton id={id} status={status ?? false} action={undefined} />
   );
   const userActions = (
     <div className="flex justify-end gap-3">
-      <EditUser id={id} />
+      <EditUser id={id} path={ pathname } />
       <DeleteUser id={id} />
     </div>
   );

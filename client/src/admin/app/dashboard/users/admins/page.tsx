@@ -33,7 +33,7 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Admins</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType="users" />
+        <Search entityType="USERS" />
       </div>
       <Suspense key={user + currentPage} fallback={<UsersTableSkeleton />}>
         <UsersTable

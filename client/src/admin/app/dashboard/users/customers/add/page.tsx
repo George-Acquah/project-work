@@ -6,18 +6,17 @@ import { BREADCRUMBS } from "@/constants/users.constants";
 import { dashboardRoutes } from "@/app/lib/routes";
 
 export const metadata: Metadata = {
-  title: "Add User",
+  title: "Add Customer",
 };
 
 export default async function AddUserPage() {
-
   return (
     <div className="w-full">
       <Suspense fallback={<UsersTableSkeleton />}>
         <AddUser
           breadcrumbs={BREADCRUMBS.ADD_UERS}
           route={dashboardRoutes.USERS.ALL.BASE}
-          type="user"
+          type="customer"
           addFunction={undefined}
         />
       </Suspense>

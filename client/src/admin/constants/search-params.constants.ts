@@ -1,14 +1,12 @@
-export interface _ISearchParams {
-  SESSION: string;
-  ERROR: string;
-  ERR_MSG: string;
-  ERR_DESC: string;
-  BTN_LABEL: string;
-  APPLICANTS: string;
-  USERS: string;
-  CENTERS: string;
-  SLOTS: string;
-}
+export const ENTITY_TYPES = {
+  USERS: {
+    ALL: "all",
+    ADMIN: "admin",
+    OWNERS: "owners",
+    CUSTOMERS: "customers",
+    UNVERIFIED: "unvierified",
+  },
+};
 
 const SEARCH_PARAMS: _ISearchParams = {
   SESSION: "session-modals",
@@ -18,8 +16,13 @@ const SEARCH_PARAMS: _ISearchParams = {
   BTN_LABEL: 'btn-label',
   APPLICANTS: "applicant",
   USERS: "users",
+  ENTITY_TYPE: "type",
   CENTERS: "centers",
   SLOTS: "slots",
 };
+
+export const SEARCH_COOKIES_KEYS = {
+  ENTITY_TYPE: 'base-url-type'
+}
 
 export { SEARCH_PARAMS };

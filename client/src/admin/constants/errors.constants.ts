@@ -25,7 +25,7 @@ const redirectDynamicUrls = (
       SEARCH_PARAMS.ERR_MSG,
     ]}=${err_msg}.&${[SEARCH_PARAMS.ERR_DESC]}=${err_desc}.&${[
       SEARCH_PARAMS.BTN_LABEL,
-    ]}=${err_btn ?? 'Try Again'}`,
+    ]}=${err_btn ?? "Try Again"}`,
   };
 };
 
