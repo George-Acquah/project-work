@@ -2,11 +2,11 @@ import { UsersTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { lusitana } from "@/app/ui/font";
-import SearchApplicants from "@/app/ui/users/search";
 import { AddCenter } from "@/app/ui/users/buttons";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { CentersTable } from "@/app/ui/users/tables";
+import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {
   title: "Parking Centers",
@@ -33,7 +33,7 @@ export default async function ParkingCenterPage({ searchParams }: ISearchParams)
         <h1 className={`${lusitana.className} text-2xl`}>Parking Centers</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <SearchApplicants entityType="centers" placeholder="Search by Center Name"/>
+        <Search entityType="centers" placeholder="Search by Center Name"/>
         <AddCenter />
       </div>
       <Suspense key={center + currentPage} fallback={<UsersTableSkeleton />}>

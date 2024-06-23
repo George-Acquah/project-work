@@ -3,16 +3,17 @@ import { Icon, Text } from "@tremor/react";
 import { cardsBg } from "../themes";
 import { getValue } from "@/utils/functions/forms.functions";
 import { generateInputClass } from "@/utils/functions/styles.functions";
+import { inputIcons } from "../users/constants";
 
 interface _InputWithErrors {
   id: string;
-  prependComponent: React.ReactNode;
+  prependComponent?: React.ReactNode;
   errors: Record<string, string[] | undefined>;
 }
-const InputErrors = ({
+export const InputErrors = ({
   errors,
   id,
-  prependComponent,
+  prependComponent = <ExclamationCircleIcon className="h-5 w-5 text-red-500" />,
 }: _InputWithErrors) => {
   return (
     <>
@@ -132,3 +133,10 @@ export default function CommonInput({
     </div>
   );
 }
+
+export const RenderIcons = ({ helper }: { helper: "user" | "email" }) => {
+  const Icon = inputIcons[helper];
+  return (
+    <Icon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+  );
+};

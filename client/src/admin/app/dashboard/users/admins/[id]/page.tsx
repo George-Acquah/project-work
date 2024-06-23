@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { lusitana } from "@/app/ui/font";
-import SearchApplicants from "@/app/ui/users/search";
 import Pagination from "@/app/ui/pagination";
 import ApplicantsTable from "@/app/ui/users/tables";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { AddUser } from "@/app/ui/users/buttons";
 import { InvoiceSkeleton } from "@/app/ui/skeletons";
+import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {
   title: "Applicants",
@@ -33,7 +33,7 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Applicants</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <SearchApplicants entityType={""} />
+        <Search entityType={""} />
         <AddUser />
       </div>
       <Suspense

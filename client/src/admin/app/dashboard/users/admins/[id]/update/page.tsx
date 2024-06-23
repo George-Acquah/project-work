@@ -2,9 +2,9 @@ import { notFound } from "next/navigation";
 
 import { Metadata } from "next";
 import { dashboardRoutes } from "@/app/lib/routes";
-import Breadcrumbs from "@/app/ui/breadcrumbs";
-import EditApplicantForm from "@/app/ui/users/users/edit-form";
+import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
+import EditForms from "@/app/ui/shared/edit-forms";
 
 export const metadata: Metadata = {
   title: "Edit Applicant",
@@ -38,7 +38,7 @@ export default async function Page({ params }: _IdParams) {
           },
         ]}
       />
-      <EditApplicantForm id={""} fields={[]} updateEntity={undefined} entityData={undefined} selecteds={undefined}  />
+      <EditForms id={""} fields={[]} updateEntity={undefined} entityData={undefined} selecteds={undefined}  />
     </main>
   );
 }

@@ -12,6 +12,7 @@ interface _IVerificationBtn {
 
 const btnClasses = {
   EDIT: "rounded-2xl border p-2 md:py-1 md:px-4 bg-custom-primary/20 md:flex justify-between items-center dark:bg-[#2C303B] hover:border-custom-primary/70 dark:hover:border-custom-primary hover:bg-custom-primary/30 dark:hover:bg-custom-primary/20 dark:hover:shadow-none w-fit border-custom-primary/50  dark:border-custom-primary/70 cursor-pointer ",
+  SQUARE_EDIT: `flex h-[36px] grow items-center justify-center gap-2 rounded-md bg-sky-600 dark:bg-sky-600 p-3 text-sm font-medium text-white hover:bg-sky-500 dark:hover:bg-sky-500 md:flex-none md:justify-start md:p-2 md:px-3`,
   VERIFY:
     "rounded-2xl border p-2 md:py-1 md:px-4 dark:hover:shadow-none w-fit cursor-pointer ",
   DELETE: "bg-red-500 rounded-md border border-red-500 p-2 hover:bg-red-400",
@@ -63,10 +64,10 @@ function AddSlot() {
   );
 }
 
-function AddUser() {
+function AddUser() { 
   return (
-    <Link href={`${dashboardRoutes.USERS.BASE}/add`} className={btnClasses.ADD}>
-      <span className="hidden md:block">Add User</span>{" "}
+    <Link href={`${dashboardRoutes.USERS.ALL.ADD}`} className={btnClasses.ADD}>
+      <span className="hidden md:block">Add User</span>
       <PlusIcon className="h-5 md:ml-4" />
     </Link>
   );
@@ -79,9 +80,7 @@ function EditCustomer({ id }: _Id) {
       href={`${dashboardRoutes.USERS.CUSTOMERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm  font-normal">
-        Edit
-      </p>
+      <p className="hidden md:flex text-sm  font-normal">Edit</p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -93,9 +92,7 @@ function EditOwner({ id }: _Id) {
       href={`${dashboardRoutes.USERS.OWNERS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm  font-normal">
-        Edit
-      </p>
+      <p className="hidden md:flex text-sm  font-normal">Edit</p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -107,9 +104,7 @@ function EditSlot({ id }: _Id) {
       href={`${dashboardRoutes.SLOTS.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm  font-normal">
-        Edit
-      </p>
+      <p className="hidden md:flex text-sm  font-normal">Edit</p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -118,12 +113,10 @@ function EditSlot({ id }: _Id) {
 function EditUser({ id }: _Id) {
   return (
     <Link
-      href={`${dashboardRoutes.USERS.BASE}/${id}/update`}
+      href={`${dashboardRoutes.USERS.ALL.BASE}/${id}/update`}
       className={`${btnClasses.EDIT} h-fit`}
     >
-      <p className="hidden md:flex text-sm  font-normal">
-        Edit
-      </p>
+      <p className="hidden md:flex text-sm  font-normal">Edit</p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -135,9 +128,7 @@ function EditCenter({ id }: _Id) {
       href={`${dashboardRoutes.PARKING_LOTS.BASE}/${id}/update`}
       className={btnClasses.EDIT}
     >
-      <p className="hidden md:flex text-base  font-normal">
-        Edit
-      </p>
+      <p className="hidden md:flex text-base  font-normal">Edit</p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
   );
@@ -210,9 +201,9 @@ function DeleteSlot({ id }: _Id) {
   );
 }
 
-function EditProfileButton({linkTo}: {linkTo: string}) {
+function EditProfileButton({ linkTo }: { linkTo: string }) {
   return (
-    <Link href={linkTo} className={`flex  ${btnClasses.EDIT}`}>
+    <Link href={linkTo} className={`flex  ${btnClasses.SQUARE_EDIT}`}>
       <p className="text-base font-light">Edit Profile</p>
       <PencilSquareIcon className="w-4" />
     </Link>
@@ -231,9 +222,7 @@ async function VerificationButton({ id, status = false }: _IVerificationBtn) {
             : "bg-green-50 dark:hover:bg-green-500 dark:hover:bg-opacity-20 hover:bg-green-100 hover:border-green-500 border-green-500/70"
         }`}
       >
-        <p className="text-sm  font-normal">
-          {status ? "Unverify" : "Verify"}
-        </p>
+        <p className="text-sm  font-normal">{status ? "Unverify" : "Verify"}</p>
       </button>
     </form>
   );

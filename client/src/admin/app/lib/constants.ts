@@ -57,7 +57,7 @@ const clientCookiesValues = {
 
 const usersLinks: _INavLinks[] = [
   {
-    href: dashboardRoutes.USERS.BASE,
+    href: dashboardRoutes.USERS.ALL.BASE,
     name: "All Users",
     type: "normal",
     icon: UsersIcon,

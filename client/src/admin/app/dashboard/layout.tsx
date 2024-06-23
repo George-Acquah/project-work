@@ -24,7 +24,7 @@ export default async function Layout({ children }: _IChildren) {
         </div>
 
         {/* Content area that takes the remaining space */}
-        <div >{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );

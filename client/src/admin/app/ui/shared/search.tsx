@@ -3,10 +3,10 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { searchParamsKeys } from "./constants";
 import { SvgSpinner } from "@/app/lib/icons";
 import { strongTextColor, textColor } from "../themes";
 import { generateInputClass } from "@/utils/functions/styles.functions";
+import { searchParamsKeys } from "../users/constants";
 
 interface IProps {
   entityType: string; // Add entityType prop
@@ -14,7 +14,7 @@ interface IProps {
   disabled?: boolean;
 }
 
-export default function SearchApplicants({
+export default function Search({
   disabled,
   placeholder = "Search by Name",
   entityType,

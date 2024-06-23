@@ -9,7 +9,13 @@ const dashboardRoutes = {
     OVERVIEW: "/dashboard/overview",
   },
   USERS: {
-    BASE: "/dashboard/users/all",
+    BASE: "/dashboard/users",
+    ALL: {
+      BASE: "/dashboard/users/all",
+      ADD: "/dashboard/users/all/add",
+      EDIT: "/dashboard/users/all/edit",
+      VIEW: "/dashboard/users/all/view",
+    },
     CUSTOMERS: {
       BASE: "/dashboard/users/customers",
       ADD: "/dashboard/users/customers/add",
