@@ -1,7 +1,7 @@
 import { Title, Text } from "@tremor/react";
 import Link from "next/link";
-import Button from "@/app/ui/button";
-import AddProfileImage from "@/app/ui/images";
+import Button from "@/app/ui/shared/button";
+import AddProfileImage from "@/app/ui/users/images";
 import { dashboardRoutes } from "@/app/lib/routes";
 import { verifyUser } from "@/app/lib/requests";
 import NotFound from "./update/not-found";
