@@ -33,7 +33,7 @@ export default async function SlotsPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Slots</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType="slots" placeholder="Search by Slot Name"/>
+        <Search entityType="SLOTS" placeholder="Search by Slot Name"/>
         <AddSlot />
       </div>
       <Suspense key={slot + currentPage} fallback={<UsersTableSkeleton />}>

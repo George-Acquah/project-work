@@ -1,9 +1,10 @@
-import { ExclamationCircleIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
-import { Icon, Text } from "@tremor/react";
-import { cardsBg } from "../themes";
+import { ExclamationCircleIcon, InformationCircleIcon, TagIcon } from "@heroicons/react/24/outline";
+import { Icon, Select, SelectItem, Text } from "@tremor/react";
+import { bodyBg, cardsBg, textColor } from "../themes";
 import { getValue } from "@/utils/functions/forms.functions";
 import { generateInputClass } from "@/utils/functions/styles.functions";
 import { inputIcons } from "../users/constants";
+// import { useState } from "react";
 
 interface _InputWithErrors {
   id: string;
@@ -81,13 +82,19 @@ export default function CommonInput({
   placeholder,
   icon,
   label,
+  input_type,
+  options,
+  radio,
   type,
   disabled,
   errors,
   tooltip,
+  width,
+  bg
 }: _IDetail) {
   const LinkIcon = icon;
   const err_bool = errors && (errors[id]!! as unknown as boolean);
+  // const [selectFields, setSelectFields] = useState(selecteds);
   return (
     <div className="mb-4 lg:mr-4">
       <label
@@ -106,21 +113,88 @@ export default function CommonInput({
           />
         )}
       </label>
-      <div className="relative">
-        <input
-          id={id}
-          name={id}
-          defaultValue={value}
-          placeholder={placeholder}
-          aria-describedby={`${id}-error`}
-          aria-labelledby={`${id}`}
-          type={type}
-          className={generateInputClass(err_bool!!)}
-          autoComplete={"on"}
-          disabled={disabled}
-        />
-        <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
-      </div>
+      {input_type === "select" ? (
+        <>
+          {options && (
+            <Select
+              id={id}
+              icon={TagIcon}
+              defaultValue={value}
+              // onValueChange={(event) => setSelectFields(event)}
+              className={`transition-all duration-300 object-cover ${bodyBg} text-custom-body-color text-lg dark:text-custom-body-color-dark dark:hover:bg-[#2C303B]/20 ${width}`}
+            >
+              {options.map((option) => (
+                <SelectItem
+                  key={option}
+                  className={`cursor-pointer dark:shadow-two text-base outline-none transition-all duration-300 bg-white/80 hover:bg-white ${bodyBg} text-custom-body-color dark:text-custom-body-color-dark dark:hover:bg-[#2C303B] focus:outline-none  border-gray-600  dark:border-gray-600`}
+                  value={option}
+                >
+                  {option}
+                </SelectItem>
+              ))}
+            </Select>
+          )}
+        </>
+      ) : input_type === "radio" ? (
+        <>
+          {radio && (
+            <fieldset className="mb-4 lg:w-1/2 ">
+              <div
+                className={` border border-gray-200 dark:border-gray-600 px-[14px] py-3 ${bodyBg}`}
+              >
+                <div className="flex gap-4">
+                  {radio.map((item) => (
+                    <div
+                      key={`${item.id}-${item.value}`}
+                      className="flex items-center"
+                    >
+                      <input
+                        id={item.id}
+                        name={id}
+                        type="radio"
+                        value={item.value}
+                        defaultChecked={item.checked}
+                        className={`h-4 w-4 border-gray-300 dark:border-gray-600 ${cardsBg} text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600`}
+                      />
+                      <label
+                        htmlFor={item.id}
+                        className={`ml-2 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ${
+                          item.id === "verified" ? textColor : "text-white/90"
+                        }  ${
+                          item.value === "true" ? `${cardsBg}` : "bg-red-500"
+                        }`}
+                      >
+                        {item.label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </fieldset>
+          )}
+        </>
+      ) : (
+        <>
+          <div className={`relative ${width}`}>
+            <input
+              id={id}
+              name={id}
+              defaultValue={value}
+              placeholder={placeholder}
+              aria-describedby={`${id}-error`}
+              aria-labelledby={`${id}`}
+              type={type}
+              className={generateInputClass(err_bool!!, bg)}
+              autoComplete={"on"}
+              disabled={disabled}
+            />
+            {icon && (
+              <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            )}
+          </div>
+        </>
+      )}
+
       {errors && (
         <InputErrors
           id={id}

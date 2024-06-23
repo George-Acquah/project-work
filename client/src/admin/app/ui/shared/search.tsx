@@ -6,19 +6,22 @@ import { useDebouncedCallback } from "use-debounce";
 import { SvgSpinner } from "@/app/lib/icons";
 import { strongTextColor, textColor } from "../themes";
 import { generateInputClass } from "@/utils/functions/styles.functions";
-import { searchParamsKeys } from "../users/constants";
+import { SEARCH_PARAMS } from "@/constants/search-params.constants";
 
-interface IProps {
-  entityType: string; // Add entityType prop
+interface IProps<T> {
+  entityType: T; // Add entityType prop
   placeholder?: string;
   disabled?: boolean;
 }
 
-export default function Search({
+// Define the type for SEARCH_PARAMS keys
+type SearchParamKeys = keyof typeof SEARCH_PARAMS;
+
+export default function Search<T extends SearchParamKeys>({
   disabled,
   placeholder = "Search by Name",
   entityType,
-}: IProps) {
+}: IProps<T>) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -27,9 +30,9 @@ export default function Search({
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
     if (term) {
-      params.set(searchParamsKeys[entityType], term);
+      params.set(SEARCH_PARAMS[entityType], term);
     } else {
-      params.delete(searchParamsKeys[entityType]);
+      params.delete(SEARCH_PARAMS[entityType]);
     }
 
     startTransition(() => {
@@ -50,8 +53,7 @@ export default function Search({
         placeholder={placeholder}
         disabled={disabled}
         onChange={(e) => handleSearch(e.target.value)}
-        defaultValue={searchParams
-          .get(searchParamsKeys[entityType])
+        defaultValue={searchParams.get(SEARCH_PARAMS[entityType])
           ?.toString()}
       />
       <MagnifyingGlassIcon

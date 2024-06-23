@@ -36,7 +36,7 @@ export default async function AllUsersPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Users</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType="users" />
+        <Search entityType="USERS" />
         <Filters>
           <Suspense key={user} fallback={<FilterSkeleton />}>
             <AllUsersFilter />

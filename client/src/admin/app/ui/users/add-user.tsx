@@ -1,61 +1,25 @@
 import { fetchUserTypes } from "@/app/lib/requests";
-import EditForms from "../shared/edit-forms";
+import { updateUser } from "@/app/lib/actions";
+import Breadcrumbs from "../shared/breadcrumbs";
+import AddForms from "../shared/add-forms";
 
-export default async function AddUser() {
-  const userTypes = await fetchUserTypes();
+interface _IAddPages {
+  breadcrumbs: Breadcrumb[];
+  route: string;
+  type: "user" | "customer" | "owner";
+  addFunction: any;
+}
 
-  const userFields: _IField[] = [
-    {
-      label: "Email",
-      key: "email",
-      type: "email",
-      disabled: true,
-      icon: "email",
-    },
-    {
-      label: "Full Name",
-      key: "fullName",
-      type: "text",
-      disabled: false,
-      icon: "user",
-    },
-    {
-      label: "User Type",
-      key: "userType",
-      type: "select",
-      disabled: false,
-      options: userTypes.data,
-    },
-    {
-      label: "Verified Status",
-      key: "isActive",
-      type: "radio",
-      disabled: false,
-      radio: [
-        {
-          id: "verified",
-          checked: false,
-          value: "true",
-          label: "Verified",
-        },
-        {
-          id: "unverified",
-          checked: true,
-          value: "false",
-          label: "Unverified",
-        },
-      ],
-    },
-  ];
-
+export default async function AddUser({ breadcrumbs, route, type, addFunction }: _IAddPages) {
+  const { data: userTypes } = await fetchUserTypes();
   return (
     <main>
-      <EditForms
-        id={""}
-        fields={[]}
-        updateEntity={undefined}
-        entityData={undefined}
-        selecteds={undefined}
+      <Breadcrumbs breadcrumbs={breadcrumbs} />
+      <AddForms
+        options={userTypes}
+        route={route}
+        type={type}
+        addFunction={addFunction}
       />
     </main>
   );

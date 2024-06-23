@@ -3,12 +3,6 @@ import Link from "next/link";
 import { inter } from "@/app/ui/font";
 import { strongTextColor } from "../themes";
 
-interface Breadcrumb {
-  label: string;
-  href: string;
-  active?: boolean;
-}
-
 export default function Breadcrumbs({
   breadcrumbs,
 }: {

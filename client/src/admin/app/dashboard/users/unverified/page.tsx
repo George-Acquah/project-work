@@ -30,7 +30,7 @@ export default async function ApplicationsPage({
         </h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType={""} />
+        <Search entityType="USERS" />
         {/* <CreateInvoice /> */}
       </div>
       {/* <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>

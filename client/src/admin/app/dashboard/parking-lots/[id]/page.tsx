@@ -34,7 +34,7 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Applicants</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType={""} />
+        <Search entityType="CENTERS" />
         <AddCustomer />
       </div>
       <Suspense

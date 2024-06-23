@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { gradientDark, textColor } from "../ui/themes"; // Make sure to import bgColor from your theme
+import { gradientDark, secondaryBg, strongTextColor, textColor } from "../ui/themes"; // Make sure to import bgColor from your theme
+import SmartCarParkingAdminLogo from "../ui/logos";
 
 export const HR = () => (
   <div
@@ -29,6 +30,14 @@ export const HRWithText = ({
 const AuthenticationLayout = ({ children }: _IChildren) => {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* <div
+        className={`flex justify-center items-center h-24 w-full rounded-lg p-3 md:h-32 ${secondaryBg} ${strongTextColor}`}
+      >
+        <div className="w-32 md:w-36 ">
+          <SmartCarParkingAdminLogo />
+        </div>
+        <p className="uppercase text-2xl ml-4">Smart Car Parking Admin</p>
+      </div> */}
       <div className="flex-grow">{children}</div>
       {/* <div className={`h-[0.3px] mx-8 md:mx-20 bg-gray-400`} /> */}
       <HR />
