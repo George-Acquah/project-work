@@ -5,7 +5,7 @@ import { DialogPanel, DialogTitle } from "@headlessui/react";
 import useCustomSearchParams from "@/hooks/search-params.hook";
 import { PowerIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { signOutHelper } from "@/app/lib/actions";
-import Modal from "../modal";
+import Modal from "../shared/modal";
 
 const SessionModal = () => {
   const { handleSetParams, modalValue, paramValues } = useCustomSearchParams(

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import AddImage from "./image";
+import AddImage from "../shared/image";
 
 const AddProfileImage = () => {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);

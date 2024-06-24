@@ -3,7 +3,7 @@
 import { lusitana } from "@/app/ui/font";
 import { useFormState, useFormStatus } from "react-dom";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import Button from "./button";
+import Button from "./shared/button";
 import { authenticate } from "../lib/actions";
 import {
   secondaryBg,
