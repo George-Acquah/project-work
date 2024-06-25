@@ -6,7 +6,7 @@ import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Edit Applicant",
+  title: "Edit Center",
 };
 
 export default async function Page({ params }: _IdParams) {

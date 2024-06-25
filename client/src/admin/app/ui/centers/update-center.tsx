@@ -2,11 +2,10 @@ import { notFound } from "next/navigation";
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
 import { updateUser } from "@/app/lib/actions";
-import EditForms from "../../shared/edit-forms";
-import { dashboardRoutes } from "@/app/lib/routes";
+import EditForms from "../shared/edit-forms";
 
-export default async function UpdateUser({ id, label, href }: _IUpdate) {
-  const [user, userTypes] = await Promise.all([
+export default async function UpdateCenter({ id, label, href }: _IUpdate) {
+  const [{ data: user }, { data: userTypes }] = await Promise.all([
     fetchUserById(id),
     fetchUserTypes(),
   ]);
@@ -32,13 +31,13 @@ export default async function UpdateUser({ id, label, href }: _IUpdate) {
       />
       <EditForms
         id={id}
-        route={`${dashboardRoutes.USERS.ALL.BASE}`}
-        options={userTypes.data}
-        type="user"
+        route={href}
+        options={userTypes}
+        type={label}
         updateFunction={updateUser}
-        entityData={user.data}
-        isVerified={user.data.isVerified}
-        selecteds={user.data.userType}
+        entityData={user}
+        isVerified={user.isVerified}
+        selecteds={user.userType}
       />
     </main>
   );

@@ -46,15 +46,14 @@ export default function Search<T extends SearchParamKeys>({
         Search
       </label>
       <input
-        className={` dark:text-gray-400 h-10 rounded-lg ${generateInputClass(
+        className={` dark:text-gray-400 h-11 rounded-lg ${generateInputClass(
           false,
-          "white"
+          "bg-white dark:bg-[#2C303B]"
         )}`}
         placeholder={placeholder}
         disabled={disabled}
         onChange={(e) => handleSearch(e.target.value)}
-        defaultValue={searchParams.get(SEARCH_PARAMS[entityType])
-          ?.toString()}
+        defaultValue={searchParams.get(SEARCH_PARAMS[entityType])?.toString()}
       />
       <MagnifyingGlassIcon
         className={`absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 peer-focus:${strongTextColor} ${textColor}`}

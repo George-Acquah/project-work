@@ -9,6 +9,16 @@ import {
 } from "@tremor/react";
 import { cardOutline, cardsBg } from "../../themes";
 
+// Utility function to format numbers with a maximum of 2 decimal places
+const formatNumber = (value: number | string, maximumFractionDigits = 2) => {
+  const number = typeof value === "string" ? parseFloat(value) : value;
+  return isNaN(number)
+    ? "0"
+    : Intl.NumberFormat("en-US", {
+        maximumFractionDigits,
+      }).format(number);
+};
+
 const getDeltaType = (trend: number): DeltaType => {
   if (trend < -35) return "decrease";
   if (trend < 0) return "moderateDecrease";
@@ -25,9 +35,9 @@ export const KpiCard = ({
   percentage,
 }: {
   title: string;
-  total: string;
+  total: string | number;
   trend: number;
-  target: string;
+  target: string | number;
   percentage: number;
 }) => {
   return (
@@ -35,18 +45,20 @@ export const KpiCard = ({
       <Flex alignItems="start">
         <div>
           <Text>{title}</Text>
-          <Metric>{total}</Metric>
+          <Metric>{formatNumber(total)}</Metric>
         </div>
         <BadgeDelta
           className="rounded-full"
           deltaType={getDeltaType(trend)}
-        >{`${trend}%`}</BadgeDelta>
+        >{`${formatNumber(trend)}%`}</BadgeDelta>
       </Flex>
       <Flex className="mt-4">
-        <Text className="truncate">{`${percentage}% (${total})`}</Text>
-        <Text>{`Target(${target})`}</Text>
+        <Text className="truncate">{`${formatNumber(
+          percentage
+        )}% (${formatNumber(total)})`}</Text>
+        <Text>{`Target (${formatNumber(target)})`}</Text>
       </Flex>
-      <ProgressBar value={percentage} className="mt-2" />
+      <ProgressBar value={percentage} color="sky" className="mt-2" />
     </Card>
   );
 };
