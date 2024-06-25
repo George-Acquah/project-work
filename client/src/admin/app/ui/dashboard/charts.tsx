@@ -12,14 +12,13 @@ import {
   TabList,
   Tab,
 } from "@tremor/react";
-
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { cardOutline, cardsBg } from "../themes";
 import { chartData } from "@/app/lib/constants";
 
 interface IObject {
   date: string;
-  value: string;
+  value: number; // Updated to number for correct usage in charts
 }
 
 interface IProps {
@@ -42,41 +41,33 @@ const formatDate = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
-export function ChartView({
-  revenue,
-  centers,
-  slots,
-  vehicles,
-}: IProps) {
+export function ChartView({ revenue, centers, slots, vehicles }: IProps) {
   const [selectedKpi, setSelectedKpi] = useState(0);
 
-  // map formatters by selectedKpi
-  const formatters: { [key: string]: any } = {
-    revenue: dollarFormatter,
-    orders: numberFormatter,
-    customers: numberFormatter,
-    vehicles: numberFormatter,
-  };
+  // Map formatters by selectedKpi index
+  const formatters = [
+    dollarFormatter,
+    numberFormatter,
+    numberFormatter,
+    numberFormatter,
+  ];
 
-  let data = revenue;
+  // Determine which data set to use based on the selected KPI
+  let data = revenue; // Default data set
+
   if (selectedKpi === 1) {
     data = centers;
-  }
-
-  if (selectedKpi === 2) {
+  } else if (selectedKpi === 2) {
     data = slots;
-  }
-
-  if (selectedKpi === 3) {
+  } else if (selectedKpi === 3) {
     data = vehicles;
   }
 
-  const transformedData = data.map((dataObj) => {
-    const date = new Date(dataObj.date);
-    dataObj.date = formatDate.format(date);
-
-    return dataObj;
-  });
+  // Transform the data, keeping immutability in mind
+  const transformedData = data.map((dataObj) => ({
+    ...dataObj,
+    date: formatDate.format(new Date(dataObj.date)),
+  }));
 
   return (
     <Card className={`${cardsBg} ${cardOutline} rounded-md`}>
@@ -87,14 +78,14 @@ export function ChartView({
             className="space-x-0.5"
             alignItems="center"
           >
-            <Title> Performance History </Title>
+            <Title>Performance History</Title>
             <Icon
               icon={InformationCircleIcon}
               variant="simple"
               tooltip="Shows daily performance change"
             />
           </Flex>
-          <Text> Daily increase or decrease per domain </Text>
+          <Text>Daily increase or decrease per domain</Text>
         </div>
         <div className="mt-6 md:mt-0">
           <TabGroup
@@ -102,7 +93,7 @@ export function ChartView({
             onIndexChange={(idx) => setSelectedKpi(idx)}
           >
             <TabList>
-              {chartData.CHART_COLUMN.map((item) => (
+              {chartData.CHART_COLUMN.map((item, index) => (
                 <Tab
                   key={item}
                   className="hover:border-gray-400 dark:hover:border-blue-400"
