@@ -1,20 +1,28 @@
 import { bodyBg, cardsBg, secondaryBg, textColor } from "./themes";
 
-// Loading animation
+// Define the CSS classes and animation
+const bg = "bg-white dark:bg-[#2C303B]";
+const sec_bg = "bg-gray-100 dark:bg-gray-400";
 const shimmer =
-  "before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent";
+  "before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white before:to-transparent";
 
 export function CardSkeleton() {
   return (
     <div
-      className={`${shimmer} relative overflow-hidden rounded-xl bg-gray-100 p-2 shadow-sm`}
+      className={` relative overflow-hidden rounded-xl ${bg} px-6 py-4 shadow-sm`}
     >
-      <div className="flex p-4">
-        <div className="h-5 w-5 rounded-md bg-gray-200" />
-        <div className="ml-2 h-6 w-16 rounded-md bg-gray-200 text-sm font-medium" />
+      {/* Placeholder content for the header */}
+      <div className="flex py-4">
+        <div className="h-5 w-5 rounded-md bg-gray-200 dark:bg-gray-500" />{" "}
+        {/* Placeholder icon */}
+        <div className="ml-2 h-6 w-16 rounded-md bg-gray-200 dark:bg-gray-500" />{" "}
+        {/* Placeholder text */}
       </div>
-      <div className="flex items-center justify-center truncate rounded-xl bg-white px-4 py-8">
-        <div className="h-7 w-20 rounded-md bg-gray-200" />
+
+      {/* Placeholder content for the main area */}
+      <div className="flex items-center justify-center truncate rounded-xl bg-gray-200 dark:bg-gray-500 px-6 py-8">
+        <div className="h-7 w-20 rounded-md bg-white dark:bg-gray-500" />{" "}
+        {/* Placeholder block */}
       </div>
     </div>
   );
@@ -64,18 +72,20 @@ export function InvoiceSkeleton() {
 // Skeleton loader for a filter block with animations
 const FilterBlockSkeleton = ({ len }: { len: number }) => (
   <div className="mb-4">
-    <div className="mb-1 h-6 w-40 bg-gray-200 rounded-md animate-pulse"></div> {/* Placeholder for title */}
+    <div className="mb-1 h-6 w-40 bg-gray-200 rounded-md animate-pulse"></div>{" "}
+    {/* Placeholder for title */}
     <div className="space-y-1">
       {Array.from({ length: len }).map((_, index) => (
         <div key={index} className="flex items-center gap-2 p-2 animate-pulse">
-          <div className="h-8 w-8 bg-gray-200 rounded-full"></div> {/* Placeholder for icon */}
-          <div className="h-5 w-32 bg-gray-200 rounded-md"></div> {/* Placeholder for item text */}
+          <div className="h-8 w-8 bg-gray-200 rounded-full"></div>{" "}
+          {/* Placeholder for icon */}
+          <div className="h-5 w-32 bg-gray-200 rounded-md"></div>{" "}
+          {/* Placeholder for item text */}
         </div>
       ))}
     </div>
   </div>
 );
-
 
 // Skeleton loader for all filter blocks
 export const FilterSkeleton = () => {
@@ -108,6 +118,129 @@ export function LatestInvoicesSkeleton() {
         </div>
       </div>
     </div>
+  );
+}
+
+export function ChartSkeleton() {
+  return (
+    <div
+      className={`${shimmer} relative flex w-full flex-col ${bg} overflow-hidden rounded p-6`}
+    >
+      <div className="flex justify-between items-center">
+        <div className={`mb-4 h-8 w-36 rounded-md ${sec_bg}`} />
+        <div>
+          <div className="flex space-x-2 mb-2">
+            <div
+              className={`${shimmer} relative  h-4 w-20 overflow-hidden rounded-md ${sec_bg}`}
+            />
+            <div
+              className={`${shimmer} relative  h-4 w-20 overflow-hidden rounded-md ${sec_bg}`}
+            />
+            <div
+              className={`${shimmer} relative  h-4 w-20 overflow-hidden rounded-md ${sec_bg}`}
+            />
+            <div
+              className={`${shimmer} relative  h-4 w-20 overflow-hidden rounded-md ${sec_bg}`}
+            />
+          </div>
+          <div
+            className={`${shimmer} relative mb-4 h-[3px] w-full overflow-hidden rounded-md ${sec_bg}`}
+          />
+        </div>
+      </div>
+      <div className={`mb-2 h-2 w-48 rounded-md ${sec_bg}`} />
+
+      <div className={`flex justify-between items-center mt-5 mb-4`}>
+        <div className={` h-2 w-1 rounded-md ${bg}`} />
+        <div className="flex space-x-1">
+          <div className={` h-2 w-2 rounded-full ${sec_bg}`} />
+          <div className={` h-2 w-16 rounded-md ${sec_bg}`} />
+        </div>
+      </div>
+
+      <div className="flex flex-col mt-4 justify-end">
+        <div className="flex items-center space-x-2 mb-14">
+          <div className="flex flex-col">
+            <div className={` h-2 w-8 rounded-md mb-2 ${sec_bg}`} />
+            <div className={` h-4 w-20 rounded-md ${sec_bg}`} />
+          </div>
+          <div className={` h-[2px] w-full rounded-md ${sec_bg}`} />
+        </div>
+        <div className="flex items-center space-x-2 mb-14">
+          <div className="flex flex-col">
+            <div className={` h-2 w-8 rounded-md mb-2 ${sec_bg}`} />
+            <div className={` h-4 w-20 rounded-md ${sec_bg}`} />
+          </div>
+          <div className={` h-[2px] w-full rounded-md ${sec_bg}`} />
+        </div>
+        <div className="flex items-center space-x-2 mb-14">
+          <div className="flex flex-col">
+            <div className={` h-2 w-8 rounded-md mb-2 ${sec_bg}`} />
+            <div className={` h-4 w-20 rounded-md ${sec_bg}`} />
+          </div>
+          <div className={` h-[2px] w-full rounded-md ${sec_bg}`} />
+        </div>
+        <div className="flex items-center space-x-2 mb-14">
+          <div className="flex flex-col">
+            <div className={` h-2 w-8 rounded-md mb-2 ${sec_bg}`} />
+            <div className={` h-4 w-20 rounded-md ${sec_bg}`} />
+          </div>
+          <div className={` h-[2px] w-full rounded-md ${sec_bg}`} />
+        </div>
+        <div className="flex items-center space-x-2">
+          <div className="flex flex-col">
+            <div className={` h-2 w-8 rounded-md mb-2 ${sec_bg}`} />
+            <div className={` h-4 w-20 rounded-md ${sec_bg}`} />
+          </div>
+          <div className={` h-[2px] w-full rounded-md ${sec_bg}`} />
+        </div>
+      </div>
+
+      <div className={`mb-2 h-2 w-48 rounded-md mt-4 ml-22 ${sec_bg}`} />
+    </div>
+  );
+}
+
+export function DashboardMainSkeleton() {
+  return (
+    <>
+      <>
+        <div
+          className={`${shimmer} relative mb-2 h-8 w-52 overflow-hidden rounded-md ${bg}`}
+        />
+        <div
+          className={`${shimmer} relative mb-9 h-3 w-36 overflow-hidden rounded-md ${bg}`}
+        />
+      </>
+
+      <>
+        <div className="flex space-x-3 mb-2">
+          <div
+            className={`${shimmer} relative  h-4 w-24 overflow-hidden rounded-md ${bg}`}
+          />
+          <div
+            className={`${shimmer} relative  h-4 w-24 overflow-hidden rounded-md ${bg}`}
+          />
+          <div
+            className={`${shimmer} relative  h-4 w-24 overflow-hidden rounded-md ${bg}`}
+          />
+        </div>
+        <div
+          className={`${shimmer} relative mb-4 h-[3px] w-full overflow-hidden rounded-md ${bg}`}
+        />
+      </>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+      </div>
+      <div className="py-4">
+        <ChartSkeleton />
+      </div>
+    </>
   );
 }
 
