@@ -1,25 +1,108 @@
-// import CardWrapper from "@/app/ui/dashboard/cards";
-// import RevenueChart from "@/app/ui/dashboard/revenue-chart";
-// import LatestInvoices from "@/app/ui/dashboard/latest-invoices";
-import { lusitana } from "@/app/ui/font";
-import { Suspense } from 'react';
 import {
-  RevenueChartSkeleton,
-  LatestInvoicesSkeleton,
-  CardsSkeleton,
-} from "@/app/ui/skeletons";
-import { TabGroup, TabList, Tab, TabPanels, TabPanel, Grid, Card, Title, Text } from "@tremor/react";
+  TabGroup,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Grid,
+  Title,
+  Text,
+} from "@tremor/react";
 import { KpiCard } from "@/app/ui/dashboard/cards/kpi-card";
 import { ChartView } from "@/app/ui/dashboard/charts";
 import { Details } from "@/app/ui/dashboard/details";
 import { textColor } from "@/app/ui/themes";
+import { inter } from "@/app/ui/font";
+import { Suspense } from "react";
+import { ChartSkeleton } from "@/app/ui/skeletons";
+
+// Define TypeScript interfaces for data
+interface KpiData {
+  totalSlots: number;
+  occupiedSlots: number;
+  availableSlots: number;
+  dailyReservations: number;
+  weeklyRevenue: number;
+  monthlyRevenue: number;
+}
+
+interface IObject {
+  date: string;
+  value: number;
+}
+
+interface ChartData {
+  revenue: IObject[];
+  vehicles: IObject[];
+  centers: IObject[];
+  slots: IObject[];
+}
+
+interface DetailData {
+  id: number;
+  type: string;
+  user: string;
+  time: string;
+}
+
+interface DashboardData {
+  kpis: KpiData;
+  charts: ChartData;
+  details: DetailData[];
+}
+
+// Simulate fetching data function
+const fetchData = async (): Promise<DashboardData> => {
+  return {
+    kpis: {
+      totalSlots: 120,
+      occupiedSlots: 85,
+      availableSlots: 35,
+      dailyReservations: 30,
+      weeklyRevenue: 3000,
+      monthlyRevenue: 12000,
+    },
+    charts: {
+      revenue: [
+        { date: "2024-01-01", value: 1500 },
+        { date: "2024-01-02", value: 2300 },
+        // more data points...
+      ],
+      centers: [
+        { date: "2024-01-01", value: 5 },
+        { date: "2024-01-02", value: 6 },
+        // more data points...
+      ],
+      vehicles: [
+        { date: "2024-01-01", value: 20 },
+        { date: "2024-01-02", value: 25 },
+        // more data points...
+      ],
+      slots: [
+        { date: "2024-01-01", value: 50 },
+        { date: "2024-01-02", value: 48 },
+        // more data points...
+      ],
+    },
+    details: [
+      { id: 1, type: "Reservation", user: "User A", time: "10:00 AM" },
+      { id: 2, type: "Reservation", user: "User B", time: "11:00 AM" },
+      // ...more data
+    ],
+  };
+};
 
 export default async function Page() {
+  // Initialize state with the correct type
+  const data = await fetchData();
 
   return (
     <main className={`${textColor}`}>
-      <Title>Dashboard</Title>
-      <Text>View core metrics on the state of your company.</Text>
+      <Title className={`${inter.className} text-[28px]`}>
+        Smart Car Parking Dashboard
+      </Title>
+      <Text>Monitor and manage your parking operations efficiently.</Text>
+
       <TabGroup className="mt-6">
         <TabList>
           <Tab>Overview</Tab>
@@ -28,105 +111,127 @@ export default async function Page() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
-              <KpiCard
-                title={"Total Admitted Applicants"}
-                total={"1000"}
-                trend={20}
-                target={"$ 10,500"}
-                percentage={80}
-              />
-              <KpiCard
-                title={"Total Un-Admitted Applicants"}
-                total={"10"}
-                trend={-20}
-                target={"$ 10,500"}
-                percentage={8}
-              />
-              <KpiCard
-                title={"Weekly Application Form Downloads"}
-                total={"0"}
-                trend={0}
-                target={"$ 10,500"}
-                percentage={20}
-              />
-              <KpiCard
-                title={"New Applications"}
-                total={"0"}
-                trend={-5}
-                target={"$ 10,500"}
-                percentage={50}
-              />
-            </Grid>
-            <div className="mt-6">
-              <ChartView
-                revenue={[]}
-                vehicles={[]}
-                centers={[]}
-                slots={[]}
-              />
-            </div>
-          </TabPanel>
-          <TabPanel>
+            {/* Overview of key metrics */}
             <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
               <KpiCard
                 title={"Total Slots"}
-                total={"1000"}
-                trend={20}
-                target={"$ 10,500"}
+                total={data.kpis.totalSlots.toString()}
+                trend={0}
+                target={data.kpis.totalSlots.toString()}
+                percentage={100}
+              />
+              <KpiCard
+                title={"Occupied Slots"}
+                total={data.kpis.occupiedSlots.toString()}
+                trend={10}
+                target={data.kpis.totalSlots.toString()}
+                percentage={
+                  (data.kpis.occupiedSlots / data.kpis.totalSlots) * 100
+                }
+              />
+              <KpiCard
+                title={"Available Slots"}
+                total={data.kpis.availableSlots.toString()}
+                trend={-5}
+                target={data.kpis.totalSlots.toString()}
+                percentage={
+                  (data.kpis.availableSlots / data.kpis.totalSlots) * 100
+                }
+              />
+              <KpiCard
+                title={"Daily Reservations"}
+                total={data.kpis.dailyReservations.toString()}
+                trend={15}
+                target={"50"}
+                percentage={(data.kpis.dailyReservations / 50) * 100}
+              />
+              <KpiCard
+                title={"Weekly Revenue"}
+                total={`${data.kpis.weeklyRevenue}`}
+                trend={25}
+                target={"4000"}
+                percentage={(data.kpis.weeklyRevenue / 4000) * 100}
+              />
+              <KpiCard
+                title={"Monthly Revenue"}
+                total={`${data.kpis.monthlyRevenue}`}
+                trend={5}
+                target={"15000"}
+                percentage={(data.kpis.monthlyRevenue / 15000) * 100}
+              />
+            </Grid>
+
+            {/* Charts for visualization */}
+            <div className="mt-6">
+              <Suspense fallback={<ChartSkeleton />}>
+                <ChartView
+                  revenue={data.charts.revenue}
+                  vehicles={data.charts.vehicles}
+                  centers={data.charts.centers}
+                  slots={data.charts.slots}
+                />
+              </Suspense>
+            </div>
+          </TabPanel>
+          <TabPanel>
+            {/* Slot management */}
+            <Grid numItemsMd={2} numItemsLg={3} className="gap-6 mt-6">
+              <KpiCard
+                title={"Total Slots"}
+                total={data.kpis.totalSlots.toString()}
+                trend={0}
+                target={data.kpis.totalSlots.toString()}
+                percentage={100}
+              />
+              <KpiCard
+                title={"Occupied Slots"}
+                total={data.kpis.occupiedSlots.toString()}
+                trend={10}
+                target={data.kpis.totalSlots.toString()}
+                percentage={
+                  (data.kpis.occupiedSlots / data.kpis.totalSlots) * 100
+                }
+              />
+              <KpiCard
+                title={"Available Slots"}
+                total={data.kpis.availableSlots.toString()}
+                trend={-5}
+                target={data.kpis.totalSlots.toString()}
+                percentage={
+                  (data.kpis.availableSlots / data.kpis.totalSlots) * 100
+                }
+              />
+              <KpiCard
+                title={"Daily Reservations"}
+                total={data.kpis.dailyReservations.toString()}
+                trend={15}
+                target={"50"}
+                percentage={(data.kpis.dailyReservations / 50) * 100}
+              />
+              <KpiCard
+                title={"Weekly Reservations"}
+                total={"200"}
+                trend={5}
+                target={"250"}
                 percentage={80}
               />
               <KpiCard
-                title={"Total Slots Available"}
-                total={"10"}
-                trend={-20}
-                target={"$ 10,500"}
-                percentage={8}
-              />
-              <KpiCard
-                title={"Daily Slots Reserved"}
-                total={"0"}
-                trend={0}
-                target={"$ 10,500"}
-                percentage={20}
-              />
-              <KpiCard
-                title={"Weekly Slots Reserved"}
-                total={"0"}
-                trend={0}
-                target={"$ 10,500"}
-                percentage={20}
-              />
-              <KpiCard
-                title={"Monthly Slots Reserved"}
-                total={"0"}
-                trend={0}
-                target={"$ 10,500"}
-                percentage={20}
+                title={"Monthly Reservations"}
+                total={"800"}
+                trend={5}
+                target={"1000"}
+                percentage={80}
               />
             </Grid>
           </TabPanel>
           <TabPanel>
+            {/* Detailed information and analytics */}
             <div className="mt-6">
               <Details />
             </div>
           </TabPanel>
         </TabPanels>
       </TabGroup>
-
-      {/* <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Suspense fallback={<CardsSkeleton />}>
-          <CardWrapper />
-        </Suspense>
-      </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <Suspense fallback={<RevenueChartSkeleton />}>
-          <RevenueChart />
-        </Suspense>
-        <Suspense fallback={<LatestInvoicesSkeleton />}>
-          <LatestInvoices />
-        </Suspense>
-      </div> */}
     </main>
   );
 }
