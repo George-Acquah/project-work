@@ -10,6 +10,6 @@ export default async function UserPage({ params }: _IdParams) {
   const id = params.id;
 
   return (
-    <UpdateUser id={id} href={dashboardRoutes.USERS.ALL.BASE} label="User" />
+    <UpdateUser id={id} href={dashboardRoutes.USERS.ADMINS.BASE} label="Admin" />
   );
 }
