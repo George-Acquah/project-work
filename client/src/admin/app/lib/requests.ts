@@ -47,8 +47,6 @@ async function fetchUserById(id: string, type = UserType.ALL) {
       error.message ?? 'test',
       'something random'
     );
-    console.log(error.name);
-    console.log(error.message);
     redirect(ERROR_URL);
   }
 }
