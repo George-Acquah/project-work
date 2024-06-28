@@ -350,15 +350,15 @@ export class AggregationService {
         },
         {
           $project: {
-            $toString: '$_id'
+            _id: { $toString: '$_id' } // Convert _id to string
           }
         },
         {
           $limit: 1
         }
-      ])) as unknown as string | null; // Return null if no document found
+      ])); // Return null if no document found
 
-      return pipeline;
+      return pipeline[0]._id as unknown as string | null;
     } catch (error) {
       console.error('Error in returnIdPipeline:', error);
       throw error; // Rethrow the error

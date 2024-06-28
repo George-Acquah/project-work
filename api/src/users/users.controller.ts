@@ -143,7 +143,7 @@ export class UsersController {
     });
   }
 
-  @Get('profile')
+  @Get('profiles')
   @UseGuards(JwtAuthGuard)
   async fetchUserProfiles(@User() user) {
     try {
@@ -222,6 +222,18 @@ export class UsersController {
     } catch (error) {
       console.error('Error updating user:', error);
       throw new ApiResponse(HttpStatus.BAD_REQUEST, error.message, {});
+    }
+  }
+
+  @Get(':id/profile')
+  @UseGuards(JwtAuthGuard)
+  async fetchUserProfile(@Param('id') id: string) {
+    try {
+      const user_profile = await this.usersService.newFetchUserProfile(id, true);
+      console.log(user_profile);
+      return new ApiResponse(200, 'Your query was successful', user_profile);
+    } catch (error) {
+      return new ApiResponse(error.statusCode || 500, error.message, {});
     }
   }
 
