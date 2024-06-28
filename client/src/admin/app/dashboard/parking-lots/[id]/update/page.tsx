@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 
 import { Metadata } from "next";
-import { dashboardRoutes } from "@/app/lib/routes";
-import { fetchUserById, fetchUserTypes } from "@/app/lib/requests";
+import { fetchCenterById } from "@/app/lib/requests";
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
+import CENTERS_BREADCRUMBS from "@/constants/centers.constants";
+import UpdateCenter from "@/app/ui/centers/update-center";
+import { dashboardRoutes } from "@/app/lib/routes";
 
 export const metadata: Metadata = {
   title: "Edit Center",
@@ -11,33 +13,18 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: _IdParams) {
   const id = params.id;
-  const [applicant, roles] = await Promise.all([
-    fetchUserById(id),
-    fetchUserTypes(),
-  ]);
+  const center = await fetchCenterById(id);
 
-  console.log(applicant);
-
-  if (!applicant) {
+  if (!center) {
     notFound();
   }
 
   return (
     <main>
-      <Breadcrumbs
-        breadcrumbs={[
-          {
-            label: "Parking Centers",
-            href: `${dashboardRoutes.PARKING_LOTS.BASE}`,
-          },
-          {
-            label: "Update Parking Centers",
-            href: `${dashboardRoutes.PARKING_LOTS.BASE}/${id}/update`,
-            active: true,
-          },
-        ]}
-      />
+      <Breadcrumbs breadcrumbs={CENTERS_BREADCRUMBS(id).UPDATE_CENTER} />
       {/* <EditApplicantForm applicant={applicant} roles={roles} /> */}
+      <h1 className="text-center text-3xl">{JSON.stringify(center)}</h1>
+      <UpdateCenter id={id} label={"Center"} href={dashboardRoutes.PARKING_LOTS.BASE} />
     </main>
   );
 }

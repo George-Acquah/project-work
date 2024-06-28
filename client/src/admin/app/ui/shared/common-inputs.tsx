@@ -1,16 +1,33 @@
-import { ExclamationCircleIcon, InformationCircleIcon, TagIcon } from "@heroicons/react/24/outline";
+import {
+  AtSymbolIcon,
+  ChatBubbleBottomCenterIcon,
+  ExclamationCircleIcon,
+  InformationCircleIcon,
+  KeyIcon,
+  TagIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import { Icon, Select, SelectItem, Text } from "@tremor/react";
 import { bodyBg, cardsBg, textColor } from "../themes";
 import { getValue } from "@/utils/functions/forms.functions";
-import { generateInputClass } from "@/utils/functions/styles.functions";
+import { generateInputClass, generateSelectClass } from "@/utils/functions/styles.functions";
 import { inputIcons } from "../users/constants";
-// import { useState } from "react";
 
 interface _InputWithErrors {
   id: string;
   prependComponent?: React.ReactNode;
   errors: Record<string, string[] | undefined>;
 }
+
+// Icon mapping
+const iconMap: Record<string, IconType> = {
+  TagIcon: TagIcon,
+  ChatBubbleBottomCenterIcon: ChatBubbleBottomCenterIcon,
+  AtSymbolIcon: AtSymbolIcon,
+  UserIcon: UserIcon,
+  KeyIcon: KeyIcon,
+};
+
 export const InputErrors = ({
   errors,
   id,
@@ -68,6 +85,12 @@ export function InputGroup<T extends Record<string, any>>({
               disabled={detail.disabled}
               errors={errors}
               tooltip={detail?.tooltip}
+              input_type={detail.input_type}
+              options={detail.options}
+              radio={detail.radio}
+              width={detail.width}
+              mt={detail.mt}
+              bg={detail.bg}
             />
           ))}
         </div>
@@ -92,9 +115,8 @@ export default function CommonInput({
   width,
   bg
 }: _IDetail) {
-  const LinkIcon = icon;
+  const LinkIcon = icon ? iconMap[icon] : undefined;;
   const err_bool = errors && (errors[id]!! as unknown as boolean);
-  // const [selectFields, setSelectFields] = useState(selecteds);
   return (
     <div className="mb-4 lg:mr-4">
       <label
@@ -118,15 +140,17 @@ export default function CommonInput({
           {options && (
             <Select
               id={id}
+              name={id}
               icon={TagIcon}
+              aria-describedby={`${id}-error`}
+              aria-labelledby={`${id}`}
               defaultValue={value}
-              // onValueChange={(event) => setSelectFields(event)}
-              className={`transition-all duration-300 object-cover ${bodyBg} text-custom-body-color text-lg dark:text-custom-body-color-dark dark:hover:bg-[#2C303B]/20 ${width}`}
+              className={`${generateSelectClass(err_bool!!, width, bg)}`}
             >
               {options.map((option) => (
                 <SelectItem
                   key={option}
-                  className={`cursor-pointer dark:shadow-two text-base outline-none transition-all duration-300 bg-white/80 hover:bg-white ${bodyBg} text-custom-body-color dark:text-custom-body-color-dark dark:hover:bg-[#2C303B] focus:outline-none  border-gray-600  dark:border-gray-600`}
+                  className={`${generateSelectClass(err_bool!!, width)}`}
                   value={option}
                 >
                   {option}
@@ -153,6 +177,8 @@ export default function CommonInput({
                         name={id}
                         type="radio"
                         value={item.value}
+                        // aria-describedby={`${id}-error`}
+                        // aria-labelledby={`${id}`}
                         defaultChecked={item.checked}
                         className={`h-4 w-4 border-gray-300 dark:border-gray-600 ${cardsBg} text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600`}
                       />
@@ -173,6 +199,24 @@ export default function CommonInput({
             </fieldset>
           )}
         </>
+      ) : input_type === "textarea" ? (
+        <div className={`relative ${width}`}>
+          <textarea
+            id={id}
+            name={id}
+            defaultValue={value}
+            placeholder={placeholder}
+            aria-describedby={`${id}-error`}
+            aria-labelledby={`${id}`}
+            className={generateInputClass(err_bool!!, bg)}
+            autoComplete={"on"}
+            disabled={disabled}
+            rows={4} // Adjust as needed
+          />
+          {icon && LinkIcon && (
+            <LinkIcon className="pointer-events-none absolute left-3 top-[26px]  h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          )}
+        </div>
       ) : (
         <>
           <div className={`relative ${width}`}>
@@ -188,7 +232,7 @@ export default function CommonInput({
               autoComplete={"on"}
               disabled={disabled}
             />
-            {icon && (
+            {icon && LinkIcon && (
               <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             )}
           </div>
