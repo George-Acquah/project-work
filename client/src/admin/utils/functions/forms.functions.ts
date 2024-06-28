@@ -28,5 +28,18 @@ function getValue<T extends Record<string, any>>(
   return helper in entity ? entity[helper] : '';
 }
 
+// Utility function to group field configurations
+const groupFieldConfigs = (fields: FieldConfig[]) => {
+  return fields.reduce((groups, field) => {
+    const group = field.group || 'default'; // Use 'default' if no group is specified
+    if (!groups[group]) {
+      groups[group] = [];
+    }
+    groups[group].push(field);
+    return groups;
+  }, {} as Record<string, FieldConfig[]>);
+};
 
-export { getValue }
+
+
+export { getValue, groupFieldConfigs }
