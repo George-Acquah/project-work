@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { dashboardRoutes } from "@/app/lib/routes";
-import UpdateUser from "@/app/ui/users/updates/update-user";
+import UpdateUser from "@/app/ui/users/update-user";
 
 export const metadata: Metadata = {
   title: "Edit Admin",

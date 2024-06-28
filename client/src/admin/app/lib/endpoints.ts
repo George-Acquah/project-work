@@ -23,6 +23,7 @@ const endpoints = {
     ADD_VEHICLE: "customer/vehicle/add",
   },
   PARKING_CENTER: {
+    BASE: "owner/parking-center",
     ADD_CENTER: "owner/parking-center",
     GET_ALL_PARKING_CENTERS: "owner/parking-center",
     GET_AVAILABLE_PARKING_CENTERS: "owner/parking-center/available",

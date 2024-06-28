@@ -1,17 +1,26 @@
 import { Title } from "@tremor/react";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
-import { verifyUser } from "@/app/lib/requests";
-import EditForms from "@/app/ui/shared/edit-forms";
-import { updateAdmin, updateUser } from "@/app/lib/actions";
+import { fetchUserById, fetchUserTypes, verifyUser } from "@/app/lib/requests";
+import { updateUser } from "@/app/lib/actions";
 import { dashboardRoutes } from "@/app/lib/routes";
+import { updateUserFields } from "@/constants/users.constants";
+import EditForms from "@/app/ui/shared/edit-forms";
 
 const UpdateAdminProfile = async () => {
   const session = await auth();
-  const admin = await verifyUser() as _IUser;
-      if (!admin) {
-        notFound();
-      }
+  console.log(session?.user);
+  if (!session) {
+    console.log('NO SESSION')
+  }
+  const [{ data: admin }, { data: userTypes }] = await Promise.all([
+      fetchUserById(session?.user._id!),
+      fetchUserTypes(),
+  ]);
+  
+  if (!admin) {
+    notFound();
+  }
 
   return (
     <main>
@@ -22,17 +31,10 @@ const UpdateAdminProfile = async () => {
         route={`${dashboardRoutes.ADMIN.BASE}`}
         type="user"
         updateFunction={updateUser}
-        entityData={admin}
-        isVerified={admin.isVerified}
-        selecteds={admin.userType}
+        formType="group"
+        data={admin}
+        fieldConfigs={updateUserFields(userTypes, admin.isVerified, admin, 'group')}
       />
-      {/* <EditForms
-        id={""}
-        fields={[]}
-        updateEntity={updateAdmin}
-        entityData={undefined}
-        selecteds={undefined}
-      /> */}
     </main>
   );
 };

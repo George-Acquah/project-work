@@ -41,8 +41,9 @@ async function fetchUserById(id: string, type = UserType.ALL) {
     );
     return response;
   } catch (error: any) {
+    console.log(error);
     const { ERROR_URL } = redirectDynamicUrls(
-      "/dashboard/users/all",
+      "/dashboard",
       error.message ?? 'test',
       'something random'
     );
@@ -98,6 +99,23 @@ async function fetchFilteredParkingCenters(
   return formatCentersTable(response.data);
 }
 
+async function fetchCenterById(centers_id: string) {
+  try {
+    const url = `${endpoints.PARKING_CENTER.BASE}/${centers_id}`;
+    const response = await fetcher<_IParkingCenter>(url, "GET", "no-store");
+    return response;
+  } catch (error: any) {
+    const { ERROR_URL } = redirectDynamicUrls(
+      "/dashboard/users/parking-lots",
+      error.message ?? "test",
+      "something random"
+    );
+    console.log(error.name);
+    console.log(error.message);
+    redirect(ERROR_URL);
+  }
+}
+
 //END PARKING CENTERS
 
 //BEGIN SLOTS
@@ -122,6 +140,7 @@ export {
   fetchUserById,
   fetchUserTypes,
   fetchFilteredParkingCenters,
+  fetchCenterById,
   fetchFilteredSlots,
   verifyUser,
 };

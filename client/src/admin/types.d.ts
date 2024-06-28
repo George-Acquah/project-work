@@ -70,6 +70,18 @@ interface _IEditApplicantForm {
   entityData: any;
   selecteds: any;
 }
+
+// Props interface for the EditForms component
+interface EditFormsProps {
+  id: string;
+  updateFunction: any;
+  type: string;
+  route: string;
+  formType: "group" | "single";
+  fieldConfigs: FieldConfig[]; // Array of field configurations
+  data?: Record<string, any>
+}
+
 interface _IField {
   label: string;
   key: string;
@@ -78,6 +90,25 @@ interface _IField {
   options?: string[];
   icon?: IconType;
   radio?: _IRadio[];
+}
+
+// Interface for field configuration
+interface FieldConfig {
+  id: string;
+  placeholder: string;
+  value?: any;
+  label: string;
+  width?: string;
+  bg?: string;
+  input_type?: "select" | "radio" | "textarea"; // I'll add more here and then
+  icon?: string;
+  options?: string[];
+  radio?: { id: string; value: string; label: string; checked: boolean }[];
+  type: string;
+  disabled?: boolean;
+  tooltip?: boolean;
+  mt?: boolean;
+  group?: string; // New property to define the group
 }
 interface _ILoginError {
   username?: string[];
@@ -306,7 +337,7 @@ interface _ISlot {
 
 // Extend the User type with the properties you expect
 interface _ISessionUser {
-  id: string;
+  _id: string;
   email: string;
   userType: _TUserType;
   image: string;
@@ -415,7 +446,8 @@ interface _IDetail {
    * @type {string}
    * @memberof Detail
    */
-  input_type?: "select" | "radio";
+  input_type?: "select" | "radio" | "textarea";
+  // input_type?: "select" | "radio";
 
   /**
    * Optional icon to be displayed within the input field.
@@ -589,7 +621,7 @@ interface _Inputs {
   id: string;
   placeholder: string;
   label: string;
-  icon: IconType;
+  icon: string;
   type: string;
 }
 interface _ICommonInputComp extends _Inputs{
@@ -719,6 +751,13 @@ type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";
 type _TFields = "text" | "radio" | "select" | "email";
 type _IThemeType = "light" | "dark";
 type ValueObject = Record<string, string>;
+
+type IconType = React.ForwardRefExoticComponent<
+  Omit<React.SVGProps<SVGSVGElement>, "ref"> & {
+    title?: string;
+    titleId?: string;
+  } & React.RefAttributes<SVGSVGElement>
+>;
 
 type ActionResult =
   | {

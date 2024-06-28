@@ -52,6 +52,8 @@ export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
       
 
       if (new Date().getTime() < token.tokens.expiresIn!) {
+
+        console.log('helllo');
         return token;
       }
 
@@ -61,10 +63,12 @@ export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
     async session({ session, token }) {
       // Example: Adding a default value for emailVerified
       const emailVerified = null; // Replace false with how you determine the verification status
+      const id = session.user._id;
 
       // Now, extend the session.user with the emailVerified property
       session.user = {
         ...token.user,
+        id,
         emailVerified: emailVerified,
       };
       // session.user = token.user;

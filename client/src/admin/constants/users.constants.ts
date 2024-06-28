@@ -64,39 +64,41 @@ const addUserFields = (options: string[]) => {
   ] as _IDetail[];
 }
 
-const updateUserFields = (options: string[], checked: boolean, data?: _IUpdateUserData) => {
+const updateUserFields = (options: string[], checked: boolean, data?: _IUser, type: 'group' | 'single' = 'single') => {
   return [
     {
       id: "email",
       placeholder: "Enter Email",
       label: "Email",
-      icon: AtSymbolIcon,
+      icon: "AtSymbolIcon",
       type: "email",
       required: true,
       mt: false,
-      width: "lg:w-1/2",
+      width: type === "single" && "lg:w-1/2",
       bg: bodyBg,
-      value: data?.email
+      value: data?.email,
     },
     {
       id: "fullName",
       label: "Full Name",
       placeholder: "Enter Full Name",
-      icon: UserIcon,
+      icon: "UserIcon",
       type: "text",
       disabled: false,
-      width: "lg:w-1/2",
+      width: type === "single" && "lg:w-1/2",
       bg: bodyBg,
-      value: data?.fullname
+      value: data?.profile?.first_name,
     },
     {
       label: "User Type",
       id: "userType",
       type: "select",
       input_type: "select",
+      bg: bodyBg,
       disabled: false,
       options: options,
-      width: "lg:w-1/2",
+      value: data?.userType,
+      width: type === "single" && "lg:w-1/2",
     },
     {
       label: "Verified Status",
@@ -104,7 +106,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUpdateUs
       type: "radio",
       input_type: "radio",
       disabled: false,
-      width: "lg:w-1/2",
+      width: type === "single" && "lg:w-1/2",
       radio: [
         {
           id: "verified",
@@ -120,7 +122,35 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUpdateUs
         },
       ],
     },
-  ] as _IDetail[];
+    {
+      id: "longitude",
+      placeholder: "Enter longitude",
+      label: "Longitude",
+      type: "number",
+      group: "Profile Info",
+    },
+    {
+      id: "longitude",
+      placeholder: "Enter longitude",
+      label: "Longitude",
+      type: "number",
+      group: "Profile Info",
+    },
+    {
+      id: "longitude",
+      placeholder: "Enter longitude",
+      label: "Longitude",
+      type: "number",
+      group: "Profile Info",
+    },
+    {
+      id: "longitude",
+      placeholder: "Enter longitude",
+      label: "Longitude",
+      type: "number",
+      group: "Profile Info",
+    },
+  ] as FieldConfig[];
 };
 
 const BREADCRUMBS = {
