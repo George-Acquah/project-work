@@ -1,5 +1,4 @@
 import { dashboardRoutes } from "@/app/lib/routes";
-import { FieldConfig } from "@/app/ui/shared/edit-forms";
 import { bodyBg } from "@/app/ui/themes";
 
 const a = ["Class A", "Class B", "Class C"];

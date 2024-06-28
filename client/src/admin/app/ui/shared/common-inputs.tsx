@@ -2,8 +2,11 @@ import {
   AtSymbolIcon,
   ChatBubbleBottomCenterIcon,
   ExclamationCircleIcon,
+  GlobeEuropeAfricaIcon,
   InformationCircleIcon,
   KeyIcon,
+  MapPinIcon,
+  PhoneIcon,
   TagIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
@@ -26,6 +29,9 @@ const iconMap: Record<string, IconType> = {
   AtSymbolIcon: AtSymbolIcon,
   UserIcon: UserIcon,
   KeyIcon: KeyIcon,
+  PhoneIcon: PhoneIcon,
+  GlobeEuropeAfricaIcon: GlobeEuropeAfricaIcon,
+  MapPinIcon: MapPinIcon
 };
 
 export const InputErrors = ({
