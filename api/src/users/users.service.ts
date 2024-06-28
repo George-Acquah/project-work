@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import { AnyExpression, ClientSession, Model, Types } from 'mongoose';
+import mongoose, { AnyExpression, ClientSession, Model, Types } from 'mongoose';
 import { CreateUserDto } from './dtos/create-users.dto';
 import { Customer } from 'src/shared/schemas/customer.schema';
 import { ParkOwner } from 'src/shared/schemas/owner.schema';
@@ -503,6 +503,53 @@ export class UsersService {
     }
   }
 
+  async newFetchUserProfile(user_id: string, extra: boolean) {
+    try {
+      const user = await this.returnId(user_id);
+
+      if (!user) {
+        throw new NotFoundException('This user does not exist');
+      }
+
+      console.log(user);
+
+      const profile = await this.aggregationService.dynamicDocumentsPipeline<
+        _IDbProfile,
+        _INewProfile
+      >(
+        this.profileModel,
+        true,
+        [
+          'first_name',
+          'last_name',
+          'contact_no',
+          'area',
+          'city',
+          'state',
+          'pinCode'
+        ],
+        { user: new mongoose.Types.ObjectId(user) },
+        // [],
+        // 'user profile'
+      );
+
+      console.log(profile);
+
+      if (extra) {
+        return {
+          ...profile,
+          _id: user,
+          // user_image: user?.user_image?.file_id ?? null,
+          // phone_number: user.phone_number,
+          // email: user.email
+        };
+      }
+
+      return profile;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
   //With Yransactions
   async updateUserTransaction(
     id: string,
