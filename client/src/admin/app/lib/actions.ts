@@ -12,7 +12,7 @@ import { AdminSchema, ApplicantSchema } from "./z-validations";
 import { clientCookiesKeys, clientCookiesValues } from "./constants";
 import { AUTH_ERRORS } from "@/constants/errors.constants";
 import AuthSchema from "@/schemas/auth.schema";
-import UserSchema from "@/schemas/users.schema";
+import UserSchema, { FullUserSchema } from "@/schemas/users.schema";
 
 const UpdateApplicant = ApplicantSchema.omit({ id: true });
 const UpdateUser = UserSchema.omit({ phone_number: true })
@@ -137,10 +137,12 @@ async function updateUser(
   prevState: ActionResult,
   payload: FormData
 ) {
-  const validatedFields = UpdateUser.safeParse(
+  console.log(payload);
+  const validatedFields = FullUserSchema.safeParse(
     Object.fromEntries(payload.entries())
   );
 
+  console.log(validatedFields);
   if (!validatedFields.success) {
     return {
       type: "error" as const,

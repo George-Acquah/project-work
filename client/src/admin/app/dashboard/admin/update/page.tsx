@@ -1,7 +1,7 @@
 import { Title } from "@tremor/react";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
-import { fetchUserById, fetchUserTypes, verifyUser } from "@/app/lib/requests";
+import { fetchUserById, fetchUserProfile, fetchUserTypes, verifyUser } from "@/app/lib/requests";
 import { updateUser } from "@/app/lib/actions";
 import { dashboardRoutes } from "@/app/lib/routes";
 import { updateUserFields } from "@/constants/users.constants";
@@ -13,9 +13,10 @@ const UpdateAdminProfile = async () => {
   if (!session) {
     console.log('NO SESSION')
   }
-  const [{ data: admin }, { data: userTypes }] = await Promise.all([
-      fetchUserById(session?.user._id!),
-      fetchUserTypes(),
+  const [{ data: admin }, { data: userTypes }, { data: profile }] = await Promise.all([
+    fetchUserById(session?.user._id!),
+    fetchUserTypes(),
+    fetchUserProfile(session?.user._id!),
   ]);
   
   if (!admin) {
@@ -33,7 +34,7 @@ const UpdateAdminProfile = async () => {
         updateFunction={updateUser}
         formType="group"
         data={admin}
-        fieldConfigs={updateUserFields(userTypes, admin.isVerified, admin, 'group')}
+        fieldConfigs={updateUserFields(userTypes, admin.isVerified, admin, profile, 'group')}
       />
     </main>
   );

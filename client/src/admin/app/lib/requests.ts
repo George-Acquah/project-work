@@ -53,6 +53,28 @@ async function fetchUserById(id: string, type = UserType.ALL) {
   }
 }
 
+async function fetchUserProfile(id: string) {
+  try {
+    const url = endpoints.USERS.BASE;
+    const response = await fetcher<_IProfile>(
+      `${url}/${id}/profile`,
+      "GET",
+      "default"
+    );
+    return response;
+  } catch (error: any) {
+    console.log(error);
+    const { ERROR_URL } = redirectDynamicUrls(
+      "/dashboard",
+      error.message ?? "test",
+      "something random"
+    );
+    console.log(error.name);
+    console.log(error.message);
+    redirect(ERROR_URL);
+  }
+}
+
 async function verifyUser(admin?: boolean) {
   const url = endpoints.USERS.VERIFY_USER;
   const response = await fetcher<_IUser>(url, "GET", "no-store");
@@ -138,6 +160,7 @@ export {
   fetchFilteredUsers,
   fetchUsersPage,
   fetchUserById,
+  fetchUserProfile,
   fetchUserTypes,
   fetchFilteredParkingCenters,
   fetchCenterById,

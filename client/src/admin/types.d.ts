@@ -300,7 +300,7 @@ interface _IPayment {
   // Add other properties relevant to payments
 }
 interface _IProfile {
-  id: string;
+  _id: string;
   first_name: string | null;
   last_name: string | null;
   contact_no: string | null;

@@ -7,6 +7,7 @@ const endpoints = {
     REFRESH: "auth/refresh",
   },
   USERS: {
+    BASE: "users",
     GET_FILTERED_USERS: "users",
     SET_IMAGE: "users/set-image",
     VERIFY_USER: "users/me",

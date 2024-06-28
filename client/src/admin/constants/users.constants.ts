@@ -64,7 +64,7 @@ const addUserFields = (options: string[]) => {
   ] as _IDetail[];
 }
 
-const updateUserFields = (options: string[], checked: boolean, data?: _IUser, type: 'group' | 'single' = 'single') => {
+const updateUserFields = (options: string[], checked: boolean, data?: _IUser, profile?: _IProfile, type: 'group' | 'single' = 'single') => {
   return [
     {
       id: "email",
@@ -75,7 +75,8 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, ty
       required: true,
       mt: false,
       width: type === "single" && "lg:w-1/2",
-      bg: bodyBg,
+      bg: type === "single" && bodyBg,
+      group: "Basic",
       value: data?.email,
     },
     {
@@ -86,7 +87,8 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, ty
       type: "text",
       disabled: false,
       width: type === "single" && "lg:w-1/2",
-      bg: bodyBg,
+      bg: type === "single" && bodyBg,
+      group: "Basic",
       value: data?.profile?.first_name,
     },
     {
@@ -94,10 +96,11 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, ty
       id: "userType",
       type: "select",
       input_type: "select",
-      bg: bodyBg,
+      bg: type === "single" && bodyBg,
       disabled: false,
       options: options,
       value: data?.userType,
+      group: "Basic",
       width: type === "single" && "lg:w-1/2",
     },
     {
@@ -106,6 +109,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, ty
       type: "radio",
       input_type: "radio",
       disabled: false,
+      group: "Basic",
       width: type === "single" && "lg:w-1/2",
       radio: [
         {
@@ -122,33 +126,49 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, ty
         },
       ],
     },
-    {
-      id: "longitude",
-      placeholder: "Enter longitude",
-      label: "Longitude",
-      type: "number",
+    profile && {
+      id: "area",
+      placeholder: "Enter Area",
+      label: "Area",
       group: "Profile Info",
+      icon: "MapPinIcon",
+      bg: type === "single" && bodyBg,
+      disabled: false,
+      value: profile.area,
+      width: type === "single" && "lg:w-1/2",
     },
-    {
-      id: "longitude",
-      placeholder: "Enter longitude",
-      label: "Longitude",
-      type: "number",
+    profile && {
+      id: "city",
+      placeholder: "Enter City",
+      label: "City",
       group: "Profile Info",
+      icon: "GlobeEuropeAfricaIcon",
+      bg: type === "single" && bodyBg,
+      disabled: false,
+      value: profile.city,
+      width: type === "single" && "lg:w-1/2",
     },
-    {
-      id: "longitude",
-      placeholder: "Enter longitude",
-      label: "Longitude",
-      type: "number",
+    profile && {
+      id: "state",
+      placeholder: "Enter State",
+      label: "State",
       group: "Profile Info",
+      icon: "GlobeEuropeAfricaIcon",
+      bg: type === "single" && bodyBg,
+      disabled: false,
+      value: profile.state,
+      width: type === "single" && "lg:w-1/2",
     },
-    {
-      id: "longitude",
-      placeholder: "Enter longitude",
-      label: "Longitude",
-      type: "number",
+    profile && {
+      id: "phone_number",
+      placeholder: "Enter Phone Number",
+      icon: "PhoneIcon",
+      label: "Phone Number",
       group: "Profile Info",
+      bg: type === "single" && bodyBg,
+      disabled: false,
+      value: profile.contact_no,
+      width: type === "single" && "lg:w-1/2",
     },
   ] as FieldConfig[];
 };
