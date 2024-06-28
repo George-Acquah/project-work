@@ -12,8 +12,10 @@ import { AdminSchema, ApplicantSchema } from "./z-validations";
 import { clientCookiesKeys, clientCookiesValues } from "./constants";
 import { AUTH_ERRORS } from "@/constants/errors.constants";
 import AuthSchema from "@/schemas/auth.schema";
+import UserSchema from "@/schemas/users.schema";
 
 const UpdateApplicant = ApplicantSchema.omit({ id: true });
+const UpdateUser = UserSchema.omit({ phone_number: true })
 const Login = AuthSchema.omit({ phone_number: true });
 
 const UpdateAdmin = AdminSchema.omit({ id: true, username: true });
@@ -132,14 +134,12 @@ async function deleteOwner(id: string) {
 
 async function updateUser(
   id: string,
-  myrole: string,
   prevState: ActionResult,
-  formData: FormData
+  payload: FormData
 ) {
-  const validatedFields = UpdateApplicant.safeParse({
-    userType: myrole,
-    isActive: formData.get("isActive"),
-  });
+  const validatedFields = UpdateUser.safeParse(
+    Object.fromEntries(payload.entries())
+  );
 
   if (!validatedFields.success) {
     return {
@@ -200,6 +200,37 @@ async function updateAdmin(id: string, prevState: any, formData: FormData) {
   redirect(dashboardRoutes.ADMIN.BASE);
 }
 
+async function updateCenter(
+  id: string,
+  prevState: ActionResult,
+  formData: FormData
+) {
+  console.log(formData);
+  const validatedFields = UpdateApplicant.safeParse({
+    userType: formData.get(""),
+    isActive: formData.get("isActive"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      type: "error" as const,
+      errors: validatedFields.error.flatten().fieldErrors,
+    } satisfies ActionResult;
+  }
+  const url = `${endpoints.PARKING_CENTER.GET_PARKING_CENTER}/${id}`;
+  try {
+    await fetcher(url, "PUT", "no-cache", validatedFields.data);
+  } catch (error: any) {
+    console.log(error.message);
+    return {
+      message: error.message,
+    };
+  }
+
+  revalidatePath(dashboardRoutes.USERS.CUSTOMERS.BASE);
+  redirect(dashboardRoutes.USERS.CUSTOMERS.BASE);
+}
+
 async function signOutHelper() {
   await signOut();
 }
@@ -213,6 +244,7 @@ export {
   deleteOwner,
   deleteUser,
   updateUser,
+  updateCenter,
   updateAdmin,
   testEmail,
 };
