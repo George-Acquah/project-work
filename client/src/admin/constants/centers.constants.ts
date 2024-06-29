@@ -61,7 +61,7 @@ const updateParkingCenterFields = (
       ],
     },
     // Add more fields as needed...
-  ] as FieldConfig[];
+  ] as _IDetail[];
 };
 
 const CENTERS_BREADCRUMBS = (id?: string) => {
@@ -80,7 +80,7 @@ const CENTERS_BREADCRUMBS = (id?: string) => {
 }
 };
 
-const centersFieldConfigs: FieldConfig[] = [
+const centersFieldConfigs: _IDetail[] = [
   {
     id: "email",
     placeholder: "Enter name",
