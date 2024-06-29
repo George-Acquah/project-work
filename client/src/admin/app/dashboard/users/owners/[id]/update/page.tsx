@@ -14,6 +14,7 @@ export default async function Page({ params }: _IdParams) {
       id={id}
       href={dashboardRoutes.USERS.OWNERS.BASE}
       label="Owner"
+      formType="group"
     />
   );
 }

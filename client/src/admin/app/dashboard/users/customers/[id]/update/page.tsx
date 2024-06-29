@@ -10,6 +10,6 @@ export default async function UpdateCustomerPage({ params }: _IdParams) {
   const id = params.id;
 
   return (
-    <UpdateUser id={id} href={dashboardRoutes.USERS.CUSTOMERS.BASE} label="Customer" />
+    <UpdateUser id={id} href={dashboardRoutes.USERS.CUSTOMERS.BASE} label="Customer" formType="group"/>
   );
 }

@@ -3,10 +3,9 @@
 import React from "react";
 import { useFormState } from "react-dom";
 import { cardsBg } from "../themes";
-import CommonInput, { GlobalError } from "./common-inputs";
+import CommonInput, { GlobalError, InputGroup } from "./common-inputs";
 import { EditBtn } from "./buttons";
 import { groupFieldConfigs } from "@/utils/functions/forms.functions";
-import { InputGroup } from "./new-inputs";
 
 export default function EditForms({
   id,
