@@ -13,7 +13,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { UserType } from "../lib/constants";
+import { UserType } from "../../lib/constants";
 import {
   DeleteCenter,
   DeleteCustomer,
@@ -26,11 +26,12 @@ import {
   EditSlot,
   EditUser,
   VerificationButton,
-} from "./users/buttons";
-import { cardBorder, cardsBg, providerBtnClass } from "./themes";
-import StatusBadge, { _IStatus } from "./users/status";
+} from "../users/buttons";
+import { cardBorder, cardsBg, providerBtnClass } from "../themes";
+import StatusBadge, { _IStatus } from "../users/status";
 import { useState } from "react";
 import { Checkbox } from "@headlessui/react";
+import NoContentFound from "./no-content";
 
 // Reusable component for rendering the image cell
 const TableImage = ({ data }: { data: _TableRowType }) => (
@@ -71,17 +72,15 @@ const renderCell = (
     case "isAvailable":
       return <StatusBadge status={item[column] as unknown as _IStatus} />;
     case "select": // New column for checkbox
-      return (
-        <Checkbox
-          onChange={(e) => handleCheckboxChange(e, item._id)}
-        />
-      );
+      return <Checkbox onChange={(e) => handleCheckboxChange(e, item._id)} />;
     default:
       const additionalClassName =
         (entityType === "users" &&
           (column === "vehicles" || column === "centers")) ||
-        (entityType === "centers" && (column === "slots" || column === "capacity")) ||
-        (entityType === "slots" && (column === "capacity" || column === "price"))
+        (entityType === "centers" &&
+          (column === "slots" || column === "capacity")) ||
+        (entityType === "slots" &&
+          (column === "capacity" || column === "price"))
           ? "text-center"
           : "";
       return <Text className={additionalClassName}>{item[column]}</Text>;
@@ -100,14 +99,14 @@ const TableButtonHelper = ({
   type?: string;
   verify?: boolean;
   status?: boolean;
-  }) => {
+}) => {
   const pathname = usePathname();
   const isVerification = verify && (
     <VerificationButton id={id} status={status ?? false} action={undefined} />
   );
   const userActions = (
     <div className="flex justify-end gap-3">
-      <EditUser id={id} path={ pathname } />
+      <EditUser id={id} path={pathname} />
       <DeleteUser id={id} />
     </div>
   );
@@ -137,17 +136,17 @@ const TableComponent = ({
   entityType,
 }: _ITableProps) => {
   const router = useRouter();
-  const [selectedItems, setSelectedItems] = useState<string[]>([]); // State to store selected item IDs
+  // const [selectedItems, setSelectedItems] = useState<string[]>([]); // State to store selected item IDs
 
-  const handleCheckboxChange = (isChecked: boolean, itemId: string) => {
-    setSelectedItems((prevItems) => {
-      if (isChecked) {
-        return [...prevItems, itemId];
-      } else {
-        return prevItems.filter((id) => id !== itemId);
-      }
-    });
-  };
+  // const handleCheckboxChange = (isChecked: boolean, itemId: string) => {
+  //   setSelectedItems((prevItems) => {
+  //     if (isChecked) {
+  //       return [...prevItems, itemId];
+  //     } else {
+  //       return prevItems.filter((id) => id !== itemId);
+  //     }
+  //   });
+  // };
 
   return (
     <Table
@@ -158,13 +157,13 @@ const TableComponent = ({
       >
         <TableRow>
           {/* Add checkbox header cell */}
-          <TableHeaderCell className="px-6">
+          {/* <TableHeaderCell className="px-6">
             <Checkbox
               onChange={
                 (e) => handleCheckboxChange(e, "all") // Check/uncheck all
               }
             />
-          </TableHeaderCell>
+          </TableHeaderCell> */}
           {columnData.map((column, index) => (
             <TableHeaderCell key={`__${index}__${column}`} className="px-6">
               {column}
@@ -187,13 +186,12 @@ const TableComponent = ({
                 key={index}
                 className="px-6 align-middle border-none text-xs whitespace-nowrap p-4"
               >
-                <TableCell className="px-6">
+                {/* <TableCell className="px-6">
                   <Checkbox
                     checked={selectedItems.includes(item._id)} // Check if item is selected
                     onChange={(e) => handleCheckboxChange(e, item._id)}
                     className="group block size-4 rounded border bg-white data-[checked]:bg-blue-500"
                   >
-                    {/* Checkmark icon */}
                     <svg
                       className="stroke-white opacity-0 group-data-[checked]:opacity-100"
                       viewBox="0 0 14 14"
@@ -207,7 +205,7 @@ const TableComponent = ({
                       />
                     </svg>
                   </Checkbox>
-                </TableCell>
+                </TableCell> */}
                 {columns
                   .filter((column) => !column.includes("_id"))
                   .map((column, columnIndex) => (
@@ -230,20 +228,7 @@ const TableComponent = ({
           })}
         </TableBody>
       ) : (
-        <TableBody>
-          <TableRow className="h-60 text-center">
-            <TableCell colSpan={columnData.length + 2} className="py-4">
-              <FaceFrownIcon className="w-10 text-gray-400 pos__center" />
-              <Title className="text-center mb-4">No Content Found</Title>
-              <Title
-                onClick={router.refresh}
-                className={`${providerBtnClass} w-fit pos__center dark:border-custom-primary/50 cursor-pointer`}
-              >
-                Retry
-              </Title>
-            </TableCell>
-          </TableRow>
-        </TableBody>
+        <NoContentFound columnCount={columnData.length} />
       )}
     </Table>
   );

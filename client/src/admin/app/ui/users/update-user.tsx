@@ -5,7 +5,7 @@ import { updateUser } from "@/app/lib/actions";
 import EditForms from "../shared/edit-forms";
 import { updateUserFields } from "@/constants/users.constants";
 
-export default async function UpdateUser({ id, label, href }: _IUpdate) {
+export default async function UpdateUser({ id, label, href, formType  }: _IUpdate) {
   const [{ data: user }, { data: userTypes }, { data: profile }] =
     await Promise.all([
       fetchUserById(id),
@@ -13,8 +13,6 @@ export default async function UpdateUser({ id, label, href }: _IUpdate) {
       fetchUserProfile(id),
     ]);
   
-  console.log(user);
-
   if (!user) {
     notFound();
   }
@@ -41,7 +39,7 @@ export default async function UpdateUser({ id, label, href }: _IUpdate) {
         updateFunction={updateUser}
         formType="group"
         data={user}
-        fieldConfigs={updateUserFields(userTypes, user.isVerified, user, profile)}
+        fieldConfigs={updateUserFields(userTypes, user.isVerified, user, profile, formType)}
       />
     </main>
   );

@@ -1,38 +1,22 @@
 import {
-  AtSymbolIcon,
-  ChatBubbleBottomCenterIcon,
   ExclamationCircleIcon,
-  GlobeEuropeAfricaIcon,
   InformationCircleIcon,
-  KeyIcon,
-  MapPinIcon,
-  PhoneIcon,
   TagIcon,
-  UserIcon,
 } from "@heroicons/react/24/outline";
 import { Icon, Select, SelectItem, Text } from "@tremor/react";
 import { bodyBg, cardsBg, textColor } from "../themes";
-import { getValue } from "@/utils/functions/forms.functions";
-import { generateInputClass, generateSelectClass } from "@/utils/functions/styles.functions";
+import {
+  generateInputClass,
+  generateSelectClass,
+} from "@/utils/functions/styles.functions";
 import { inputIcons } from "../users/constants";
+import iconMap from "@/constants/form.constants";
 
 interface _InputWithErrors {
   id: string;
   prependComponent?: React.ReactNode;
   errors: Record<string, string[] | undefined>;
 }
-
-// Icon mapping
-const iconMap: Record<string, IconType> = {
-  TagIcon: TagIcon,
-  ChatBubbleBottomCenterIcon: ChatBubbleBottomCenterIcon,
-  AtSymbolIcon: AtSymbolIcon,
-  UserIcon: UserIcon,
-  KeyIcon: KeyIcon,
-  PhoneIcon: PhoneIcon,
-  GlobeEuropeAfricaIcon: GlobeEuropeAfricaIcon,
-  MapPinIcon: MapPinIcon
-};
 
 export const InputErrors = ({
   errors,
@@ -69,22 +53,22 @@ export function GlobalError({ message }: { message: any }) {
 }
 
 export function InputGroup<T extends Record<string, any>>({
-  data,
   title,
+  data,
   details,
   errors,
 }: CommonDivCompProps<T>): JSX.Element {
   return (
-    <>
-      <h2>{title}</h2>
-      <div className={`rounded-md ${cardsBg} p-4 md:p-6`}>
-        <div className="lg:grid lg:grid-cols-2">
+    <div className="mb-6">
+      <h2 className="text-xl font-semibold mb-4">{title}</h2>
+      <div className={`rounded-md ${bodyBg} p-4 md:p-6`}>
+        <div className="lg:grid lg:grid-cols-2 gap-4 ">
           {details.map((detail) => (
             <CommonInput
               key={`${String(detail.id)}__${detail.placeholder}`}
               id={String(detail.id)}
               placeholder={detail.placeholder}
-              value={getValue<T>(data, detail.id)}
+              value={data[detail.id]}
               label={detail.label}
               icon={detail.icon}
               type={detail.type}
@@ -101,7 +85,7 @@ export function InputGroup<T extends Record<string, any>>({
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -119,9 +103,9 @@ export default function CommonInput({
   errors,
   tooltip,
   width,
-  bg
+  bg,
 }: _IDetail) {
-  const LinkIcon = icon ? iconMap[icon] : undefined;;
+  const LinkIcon = icon ? iconMap[icon] : undefined;
   const err_bool = errors && (errors[id]!! as unknown as boolean);
   return (
     <div className="mb-4 lg:mr-4">
@@ -170,7 +154,7 @@ export default function CommonInput({
           {radio && (
             <fieldset className="mb-4 lg:w-1/2 ">
               <div
-                className={` border border-gray-200 dark:border-gray-600 px-[14px] py-3 ${bodyBg}`}
+                className={` border border-gray-200 dark:border-gray-600 px-[14px] py-3 ${cardsBg}`} //TODO
               >
                 <div className="flex gap-4">
                   {radio.map((item) => (
@@ -183,17 +167,19 @@ export default function CommonInput({
                         name={id}
                         type="radio"
                         value={item.value}
-                        // aria-describedby={`${id}-error`}
-                        // aria-labelledby={`${id}`}
                         defaultChecked={item.checked}
-                        className={`h-4 w-4 border-gray-300 dark:border-gray-600 ${cardsBg} text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600`}
+                        className={`h-4 w-4 border-gray-300 dark:border-gray-600 ${
+                          bg ?? cardsBg
+                        } text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600`}
                       />
                       <label
                         htmlFor={item.id}
                         className={`ml-2 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ${
                           item.id === "verified" ? textColor : "text-white/90"
                         }  ${
-                          item.value === "true" ? `${cardsBg}` : "bg-red-500"
+                          item.value === "true"
+                            ? `${item.bg ?? cardsBg}`
+                            : "bg-red-500"
                         }`}
                       >
                         {item.label}

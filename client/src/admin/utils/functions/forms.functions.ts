@@ -29,7 +29,7 @@ function getValue<T extends Record<string, any>>(
 }
 
 // Utility function to group field configurations
-const groupFieldConfigs = (fields: FieldConfig[]) => {
+const groupFieldConfigs = (fields: _IDetail[]) => {
   return fields.reduce((groups, field) => {
     const group = field.group || 'default'; // Use 'default' if no group is specified
     if (!groups[group]) {
@@ -37,7 +37,7 @@ const groupFieldConfigs = (fields: FieldConfig[]) => {
     }
     groups[group].push(field);
     return groups;
-  }, {} as Record<string, FieldConfig[]>);
+  }, {} as Record<string, _IDetail[]>);
 };
 
 

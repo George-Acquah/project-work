@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { TagIcon } from "@heroicons/react/24/outline";
+import React from "react";
 import { useFormState } from "react-dom";
-import { Select, SelectItem } from "@tremor/react";
-import { bodyBg, cardsBg, textColor } from "../themes";
-import { generateInputClass } from "@/utils/functions/styles.functions";
-import CommonInput, { GlobalError, InputErrors, RenderIcons } from "./common-inputs";
+import { cardsBg } from "../themes";
+import CommonInput, { GlobalError } from "./common-inputs";
 import { AddBtn } from "./buttons";
 import { addUserFields } from "@/constants/users.constants";
 
@@ -16,13 +13,7 @@ export default function AddForms({
   type,
   route,
 }: _IAddForm) {
-  // const [formData, setFormData] = useState(entityData);
-  // const [selectFields, setSelectFields] = useState(selecteds);
 
-  // const handleChange = (key: string, value: any) => {
-  //   setFormData((prevData: any) => ({ ...prevData, [key]: value }));
-  // };
-  // Initial state for form
   const initialState: any = {
     message: null,
     errors: {},

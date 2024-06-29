@@ -30,7 +30,7 @@ const secHover =
 const cardHover = "hover:bg-custom-primary/10 dark:hover:bg-custom-primary/80";
 
 const providerBtnClass =
-  "border-stroke dark:text-custom-body-color-dark dark:shadow-two mb-6 flex w-full items-center justify-center rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-custom-body-color outline-none transition-all duration-300 hover:border-custom-primary hover:bg-custom-primary/5 hover:text-custom-primary dark:border-transparent dark:bg-[#2C303B] dark:hover:border-custom-primary dark:hover:bg-custom-primary/5 dark:hover:text-custom-primary dark:hover:shadow-none";
+  "border-stroke dark:text-custom-body-color-dark dark:shadow-two mb-6 flex  items-center justify-center rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-custom-body-color outline-none transition-all duration-300 hover:border-custom-primary hover:bg-custom-primary/5 hover:text-custom-primary dark:border-transparent dark:bg-[#2C303B] dark:hover:border-custom-primary dark:hover:bg-custom-primary/5 dark:hover:text-custom-primary dark:hover:shadow-none";
 
   const loginBtnClass =
     "border-stroke shadow mb-6 flex w-full items-center justify-center rounded-sm border bg-custom-primary px-6 py-3 text-base text-white outline-none transition-all duration-300 hover:border-custom-primary hover:bg-custom-primary/80 dark:border-transparent  dark:hover:border-custom-primary dark:hover:shadow-none";

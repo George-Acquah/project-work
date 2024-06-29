@@ -1,11 +1,6 @@
 import { dashboardRoutes } from "@/app/lib/routes";
-import { bodyBg } from "@/app/ui/themes";
+import { bodyBg, cardsBg } from "@/app/ui/themes";
 import { AtSymbolIcon, UserIcon } from "@heroicons/react/24/outline";
-
-interface _IUpdateUserData {
-  email: string;
-  fullname: string;
-}
 
 const addUserFields = (options: string[]) => {
   return [
@@ -13,7 +8,7 @@ const addUserFields = (options: string[]) => {
       id: "email",
       placeholder: "Enter Email",
       label: "Email",
-      icon: AtSymbolIcon,
+      icon: 'AtSymbolIcon',
       type: "email",
       required: true,
       mt: false,
@@ -24,7 +19,7 @@ const addUserFields = (options: string[]) => {
       id: "fullName",
       label: "Full Name",
       placeholder: "Enter Full Name",
-      icon: UserIcon,
+      icon: 'UserIcon',
       type: "text",
       disabled: false,
       width: "lg:w-1/2",
@@ -75,7 +70,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
       required: true,
       mt: false,
       width: type === "single" && "lg:w-1/2",
-      bg: type === "single" && bodyBg,
+      bg: type === "single" ? bodyBg : undefined,
       group: "Basic",
       value: data?.email,
     },
@@ -87,7 +82,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
       type: "text",
       disabled: false,
       width: type === "single" && "lg:w-1/2",
-      bg: type === "single" && bodyBg,
+      bg: type === "single" ? bodyBg : undefined,
       group: "Basic",
       value: data?.profile?.first_name,
     },
@@ -96,7 +91,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
       id: "userType",
       type: "select",
       input_type: "select",
-      bg: type === "single" && bodyBg,
+      bg: type === "single" ? bodyBg : undefined,
       disabled: false,
       options: options,
       value: data?.userType,
@@ -115,6 +110,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
         {
           id: "verified",
           checked: checked ?? false,
+          bg: type === "single" ? cardsBg : bodyBg,
           value: "true",
           label: "Verified",
         },
@@ -132,7 +128,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
       label: "Area",
       group: "Profile Info",
       icon: "MapPinIcon",
-      bg: type === "single" && bodyBg,
+      bg: type === "single" ? bodyBg : undefined,
       disabled: false,
       value: profile.area,
       width: type === "single" && "lg:w-1/2",
@@ -143,7 +139,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
       label: "City",
       group: "Profile Info",
       icon: "GlobeEuropeAfricaIcon",
-      bg: type === "single" && bodyBg,
+      bg: type === "single" ? bodyBg : undefined,
       disabled: false,
       value: profile.city,
       width: type === "single" && "lg:w-1/2",
@@ -154,7 +150,7 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
       label: "State",
       group: "Profile Info",
       icon: "GlobeEuropeAfricaIcon",
-      bg: type === "single" && bodyBg,
+      bg: type === "single" ? bodyBg : undefined,
       disabled: false,
       value: profile.state,
       width: type === "single" && "lg:w-1/2",
@@ -165,12 +161,12 @@ const updateUserFields = (options: string[], checked: boolean, data?: _IUser, pr
       icon: "PhoneIcon",
       label: "Phone Number",
       group: "Profile Info",
-      bg: type === "single" && bodyBg,
+      bg: type === "single" ? bodyBg : undefined,
       disabled: false,
       value: profile.contact_no,
       width: type === "single" && "lg:w-1/2",
     },
-  ] as FieldConfig[];
+  ] as _IDetail[];
 };
 
 const BREADCRUMBS = {

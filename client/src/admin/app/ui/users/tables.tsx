@@ -3,7 +3,7 @@ import {
   fetchFilteredSlots,
   fetchFilteredUsers,
 } from "@/app/lib/requests";
-import TableComponent from "../table";
+import TableComponent from "../shared/table";
 import { UserType, tableColumns } from "@/app/lib/constants";
 
 const UsersTable = async ({

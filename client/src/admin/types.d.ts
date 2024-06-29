@@ -52,6 +52,7 @@ interface _IRadio {
   checked: boolean;
   value: string;
   label: string;
+  bg?: string;
 }
 
 interface _IEditApplicantForm {
@@ -78,18 +79,8 @@ interface EditFormsProps {
   type: string;
   route: string;
   formType: "group" | "single";
-  fieldConfigs: FieldConfig[]; // Array of field configurations
+  fieldConfigs: _IDetail[]; // Array of field configurations
   data?: Record<string, any>
-}
-
-interface _IField {
-  label: string;
-  key: string;
-  type: _TFields;
-  disabled: boolean;
-  options?: string[];
-  icon?: IconType;
-  radio?: _IRadio[];
 }
 
 // Interface for field configuration
@@ -456,7 +447,7 @@ interface _IDetail {
    * @type {any}
    * @memberof Detail
    */
-  icon?: any;
+  icon?: string;
 
   /**
    * Optional options to be rendered for select input field.
@@ -509,12 +500,20 @@ interface _IDetail {
   tooltip?: boolean;
 
   /**
+   * New optional property to define the group
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  group?: string; //
+
+  /**
    * Optional errors to show to the user
    *
    * @type {any}
    * @memberof Detail
    */
-  errors: Record<string, string[] | undefined> | null;
+  errors?: Record<string, string[] | undefined> | null;
 }
 
 interface _ISecurityLog {
@@ -555,6 +554,7 @@ interface _IUpdate {
   id: string;
   label: string;
   href: string;
+  formType: 'single' | 'group' = 'single';
 }
 interface _IUser {
   _id: string;
