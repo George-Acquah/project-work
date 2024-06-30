@@ -9,22 +9,26 @@ import { SlotsTable } from "@/app/ui/users/tables";
 import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {
-  title: "Slots",
+  title: "Reservations",
 };
 interface ISearchParams {
   searchParams?: {
-    slots?: string;
+    reservations?: string;
     page?: string;
     size?: string;
   };
 }
 
 export default async function SlotsPage({ searchParams }: ISearchParams) {
-  const slot = searchParams?.slots || "";
+  const reservations = searchParams?.reservations || "";
   const currentPage = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.size) || 5;
 
-  const totalPages = await fetchUsersPage(slot, pageSize, 'UserType.CUSTOMER');
+  const totalPages = await fetchUsersPage(
+    reservations,
+    pageSize,
+    "UserType.CUSTOMER"
+  );
   
 
   return (
@@ -33,12 +37,15 @@ export default async function SlotsPage({ searchParams }: ISearchParams) {
         <h1 className={`${lusitana.className} text-2xl`}>Slots</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType="SLOTS" placeholder="Search by Slot Name"/>
+        <Search entityType="SLOTS" placeholder="Search by Slot Name" />
         <AddSlot />
       </div>
-      <Suspense key={slot + currentPage} fallback={<UsersTableSkeleton />}>
+      <Suspense
+        key={reservations + currentPage}
+        fallback={<UsersTableSkeleton />}
+      >
         <SlotsTable
-          query={slot}
+          query={reservations}
           currentPage={currentPage}
           pageSize={pageSize}
         />
