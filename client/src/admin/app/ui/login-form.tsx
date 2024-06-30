@@ -1,5 +1,4 @@
 "use client"
-import { inter } from "@/app/ui/font";
 import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "../lib/actions";
 import {
@@ -34,12 +33,12 @@ export default function LoginForm() {
             className={`flex-1 rounded px-6 pb-4 pt-8 shadow-three mx-auto max-w-[420px]  ${secondaryBg} px-4 ${textColor}`}
           >
             <h1
-              className={`${inter.className} mb-3 text-2xl font-medium text-center ${strongTextColor}`}
+              className={` mb-3 text-2xl font-medium text-center ${strongTextColor}`}
             >
               Sign in to your account here
             </h1>
             <p
-              className={`${inter.className} mb-11 text-base font-medium text-custom-body-color text-center`}
+              className={` mb-11 text-base font-medium text-custom-body-color text-center`}
             >
               Login to your account as an admin.
             </p>

@@ -2,15 +2,19 @@ import { fetchUserTypes } from "@/app/lib/requests";
 import Breadcrumbs from "../shared/breadcrumbs";
 import Forms from "../shared/common-form";
 import { addUserFields } from "@/constants/users.constants";
+import { dashboardRoutes } from "@/app/lib/routes";
 
-interface _IAddPages {
+interface _IAddCenters {
   breadcrumbs: Breadcrumb[];
-  route: string;
-  type: "user" | "customer" | "owner";
+  // route: string;
   addFunction: any;
 }
 
-export default async function AddUser({ breadcrumbs, route, type, addFunction }: _IAddPages) {
+export default async function AddCenter({
+  breadcrumbs,
+  // route,
+  addFunction,
+}: _IAddCenters) {
   const { data: userTypes } = await fetchUserTypes();
   return (
     <main>
@@ -18,9 +22,9 @@ export default async function AddUser({ breadcrumbs, route, type, addFunction }:
       <Forms
         action={addFunction}
         actionType="add"
-        type={type}
+        type="Parking Center"
         formType="single"
-        route={route}
+        route={dashboardRoutes.PARKING_LOTS.BASE}
         fieldConfigs={addUserFields(userTypes)}
       />
     </main>

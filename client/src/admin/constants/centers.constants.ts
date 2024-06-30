@@ -1,7 +1,7 @@
 import { dashboardRoutes } from "@/app/lib/routes";
 import { bodyBg } from "@/app/ui/themes";
 
-const a = ["Class A", "Class B", "Class C"];
+const centerClasses = ["Class A", "Class B", "Class C"];
 // Example field configurations for a Parking Center
 const updateParkingCenterFields = (
   options: string[],

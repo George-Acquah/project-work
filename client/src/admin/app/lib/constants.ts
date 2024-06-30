@@ -15,6 +15,7 @@ import {
   PhoneIcon,
 
   IdentificationIcon,
+  TruckIcon,
 } from "@heroicons/react/24/outline";
 import { dashboardRoutes } from "./routes";
 
@@ -90,13 +91,13 @@ const usersLinks: _INavLinks[] = [
 
 const paymentLinks: _INavLinks[] = [
   {
-    href: "/admin/transactions/income",
+    href: dashboardRoutes.PAYMENTS.INCOME.BASE,
     name: "Income",
     type: "green",
     icon: ArrowUpIcon,
   },
   {
-    href: "/admin/transactions/withdrawal",
+    href: dashboardRoutes.PAYMENTS.WITHDRAWAL.BASE,
     name: "Withdrawal",
     type: "red",
     icon: ArrowDownIcon,
@@ -105,13 +106,13 @@ const paymentLinks: _INavLinks[] = [
 
 const reservationLinks: _INavLinks[] = [
   {
-    href: "/dashboard/reservations",
+    href: dashboardRoutes.RESERVATIONS.BASE,
     name: "Overview",
     type: "normal",
     icon: TvIcon,
   },
   {
-    href: "/dashboard/reservations/details",
+    href: dashboardRoutes.RESERVATIONS.VIEW,
     name: "Reservations",
     type: "normal",
     icon: DocumentIcon,
@@ -125,12 +126,6 @@ const parkingLinks: _INavLinks[] = [
     type: "normal",
     icon: TvIcon,
   },
-  // {
-  //   href: "/dashboard/reservations/details",
-  //   name: "Center Details",
-  //   type: "normal",
-  //   icon: DocumentIcon,
-  // },
   {
     href: "/dashboard/slots",
     name: "Slots",
@@ -141,16 +136,16 @@ const parkingLinks: _INavLinks[] = [
 
 const vehiclesLinks: _INavLinks[] = [
   {
-    href: "/dashboard/reservations",
+    href: dashboardRoutes.VEHICLES.BASE,
     name: "Overview",
     type: "normal",
-    icon: TvIcon,
+    icon: TruckIcon,
   },
   {
-    href: "/dashboard/reservations/details",
-    name: "Reservations",
+    href: dashboardRoutes.VEHICLES.VIEW,
+    name: "Vehicles",
     type: "normal",
-    icon: DocumentIcon,
+    icon: TruckIcon,
   },
 ];
 
@@ -338,7 +333,7 @@ const editAdminProfileDetails: _IDetail[] = [
     placeholder: "Enter Firstname",
     value: "first name",
     label: "First Name",
-    icon: UserCircleIcon,
+    icon: 'UserCircleIcon',
     type: "text",
     disabled: false,
     errors: null
@@ -348,7 +343,7 @@ const editAdminProfileDetails: _IDetail[] = [
     placeholder: "Enter Lastname",
     value: "last name",
     label: "Last Name",
-    icon: UserCircleIcon,
+    icon: 'UserCircleIcon',
     type: "text",
     disabled: false,
     errors: null
@@ -361,7 +356,7 @@ const editAdminOtherDetails: _IDetail[] = [
     placeholder: "Creation Date",
     value: "created at date",
     label: "Date of Registration",
-    icon: CalendarDaysIcon,
+    icon: 'CalendarDaysIcon',
     type: "text",
     disabled: true,
     errors: null
@@ -371,7 +366,7 @@ const editAdminOtherDetails: _IDetail[] = [
     placeholder: "Updated Date",
     value: "updated at date",
     label: "Date of Last Update",
-    icon: CalendarDaysIcon,
+    icon: 'CalendarDaysIcon',
     type: "text",
     disabled: true,
     errors: null
@@ -384,7 +379,7 @@ const editAdminContactDetails: _IDetail[] = [
     placeholder: "Enter Contact",
     value: "contact",
     label: "Contact No",
-    icon: PhoneIcon,
+    icon: 'PhoneIcon',
     type: "text",
     disabled: false,
     errors: null
@@ -394,7 +389,7 @@ const editAdminContactDetails: _IDetail[] = [
     placeholder: "Enter Area",
     value: "test area",
     label: "Area",
-    icon: MapPinIcon,
+    icon: 'MapPinIcon',
     type: "text",
     disabled: false,
     errors: null
@@ -404,7 +399,7 @@ const editAdminContactDetails: _IDetail[] = [
     placeholder: "Enter City",
     value: "Accra",
     label: "City",
-    icon: MapPinIcon, // You might want to use a different icon here
+    icon: 'MapPinIcon', // You might want to use a different icon here
     type: "text",
     disabled: false,
     errors: null
@@ -414,7 +409,7 @@ const editAdminContactDetails: _IDetail[] = [
     placeholder: "Enter State",
     value: "state",
     label: "State",
-    icon: GlobeAltIcon, // You might want to use a different icon here
+    icon: 'GlobeAltIcon', // You might want to use a different icon here
     type: "text",
     disabled: false,
     errors: null
@@ -424,7 +419,7 @@ const editAdminContactDetails: _IDetail[] = [
     placeholder: "Enter Pincode",
     value: "pinCode",
     label: "Pincode",
-    icon: IdentificationIcon, // You might want to use a different icon here
+    icon: 'IdentificationIcon', // You might want to use a different icon here
     type: "text",
     disabled: false,
     errors: null

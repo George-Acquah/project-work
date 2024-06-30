@@ -4,33 +4,36 @@ import React from "react";
 import { useFormState } from "react-dom";
 import { cardsBg } from "../themes";
 import CommonInput, { GlobalError, InputGroup } from "./common-inputs";
-import { EditBtn } from "./buttons";
+import { FormBtn } from "./buttons";
 import { groupFieldConfigs } from "@/utils/functions/forms.functions";
 
-export default function EditForms({
-  id,
-  type,
-  updateFunction,
-  formType,
-  route,
-  fieldConfigs,
-  data,
-}: EditFormsProps) {
+export default function Forms({
+  id, // Resource ID (used for update)
+  type, // Type of resource (e.g., "User")
+  action, // Function to handle form submission
+  actionType = "add", // Type of action ("add" or "update")
+  formType, // Form type ("single" or "grouped")
+  route, // Route to navigate after form submission
+  fieldConfigs, // Configuration for form fields
+  data, // Initial form data (used for update)
+}: _IForms) {
   // Initial state for form
   const initialState: any = {
     message: null,
     errors: {},
   };
 
-  // Function to update the entity with its ID
-  const updateEntityWithId = updateFunction.bind(null, id);
+  const resolvedAction = actionType === "add" ? action : action.bind(null, id);
 
   // Use useFormState hook for form state
-  const [state, dispatch] = useFormState(updateEntityWithId, initialState);
+  const [state, dispatch] = useFormState(resolvedAction, initialState);
 
   // Group field configurations
   const groupedFieldConfigs = groupFieldConfigs(fieldConfigs);
   const groupData = data ?? {};
+
+  const label = actionType === "add" ? "Add" : "Update";
+  const text = actionType === "add" ? "Adding" : "Updating";
 
   return (
     <form action={dispatch} className={`rounded-md ${cardsBg} p-4 md:p-6`}>
@@ -41,18 +44,7 @@ export default function EditForms({
               return (
                 <CommonInput
                   key={field.id}
-                  id={field.id}
-                  placeholder={field.placeholder}
-                  input_type={field.input_type}
-                  options={field.options}
-                  radio={field.radio}
-                  width={field.width}
-                  label={field.label}
-                  icon={field.icon}
-                  type={field.type}
-                  mt={field.mt}
-                  bg={field.bg}
-                  value={field.value}
+                  {...field} // Spread the field properties
                   errors={state?.type === "error" ? state?.errors : null}
                 />
               );
@@ -73,10 +65,10 @@ export default function EditForms({
         )}
       </div>
 
-      <EditBtn
+      <FormBtn
         href={route}
-        text={`Updating ${type}`}
-        label={`Update ${type}`}
+        text={`${text} ${type}`}
+        label={`${label} ${type}`}
       />
       <GlobalError message={state.message ?? null} />
     </form>
