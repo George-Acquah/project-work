@@ -22,9 +22,8 @@ export default async function Page({ params }: _IdParams) {
   return (
     <main>
       <Breadcrumbs breadcrumbs={CENTERS_BREADCRUMBS(id).UPDATE_CENTER} />
-      {/* <EditApplicantForm applicant={applicant} roles={roles} /> */}
       <h1 className="text-center text-3xl">{JSON.stringify(center)}</h1>
-      <UpdateCenter id={id} label={"Center"} href={dashboardRoutes.PARKING_LOTS.BASE} />
+      <UpdateCenter id={id} label={"Center"} href={dashboardRoutes.PARKING_LOTS.BASE} formType={"group"} />
     </main>
   );
 }
