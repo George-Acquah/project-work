@@ -1,6 +1,5 @@
 import { dashboardRoutes } from "@/app/lib/routes";
 import { bodyBg, cardsBg } from "@/app/ui/themes";
-import { AtSymbolIcon, UserIcon } from "@heroicons/react/24/outline";
 
 const addUserFields = (options: string[]) => {
   return [

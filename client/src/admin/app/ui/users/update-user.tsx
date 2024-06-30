@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
 import { fetchUserById, fetchUserProfile, fetchUserTypes } from "@/app/lib/requests";
 import { updateUser } from "@/app/lib/actions";
-import EditForms from "../shared/edit-forms";
 import { updateUserFields } from "@/constants/users.constants";
+import Forms from "../shared/common-form";
 
 export default async function UpdateUser({ id, label, href, formType  }: _IUpdate) {
   const [{ data: user }, { data: userTypes }, { data: profile }] =
@@ -32,14 +32,21 @@ export default async function UpdateUser({ id, label, href, formType  }: _IUpdat
           },
         ]}
       />
-      <EditForms
+      <Forms
         id={id}
         route={href}
         type={label}
-        updateFunction={updateUser}
+        actionType="update"
+        action={updateUser}
         formType="group"
         data={user}
-        fieldConfigs={updateUserFields(userTypes, user.isVerified, user, profile, formType)}
+        fieldConfigs={updateUserFields(
+          userTypes,
+          user.isVerified,
+          user,
+          profile,
+          formType
+        )}
       />
     </main>
   );

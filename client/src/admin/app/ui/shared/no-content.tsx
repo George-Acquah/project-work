@@ -17,7 +17,7 @@ const NoContentFound = ({ columnCount }: { columnCount: number }) => {
             </Title>
             {/* Description */}
             <p className="text-gray-500">
-              We couldn't find any data to display here. Try refreshing the
+              We couldn&apos;t find any data to display here. Try refreshing the
               page.
             </p>
             {/* Refresh Button */}
