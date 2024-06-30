@@ -5,7 +5,7 @@ import { fetchUserById, fetchUserProfile, fetchUserTypes, verifyUser } from "@/a
 import { updateUser } from "@/app/lib/actions";
 import { dashboardRoutes } from "@/app/lib/routes";
 import { updateUserFields } from "@/constants/users.constants";
-import EditForms from "@/app/ui/shared/edit-forms";
+import Forms from "@/app/ui/shared/common-form";
 
 const UpdateAdminProfile = async () => {
   const session = await auth();
@@ -27,11 +27,12 @@ const UpdateAdminProfile = async () => {
     <main>
       <Title>Edit Your Profile Here</Title>
       <div className="mt-8" />
-      <EditForms
+      <Forms
         id={admin._id}
         route={`${dashboardRoutes.ADMIN.BASE}`}
         type="user"
-        updateFunction={updateUser}
+        action={updateUser}
+        actionType="update"
         formType="group"
         data={admin}
         fieldConfigs={updateUserFields(userTypes, admin.isVerified, admin, profile, 'group')}

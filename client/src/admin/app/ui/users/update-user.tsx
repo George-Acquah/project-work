@@ -5,6 +5,13 @@ import { updateUser } from "@/app/lib/actions";
 import { updateUserFields } from "@/constants/users.constants";
 import Forms from "../shared/common-form";
 
+interface _IUpdate {
+  id: string;
+  label: string;
+  href: string;
+  formType?: 'group' | 'single';
+}
+
 export default async function UpdateUser({ id, label, href, formType  }: _IUpdate) {
   const [{ data: user }, { data: userTypes }, { data: profile }] =
     await Promise.all([
