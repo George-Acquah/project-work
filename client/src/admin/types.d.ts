@@ -83,24 +83,7 @@ interface EditFormsProps {
   data?: Record<string, any>
 }
 
-// Interface for field configuration
-interface FieldConfig {
-  id: string;
-  placeholder: string;
-  value?: any;
-  label: string;
-  width?: string;
-  bg?: string;
-  input_type?: "select" | "radio" | "textarea"; // I'll add more here and then
-  icon?: string;
-  options?: string[];
-  radio?: { id: string; value: string; label: string; checked: boolean }[];
-  type: string;
-  disabled?: boolean;
-  tooltip?: boolean;
-  mt?: boolean;
-  group?: string; // New property to define the group
-}
+
 interface _ILoginError {
   username?: string[];
   password?: string[];
@@ -112,6 +95,17 @@ interface _IFetcher {
   token?: string;
   method?: RequestMethod;
   cache?: RequestCache;
+}
+
+interface _IForms {
+  id?: string;
+  action: any;
+  actionType: 'add' | 'update',
+  type: string;
+  route: string;
+  formType: "group" | "single";
+  fieldConfigs: _IDetail[]; // Array of field configurations
+  data?: Record<string, any>;
 }
 
 interface _IFeedback {
@@ -550,12 +544,6 @@ interface _ITransaction {
 
 // UUU
 
-interface _IUpdate {
-  id: string;
-  label: string;
-  href: string;
-  formType: 'single' | 'group' = 'single';
-}
 interface _IUser {
   _id: string;
   email: string;
