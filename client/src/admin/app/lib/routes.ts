@@ -52,9 +52,23 @@ const dashboardRoutes = {
     EDIT: "/dashboard/slots/edit/",
     VIEW: "/dashboard/slots/view/",
   },
-  BOOKINGS: {
-    BASE: "/dashboard/bookings",
-    VIEW: "/dashboard/bookings/view/",
+  RESERVATIONS: {
+    BASE: "/dashboard/reservations",
+    VIEW: "/dashboard/reservations/view/",
+  },
+  PAYMENTS: {
+    INCOME: {
+      BASE: "/dashboard/transactions/income",
+      VIEW: "/dashboard/transactions/incomeview",
+    },
+    WITHDRAWAL: {
+      BASE: "/dashboard/transactions/income",
+      VIEW: "/dashboard/transactions/incomeview",
+    },
+  },
+  VEHICLES: {
+    BASE: "/dashboard/vehicles",
+    VIEW: "/dashboard/vehicles/view/",
   },
   REPORTS: {
     BASE: "/dashboard/reports",
