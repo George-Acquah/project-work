@@ -1,16 +1,8 @@
 import { _ILookup } from '../interfaces/responses.interface';
 import { _TUser } from '../interfaces/users.interface';
+import { _IAggregationFields } from './interface';
 
-interface _IUserAggregation<T> {
-  /** test */
-  lookups?: _ILookup[];
-  unwind_fields?: (keyof T)[];
-  project_fields?: (keyof T)[];
-  count_fields?: string[];
-  field_names?: string[];
-}
-
-const FETCH_USERS_BY_ADMIN_AGGREGATION: _IUserAggregation<_TUser> = {
+const FETCH_USERS_BY_ADMIN_AGGREGATION: _IAggregationFields<_TUser> = {
   lookups: [
     {
       from: 'profiles',

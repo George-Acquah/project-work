@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  ConflictException,
-  Injectable,
-  Logger,
-  NotAcceptableException
-} from '@nestjs/common';
+import { Injectable, Logger, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
+import { FETCH_VEHICLES_BY_ADMIN_AGGREGATION } from 'src/shared/constants/vehicles.constants';
+import { sanitizeVehiclesFn } from 'src/shared/helpers/vehicles.sanitizers';
 import {
   _ICloudRes,
   _IDbVehicleImage
@@ -19,6 +16,7 @@ import {
   _IDbVehicleInsurance,
   _IDbVehicleNew,
   _IDbVehicleRegistration,
+  _IFormattedVehicle,
   _INewVehicle,
   _IVehicle,
   _IVehicleNew
@@ -27,10 +25,6 @@ import { VehicleImage } from 'src/shared/schemas/vehicle-image.schema';
 import { VehicleInsurance } from 'src/shared/schemas/vehicle-insurance.schema';
 import { VehicleRegistration } from 'src/shared/schemas/vehicle-registration.schema';
 import { Vehicle } from 'src/shared/schemas/vehicle.schema';
-import {
-  sanitizeVehicles,
-  sanitizevehicle
-} from 'src/shared/utils/vehicles.utils';
 import { StorageService } from 'src/storage/storage.service';
 
 @Injectable()
@@ -78,41 +72,26 @@ export class VehiclesService {
   //   }
   // }
 
-  async getVehiclesWithVirtuals(
-    query?: string,
-    page = 1,
-    limit = 5
-  ): Promise<_IVehicleNew[]> {
-    const match_fields = ['vehicle_no'];
-    const lookups: _ILookup[] = [
-      {
-        from: 'vehicleimages',
-        as: 'vehicle_images',
-        foreignField: 'vehicle'
-      },
-      {
-        from: 'vehicleinsurances',
-        as: 'vehicle_insurance',
-        foreignField: 'vehicle'
-      },
-      {
-        from: 'vehicleregistrations',
-        as: 'vehicle_registrations',
-        foreignField: 'vehicle'
-      }
-    ];
-    const vehiclesWithVirtuals: _IVehicleNew[] =
-      await this.aggregationService.virtualFieldsPipeline(
-        this.vehicleModel,
-        match_fields,
-        query,
-        lookups,
-        page,
-        limit
-      );
-    console.log(vehiclesWithVirtuals);
+  async getVehiclesWithVirtuals(query?: string, page = 1, limit = 5) {
+    const { project_fields, lookups, unwind_fields, count_fields } =
+      FETCH_VEHICLES_BY_ADMIN_AGGREGATION;
+    const vehicles = await this.aggregationService.dynamicDocumentsPipeline<
+      _IDbVehicleNew,
+      _IFormattedVehicle[]
+    >(
+      this.vehicleModel,
+      false,
+      project_fields,
+      {},
+      lookups,
+      unwind_fields,
+      count_fields,
+      page,
+      limit,
+      sanitizeVehiclesFn
+    );
 
-    return vehiclesWithVirtuals;
+    return vehicles;
   }
 
   // async getDriverVehicles(driver: string): Promise<_IVehicle[]> {
