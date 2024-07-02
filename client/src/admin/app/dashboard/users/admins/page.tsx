@@ -1,7 +1,7 @@
 import { UsersTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { lusitana } from "@/app/ui/font";
+import { inter } from "@/app/ui/font";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
@@ -30,7 +30,7 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Admins</h1>
+        <h1 className={`${inter.className} text-2xl`}>Admins</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search entityType="USERS" />

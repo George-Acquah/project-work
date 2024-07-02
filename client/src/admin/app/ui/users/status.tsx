@@ -1,9 +1,17 @@
 import { FC } from "react";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { CheckIcon } from "@heroicons/react/24/solid";
 import { Badge } from "@tremor/react";
 
 // Define a type for the valid status values
-export type _IStatus = "verified" | "not verified" | "available" | "not available";
+export type _IStatus =
+  | "verified"
+  | "not verified"
+  | "available"
+  | "not available"
+  | "insured"
+  | "not insured"
+  | "has reservation"
+  | "no reservation";
 
 // Define the structure of each status object in the status map
 interface StatusInfo {
@@ -17,22 +25,42 @@ const statusMap: Record<_IStatus, StatusInfo> = {
   verified: {
     text: "Verified",
     icon: CheckIcon,
-    className: "bg-green-500 text-white",
+    className: "bg-green-500 ",
   },
   "not verified": {
     text: "Unverified",
-    icon: XMarkIcon,
-    className: "bg-red-500 text-neutral-100",
+    icon: undefined,
+    className: "bg-red-500 border-red-600 ",
   },
   available: {
     text: "Available",
     icon: CheckIcon,
-    className: "bg-green-500 text-white",
+    className: "bg-green-500 ",
   },
   "not available": {
     text: "Unavailable",
-    icon: XMarkIcon,
-    className: "bg-red-500 text-neutral-100",
+    icon: undefined,
+    className: "bg-red-500 border-red-600",
+  },
+  insured: {
+    text: "Insured",
+    icon: CheckIcon,
+    className: "bg-green-500 ",
+  },
+  "not insured": {
+    text: "Not Insured",
+    icon: undefined,
+    className: "bg-red-500 border-red-600",
+  },
+  "has reservation": {
+    text: "Has Reservation",
+    icon: CheckIcon,
+    className: "bg-green-500 ",
+  },
+  "no reservation": {
+    text: "No Reservation",
+    icon: undefined,
+    className: "bg-red-500 border-red-600",
   },
 };
 
@@ -48,7 +76,7 @@ const StatusBadge: FC<StatusBadgeProps> = ({ status }) => {
 
   return (
     <Badge
-      className={`rounded-lg ${statusInfo.className}`}
+      className={`rounded px-2 py-1 outline-none text-white ${statusInfo.className}`}
       icon={statusInfo.icon}
     >
       {statusInfo.text}

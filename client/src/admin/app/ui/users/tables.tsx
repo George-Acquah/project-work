@@ -2,6 +2,7 @@ import {
   fetchFilteredParkingCenters,
   fetchFilteredSlots,
   fetchFilteredUsers,
+  fetchVehicles,
 } from "@/app/lib/requests";
 import TableComponent from "../shared/table";
 import { UserType, tableColumns } from "@/app/lib/constants";
@@ -71,6 +72,30 @@ export const SlotsTable = async ({
       currentPage={currentPage}
       data={centers}
       entityType="slots"
+    />
+  );
+};
+
+export const VehiclesTable = async ({
+  query,
+  currentPage,
+  pageSize,
+}: _ISpecificTableProps) => {
+  const vehicles = (await fetchVehicles(
+    query,
+    currentPage,
+    pageSize
+  )) as _IFormattedVehicle[];
+
+  console.log(vehicles);
+
+  return (
+    <TableComponent
+      columnData={tableColumns.vehiclesTableColumn}
+      query={query}
+      currentPage={currentPage}
+      data={vehicles}
+      entityType="vehicles"
     />
   );
 };

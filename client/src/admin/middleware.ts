@@ -15,17 +15,16 @@ export default auth((req) => {
   const isAuthenticated = !!req.auth; // Check if the user is authenticated
   const { pathname } = req.nextUrl;
 
-  // Rewrite unauthenticated users trying to access loggedInRoutes to login page
+  // Redirect unauthenticated users trying to access loggedInRoutes to login page
   if (!isAuthenticated && loggedInRoutes.some(path => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL(`/auth/login`, req.nextUrl));
   }
 
-  // Rewrite authenticated users trying to access loggedOutRoutes to dashboard
+  // Redirect authenticated users trying to access loggedOutRoutes to dashboard
   if (isAuthenticated && loggedOutRoutes.some(path => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL(`/dashboard`, req.nextUrl));
   }
 
   // If the request does not match any of the specific routes, continue with the request
-  console.log('Continuing with the request: ');
   return NextResponse.next();
 });

@@ -18,6 +18,7 @@ const endpoints = {
     DELETE_USER: "users/admin",
   },
   VEHICLES: {
+    BASE: "customer/vehicle",
     GET_ALL_VEHICLES: "customer/vehicle",
     GET_DRIVER_VEHICLES: "customer/vehicle/driver",
     GET_SINGLE_VEHICLE: "customer/vehicle/:id",

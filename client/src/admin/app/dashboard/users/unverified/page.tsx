@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { lusitana } from "@/app/ui/font";
+import { inter } from "@/app/ui/font";
 import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default async function ApplicationsPage({
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>
+        <h1 className={`${inter.className} text-2xl`}>
           Unverifed Applicants
         </h1>
       </div>

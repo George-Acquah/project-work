@@ -243,6 +243,18 @@ async function VerificationButton({ id, status = false }: _IVerificationBtn) {
   );
 }
 
+export function NormalAddBtn({ href, label }: _ISafeBtn) {
+  return (
+    <Link
+      href={href}
+      className={`flex h-11 items-center rounded bg-blue-600 px-4 text-base font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
+    >
+      <span className="hidden md:block">{`Add ${label}`}</span>
+      <PlusIcon className="h-5 md:hidden" />
+    </Link>
+  );
+}
+
 export {
   AddCenter,
   AddCustomer,
