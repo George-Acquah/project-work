@@ -9,7 +9,6 @@ export default async function Layout({ children }: _IChildren) {
 
   return (
     <div className="grid h-screen grid-cols-1 md:grid-cols-[16rem,1fr]">
-      {/* Sidebar with fixed width on larger screens */}
       <div className="">
         <SideNav />
       </div>

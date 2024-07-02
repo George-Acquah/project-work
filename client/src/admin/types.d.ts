@@ -23,10 +23,12 @@ interface Breadcrumb {
   active?: boolean;
 }
 
-interface _IBtn {
+interface _ISafeBtn {
   href: string;
-  text: string;
   label: string;
+}
+interface _IBtn extends _ISafeBtn{
+  text: string;
 }
 
 
@@ -158,6 +160,21 @@ interface _IFormattedCenter {
   image: string | null;
   isAvailable: string;
   capacity: number;
+}
+
+interface _IFormattedVehicle {
+  [key: string]: string | number | null;
+  _id: string;
+  vehicle_no: string;
+  registration_number: string;
+  description: string;
+  registration_date: string;
+  expiry_date: string;
+  last_updated: string;
+  has_insurance: boolean;
+  image: string | null;
+  isVerified: string;
+  has_reservation: string;
 }
 
 interface _IFormattedSlot {
@@ -683,6 +700,8 @@ interface _ISearchParams {
   CENTERS: string;
   SLOTS: string;
   ENTITY_TYPE: string;
+  VEHICLES: string;
+  RESERVATIONS: string;
 }
 
 interface _IThemeContext {
@@ -733,7 +752,7 @@ interface _ITableContext {
 
 type _TVehicleImage = _Image;
 
-type _TableRowType = _IFormattedCenter | _IFormattedUser | _IFormattedSlot;
+type _TableRowType = _IFormattedCenter | _IFormattedUser | _IFormattedSlot | _IFormattedVehicle;
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";
 type _TFields = "text" | "radio" | "select" | "email";
