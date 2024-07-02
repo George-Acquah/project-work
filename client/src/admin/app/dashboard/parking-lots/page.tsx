@@ -1,12 +1,13 @@
 import { UsersTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { lusitana } from "@/app/ui/font";
-import { AddCenter } from "@/app/ui/users/buttons";
+import { inter } from "@/app/ui/font";
+import { NormalAddBtn } from "@/app/ui/users/buttons";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { CentersTable } from "@/app/ui/users/tables";
 import Search from "@/app/ui/shared/search";
+import { dashboardRoutes } from "@/app/lib/routes";
 
 export const metadata: Metadata = {
   title: "Parking Centers",
@@ -30,11 +31,11 @@ export default async function ParkingCenterPage({ searchParams }: ISearchParams)
   return (
     <div className="">
       <div className="flex items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Parking Centers</h1>
+        <h1 className={`${inter.className} text-2xl`}>Parking Centers</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType="CENTERS" placeholder="Search by Center Name"/>
-        <AddCenter />
+        <Search entityType="CENTERS" placeholder="Search by Center Name" />
+        <NormalAddBtn href={dashboardRoutes.PARKING_LOTS.ADD} label="Parking Center" />
       </div>
       <Suspense key={center + currentPage} fallback={<UsersTableSkeleton />}>
         <CentersTable
