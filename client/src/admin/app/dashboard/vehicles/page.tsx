@@ -1,12 +1,13 @@
 import { UsersTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { lusitana } from "@/app/ui/font";
-import { AddSlot } from "@/app/ui/users/buttons";
+import { inter } from "@/app/ui/font";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
-import { SlotsTable } from "@/app/ui/users/tables";
+import { VehiclesTable } from "@/app/ui/users/tables";
 import Search from "@/app/ui/shared/search";
+import { NormalAddBtn } from "@/app/ui/users/buttons";
+import { dashboardRoutes } from "@/app/lib/routes";
 
 export const metadata: Metadata = {
   title: "Vehicles",
@@ -19,7 +20,7 @@ interface ISearchParams {
   };
 }
 
-export default async function SlotsPage({ searchParams }: ISearchParams) {
+export default async function VehiclesPage({ searchParams }: ISearchParams) {
   const vehicles = searchParams?.vehicles || "";
   const currentPage = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.size) || 5;
@@ -34,14 +35,14 @@ export default async function SlotsPage({ searchParams }: ISearchParams) {
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Slots</h1>
+        <h1 className={`${inter.className} text-2xl`}>Vehicles</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search entityType="SLOTS" placeholder="Search by Slot Name" />
-        <AddSlot />
+        <Search entityType="VEHICLES" placeholder="Search by Vehicle Number" />
+        <NormalAddBtn href={dashboardRoutes.VEHICLES.ADD} label="Vehicle" />
       </div>
       <Suspense key={vehicles + currentPage} fallback={<UsersTableSkeleton />}>
-        <SlotsTable
+        <VehiclesTable
           query={vehicles}
           currentPage={currentPage}
           pageSize={pageSize}
