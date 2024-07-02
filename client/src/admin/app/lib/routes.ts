@@ -54,6 +54,7 @@ const dashboardRoutes = {
   },
   RESERVATIONS: {
     BASE: "/dashboard/reservations",
+    ADD: "/dashboard/reservations/add",
     VIEW: "/dashboard/reservations/view/",
   },
   PAYMENTS: {
@@ -69,6 +70,7 @@ const dashboardRoutes = {
   VEHICLES: {
     BASE: "/dashboard/vehicles",
     VIEW: "/dashboard/vehicles/view/",
+    ADD: "/dashboard/vehicles/add",
   },
   REPORTS: {
     BASE: "/dashboard/reports",

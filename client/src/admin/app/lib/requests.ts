@@ -154,6 +154,51 @@ async function fetchFilteredSlots(
 }
 //END SLOTS
 
+//BEGIN VEHICLES
+async function fetchVehicles(
+  vehicles: string,
+  currentPage: number,
+  pageSize: number
+) {
+try {
+  const url = endpoints.VEHICLES.BASE;
+  const response = await fetcher<_IFormattedVehicle[]>(
+    `${url}?vehicles=${vehicles}&currentPage=${currentPage}&size=${pageSize}`,
+    "GET",
+    "no-store"
+  );
+  // return formatCentersTable(response.data);
+  return response.data;
+} catch (error: any) {
+  console.log(error)
+  const { ERROR_URL } = redirectDynamicUrls(
+    "/dashboard",
+    error.message ?? "test",
+    "something random"
+  );
+  // redirect(ERROR_URL);
+}
+}
+
+async function fetchVehicleById(centers_id: string) {
+  try {
+    const url = `${endpoints.PARKING_CENTER.BASE}/${centers_id}`;
+    const response = await fetcher<_IParkingCenter>(url, "GET", "no-store");
+    return response;
+  } catch (error: any) {
+    const { ERROR_URL } = redirectDynamicUrls(
+      "/dashboard/users/parking-lots",
+      error.message ?? "test",
+      "something random"
+    );
+    console.log(error.name);
+    console.log(error.message);
+    redirect(ERROR_URL);
+  }
+}
+
+//END VEHICLES
+
 export {
   fetchFilteredUsers,
   fetchUsersPage,
@@ -164,4 +209,6 @@ export {
   fetchCenterById,
   fetchFilteredSlots,
   verifyUser,
+
+  fetchVehicles
 };

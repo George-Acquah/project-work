@@ -194,6 +194,19 @@ const tableColumns = {
     "PRICE/RATE", // Added price/rate column (if applicable)
   ],
 
+  vehiclesTableColumn: [
+    "IMAGE",
+    "VEHICLE NUMBER",
+    "REGISTRATION NUMBER",
+    "DESCRIPTION",
+    "DATE REGISTERED",
+    "EXPIRY DATE",
+    "LAST UPDATED",
+    'HAS INSURANCE',
+    "HAS RESERVATION",
+    "IS VERIFIED",
+  ],
+
   // Transactions Table
   transactionsTableColumn: [
     "TRANSACTION ID",
