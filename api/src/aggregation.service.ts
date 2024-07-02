@@ -339,7 +339,7 @@ export class AggregationService {
     identifier: string // Rename to identifier for flexibility
   ): Promise<string | null> {
     try {
-      const pipeline = (await model.aggregate([
+      const pipeline = await model.aggregate([
         {
           $match: {
             $or: [
@@ -356,7 +356,7 @@ export class AggregationService {
         {
           $limit: 1
         }
-      ])); // Return null if no document found
+      ]); // Return null if no document found
 
       return pipeline[0]._id as unknown as string | null;
     } catch (error) {

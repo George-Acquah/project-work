@@ -528,7 +528,7 @@ export class UsersService {
           'state',
           'pinCode'
         ],
-        { user: new mongoose.Types.ObjectId(user) },
+        { user: new mongoose.Types.ObjectId(user) }
         // [],
         // 'user profile'
       );
@@ -538,7 +538,7 @@ export class UsersService {
       if (extra) {
         return {
           ...profile,
-          _id: user,
+          _id: user
           // user_image: user?.user_image?.file_id ?? null,
           // phone_number: user.phone_number,
           // email: user.email
