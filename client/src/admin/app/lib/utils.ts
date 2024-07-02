@@ -160,6 +160,15 @@ function formatCentersTable(centers: _IParkingCenter[]): _IFormattedCenter[] {
   }));
 }
 
+// function formatVehiclesTable(vehicles: _IVehicle[]): _IFormattedVehicle[] {
+//   return vehicles.map((vehicle) => ({
+//     _id: vehicle._id,
+//     image: null,
+//     vehicle_no: vehicle.vehicle_no,
+
+//   }));
+// }
+
 function formatSlotsTable(slots: _ISlot[]): _IFormattedSlot[] {
   return slots.map((slot) => ({
     _id: slot._id,
@@ -284,6 +293,7 @@ export {
   getDistinctLatestUrl,
   formatusersTable,
   formatCentersTable,
+  // formatVehiclesTable,
   formatSlotsTable,
   formatAdminDetails,
   formatKey,
