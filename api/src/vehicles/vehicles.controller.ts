@@ -26,7 +26,7 @@ export class VehiclesController {
     private readonly uploadsService: UploadService
   ) {}
 
-  @UseGuards(VehicleAuthGuard)
+  // @UseGuards(VehicleAuthGuard)
   @Get()
   async getAllVehicles(
     @Query('vehicles') query: string,

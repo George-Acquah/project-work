@@ -94,4 +94,19 @@ interface _INewVehicle extends _IAddVehicle {
   driver: string;
 }
 
+export interface _IFormattedVehicle {
+  [key: string]: string | boolean | null;
+  _id: string;
+  vehicle_no: string;
+  isVerified: string;
+  registration_number: string;
+  description: string;
+  registration_date: string;
+  expiry_date: string;
+  last_updated: string;
+  has_insurance: string;
+  image: string | null;
+  has_reservation: string;
+}
+
 export { _IAddVehicle, _INewVehicle };
