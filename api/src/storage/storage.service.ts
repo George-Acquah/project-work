@@ -15,16 +15,12 @@ export class StorageService {
   constructor(private readonly configService: ConfigService) {
     const {
       mediaBucket,
-      path,
-      url
+      path
     }: { mediaBucket: string; path: string; url: string } =
       this.configService.get('GCPStorageConfig');
 
-    // this.url = url;
-
-    this.storage = new Storage({
-      keyFilename: path
-    });
+    const credentials = JSON.parse(path);
+    this.storage = new Storage({ credentials });
 
     this.bucket = mediaBucket;
     this.cache = new Map(); // initialiizes the cache
@@ -126,17 +122,35 @@ export class StorageService {
       // Check if the file exists
       const [exists] = await file.exists();
       if (!exists) {
+        console.error('File does not exist:', fileName);
         throw new BadRequestException('File not found.');
       }
 
+      console.log('FILE EXISTS.......');
+
       // Get the file metadata to set the correct content type
       const [metadata] = await file.getMetadata();
-      response.set('Content-Type', metadata.contentType);
+      console.log(`Streaming file with MIME type: ${metadata.contentType}`);
+      response.set(
+        'Content-Type',
+        metadata.contentType || 'application/octet-stream'
+      );
 
       // Stream the file to the response
-      file.createReadStream().pipe(response);
+      // file.createReadStream().pipe(response);
+      // Stream the file to the response
+      file
+        .createReadStream()
+        .on('error', (err) => {
+          console.error('Error during streaming:', err);
+          response.status(500).send('Internal Server Error');
+        })
+        .pipe(response)
+        .on('finish', () => {
+          console.log('File streaming completed:', fileName);
+        });
     } catch (error) {
-      console.error('Error streaming file:', error);
+      console.error('Error in streamFileToResponse method:', error);
       throw new BadRequestException(
         error.message || 'Error streaming file. Please try again.'
       );
