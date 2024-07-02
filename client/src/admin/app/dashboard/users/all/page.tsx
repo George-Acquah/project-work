@@ -1,8 +1,8 @@
 import { UsersTableSkeleton, FilterSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { lusitana } from "@/app/ui/font";
-import { AddUser } from "@/app/ui/users/buttons";
+import { inter } from "@/app/ui/font";
+import { NormalAddBtn } from "@/app/ui/users/buttons";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
@@ -10,6 +10,7 @@ import UsersTable from "@/app/ui/users/tables";
 import Filters from "@/app/ui/shared/filters";
 import AllUsersFilter from "@/app/ui/users/all-users.filter";
 import Search from "@/app/ui/shared/search";
+import { dashboardRoutes } from "@/app/lib/routes";
 
 export const metadata: Metadata = {
   title: "Users",
@@ -33,7 +34,7 @@ export default async function AllUsersPage({ searchParams }: ISearchParams) {
   return (
     <main>
       <div className="flex items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Users</h1>
+        <h1 className={`${inter.className} text-2xl`}>Users</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search entityType="USERS" />
@@ -42,7 +43,10 @@ export default async function AllUsersPage({ searchParams }: ISearchParams) {
             <AllUsersFilter />
           </Suspense>
         </Filters>
-        <AddUser />
+        <NormalAddBtn
+          href={dashboardRoutes.USERS.ALL.ADD}
+          label="User"
+        />
       </div>
       <Suspense
         // Ensure this key only changes when fetching new data

@@ -1,13 +1,14 @@
 import { UsersTableSkeleton } from "@/app/ui/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { lusitana } from "@/app/ui/font";
-import { AddCustomer } from "@/app/ui/users/buttons";
+import { inter } from "@/app/ui/font";
+import { NormalAddBtn } from "@/app/ui/users/buttons";
 import Pagination from "@/app/ui/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
 import UsersTable from "@/app/ui/users/tables";
 import Search from "@/app/ui/shared/search";
+import { dashboardRoutes } from "@/app/lib/routes";
 
 export const metadata: Metadata = {
   title: "Customers",
@@ -31,17 +32,19 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
-        <h1 className={`${lusitana.className} text-2xl`}>Customers</h1>
+        <h1 className={`${inter.className} text-2xl`}>Customers</h1>
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search entityType="USERS" />
-        <AddCustomer />
+        <NormalAddBtn href={dashboardRoutes.USERS.CUSTOMERS.ADD} label="Customer" />
       </div>
-      <Suspense
-        key={user + currentPage}
-        fallback={<UsersTableSkeleton />}
-      >
-        <UsersTable query={user} currentPage={currentPage} pageSize={pageSize} type={UserType.CUSTOMER} />
+      <Suspense key={user + currentPage} fallback={<UsersTableSkeleton />}>
+        <UsersTable
+          query={user}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          type={UserType.CUSTOMER}
+        />
       </Suspense>
       <div className="mt-5 flex w-full justify-center flex-wrap gap-2 space-x-10">
         <Pagination totalPages={totalPages} />
