@@ -1,19 +1,19 @@
-"use client"
+"use client";
 import { useFormState, useFormStatus } from "react-dom";
-import { authenticate } from "../lib/actions";
+import { authenticate } from "../../lib/actions";
 import {
   secondaryBg,
   textColor,
   strongTextColor,
   providerBtnClass,
   loginBtnClass,
-} from "./themes";
-import { loginDetails } from "../lib/constants";
-import { SvgCheck, SvgGithub, SvgGoogle } from "../lib/icons";
-import { HRWithText } from "../auth/layout";
+} from "../themes";
+import { loginDetails } from "../../lib/constants";
+import { SvgCheck, SvgGithub, SvgGoogle } from "../../lib/icons";
+import { HRWithText } from "../../auth/layout";
 import Link from "next/link";
-import CommonInput from "./shared/common-inputs";
-import Loading from "./shared/loading";
+import CommonInput from "../shared/common-inputs";
+import Loading from "../shared/loading";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export default function LoginForm() {
@@ -21,7 +21,10 @@ export default function LoginForm() {
     type: undefined,
     message: null,
   };
-  const [state, dispatch] = useFormState<ActionResult, FormData>(authenticate, initialState);
+  const [state, dispatch] = useFormState<ActionResult, FormData>(
+    authenticate,
+    initialState
+  );
   const [loading, setLoading] = useState(false);
 
   return (
@@ -82,8 +85,8 @@ function LoginButton({
 }) {
   const { pending } = useFormStatus();
   useEffect(() => {
-    setLoading(pending)
-  }, [pending, setLoading])
+    setLoading(pending);
+  }, [pending, setLoading]);
   return (
     <button
       className={`w-full ${loginBtnClass} cursor-pointer`}
@@ -95,7 +98,10 @@ function LoginButton({
 }
 
 const GithubButton = () => (
-  <div className={`w-full ${providerBtnClass} cursor-pointer`} onClick={undefined}>
+  <div
+    className={`w-full ${providerBtnClass} cursor-pointer`}
+    onClick={undefined}
+  >
     <span className="mr-3">
       <SvgGithub />
     </span>
@@ -104,7 +110,10 @@ const GithubButton = () => (
 );
 
 const GoogleButton = () => (
- <div className={`w-full ${providerBtnClass} cursor-pointer`} onClick={undefined}>
+  <div
+    className={`w-full ${providerBtnClass} cursor-pointer`}
+    onClick={undefined}
+  >
     <span className="mr-3">
       <SvgGoogle />
     </span>
@@ -126,13 +135,15 @@ const RememberMe = () => (
               <SvgCheck />
             </span>
           </div>
-          
         </div>
         Keep me signed in
       </label>
     </div>
     <div>
-      <Link href="/auth/forgot-password" className="text-sm font-medium text-blue-400 hover:underline">
+      <Link
+        href="/auth/forgot-password"
+        className="text-sm font-medium text-blue-400 hover:underline"
+      >
         Forgot Password?
       </Link>
     </div>

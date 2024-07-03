@@ -1,7 +1,7 @@
 import { inter } from "@/app/ui/font";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../public/Scpl.png";
+import logo from "../../../public/Scpl.png";
 
 export default function SmartCarParkingAdminLogo({ home }: { home?: boolean }) {
   return (
