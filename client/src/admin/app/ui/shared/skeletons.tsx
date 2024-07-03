@@ -1,4 +1,4 @@
-import { bodyBg, cardsBg, secondaryBg, textColor } from "./themes";
+import { bodyBg, secondaryBg, textColor, cardsBg } from "../themes";
 
 // Define the CSS classes and animation
 const bg = "bg-white dark:bg-[#2C303B]";

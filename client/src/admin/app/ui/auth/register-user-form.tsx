@@ -3,19 +3,19 @@
 import { lusitana } from "@/app/ui/font";
 import { useFormState, useFormStatus } from "react-dom";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
-import Button from "./shared/button";
-import { authenticate } from "../lib/actions";
+import Button from "../shared/button";
+import { authenticate } from "../../lib/actions";
 import {
   secondaryBg,
   textColor,
   strongTextColor,
   providerBtnClass,
-} from "./themes";
-import { loginDetails } from "../lib/constants";
-import { SvgCheck, SvgGithub, SvgGoogle } from "../lib/icons";
-import { HRWithText } from "../auth/layout";
+} from "../themes";
+import { loginDetails } from "../../lib/constants";
+import { SvgCheck, SvgGithub, SvgGoogle } from "../../lib/icons";
+import { HRWithText } from "../../auth/layout";
 import Link from "next/link";
-import CommonInput from "./shared/common-inputs";
+import CommonInput from "../shared/common-inputs";
 
 export default function RegistrationForm() {
   const initialState: any = {
