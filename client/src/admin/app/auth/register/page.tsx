@@ -1,6 +1,4 @@
-import SmartCarParkingAdminLogo from "@/app/ui/logos";
 import { Metadata } from "next";
-import { secondaryBg, strongTextColor } from "@/app/ui/themes";
 import RegistrationForm from "@/app/ui/auth/register-user-form";
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import { UsersTableSkeleton } from "@/app/ui/skeletons";
+import { UsersTableSkeleton } from "@/app/ui/shared/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import AddCenter from "@/app/ui/centers/add-center";
