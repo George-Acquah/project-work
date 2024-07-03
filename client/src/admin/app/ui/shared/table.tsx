@@ -13,16 +13,8 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { UserType } from "../../lib/constants";
 import {
-  DeleteCenter,
-  DeleteCustomer,
-  DeleteOwner,
-  DeleteSlot,
-  DeleteUser,
-  EditCenter,
-  EditCustomer,
-  EditOwner,
-  EditSlot,
-  EditUser,
+  DeleteBtn,
+  NormalEditBtn,
   VerificationButton,
 } from "../users/buttons";
 import { cardBorder, cardsBg } from "../themes";
@@ -99,29 +91,34 @@ const TableButtonHelper = ({
   type,
   verify,
   status,
+  deleteAction,
 }: {
   id: string;
   entityType: string;
   type?: string;
+  deleteAction?: (id: string) => Promise<_IApiResponse<unknown> | undefined>;
   verify?: boolean;
   status?: boolean;
 }) => {
   const pathname = usePathname();
   const isVerification = verify && (
-    <VerificationButton id={id} status={status ?? false} action={undefined} />
+    <VerificationButton id={id} status={status ?? false} />
   );
   const userActions = (
     <div className="flex justify-end gap-3">
-      <EditUser id={id} path={pathname} />
-      <DeleteUser id={id} />
+      <NormalEditBtn href={`${pathname}/${id}/update`} />
+      {/* <DeleteUser id={id} /> */}
+      {deleteAction && (
+        <DeleteBtn id={id} label={"Delete User"} action={deleteAction} />
+      )}
     </div>
   );
 
-  if (entityType === "users") {
-    if (type === UserType.ALL || type === UserType.CUSTOMER) {
-      return isVerification || userActions;
-    }
-  }
+  // if (entityType === "users") {
+  //   if (type === UserType.ALL || type === UserType.CUSTOMER) {
+  //     return isVerification || userActions;
+  //   }
+  // }
 
   // Add more entity type cases as needed
   // For now, let's default to user actions if no special cases match
@@ -134,6 +131,7 @@ const TableComponent = ({
   columnData,
   type,
   entityType,
+  deleteAction,
 }: _ITableProps) => {
   const router = useRouter();
 
@@ -181,6 +179,7 @@ const TableComponent = ({
                       type={type}
                       id={item._id}
                       entityType={entityType}
+                      deleteAction = {deleteAction}
                     />
                   )}
                 </TableCell>

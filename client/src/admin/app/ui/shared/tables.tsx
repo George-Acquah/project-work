@@ -4,8 +4,9 @@ import {
   fetchFilteredUsers,
   fetchVehicles,
 } from "@/app/lib/requests";
-import TableComponent from "../shared/table";
+import TableComponent from "./table";
 import { UserType, tableColumns } from "@/app/lib/constants";
+import { deleteUser } from "@/app/lib/actions";
 
 const UsersTable = async ({
   query,
@@ -28,6 +29,7 @@ const UsersTable = async ({
       type={type}
       data={users}
       entityType="users"
+      deleteAction={deleteUser}
     />
   );
 };
@@ -50,6 +52,7 @@ export const CentersTable = async ({
       currentPage={currentPage}
       data={centers}
       entityType="centers"
+      deleteAction={deleteUser}
     />
   );
 };
@@ -72,6 +75,7 @@ export const SlotsTable = async ({
       currentPage={currentPage}
       data={centers}
       entityType="slots"
+      deleteAction={deleteUser}
     />
   );
 };
@@ -96,6 +100,7 @@ export const VehiclesTable = async ({
       currentPage={currentPage}
       data={vehicles}
       entityType="vehicles"
+      deleteAction={deleteUser}
     />
   );
 };
