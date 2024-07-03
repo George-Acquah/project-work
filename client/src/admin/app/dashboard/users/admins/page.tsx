@@ -1,11 +1,11 @@
-import { UsersTableSkeleton } from "@/app/ui/skeletons";
+import { UsersTableSkeleton } from "@/app/ui/shared/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { inter } from "@/app/ui/font";
-import Pagination from "@/app/ui/pagination";
+import Pagination from "@/app/ui/shared/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
-import UsersTable from "@/app/ui/users/tables";
+import UsersTable from "@/app/ui/shared/tables";
 import Search from "@/app/ui/shared/search";
 
 export const metadata: Metadata = {

@@ -1,12 +1,12 @@
-import { UsersTableSkeleton, FilterSkeleton } from "@/app/ui/skeletons";
+import { UsersTableSkeleton, FilterSkeleton } from "@/app/ui/shared/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { inter } from "@/app/ui/font";
 import { NormalAddBtn } from "@/app/ui/users/buttons";
-import Pagination from "@/app/ui/pagination";
+import Pagination from "@/app/ui/shared/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
-import UsersTable from "@/app/ui/users/tables";
+import UsersTable from "@/app/ui/shared/tables";
 import Filters from "@/app/ui/shared/filters";
 import AllUsersFilter from "@/app/ui/users/all-users.filter";
 import Search from "@/app/ui/shared/search";
@@ -43,10 +43,7 @@ export default async function AllUsersPage({ searchParams }: ISearchParams) {
             <AllUsersFilter />
           </Suspense>
         </Filters>
-        <NormalAddBtn
-          href={dashboardRoutes.USERS.ALL.ADD}
-          label="User"
-        />
+        <NormalAddBtn href={dashboardRoutes.USERS.ALL.ADD} label="User" />
       </div>
       <Suspense
         // Ensure this key only changes when fetching new data
