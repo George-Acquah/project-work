@@ -4,11 +4,17 @@ import { getAddbtnLabel } from "@/utils/functions/search.functions";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { PencilIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import { DeleteClientBtn } from "../shared/buttons";
 
 interface _IVerificationBtn {
   id: string;
   status: boolean;
-  action: any;
+}
+
+interface _IActionBtn {
+  id: string;
+  label: string;
+  action: (id: string) => Promise<_IApiResponse<unknown> | undefined>;
 }
 
 const btnClasses = {
@@ -65,7 +71,7 @@ function AddSlot() {
   );
 }
 
-function AddUser() { 
+function AddUser() {
   return (
     <Link href={`${dashboardRoutes.USERS.ALL.ADD}`} className={btnClasses.ADD}>
       <span className="hidden md:block">Add User</span>
@@ -125,12 +131,9 @@ function EditSlot({ id }: _Id) {
   );
 }
 
-function EditUser({ id, path }: _Id & { path: string}) {
+function EditUser({ id, path }: _Id & { path: string }) {
   return (
-    <Link
-      href={`${path}/${id}/update`}
-      className={`${btnClasses.EDIT} h-fit`}
-    >
+    <Link href={`${path}/${id}/update`} className={`${btnClasses.EDIT} h-fit`}>
       <p className="hidden md:flex text-sm  font-normal">Edit</p>
       <PencilIcon className="w-4 block md:hidden" />
     </Link>
@@ -255,6 +258,25 @@ export function NormalAddBtn({ href, label }: _ISafeBtn) {
   );
 }
 
+export function NormalEditBtn({ href }: { href: string }) {
+  return (
+    <Link href={href} className={`${btnClasses.EDIT} h-fit`}>
+      <span className="hidden md:flex text-base font-normal">{`Edit`}</span>
+      <PencilIcon className="w-4 block md:hidden" />
+    </Link>
+  );
+}
+
+export function DeleteBtn({ id, label, action }: _IActionBtn) {
+  const deleteAction = action.bind(null, id);
+
+  return (
+    <form action={deleteAction}>
+      <DeleteClientBtn label={label} />
+    </form>
+  );
+}
+
 export {
   AddCenter,
   AddCustomer,
@@ -273,5 +295,5 @@ export {
   DeleteUser,
   VerificationButton,
   EditProfileButton,
-  CAddUser
+  CAddUser,
 };
