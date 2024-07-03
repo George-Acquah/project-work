@@ -1,12 +1,12 @@
-import { UsersTableSkeleton } from "@/app/ui/skeletons";
+import { UsersTableSkeleton } from "@/app/ui/shared/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { inter } from "@/app/ui/font";
 import { NormalAddBtn } from "@/app/ui/users/buttons";
-import Pagination from "@/app/ui/pagination";
+import Pagination from "@/app/ui/shared/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
 import { UserType } from "@/app/lib/constants";
-import UsersTable from "@/app/ui/users/tables";
+import UsersTable from "@/app/ui/shared/tables";
 import Search from "@/app/ui/shared/search";
 import { dashboardRoutes } from "@/app/lib/routes";
 
@@ -36,7 +36,10 @@ export default async function ApplicantsPage({ searchParams }: ISearchParams) {
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search entityType="USERS" />
-        <NormalAddBtn href={dashboardRoutes.USERS.CUSTOMERS.ADD} label="Customer" />
+        <NormalAddBtn
+          href={dashboardRoutes.USERS.CUSTOMERS.ADD}
+          label="Customer"
+        />
       </div>
       <Suspense key={user + currentPage} fallback={<UsersTableSkeleton />}>
         <UsersTable

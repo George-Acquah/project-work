@@ -1,10 +1,10 @@
-import { UsersTableSkeleton } from "@/app/ui/skeletons";
+import { UsersTableSkeleton } from "@/app/ui/shared/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { inter } from "@/app/ui/font";
-import Pagination from "@/app/ui/pagination";
+import Pagination from "@/app/ui/shared/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
-import { VehiclesTable } from "@/app/ui/users/tables";
+import { VehiclesTable } from "@/app/ui/shared/tables";
 import Search from "@/app/ui/shared/search";
 import { NormalAddBtn } from "@/app/ui/users/buttons";
 import { dashboardRoutes } from "@/app/lib/routes";
