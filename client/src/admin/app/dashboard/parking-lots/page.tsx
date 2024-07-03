@@ -1,11 +1,11 @@
-import { UsersTableSkeleton } from "@/app/ui/skeletons";
+import { UsersTableSkeleton } from "@/app/ui/shared/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { inter } from "@/app/ui/font";
 import { NormalAddBtn } from "@/app/ui/users/buttons";
-import Pagination from "@/app/ui/pagination";
+import Pagination from "@/app/ui/shared/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
-import { CentersTable } from "@/app/ui/users/tables";
+import { CentersTable } from "@/app/ui/shared/tables";
 import Search from "@/app/ui/shared/search";
 import { dashboardRoutes } from "@/app/lib/routes";
 
@@ -20,13 +20,18 @@ interface ISearchParams {
   };
 }
 
-export default async function ParkingCenterPage({ searchParams }: ISearchParams) {
+export default async function ParkingCenterPage({
+  searchParams,
+}: ISearchParams) {
   const center = searchParams?.centers || "";
   const currentPage = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.size) || 5;
 
-  const totalPages = await fetchUsersPage(center, pageSize, 'UserType.CUSTOMER');
-  
+  const totalPages = await fetchUsersPage(
+    center,
+    pageSize,
+    "UserType.CUSTOMER"
+  );
 
   return (
     <div className="">
@@ -35,7 +40,10 @@ export default async function ParkingCenterPage({ searchParams }: ISearchParams)
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search entityType="CENTERS" placeholder="Search by Center Name" />
-        <NormalAddBtn href={dashboardRoutes.PARKING_LOTS.ADD} label="Parking Center" />
+        <NormalAddBtn
+          href={dashboardRoutes.PARKING_LOTS.ADD}
+          label="Parking Center"
+        />
       </div>
       <Suspense key={center + currentPage} fallback={<UsersTableSkeleton />}>
         <CentersTable

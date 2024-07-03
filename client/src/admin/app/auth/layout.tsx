@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
-import { gradientDark, secondaryBg, strongTextColor, textColor } from "../ui/themes"; // Make sure to import bgColor from your theme
-import SmartCarParkingAdminLogo from "../ui/logos";
+import {
+  gradientDark,
+  secondaryBg,
+  strongTextColor,
+  textColor,
+} from "../ui/themes"; // Make sure to import bgColor from your theme
+import SmartCarParkingAdminLogo from "../../../../../logos";
 
 export const HR = () => (
   <div
@@ -22,7 +27,9 @@ export const HRWithText = ({
 }) => (
   <div className="mb-8 flex items-center justify-center">
     <span className="hidden h-[1px] w-full max-w-[70px] bg-custom-body-color/50 sm:block" />
-    <p className="w-full px-2 text-center text-base font-medium text-custom-body-color">{text}</p>
+    <p className="w-full px-2 text-center text-base font-medium text-custom-body-color">
+      {text}
+    </p>
     <span className="hidden h-[1px] w-full max-w-[70px] bg-custom-body-color/50 sm:block" />
   </div>
 );
