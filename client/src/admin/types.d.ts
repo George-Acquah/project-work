@@ -550,6 +550,8 @@ interface _ITableProps<T = _TableRowType[]> {
   currentPage: number;
   columnData: string[];
   entityType: string;
+  deleteAction: (id: string) => Promise<_IApiResponse<unknown> | undefined>;
+  // deleteAction: (id: string) => Promise<_IApiResponse<T> | undefined>;
   data?: T;
   type?: string;
 }
