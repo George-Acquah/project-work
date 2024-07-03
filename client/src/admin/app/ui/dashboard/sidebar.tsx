@@ -1,8 +1,8 @@
-import NavLinks from '@/app/ui/dashboard/nav-links';
-import { PowerIcon } from '@heroicons/react/24/outline';
-import SmartCarParkingAdminLogo from "../logos";
-import { signOut } from '@/auth';
-import { borderRight, cardsBg, textColor } from '../themes';
+import NavLinks from "@/app/ui/dashboard/nav-links";
+import { PowerIcon } from "@heroicons/react/24/outline";
+import { signOut } from "@/auth";
+import { borderRight, cardsBg, textColor } from "../themes";
+import SmartCarParkingAdminLogo from "./logos";
 
 export const SignOutBtn = () => (
   <form

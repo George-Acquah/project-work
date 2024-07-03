@@ -22,7 +22,7 @@ import { classNames, formatUserType } from "@/app/lib/utils";
 import UserMenu from "./user-menu";
 import { loginCallbackUrl } from "@/app/lib/routes";
 import { signOutHelper } from "@/app/lib/actions";
-import { LinklessLogo } from "../logos";
+import { LinklessLogo } from "./logos";
 import {
   bgColor,
   textColor,

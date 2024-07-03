@@ -26,7 +26,6 @@ export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
 
           if (response.ok && data && data.statusCode === 200) {
             const login_data = data.data;
-            console.log(login_data);
 
             if (login_data.user.userType === process.env.AUTHORIZE_ADMIN) {
               console.log("You're not an admin");
@@ -52,8 +51,6 @@ export const { auth, signIn, signOut, handlers, unstable_update } = NextAuth({
       
 
       if (new Date().getTime() < token.tokens.expiresIn!) {
-
-        console.log('helllo');
         return token;
       }
 

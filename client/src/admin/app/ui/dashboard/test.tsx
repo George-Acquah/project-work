@@ -2,7 +2,7 @@
 import { testEmail } from "@/app/lib/actions";
 import { classNames } from "@/app/lib/utils";
 import { useFormState, useFormStatus } from "react-dom";
-import { SvgSpinner } from "../icons";
+import { SvgSpinner } from "../shared/icons";
 
 const TestEmail = () => {
   // Initial state for form

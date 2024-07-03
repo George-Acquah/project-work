@@ -1,11 +1,11 @@
-import { UsersTableSkeleton } from "@/app/ui/skeletons";
+import { UsersTableSkeleton } from "@/app/ui/shared/skeletons";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { inter } from "@/app/ui/font";
 import { NormalAddBtn } from "@/app/ui/users/buttons";
-import Pagination from "@/app/ui/pagination";
+import Pagination from "@/app/ui/shared/pagination";
 import { fetchUsersPage } from "@/app/lib/requests";
-import { SlotsTable } from "@/app/ui/users/tables";
+import { SlotsTable } from "@/app/ui/shared/tables";
 import Search from "@/app/ui/shared/search";
 import { dashboardRoutes } from "@/app/lib/routes";
 
@@ -25,8 +25,7 @@ export default async function SlotsPage({ searchParams }: ISearchParams) {
   const currentPage = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.size) || 5;
 
-  const totalPages = await fetchUsersPage(slot, pageSize, 'UserType.CUSTOMER');
-  
+  const totalPages = await fetchUsersPage(slot, pageSize, "UserType.CUSTOMER");
 
   return (
     <div className="w-full">

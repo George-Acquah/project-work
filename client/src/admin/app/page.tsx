@@ -1,8 +1,8 @@
-import SmartCarParkingAdminLogo from "./ui/logos";
 import Link from "next/link";
 import Image from "next/image";
 import { lusitana } from "./ui/font";
 import { secondaryBg, strongTextColor, textColor } from "./ui/themes";
+import SmartCarParkingAdminLogo from "./ui/dashboard/logos";
 
 const SmartCarParkingAdminHome = () => {
   return (

@@ -14,7 +14,7 @@ import { Details } from "@/app/ui/dashboard/details";
 import { textColor } from "@/app/ui/themes";
 import { inter } from "@/app/ui/font";
 import { Suspense } from "react";
-import { ChartSkeleton } from "@/app/ui/skeletons";
+import { ChartSkeleton } from "@/app/ui/shared/skeletons";
 
 // Define TypeScript interfaces for data
 interface KpiData {

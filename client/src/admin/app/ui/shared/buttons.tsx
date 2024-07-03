@@ -1,8 +1,11 @@
+'use client'
+
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import { SvgSpinner } from "../icons";
+import { SvgSpinner } from "./icons";
 import { textColor } from "../themes";
 import { Button } from "@tremor/react";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 export function EditBtn({ href, text, label }: _IBtn) {
   const { pending } = useFormStatus();
@@ -23,7 +26,7 @@ export function EditBtn({ href, text, label }: _IBtn) {
         {pending ? (
           <div className="flex items-center justify-between capitalize">
             <p className="">{text}...</p>
-            <SvgSpinner className="text-white" color="white"/>
+            <SvgSpinner className="text-white" color="white" />
           </div>
         ) : (
           `${label}`
@@ -59,6 +62,28 @@ export function AddBtn({ href, text, label }: _IBtn) {
         )}
       </Button>
     </div>
+  );
+}
+
+export function DeleteClientBtn({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      aria-disabled={pending}
+      className="aria-disabled:pointer-events-none aria-disabled:bg-opacity-70 bg-red-500 rounded-md border border-red-500 p-2 hover:bg-red-600"
+      type="submit"
+    >
+      {pending ? (
+        <div className="flex items-center">
+          <SvgSpinner className=" text-white w-4 h-4" fill="white" />
+        </div>
+      ) : (
+        <>
+          <span className="sr-only">{label}</span>
+          <TrashIcon className="w-4 fill-white" />
+        </>
+      )}
+    </button>
   );
 }
 

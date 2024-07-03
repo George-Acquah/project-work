@@ -91,6 +91,7 @@ async function deleteUser(id: string) {
   const url = `${endpoints.USERS.DELETE_USER}/${id}`;
   try {
     const response = await fetcher(url, "DELETE");
+    console.log(response);
     revalidatePath(dashboardRoutes.USERS.BASE);
     return response;
   } catch (error: any) {
