@@ -32,6 +32,14 @@ interface _IBtn extends _ISafeBtn{
 }
 
 
+interface _IStepBtn {
+  href?: string;
+  onClick?: () => any;
+  type: 'back' | 'next' | 'cancel' | 'submit';
+  text?: string;
+}
+
+
 interface _IChildren {
   children: React.ReactNode;
 }
@@ -704,6 +712,7 @@ interface _ISearchParams {
   ENTITY_TYPE: string;
   VEHICLES: string;
   RESERVATIONS: string;
+  FORM_STEP: string;
 }
 
 interface _IThemeContext {

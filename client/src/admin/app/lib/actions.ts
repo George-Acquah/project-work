@@ -49,6 +49,7 @@ export async function expiredSession() {
 // Function to handle user authentication
 async function authenticate(prevState: ActionResult, payload: FormData) {
   try {
+    console.log(payload);
     const validatedFields = Login.safeParse(
       Object.fromEntries(payload.entries())
     );

@@ -70,7 +70,7 @@ const dashboardRoutes = {
   VEHICLES: {
     BASE: "/dashboard/vehicles",
     VIEW: "/dashboard/vehicles/view/",
-    ADD: "/dashboard/vehicles/add",
+    ADD: "/dashboard/vehicles/add?step=0",
   },
   REPORTS: {
     BASE: "/dashboard/reports",
