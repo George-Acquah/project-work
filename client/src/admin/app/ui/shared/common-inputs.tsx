@@ -57,6 +57,7 @@ export function InputGroup<T extends Record<string, any>>({
   data,
   details,
   errors,
+  onChange,
 }: CommonDivCompProps<T>): JSX.Element {
   return (
     <div className="mb-6">
@@ -73,6 +74,17 @@ export function InputGroup<T extends Record<string, any>>({
               icon={detail.icon}
               type={detail.type}
               disabled={detail.disabled}
+              onChange={
+                onChange
+                  ? (
+                      e: React.ChangeEvent<
+                        | HTMLInputElement
+                        | HTMLSelectElement
+                        | HTMLTextAreaElement
+                      >
+                    ) => onChange(detail.id, e.target.value)
+                  : undefined
+              } // Pass fieldId and event to the parent handler
               errors={errors}
               tooltip={detail?.tooltip}
               input_type={detail.input_type}
@@ -104,6 +116,7 @@ export default function CommonInput({
   tooltip,
   width,
   bg,
+  onChange
 }: _IDetail) {
   const LinkIcon = icon ? iconMap[icon] : undefined;
   const err_bool = errors && (errors[id]!! as unknown as boolean);
@@ -168,6 +181,7 @@ export default function CommonInput({
                         type="radio"
                         value={item.value}
                         defaultChecked={item.checked}
+                        onChange={onChange ? onChange : undefined}
                         className={`h-4 w-4 border-gray-300 dark:border-gray-600 ${
                           bg ?? cardsBg
                         } text-gray-600 focus:ring-2 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-gray-600`}
@@ -222,6 +236,7 @@ export default function CommonInput({
               type={type}
               className={generateInputClass(err_bool!!, bg)}
               autoComplete={"on"}
+              onChange={onChange ? onChange : undefined}
               disabled={disabled}
             />
             {icon && LinkIcon && (

@@ -395,6 +395,8 @@ interface CommonDivCompProps<T> {
    */
   details: Array<Detail<T>>;
 
+  onChange?: any;
+
   /**
    * Optional errors object to indicate validation issues for the inputs.
    * The keys should match the `id` values from the `details` array.
@@ -467,6 +469,8 @@ interface _IDetail {
    * @memberof Detail
    */
   icon?: string;
+
+  onChange?: any;
 
   /**
    * Optional options to be rendered for select input field.
