@@ -5,9 +5,9 @@ import {
   textColor,
 } from "../ui/themes";
 
-export const HR = () => (
+export const HR = ({ height = 'h-px' }: { height?: string}) => (
   <div
-    className={`h-px w-full bg-gradient-to-r from-transparent to-transparent ${gradientDark}`}
+    className={`${height} w-full bg-gradient-to-r from-transparent to-transparent ${gradientDark}`}
   />
 );
 

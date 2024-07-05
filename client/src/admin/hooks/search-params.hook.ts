@@ -31,11 +31,13 @@ const useCustomSearchParams = <T extends SearchParamKeys>(
   }, [searchParams, valueTypes]);
 
   const handleSetParams = useCallback(
-    (set?: boolean) => {
+    (set?: boolean, value?: string) => {
       const params = new URLSearchParams(searchParams);
 
       if (set) {
-        params.set(SEARCH_PARAMS[entityType], SEARCH_PARAMS[entityType]);
+        value
+          ? params.set(SEARCH_PARAMS[entityType], value)
+          : params.set(SEARCH_PARAMS[entityType], SEARCH_PARAMS[entityType]);
       } else {
         params.delete(SEARCH_PARAMS[entityType]);
       }

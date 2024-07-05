@@ -115,3 +115,37 @@ export function FormBtn({ href, text, label }: _IBtn) {
     </div>
   );
 }
+
+export function StepBtn({ onClick, type, href, text}: _IStepBtn) {
+  const { pending } = useFormStatus();
+  return (
+    <div className="mt-6 transition-all duration-300">
+      {type === "cancel" && href ? (
+        <Link
+          href={href}
+          className={`flex h-[2.3rem] items-center rounded capitalize px-4 text-sm font-medium  transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 ${textColor}`}
+        >
+          {type}
+        </Link>
+      ) : (
+        <Button
+          aria-disabled={pending}
+          className="aria-disabled:pointer-events-none rounded capitalize aria-disabled:bg-opacity-70 h-[2.05rem]"
+          size="sm"
+          color={type === 'submit' ? 'green' : type === 'back' ? 'gray' : 'blue'}
+          type={type === 'submit' ? 'submit' : 'button'}
+          onClick={ type === 'submit' ? undefined : onClick}
+        >
+          {pending ? (
+            <div className="flex items-center justify-between capitalize">
+              <p className="">{text}...</p>
+              <SvgSpinner className="text-white" color="white" />
+            </div>
+          ) : (
+            `${type}`
+          )}
+        </Button>
+      )}
+    </div>
+  );
+}

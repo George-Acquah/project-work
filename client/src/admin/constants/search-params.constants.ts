@@ -21,6 +21,7 @@ const SEARCH_PARAMS: _ISearchParams = {
   SLOTS: "slots",
   VEHICLES: "vehicles",
   RESERVATIONS: "reservations",
+  FORM_STEP: 'step'
 };
 
 export const SEARCH_COOKIES_KEYS = {
