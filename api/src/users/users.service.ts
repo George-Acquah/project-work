@@ -440,7 +440,7 @@ export class UsersService {
 
   async fetchUsersPage(query = '', items: number): Promise<number> {
     try {
-      const fieldNames = ['email', 'userType'];
+      const fieldNames: (keyof _TUser)[] = ['email', 'userType'];
       const totalPages = await this.aggregationService.pageNumbersPipeline(
         this.userModel,
         fieldNames,
