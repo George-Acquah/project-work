@@ -199,6 +199,57 @@ async function fetchVehicleById(centers_id: string) {
 
 //END VEHICLES
 
+//BEGIN RESERVATION
+async function fetchReservations(
+  reservations: string,
+  currentPage: number,
+  pageSize: number
+) {
+  try {
+    const url = endpoints.PARKING_CENTER.GET_ALL_SLOT_RESERVATIONS;
+    const response = await fetcher<_IFormattedReservation[]>(
+      `${url}?reservations=${reservations}&currentPage=${currentPage}&size=${pageSize}`,
+      "GET",
+      "no-store"
+    );
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    const { ERROR_URL } = redirectDynamicUrls(
+      "/dashboard",
+      error.message ?? "test",
+      "something random"
+    );
+    // redirect(ERROR_URL);
+  }
+}
+
+async function fetchReservationsPage(
+  reservations: string,
+  pageSize: number
+) {
+  try {
+    const url = endpoints.PARKING_CENTER.GET_RESERVATIONS_PAGE;
+    const response = await fetcher<number>(
+      `${url}?reservations=${reservations}&size=${pageSize}`,
+      "GET",
+      "no-store"
+    );
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    const { ERROR_URL } = redirectDynamicUrls(
+      "/dashboard",
+      error.message ?? "test",
+      "something random"
+    );
+    // redirect(ERROR_URL);
+  }
+}
+
+
+//END RESERVATION
+
 export {
   fetchFilteredUsers,
   fetchUsersPage,
@@ -210,5 +261,7 @@ export {
   fetchFilteredSlots,
   verifyUser,
 
-  fetchVehicles
+  fetchVehicles,
+  fetchReservations,
+  fetchReservationsPage
 };

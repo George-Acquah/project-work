@@ -41,8 +41,10 @@ const endpoints = {
     GET_CENTER_IMAGES: "owner/parking-center/:center_id/images",
     GET_SLOTS_FOR_CENTER: "owner/parking-center/:center_id/slots",
     GET_SLOT_DETAILS: "owner/parking-center/:center_id/slots/:slot_id",
-    GET_SLOT_BOOKINGS:
-      "owner/parking-center/:center_id/slots/:slot_id/bookings",
+    GET_SLOT_RESERVATIONS:
+      "owner/parking-center/:center_id/slots/:slot_id/reservations",
+    GET_ALL_SLOT_RESERVATIONS: "owner/parking-center/reservations",
+    GET_RESERVATIONS_PAGE: "owner/parking-center/reservations/total-page",
     GET_SLOT_DATA: "owner/parking-center/:center_id/slots/:slot_id/data",
     GET_SLOT_IMAGES: "owner/parking-center/:center_id/slots/:slot_id/images",
   },

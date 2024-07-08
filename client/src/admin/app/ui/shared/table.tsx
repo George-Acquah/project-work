@@ -73,14 +73,7 @@ const renderCell = (
       return <StatusBadge status={item[column] as unknown as _IStatus} />;
     default:
       const additionalClassName =
-        (entityType === "users" &&
-          (column === "vehicles" || column === "centers")) ||
-        (entityType === "centers" &&
-          (column === "slots" || column === "capacity")) ||
-        (entityType === "slots" &&
-          (column === "capacity" || column === "price"))
-          ? "text-center"
-          : "";
+        typeof item[column] === "number" ? "text-center " : "";
       return <Text className={additionalClassName}>{item[column]}</Text>;
   }
 };

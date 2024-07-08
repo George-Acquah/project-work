@@ -202,9 +202,23 @@ const tableColumns = {
     "DATE REGISTERED",
     "EXPIRY DATE",
     "LAST UPDATED",
-    'HAS INSURANCE',
+    "HAS INSURANCE",
     "HAS RESERVATION",
     "IS VERIFIED",
+  ],
+
+  reservationsTableColumn: [
+    "IMAGE",
+    "SLOT NAME",
+    "DRIVER NAME",
+    "VEHICLE NUMBER",
+    "WAIT TIME",
+    "TIME RESERVED",
+    "START TIME",
+    "END TIME",
+    "DURATION",
+    "COST",
+    "STATUS",
   ],
 
   // Transactions Table
