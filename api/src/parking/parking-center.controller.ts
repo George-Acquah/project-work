@@ -25,6 +25,7 @@ import { UploadService } from 'src/storage/uploads.service';
 import { ReservationRequestDto } from './dtos/reservation-requests.dto';
 import {
   _IAddCenterAddress,
+  _IDbSlotReservation,
   _IReserveSlot
 } from 'src/shared/interfaces/slot.interface';
 import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
@@ -156,6 +157,55 @@ export class ParkingCenterController {
     } catch (error) {
       this.logger.error(`Error getting all slots: ${error.message}`);
       return new ApiResponse(error.statusCode, error.message, {});
+    }
+  }
+
+  @Get('reservations')
+  async getAllReservations(
+    @Query('reservations') query: string,
+    @Query('currentPage', new ParseIntPipe()) currentPage,
+    @Query('size', new ParseIntPipe()) size
+  ) {
+    try {
+      this.logger.error(`Get Slot Reservations`);
+      const reservations = await this.slotService.getAllReservations(
+        query,
+        currentPage,
+        size
+      );
+      return new ApiResponse(
+        200,
+        'Fetched Reservations Successfully',
+        reservations
+      );
+    } catch (error) {
+      this.logger.error(`Error getting slot bookings: ${error.message}`);
+      return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
+
+  @Get('reservations/total-page')
+  async getPages(
+    @Query('reservations') query: string,
+    @Query('size', new ParseIntPipe()) size: number
+  ) {
+    try {
+      this.logger.error(`Get Slot Reservations`);
+      const totalPages =
+        await this.slotService.fetchSlotsPage<_IDbSlotReservation>(
+          size,
+          query,
+          'reservation',
+          ['cost_of_reservation', 'wait_time']
+        );
+      return new ApiResponse(
+        200,
+        'Fetched Reservations Page Successfully',
+        totalPages
+      );
+    } catch (error) {
+      this.logger.error(`Error getting reservations pages: ${error.message}`);
+      return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
 
@@ -490,7 +540,7 @@ export class ParkingCenterController {
   }
   //TODO implement and test this endpoint
   @Get(':center_id/slots/:slot_id/reservations')
-  async getAllSlotBookings(
+  async getAllReservationsOfSlot(
     @Param('center_id') centerId: string,
     @Param('slot_id') slotId: string
   ) {
