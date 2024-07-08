@@ -2,6 +2,7 @@ import {
   fetchFilteredParkingCenters,
   fetchFilteredSlots,
   fetchFilteredUsers,
+  fetchReservations,
   fetchVehicles,
 } from "@/app/lib/requests";
 import TableComponent from "./table";
@@ -91,8 +92,6 @@ export const VehiclesTable = async ({
     pageSize
   )) as _IFormattedVehicle[];
 
-  console.log(vehicles);
-
   return (
     <TableComponent
       columnData={tableColumns.vehiclesTableColumn}
@@ -100,6 +99,30 @@ export const VehiclesTable = async ({
       currentPage={currentPage}
       data={vehicles}
       entityType="vehicles"
+      deleteAction={deleteUser}
+    />
+  );
+};
+
+
+export const ReservationsTable = async ({
+  query,
+  currentPage,
+  pageSize,
+}: _ISpecificTableProps) => {
+  const reservations = (await fetchReservations(
+    query,
+    currentPage,
+    pageSize
+  )) as _IFormattedReservation[];
+
+  return (
+    <TableComponent
+      columnData={tableColumns.reservationsTableColumn}
+      query={query}
+      currentPage={currentPage}
+      data={reservations}
+      entityType="reservations"
       deleteAction={deleteUser}
     />
   );
