@@ -3,11 +3,9 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import { inter } from "@/app/ui/font";
 import Pagination from "@/app/ui/shared/pagination";
-import { fetchUsersPage } from "@/app/lib/requests";
-import { SlotsTable } from "@/app/ui/shared/tables";
+import { fetchReservationsPage, fetchUsersPage } from "@/app/lib/requests";
+import { ReservationsTable, SlotsTable } from "@/app/ui/shared/tables";
 import Search from "@/app/ui/shared/search";
-import { NormalAddBtn } from "@/app/ui/users/buttons";
-import { dashboardRoutes } from "@/app/lib/routes";
 
 
 export const metadata: Metadata = {
@@ -21,16 +19,17 @@ interface ISearchParams {
   };
 }
 
-export default async function SlotsPage({ searchParams }: ISearchParams) {
+export default async function ReservationsPage({ searchParams }: ISearchParams) {
   const reservations = searchParams?.reservations || "";
   const currentPage = Number(searchParams?.page) || 1;
   const pageSize = Number(searchParams?.size) || 5;
 
-  const totalPages = await fetchUsersPage(
+  const totalPages = await fetchReservationsPage(
     reservations,
     pageSize,
-    "UserType.CUSTOMER"
   );
+
+  console.log(totalPages);
   
 
   return (
@@ -40,20 +39,19 @@ export default async function SlotsPage({ searchParams }: ISearchParams) {
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search entityType="RESERVATIONS" placeholder="Search by Reservation Name" />
-        <NormalAddBtn href={dashboardRoutes.RESERVATIONS.ADD} label="Reservation" />;
       </div>
       <Suspense
         key={reservations + currentPage}
         fallback={<UsersTableSkeleton />}
       >
-        <SlotsTable
+        <ReservationsTable
           query={reservations}
           currentPage={currentPage}
           pageSize={pageSize}
         />
       </Suspense>
       <div className="mt-5 flex w-full justify-center flex-wrap gap-2 space-x-10">
-        <Pagination totalPages={totalPages} />
+        <Pagination totalPages={totalPages ?? 0} />
       </div>
     </div>
   );
