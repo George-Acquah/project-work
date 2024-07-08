@@ -208,31 +208,56 @@ export class AggregationService {
 
   async pageNumbersPipeline<T extends Document>(
     model: Model<T>,
-    fieldNames: string[],
+    fieldNames: (keyof T)[],
     query = '',
     items: number,
     options?: object
   ) {
     try {
-      // Construct simple conditions for each field name
-      const simpleConditions = fieldNames.map((field) => ({
-        [field]: { $regex: query, $options: 'i' }
-      }));
+      // Validate fieldNames array
+      if (!fieldNames || fieldNames.length === 0) {
+        throw new Error('Field names array is empty.');
+      }
+
+      // Construct conditions for each field name
+      const simpleConditions = fieldNames.map((field) => {
+        // Assume query is numeric if it's a number string, otherwise treat it as a string
+        if (!isNaN(Number(query))) {
+          return {
+            [field]: Number(query)
+          };
+        } else {
+          return {
+            [field]: { $regex: query, $options: 'i' }
+          };
+        }
+      });
 
       // Combine simple conditions using $or operator
       const conditions = {
         $or: simpleConditions
-      } as unknown as FilterQuery<T>[];
+      } as unknown as FilterQuery<T>;
+
+      // Log constructed conditions
+      console.log('Constructed Conditions:', JSON.stringify(conditions));
+
       // Calculate total count of documents matching conditions
       const totalCount = await model
         .countDocuments({ ...options, ...conditions })
         .exec();
 
+      // Log total count
+      console.log('Count:', totalCount);
+
       // Calculate total pages based on total count and items per page
       const totalPages = Math.ceil(totalCount / items);
 
+      // Log total pages
+      console.log('Pages:', totalPages);
+
       return totalPages;
     } catch (error) {
+      console.error('Error in pageNumbersPipeline:', error.message);
       throw new Error(error.message);
     }
   }
@@ -548,7 +573,10 @@ export class AggregationService {
     countFields?: string[], // New parameter to specify fields to count
     currentPage = 1,
     items = 10,
-    sanitizeFn?: (doc: T) => AnyExpression
+    sanitizeFn?: (doc: T) => AnyExpression,
+    deeepLookup_data?: _ILookup[],
+    deep_unwind_fields?: string[],
+    setFields?: Record<string, any>
   ): Promise<S> {
     try {
       if (currentPage < 1 || items < 1) {
@@ -579,6 +607,34 @@ export class AggregationService {
         });
       });
 
+      // Lookup stages
+      deeepLookup_data?.forEach((data) => {
+        pipeline.push({
+          $lookup: {
+            from: data.from,
+            as: data.as,
+            localField: data.localField ?? '_id',
+            foreignField: data.foreignField
+          }
+        });
+      });
+
+      // Unwind stages
+      deep_unwind_fields?.forEach((field) => {
+        pipeline.push({
+          $unwind: {
+            path: `$${String(field)}`,
+            preserveNullAndEmptyArrays: true
+          }
+        });
+      });
+
+      if (setFields) {
+        pipeline.push({
+          $set: setFields
+        });
+      }
+
       // Project stage
       const project: Record<string, any> = {};
       project_fields.forEach((field) => {
@@ -600,14 +656,11 @@ export class AggregationService {
 
       // Execute pipeline
       const result = await model.aggregate(pipeline);
-      console.log(result);
 
       // Return based on the 'return_as_object' flag
       if (return_as_object) {
-        console.log('not array');
         return sanitizeFn ? (sanitizeFn(result[0]) as unknown as S) : result[0];
       } else {
-        console.log('array');
         return sanitizeFn
           ? (result.map((item) => sanitizeFn(item)) as unknown as S)
           : (result as unknown as S);
