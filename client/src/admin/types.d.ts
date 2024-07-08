@@ -185,6 +185,22 @@ interface _IFormattedVehicle {
   has_reservation: string;
 }
 
+interface _IFormattedReservation {
+  [key: string]: string | number | null;
+  _id: string;
+  slot_name: string;
+  vehicle_no: string;
+  driver_name: string;
+  image: string | null;
+  wait_time: number;
+  time_reserved: string;
+  start_time: string;
+  end_time: string;
+  duration: number;
+  cost: number;
+  status: string;
+}
+
 interface _IFormattedSlot {
   [key: string]: string | number | null;
   _id: string;
@@ -767,7 +783,7 @@ interface _ITableContext {
 
 type _TVehicleImage = _Image;
 
-type _TableRowType = _IFormattedCenter | _IFormattedUser | _IFormattedSlot | _IFormattedVehicle;
+type _TableRowType = _IFormattedCenter | _IFormattedUser | _IFormattedSlot | _IFormattedVehicle | _IFormattedReservation;
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type _TUserType = "owner" | "customer" | "admin" | "user" | "moderator";
 type _TFields = "text" | "radio" | "select" | "email";
