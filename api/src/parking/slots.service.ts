@@ -6,15 +6,22 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
+import {
+  FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION,
+  setReservationFields
+} from 'src/shared/constants/reservations.constants';
+import { FETCH_VEHICLES_BY_ADMIN_AGGREGATION } from 'src/shared/constants/vehicles.constants';
 import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
 import { SlotTypes } from 'src/shared/enums/slots.enum';
+import { sanitizeReservationsFn } from 'src/shared/helpers/reservations.sanitizers';
 import {
   _ICloudRes,
   _IDbSlotImage,
   _ISlotImage
 } from 'src/shared/interfaces/images.interface';
+import { _IFormattedReservation } from 'src/shared/interfaces/refactored/slots.interface';
 import { _ILookup } from 'src/shared/interfaces/responses.interface';
 import {
   _IAddSlot,
@@ -108,19 +115,21 @@ export class SlotService {
     }
   }
 
-  async fetchSlotsPage(
-    center_id: string,
+  async fetchSlotsPage<T extends Document>(
     items: number,
-    query = ''
+    query = '',
+    type: 'reservation' | 'slot',
+    fields: (keyof T)[]
   ): Promise<number> {
     try {
-      const fieldNames = [''];
+      const fieldNames = fields;
       const totalPages = await this.aggregationService.pageNumbersPipeline(
-        this.slotModel,
+        type === 'reservation'
+          ? this.slotReservationModel
+          : (this.slotModel as unknown as any),
         fieldNames,
         query,
-        items,
-        { center_id, isAvailable: false }
+        items
       );
 
       return totalPages;
@@ -424,5 +433,42 @@ export class SlotService {
       cost_of_reservation: reservation.cost_of_reservation,
       free_waiting_time: reservation.wait_time
     };
+  }
+
+  async getAllReservations(query?: string, page = 1, limit = 5) {
+    try {
+      const {
+        project_fields,
+        lookups,
+        unwind_fields,
+        count_fields,
+        deepLookups,
+        deep_unwind_fields
+      } = FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION;
+      const reservations =
+        await this.aggregationService.dynamicDocumentsPipeline<
+          _IDbSlotReservation,
+          _IFormattedReservation[]
+        >(
+          this.slotReservationModel,
+          false,
+          project_fields,
+          {},
+          lookups,
+          unwind_fields,
+          count_fields,
+          page,
+          limit,
+          sanitizeReservationsFn,
+          deepLookups,
+          deep_unwind_fields,
+          setReservationFields
+        );
+
+      return reservations;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
