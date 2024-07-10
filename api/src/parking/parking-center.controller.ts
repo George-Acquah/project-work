@@ -167,7 +167,6 @@ export class ParkingCenterController {
     @Query('size', new ParseIntPipe()) size
   ) {
     try {
-      this.logger.error(`Get Slot Reservations`);
       const reservations = await this.slotService.getAllReservations(
         query,
         currentPage,
@@ -205,6 +204,23 @@ export class ParkingCenterController {
       );
     } catch (error) {
       this.logger.error(`Error getting reservations pages: ${error.message}`);
+      return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
+
+  @Get('reservations/:reservation_id')
+  async getSingleReservation(@Param('reservation_id') reservation_id: string) {
+    try {
+      const reservation = await this.slotService.getSingleReservation(
+        reservation_id
+      );
+      return new ApiResponse(
+        200,
+        'Fetched Reservations Successfully',
+        reservation
+      );
+    } catch (error) {
+      this.logger.error(`Error getting slot bookings: ${error.message}`);
       return new ApiResponse(error.statusCode || 501, error.message, {});
     }
   }
@@ -330,7 +346,6 @@ export class ParkingCenterController {
   @Get(':center_id')
   async getParkingCenter(@Param('center_id') centerId: string) {
     try {
-      this.logger.error(`Get A Parking Center: ${centerId}`);
       const center =
         await this.parkingService.getSingleParkingCenterByAggregatiom(centerId);
       return new ApiResponse(200, 'Fetched Center Successfully', center);

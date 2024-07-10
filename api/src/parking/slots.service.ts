@@ -6,13 +6,12 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Document, Model } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
 import {
   FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION,
   setReservationFields
 } from 'src/shared/constants/reservations.constants';
-import { FETCH_VEHICLES_BY_ADMIN_AGGREGATION } from 'src/shared/constants/vehicles.constants';
 import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
 import { SlotTypes } from 'src/shared/enums/slots.enum';
 import { sanitizeReservationsFn } from 'src/shared/helpers/reservations.sanitizers';
@@ -466,6 +465,43 @@ export class SlotService {
         );
 
       return reservations;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getSingleReservation(reservation_id: string) {
+    try {
+      const {
+        project_fields,
+        lookups,
+        unwind_fields,
+        count_fields,
+        deepLookups,
+        deep_unwind_fields
+      } = FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION;
+      const reservation =
+        await this.aggregationService.dynamicDocumentsPipeline<
+          _IDbSlotReservation,
+          _IFormattedReservation
+        >(
+          this.slotReservationModel,
+          true,
+          project_fields,
+          { _id: new mongoose.Types.ObjectId(reservation_id) },
+          lookups,
+          unwind_fields,
+          count_fields,
+          1,
+          1,
+          sanitizeReservationsFn,
+          deepLookups,
+          deep_unwind_fields,
+          setReservationFields
+        );
+
+      return reservation;
     } catch (error) {
       console.log(error);
       throw error;
