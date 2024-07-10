@@ -112,7 +112,8 @@ export function ChartView({ revenue, centers, slots, vehicles }: IProps) {
         colors={["blue"]}
         showLegend={true}
         valueFormatter={formatters[selectedKpi]}
-        yAxisWidth={56}
+        yAxisWidth={selectedKpi === 0 ? 60 : 30}
+        enableLegendSlider={true}
         className="h-96 mt-8"
       />
     </Card>
