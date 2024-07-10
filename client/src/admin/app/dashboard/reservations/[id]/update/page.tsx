@@ -1,29 +1,24 @@
 import { notFound } from "next/navigation";
 
 import { Metadata } from "next";
-import { fetchCenterById } from "@/app/lib/requests";
-import Breadcrumbs from "@/app/ui/shared/breadcrumbs";
-import CENTERS_BREADCRUMBS from "@/constants/centers.constants";
-import UpdateCenter from "@/app/ui/centers/update-center";
-import { dashboardRoutes } from "@/app/lib/routes";
+import { fetchSingleReservation } from "@/app/lib/requests";
+import UpdateReservation from "@/app/ui/reservations/update-reservation";
 
 export const metadata: Metadata = {
-  title: "Edit Center",
+  title: "Edit Reservation",
 };
 
-export default async function Page({ params }: _IdParams) {
+export default async function UpdateReservationPage({ params }: _IdParams) {
   const id = params.id;
-  const center = await fetchCenterById(id);
+  const reservation = await fetchSingleReservation(id);
 
-  if (!center) {
+  if (!reservation) {
     notFound();
   }
 
   return (
     <main>
-      <Breadcrumbs breadcrumbs={CENTERS_BREADCRUMBS(id).UPDATE_CENTER} />
-      <h1 className="text-center text-3xl">{JSON.stringify(center)}</h1>
-      <UpdateCenter id={id} />
+      <UpdateReservation id={id} />
     </main>
   );
 }

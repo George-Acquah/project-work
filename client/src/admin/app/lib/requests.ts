@@ -223,6 +223,30 @@ async function fetchReservations(
     // redirect(ERROR_URL);
   }
 }
+//reservation_id
+//0545409069
+
+async function fetchSingleReservation(
+  reservation_id: string
+) {
+  try {
+    const url = endpoints.PARKING_CENTER.GET_ALL_SLOT_RESERVATIONS;
+    const response = await fetcher<_IFormattedReservation>(
+      `${url}/${reservation_id}`,
+      "GET",
+      "no-store"
+    );
+    return response.data;
+  } catch (error: any) {
+    console.log(error);
+    const { ERROR_URL } = redirectDynamicUrls(
+      "/dashboard",
+      error.message ?? "test",
+      "something random"
+    );
+    // redirect(ERROR_URL);
+  }
+}
 
 async function fetchReservationsPage(
   reservations: string,
@@ -263,5 +287,6 @@ export {
 
   fetchVehicles,
   fetchReservations,
+  fetchSingleReservation,
   fetchReservationsPage
 };
