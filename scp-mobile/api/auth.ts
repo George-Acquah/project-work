@@ -61,7 +61,7 @@ export async function refreshToken() {
 
 export async function userDetails(callbackUrl?: string) {
   const config: _IApiConfig = {
-    url: `${USER_BASE_URL}/profile`,
+    url: `${USER_BASE_URL}/profiles`,
     method: "GET",
     callbackUrl,
   };

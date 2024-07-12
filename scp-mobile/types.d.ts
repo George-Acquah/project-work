@@ -21,12 +21,12 @@ interface _IAxiosHeaders {
 }
 
 interface _IAccount {
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  state?: string;
-  area?: string;
-  pincode?: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone_number: string | null;
+  state: string | null;
+  area: string | null;
+  pincode: string | null;
 }
 
 interface _IAddress {
