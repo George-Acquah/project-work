@@ -8,7 +8,7 @@ const async_save = async <T>(key: string, value: T) => {
       typeof value === "string" ? value : JSON.stringify(value);
     await AsyncStorage.setItem(key, stringValue);
   } catch (error) {
-    console.error("Error saving to secure storage:", error);
+    console.error("Error saving to async storage:", error);
   }
 };
 
