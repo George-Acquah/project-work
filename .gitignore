@@ -118,3 +118,8 @@ dist
 /.expo
 */.expo
 /.expo*
+
+#docs
+/docs
+/docs*
+
