@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+import { MAILTRAP_KEY } from './constants.config';
 
 const MailConfig = {
   token: process.env.MAIL_TOKEN,
@@ -9,4 +10,4 @@ const MailConfig = {
   account_id: process.env.ACCOUNT_ID
 };
 
-export const MailTrapConfig = registerAs('MailTrapConfig', () => MailConfig);
+export const MailTrapConfig = registerAs(MAILTRAP_KEY, () => MailConfig);

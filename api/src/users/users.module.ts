@@ -19,7 +19,7 @@ import { UploadService } from 'src/storage/uploads.service';
 import { StorageService } from 'src/storage/storage.service';
 import { UploadMiddleware } from 'src/shared/middlewares/uploads.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GCPStorageConfig } from 'src/storage/storage.config';
+import { GCPStorageConfig } from 'src/shared/configs/storage.config';
 import { AggregationService } from 'src/aggregation.service';
 import { TransactionService } from 'src/transaction.service';
 import { MailService } from 'src/mail/mail.service';

@@ -6,12 +6,12 @@ import {
   Post,
   Res,
   ServiceUnavailableException,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { StorageService } from 'src/storage/storage.service';
-import { StorageFile } from './storage.config';
+import { StorageFile } from '../shared/configs/storage.config';
 
 @Controller('media')
 export class MediaController {
@@ -22,9 +22,9 @@ export class MediaController {
     FileInterceptor('file', {
       limits: {
         files: 1,
-        fileSize: 1024 * 1024,
-      },
-    }),
+        fileSize: 1024 * 1024
+      }
+    })
   )
   @Get('/:mediaId')
   async downloadMedia(@Param('mediaId') mediaId: string, @Res() res: Response) {

@@ -17,4 +17,21 @@ interface _IMailRecipient {
   name?: string;
 }
 
-export { _IMailConfig, _IMailSender, _IMailRecipient };
+interface _IPaymentConfig {
+  path: string;
+  url: string;
+}
+
+interface _IGCPStorage {
+  path: string;
+  url: string;
+  mediaBucket: string;
+}
+
+export {
+  _IMailConfig,
+  _IMailSender,
+  _IMailRecipient,
+  _IPaymentConfig,
+  _IGCPStorage
+};
