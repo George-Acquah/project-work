@@ -55,6 +55,7 @@ export default function HomeScreen() {
 
       <RendererHOC loading={loading} error={null}>
         <View>
+          
           <SearchBox />
 
           <Button title="Search Bar" onPress={() => router.push("/search/")} />

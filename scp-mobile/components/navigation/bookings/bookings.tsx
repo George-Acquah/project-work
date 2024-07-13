@@ -43,7 +43,7 @@ const tabs = {
 
 const BookingsComponent = () => {
   const dispatch = useAppDispatch();
-  const colorScheme = useColorScheme() ?? 'light';
+  const colorScheme = useColorScheme() ?? "light";
   const bookingStyles = generateBookingStyles(colorScheme);
   const selectedTab = useAppSelector(selectSelctedTab);
   const upcomingBookings = useAppSelector(selectUpcomingBookings);
@@ -74,7 +74,6 @@ const BookingsComponent = () => {
             onViewDetails={() => dispatch(handleShowDetailsModal(item))}
           />
         )}
-        
         style={{ marginTop: SIZES.font }}
         keyExtractor={(item) => item.slotName}
         contentContainerStyle={{ columnGap: SIZES.medium }}
@@ -116,17 +115,14 @@ const BookingsComponent = () => {
               <CustomBottomSheetModal
                 points={["50%", "75%", "85%"]}
                 index={2}
-                bg={
-                  colorScheme === "light"
-                    ? "#D0D0D0"
-                    : "#353636"
-                }
+                bg={colorScheme === "light" ? "#D0D0D0" : "#353636"}
                 indicatorBg={
                   colorScheme === "light"
                     ? LIGHT_THEME.primary700
                     : DARK_THEME.primary700
                 }
                 ref={bookingModalRef}
+                pressBehavior={"none"}
               >
                 <View style={{ flex: 1 }}>
                   <View style={{ flexGrow: 1 }}>
@@ -291,7 +287,7 @@ const BookingsComponent = () => {
                                   style={{
                                     marginVertical: SIZES.font,
                                     flexDirection: "row",
-                                    alignItems: 'center'
+                                    alignItems: "center",
                                   }}
                                   onPress={() => dispatch(handleCloseMap())}
                                 >
@@ -313,8 +309,8 @@ const BookingsComponent = () => {
                                 <Pressable
                                   style={{
                                     marginTop: SIZES.font,
-                                      flexDirection: "row",
-                                    alignItems: 'center'
+                                    flexDirection: "row",
+                                    alignItems: "center",
                                   }}
                                   onPress={() => dispatch(handleOpenMap())}
                                 >
