@@ -1,7 +1,6 @@
 import { ScrollView, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { searchParamsKeys } from "@/constants/root";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import useCenterFilter from "@/utils/hooks/useFilter";
 import Pagination from "@/components/common/pagination";
@@ -12,12 +11,13 @@ import FiltersTab from "@/components/navigation/shared/filters-tab";
 import ParkingCentersCard from "@/components/navigation/centers/parking-center-card";
 import { FONTS } from "@/constants/fonts";
 import { text_colors } from "@/components/auth/styles";
-import SearchComp from "@/components/common/search";
+import Search from "@/components/common/search";
 import useRoles from "@/utils/hooks/useRoles.hook";
 import { FontAwesome } from "@expo/vector-icons";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { UserType } from "@/utils/enums/global.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
+import useScreenLoading from "@/utils/hooks/use-screen-loading";
 
 interface _ISearchParams extends SearchParamsKeys {
   centers: string;
@@ -49,6 +49,7 @@ const ParkingCentersScreen = () => {
   const pageSize = Number(searchParams?.size) || 5;
   const fetch_data = dispatch_data({ centers: center, currentPage, pageSize });
   const { role } = useRoles();
+  const { screenLoading } = useScreenLoading();
 
   useEffect(() => {
     dispatch(fetch_data);
@@ -70,9 +71,9 @@ const ParkingCentersScreen = () => {
       </View>
 
       <View style={{ marginTop: 20 }}>
-        <SearchComp
-          entityType={searchParamsKeys.centers}
-          searchLoading={loading}
+        <Search
+          entityType={"CENTERS"}
+          // searchLoading={loading}
           placeholder="Search For Centers"
         />
       </View>
