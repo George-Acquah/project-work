@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MailtrapClient } from 'mailtrap';
-import { configConstants } from 'src/shared/configs/constants.config';
+import { MAILTRAP_KEY } from 'src/shared/configs/constants.config';
 import {
   _IMailConfig,
   _IMailRecipient,
@@ -26,7 +26,7 @@ export class MailService {
       recipient_email,
       test_id,
       account_id
-    } = this.configService.get<_IMailConfig>(configConstants.MAILTRAP);
+    } = this.configService.get<_IMailConfig>(MAILTRAP_KEY);
     this.RECIPIENT_EMAIL = recipient_email;
     this.SENDER_EMAIL = sender_email;
     this.SENDER_NAME = sender_name;

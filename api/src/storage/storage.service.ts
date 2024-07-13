@@ -1,9 +1,11 @@
 import { DownloadResponse, Storage, SaveOptions } from '@google-cloud/storage';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Response } from 'express';
-import { StorageFile } from './storage.config';
+import { StorageFile } from '../shared/configs/storage.config';
 import { _ICloudRes } from 'src/shared/interfaces/images.interface';
 import { ConfigService } from '@nestjs/config';
+import { GCP_STORAGE_KEY } from 'src/shared/configs/constants.config';
+import { _IGCPStorage } from 'src/shared/configs/types.config';
 
 @Injectable()
 export class StorageService {
@@ -13,11 +15,8 @@ export class StorageService {
   private cacheExpiry: number; // Cache expiration time in seconds
 
   constructor(private readonly configService: ConfigService) {
-    const {
-      mediaBucket,
-      path
-    }: { mediaBucket: string; path: string; url: string } =
-      this.configService.get('GCPStorageConfig');
+    const { mediaBucket, path } =
+      this.configService.get<_IGCPStorage>(GCP_STORAGE_KEY);
 
     const credentials = JSON.parse(path);
     this.storage = new Storage({ credentials });
