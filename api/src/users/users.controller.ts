@@ -147,7 +147,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async fetchUserProfiles(@User() user) {
     try {
-      const user_profile = await this.usersService.fetchUserProfile(
+      const user_profile = await this.usersService.newFetchUserProfile(
         user._id,
         true
       );
@@ -229,7 +229,10 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async fetchUserProfile(@Param('id') id: string) {
     try {
-      const user_profile = await this.usersService.newFetchUserProfile(id, true);
+      const user_profile = await this.usersService.newFetchUserProfile(
+        id,
+        true
+      );
       console.log(user_profile);
       return new ApiResponse(200, 'Your query was successful', user_profile);
     } catch (error) {

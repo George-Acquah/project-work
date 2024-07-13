@@ -39,10 +39,14 @@ import {
 } from 'src/shared/interfaces/refactored/user.interface';
 import {
   sanitizeAdminUserFn,
-  sanitizeUserFn
+  sanitizeUserFn,
+  sanitizeUserProfileFn
 } from 'src/shared/helpers/users.sanitizers';
 import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
-import { FETCH_USERS_BY_ADMIN_AGGREGATION } from 'src/shared/constants/users.constants';
+import {
+  FETCH_USERS_BY_ADMIN_AGGREGATION,
+  FETCH_USERS_PROFILES_BY_USER_AGGREGATION
+} from 'src/shared/constants/users.constants';
 import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
@@ -128,7 +132,7 @@ export class UsersService {
 
       await this.createProfile(sanitizedCustomer._id);
 
-      await this.mailService.sendTest();
+      // await this.mailService.sendTest();
       return sanitizedCustomer;
     } catch (error) {
       throw error;
@@ -505,45 +509,24 @@ export class UsersService {
 
   async newFetchUserProfile(user_id: string, extra: boolean) {
     try {
-      const user = await this.returnId(user_id);
-
-      if (!user) {
-        throw new NotFoundException('This user does not exist');
-      }
-
-      console.log(user);
+      const { lookups, unwind_fields, project_fields } =
+        FETCH_USERS_PROFILES_BY_USER_AGGREGATION;
 
       const profile = await this.aggregationService.dynamicDocumentsPipeline<
-        _IDbProfile,
+        _TUser,
         _INewProfile
       >(
-        this.profileModel,
+        this.userModel,
         true,
-        [
-          'first_name',
-          'last_name',
-          'contact_no',
-          'area',
-          'city',
-          'state',
-          'pinCode'
-        ],
-        { user: new mongoose.Types.ObjectId(user) }
-        // [],
-        // 'user profile'
+        project_fields,
+        { _id: new mongoose.Types.ObjectId(user_id) },
+        lookups,
+        unwind_fields,
+        [],
+        1,
+        1,
+        extra && sanitizeUserProfileFn
       );
-
-      console.log(profile);
-
-      if (extra) {
-        return {
-          ...profile,
-          _id: user
-          // user_image: user?.user_image?.file_id ?? null,
-          // phone_number: user.phone_number,
-          // email: user.email
-        };
-      }
 
       return profile;
     } catch (error) {

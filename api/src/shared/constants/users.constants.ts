@@ -1,4 +1,3 @@
-import { _ILookup } from '../interfaces/responses.interface';
 import { _TUser } from '../interfaces/users.interface';
 import { _IAggregationFields } from './interface';
 
@@ -41,4 +40,25 @@ const FETCH_USERS_BY_ADMIN_AGGREGATION: _IAggregationFields<_TUser> = {
   field_names: ['email', 'userType', 'profile.first_name', 'profile.last_name'] // Add more fields as needed
 };
 
-export { FETCH_USERS_BY_ADMIN_AGGREGATION };
+const FETCH_USERS_PROFILES_BY_USER_AGGREGATION: _IAggregationFields<_TUser> = {
+  lookups: [
+    {
+      from: 'profiles',
+      as: 'profile',
+      foreignField: 'user'
+    },
+    {
+      from: 'userimages',
+      as: 'user_image',
+      foreignField: 'user'
+    }
+  ],
+  unwind_fields: ['profile', 'user_image'],
+  project_fields: ['_id', 'email', 'phone_number', 'profile', 'user_image'],
+  field_names: ['email', 'userType', 'profile.first_name', 'profile.last_name'] // Add more fields as needed
+};
+
+export {
+  FETCH_USERS_BY_ADMIN_AGGREGATION,
+  FETCH_USERS_PROFILES_BY_USER_AGGREGATION
+};

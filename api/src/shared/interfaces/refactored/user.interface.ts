@@ -49,6 +49,15 @@ interface _INewProfile {
   pinCode: string | null;
 }
 
+export interface _IExtraProfile {
+  user_image: string;
+  phone_number: string;
+  email: string;
+  _id: string;
+  first_name: string | null;
+  last_name: string | null;
+}
+
 interface _ICustomerLocation {
   location_at_pickup: string;
   current_loc: string;

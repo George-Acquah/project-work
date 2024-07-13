@@ -1,6 +1,8 @@
 import { Document } from 'mongoose';
 import {
+  _IExtraProfile,
   _IExtraUsers,
+  _INewProfile,
   _IRegisterResponse,
   _IUsersTable
 } from '../interfaces/refactored/user.interface';
@@ -57,5 +59,28 @@ export function sanitizeAdminUserFn(user: _TUser & _IExtraUsers): _IUsersTable {
       user?.updatedAt?.toDateString() ?? new Date().toDateString()
     ),
     isVerified: user.isVerified ? 'verified' : 'not verified'
+  };
+}
+
+export function sanitizeUserProfileFn(
+  user: _TUser & _IExtraUsers
+): _INewProfile & _IExtraProfile {
+  if (!user) {
+    return null;
+  }
+
+  // Return only the necessary fields
+  return {
+    _id: user._id.toString(),
+    user_image: user?.user_image?.file_id ?? null,
+    email: user.email,
+    first_name: user?.profile?.first_name,
+    last_name: user?.profile?.last_name,
+    phone_number: user?.phone_number,
+    state: user?.profile?.state,
+    area: user?.profile?.area,
+    pinCode: user?.profile?.pinCode,
+    city: user?.profile?.city,
+    contact_no: user?.profile?.contact_no
   };
 }
