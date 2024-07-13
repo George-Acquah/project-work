@@ -303,7 +303,7 @@ const navDropdownLinks: _INavLinks[] = [
     icon: UserPlusIcon,
   },
   {
-    href: "/admin/reservation",
+    href: "/dashboard/settings",
     name: "Settings",
     type: "normal",
     icon: BoltSlashIcon,
