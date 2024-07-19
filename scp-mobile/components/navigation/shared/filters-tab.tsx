@@ -7,10 +7,11 @@ import { selectCentersFilter, setCentersFilter } from "@/features/root.slice";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { FlatList, TouchableOpacity } from "react-native";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
+import { Center_Filter } from "@/utils/enums/global.enum";
 
-const data = ["Available", "Nearby", "Popular"];
+const data = [Center_Filter.AVAILABLE, Center_Filter.NEARBY, Center_Filter.POPULAR];
 //TODO receive data as props to have dynamic filtering
-const FiltersTab = () => {
+const FiltersTab = ({px, py, textColor}: {py?: number, px?: number, textColor?: { lightColor: string, darkColor: string}}) => {
   const colorScheme = useColorScheme() ?? 'light';
   const center_type = useAppSelector(selectCentersFilter);
   const dispatch = useAppDispatch();
@@ -23,8 +24,8 @@ const FiltersTab = () => {
           <TouchableOpacity
             onPress={() => dispatch(setCentersFilter(item))}
             style={{
-              paddingHorizontal: 25,
-              paddingVertical: 10,
+              paddingHorizontal: px ?? 25,
+              paddingVertical: py ?? 10,
               borderRadius: colorScheme === "light" ? 20 : 50,
               borderColor: activeItem
                 ? colorScheme === "light"
@@ -36,7 +37,10 @@ const FiltersTab = () => {
               borderWidth: 1,
             }}
           >
-            <ThemedText style={{ ...FONTS.pr2 }} {...text_colors.title}>
+            <ThemedText
+              style={{ ...FONTS.pr2 }}
+              {...(textColor ?? text_colors.title)}
+            >
               {item}
             </ThemedText>
           </TouchableOpacity>
