@@ -18,6 +18,7 @@ import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { UserType } from "@/utils/enums/global.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useScreenLoading from "@/utils/hooks/use-screen-loading";
+import RendererHOC from "@/components/common/renderer.hoc";
 
 interface _ISearchParams extends SearchParamsKeys {
   centers: string;
@@ -54,76 +55,85 @@ const ParkingCentersScreen = () => {
   useEffect(() => {
     dispatch(fetch_data);
   }, [center, pageSize, center_type]);
+  console.log('centers: ', data);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Text
+    <RendererHOC loading={screenLoading} error={null}>
+      <SafeAreaView style={styles.container}>
+        <View>
+          <Text
+            style={{
+              ...FONTS.h3,
+              alignItems: "center",
+              letterSpacing: 1.005,
+            }}
+            {...text_colors.title}
+          >
+            Parking Centers Screen
+          </Text>
+        </View>
+
+        <View style={{ marginTop: 20 }}>
+          <Search
+            entityType={"CENTERS"}
+            // searchLoading={loading}
+            placeholder="Search For Centers"
+          />
+        </View>
+
+        <View style={{ marginTop: 20 }}>
+          <FiltersTab />
+        </View>
+
+        <View
           style={{
-            ...FONTS.h3,
-            alignItems: "center",
-            letterSpacing: 1.005,
+            height: 0.4,
+            marginTop: 30,
           }}
-          {...text_colors.title}
-        >
-          Parking Centers Screen
-        </Text>
-      </View>
-
-      <View style={{ marginTop: 20 }}>
-        <Search
-          entityType={"CENTERS"}
-          // searchLoading={loading}
-          placeholder="Search For Centers"
+          {...background_colors.data}
         />
-      </View>
 
-      <View style={{ marginTop: 20 }}>
-        <FiltersTab />
-      </View>
-
-      <View
-        style={{
-          height: 0.4,
-          marginTop: 30,
-        }}
-        {...background_colors.data}
-      />
-
-      <View style={styles.scrollViewContainer}>
-        <ScrollView
-          // style={{ paddingTop: 20 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {data && (
-            <>
-              {data.length > 1 ? (
-                data.map((center, i) => (
-                  <View key={center._id} style={{ marginHorizontal: 20 }}>
-                    <ParkingCentersCard center={center} index={i} width={350} />
-                  </View>
-                ))
-              ) : (
-                <View>
-                  <Text>{`${center_type} Centers are empty`}</Text>
-                </View>
+        <View style={styles.scrollViewContainer}>
+          <RendererHOC loading={loading} error={null}>
+            <ScrollView
+              // style={{ paddingTop: 20 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {data && (
+                <>
+                  {data.length > 0 ? (
+                    data.map((center, i) => (
+                      <View key={center._id} style={{ marginHorizontal: 20 }}>
+                        <ParkingCentersCard
+                          center={center}
+                          index={i}
+                          width={350}
+                        />
+                      </View>
+                    ))
+                  ) : (
+                    <View>
+                      <Text>{`${center_type} Centers are empty`}</Text>
+                    </View>
+                  )}
+                  {data.length > 1 && <Pagination totalPages={data.length} />}
+                </>
               )}
-              {data.length > 1 && <Pagination totalPages={data.length} />}
-            </>
-          )}
-        </ScrollView>
-      </View>
+            </ScrollView>
+          </RendererHOC>
+        </View>
 
-      {role === UserType.PARK_OWNER && (
-        <FontAwesome
-          name="plus"
-          color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
-          size={34}
-          style={styles.plusIcon}
-          onPress={() => router.navigate("/parking-lots/add")}
-        />
-      )}
-    </SafeAreaView>
+        {role === UserType.PARK_OWNER && (
+          <FontAwesome
+            name="plus"
+            color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
+            size={34}
+            style={styles.plusIcon}
+            onPress={() => router.navigate("/parking-lots/add")}
+          />
+        )}
+      </SafeAreaView>
+    </RendererHOC>
   );
 };
 

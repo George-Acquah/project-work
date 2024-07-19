@@ -49,6 +49,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
 
   const handleReservation = async (data: any) => {
     const { duration } = data;
+    const confirmReservationHref = ``
     const req_href = `/parking-lots/${_id}/slots/reserve-slot?start_time=${startTime}&duration=${duration}`;
 
     const result = unwrapResult(

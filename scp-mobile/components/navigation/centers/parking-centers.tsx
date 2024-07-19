@@ -32,6 +32,7 @@ const ParkingCenters = () => {
   }, [currentPage, center_type ]);
 
   const success = !isLoading && !error;
+  console.log('cenb: ', centers);
 
   return (
     <View style={{ marginTop: SIZES.xLarge }}>

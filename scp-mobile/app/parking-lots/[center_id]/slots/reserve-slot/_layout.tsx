@@ -4,6 +4,7 @@ export default function ParkingLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
+      <Stack.Screen name="confirm-reservation" />
     </Stack>
   );
 }

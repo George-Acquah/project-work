@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { View, TextInput, Text } from "react-native";
 import DateTimePicker, {
@@ -16,7 +16,7 @@ import { DARK_THEME, LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import Button from "@/components/common/button";
 import RendererHOC from "@/components/common/renderer.hoc";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
-import { generateBookingStyles } from "./styles";
+import { generateBookingStyles, inputContainerBg } from "./styles";
 import { SIZES } from "@/constants/styles";
 import { ThemedText } from "@/components/common/ThemedText";
 import { text_colors } from "@/components/auth/styles";
@@ -25,6 +25,7 @@ import { Controller, useForm } from "react-hook-form";
 import ReservationSchema from "@/schemas/reservation.schema";
 import { FONTS } from "@/constants/fonts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import FormInputs from "@/components/common/input-form";
 
 interface _IReservationRequest {
   handleReservation: (data: any) => void;
@@ -40,6 +41,9 @@ const RequestReservationForm = ({
   const startTime = useAppSelector(selectStartTIme);
   const bookingLoading = useAppSelector(selectAvailableSlotsLoading);
   const bookingError = useAppSelector(selectIsAvailableSlotsError);
+
+  // REFS
+  const durationRef = useRef(null);
 
   const requestReservationSchema = ReservationSchema;
   const { control, handleSubmit } = useForm({
@@ -63,55 +67,33 @@ const RequestReservationForm = ({
 
   const renderDuration = () => (
     <>
-      <Controller
+      {/* Phone Number */}
+      <FormInputs
+        ref={durationRef}
         control={control as any}
         name="duration"
-        render={({
-          field: { value, onChange, onBlur },
-          fieldState: { error },
-        }) => (
-          <>
-            <View style={[styles.duration_container]}>
-              <TabBarIcon
-                fontProvider={FontAwesome}
-                name="hourglass-1"
-                size={20}
-                color={
-                  colorScheme === "light"
-                    ? DARK_THEME.backgroundPrimary
-                    : SHARED_COLORS.gray500
-                }
-                style={{ marginRight: SIZES.base }}
-                auth
-              />
-              <TextInput
-                onChangeText={onChange}
-                value={value}
-                onBlur={onBlur}
-                nativeID="duration"
-                autoCapitalize="none"
-                inputMode="numeric"
-                style={styles.duration_input}
-                placeholderTextColor={
-                  colorScheme === "light"
-                    ? SHARED_COLORS.gray600
-                    : DARK_THEME.contentInverseSecondary
-                }
-                placeholder="Enter the duration"
-              />
-            </View>
-
-            {/* Error Renders */}
-            {error && (
-              <Text
-                style={[{ ...FONTS.l3, marginTop: 10 }]}
-                {...text_colors.error}
-              >
-                {error.message}
-              </Text>
-            )}
-          </>
-        )}
+        rootContainerStyles={[]}
+        inputContainerStyles={styles.duration_container}
+        applyBg={inputContainerBg}
+        style={styles.duration_input}
+        autoCapitalize="none"
+        inputMode="numeric"
+        applyFonts={false}
+        label=""
+        placeholder="Enter the duration"
+        prependComponent={
+          <TabBarIcon
+            fontProvider={FontAwesome}
+            name="hourglass-1"
+            size={20}
+            color={
+              colorScheme === "light"
+                ? DARK_THEME.backgroundPrimary
+                : SHARED_COLORS.gray900
+            }
+            style={{ marginRight: SIZES.base }}
+          />
+        }
       />
     </>
   );
@@ -125,16 +107,16 @@ const RequestReservationForm = ({
           color={
             colorScheme === "light"
               ? DARK_THEME.backgroundPrimary
-              : SHARED_COLORS.gray500
+              : SHARED_COLORS.gray900
           }
           size={20}
           style={{ marginRight: SIZES.base }}
           auth
         />
         <View nativeID="start_time" style={styles.sub_container}>
-          <ThemedText style={{}} {...text_colors.title}>
+          <Text style={{}}>
             {startTime}
-          </ThemedText>
+          </Text>
         </View>
       </View>
       <FontAwesome
@@ -144,7 +126,7 @@ const RequestReservationForm = ({
         color={
           colorScheme === "light"
             ? DARK_THEME.backgroundPrimary
-            : SHARED_COLORS.gray900
+            : SHARED_COLORS.gray300
         }
         size={32}
       />
@@ -195,3 +177,49 @@ const RequestReservationForm = ({
 };
 
 export default RequestReservationForm;
+
+
+// <Controller
+//   control={control as any}
+//   name="duration"
+//   render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
+//     <>
+//       <View style={[styles.duration_container]}>
+//         <TabBarIcon
+//           fontProvider={FontAwesome}
+//           name="hourglass-1"
+//           size={20}
+//           color={
+//             colorScheme === "light"
+//               ? DARK_THEME.backgroundPrimary
+//               : SHARED_COLORS.gray900
+//           }
+//           style={{ marginRight: SIZES.base }}
+//           auth
+//         />
+//         <TextInput
+//           onChangeText={onChange}
+//           value={value}
+//           onBlur={onBlur}
+//           nativeID="duration"
+//           autoCapitalize="none"
+//           inputMode="numeric"
+//           style={styles.duration_input}
+//           placeholderTextColor={
+//             colorScheme === "light"
+//               ? SHARED_COLORS.gray600
+//               : DARK_THEME.contentInverseSecondary
+//           }
+//           placeholder="Enter the duration"
+//         />
+//       </View>
+
+//       {/* Error Renders */}
+//       {error && (
+//         <Text style={[{ ...FONTS.l3, marginTop: 10 }]} {...text_colors.error}>
+//           {error.message}
+//         </Text>
+//       )}
+//     </>
+//   )}
+// />;
