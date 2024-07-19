@@ -17,7 +17,7 @@ const SearchBox = ({
 }: _ISearchBox) => {
   const colorScheme = useColorScheme() ?? "light";
   return (
-    <View style={{ marginTop: 20, position: "relative" }}>
+    <View style={{  position: "relative" }}>
       <PlacesAutoComplete
         placeholder={placeholder}
         type={type}

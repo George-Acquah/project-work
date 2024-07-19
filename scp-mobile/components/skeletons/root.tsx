@@ -25,13 +25,6 @@ export default function RootSkeleton({ style, children }: _IRootSkeleton) {
         backgroundColor: colorMode === "dark" ? "#000000" : "#ffffff",
       }}
     >
-      {/* <Skeleton colorMode={colorMode} radius="round" height={75} width={75} />
-      <Spacer />
-      <Skeleton colorMode={colorMode} width={250} />
-      <Spacer height={8} />
-      <Skeleton colorMode={colorMode} width={"100%"} />
-      <Spacer height={8} />
-      <Skeleton colorMode={colorMode} width={"100%"} /> */}
       { children }
     </MotiView>
   );

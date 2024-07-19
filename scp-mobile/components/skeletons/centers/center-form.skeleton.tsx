@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, View, ViewProps } from "react-native";
+import { View } from "react-native";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";

@@ -65,24 +65,27 @@ const ReserveSlotScreen = () => {
     const vehicle_id = ids.VEHICLE;
     const slot_id = ids.SLOT;
     const center = ids.CENTER;
-    const result = unwrapResult(
-      await dispatch(
-        slotReservation({
-          center_id: center,
-          slot_id,
-          start_time: start_date,
-          reservation_duration,
-          vehicle_id,
-          callbackUrl: url
-        })
-      )
-    );
+    // const result = unwrapResult(
+    //   await dispatch(
+    //     slotReservation({
+    //       center_id: center,
+    //       slot_id,
+    //       start_time: start_date,
+    //       reservation_duration,
+    //       vehicle_id,
+    //       callbackUrl: url
+    //     })
+    //   )
+    // );
 
-    if (result && result.statusCode === 200) {
-      router.navigate(
-        `/success/?title=${"Your reservation was successful"}&description=${"You have successfully booked your slot. We look forward to having you"}&btnLabel=${"Go to home"}&route=${"/(navigations)/home"}&secBtnLabel=${"View your reservations"}&secRoute=${"/reservations"}`
-      );
-    }
+    // if (result && result.statusCode === 200) {
+    //   router.navigate(
+    //     `/success/?title=${"Your reservation was successful"}&description=${"You have successfully booked your slot. We look forward to having you"}&btnLabel=${"Go to home"}&route=${"/(navigations)/home"}&secBtnLabel=${"View your reservations"}&secRoute=${"/reservations"}`
+    //   );
+    // }
+    router.navigate(
+      `/parking-lots/${center_id}/slots/reserve-slot/confirm-reservation?start_time=${start_time}&duration=${duration}`
+    );
   };
 
   return (
