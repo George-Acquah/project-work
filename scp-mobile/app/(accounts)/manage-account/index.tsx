@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "expo-router";
 import { userDetails } from "@/api/auth";
 import ManageAccount from "@/components/accounts/manage-account";
+import RendererHOC from "@/components/common/renderer.hoc";
 
 const initialData: _IVerifyUser = {
   _id: "",
@@ -38,7 +39,11 @@ const ManageAccountScreen = ({}) => {
     fetchUserDetails(); // Call the function on component mount
   }, []);
 
-  return <ManageAccount data={data} loading={loading} />;
+  return (
+    <RendererHOC loading={loading} error={null}>
+      <ManageAccount data={data} />
+    </RendererHOC>
+  );
 };
 
 export default ManageAccountScreen;

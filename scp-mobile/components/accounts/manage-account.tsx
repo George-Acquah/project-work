@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { TextInput, StyleSheet, Alert, View as RNView } from "react-native";
 import { ThemedView as View } from "@/components/common/ThemedView";
 import { ThemedText as Text } from "@/components/common/ThemedText";
@@ -11,7 +11,7 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { router, usePathname } from "expo-router";
+import { router } from "expo-router";
 import { bg_colors, text_colors } from "@/components/auth/styles";
 import Button from "@/components/common/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,13 +33,13 @@ import AccountSchema from "@/schemas/user.schema";
 
 interface _IManageAccount {
   data: _IVerifyUser;
-  loading: boolean;
+  loading?: boolean;
 }
-const ManageAccount = ({ data, loading }: _IManageAccount) => {
+const ManageAccount = ({ data }: _IManageAccount) => {
   const colorScheme = useColorScheme() ?? "light";
-  //Use Image Manager Hook
   // Image Manager Hook
   const { selectImage } = useImageManager();
+  console.log(data.phone_number);
 
   // Refs
   const firstNameRef = useRef<TextInput>(null);
@@ -64,12 +64,12 @@ const ManageAccount = ({ data, loading }: _IManageAccount) => {
   const ManageAccountSchema = AccountSchema;
   const { control, handleSubmit } = useForm({
     defaultValues: {
-      first_name: data.first_name,
-      last_name: data.last_name,
-      phone_number: data.phone_number,
-      state: data.state,
-      area: data.area,
-      pincode: data.pincode,
+      first_name: data?.first_name,
+      last_name: data?.last_name,
+      phone_number: data?.phone_number,
+      state: data?.state,
+      area: data?.area,
+      pincode: data?.pincode,
     },
     resolver: zodResolver(ManageAccountSchema),
   });
@@ -96,7 +96,7 @@ const ManageAccount = ({ data, loading }: _IManageAccount) => {
           parameters: {
             firstName: payload.first_name ?? "",
             lastName: payload.last_name ?? "",
-            contactNo: payload.phone_number ?? "",
+            contactNo: payload?.phone_number ?? "",
             state: payload.state ?? "",
             area: payload.area ?? "",
             pincode: payload.pincode ?? "",
@@ -426,65 +426,63 @@ const ManageAccount = ({ data, loading }: _IManageAccount) => {
   };
 
   return (
-    <RendererHOC loading={loading} error={null}>
-      <View style={{ flex: 1 }}>
-        <KeyboardAwareScrollView
-          enableOnAndroid={true}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps={"handled"}
-          extraScrollHeight={150}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingBottom: SIZES.padding,
-          }}
-        >
-          {/* Render Header */}
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              paddingTop: SIZES.padding,
-            }}
-          >
-            {/* {renderHeader()} */}
-            <Text style={{ ...FONTS.b1 }} {...text_colors.title}>
-              Your Profile
-            </Text>
-            <Ionicons
-              name="arrow-back"
-              size={22}
-              color={colorScheme === "light" ? SHARED_COLORS.gray800 : "white"}
-              onPress={handleBackPress}
-              style={styles.backIcon}
-            />
-          </View>
-
-          {/* Render Header */}
-          {renderHeader()}
-
-          {/* Form Inputs */}
-          {renderInputs()}
-        </KeyboardAwareScrollView>
-        {/* Render Footer */}
-        {renderFooter()}
-        <DetachedModal
-          ref={galleryOptionsRef}
-          height={calc_height}
+    <View style={{ flex: 1 }}>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps={"handled"}
+        extraScrollHeight={150}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: SIZES.padding,
+        }}
+      >
+        {/* Render Header */}
+        <View
           style={{
-            marginHorizontal: 50,
-            borderRadius: SIZES.radius * 1.5,
-          }}
-          backgroundStyle={{
-            backgroundColor:
-              colorScheme === "light"
-                ? SHARED_COLORS.gray200
-                : SHARED_COLORS.gray700,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: SIZES.padding,
           }}
         >
-          {renderGalleryOptions()}
-        </DetachedModal>
-      </View>
-    </RendererHOC>
+          {/* {renderHeader()} */}
+          <Text style={{ ...FONTS.b1 }} {...text_colors.title}>
+            Your Profile
+          </Text>
+          <Ionicons
+            name="arrow-back"
+            size={22}
+            color={colorScheme === "light" ? SHARED_COLORS.gray800 : "white"}
+            onPress={handleBackPress}
+            style={styles.backIcon}
+          />
+        </View>
+
+        {/* Render Header */}
+        {renderHeader()}
+
+        {/* Form Inputs */}
+        {renderInputs()}
+      </KeyboardAwareScrollView>
+      {/* Render Footer */}
+      {renderFooter()}
+      <DetachedModal
+        ref={galleryOptionsRef}
+        height={calc_height}
+        style={{
+          marginHorizontal: 50,
+          borderRadius: SIZES.radius * 1.5,
+        }}
+        backgroundStyle={{
+          backgroundColor:
+            colorScheme === "light"
+              ? SHARED_COLORS.gray200
+              : SHARED_COLORS.gray700,
+        }}
+      >
+        {renderGalleryOptions()}
+      </DetachedModal>
+    </View>
   );
 };
 
