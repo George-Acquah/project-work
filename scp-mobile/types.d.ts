@@ -72,6 +72,133 @@ interface _ICenterParams {
   pageSize: number;
 }
 
+interface _IDetail {
+  /**
+   * The key of the data object to be used for this input field.
+   * It should correspond to a property in the data object provided.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  id: string;
+
+  /**
+   * The placeholder text to be shown inside the input field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  placeholder?: string;
+
+  /**
+   * The value to be shown inside the input field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  value?: string;
+
+  /**
+   * The label to be displayed alongside the input field.
+   * This provides a description or name for the field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  label: string;
+
+  width?: string;
+
+  bg?: string;
+
+  /**
+   * The label to be displayed alongside the input field.
+   * This provides a description or name for the field.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  input_type?: "select" | "radio" | "textarea";
+  // input_type?: "select" | "radio";
+
+  /**
+   * Optional icon to be displayed within the input field.
+   * Can be used to visually represent the field's purpose.
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  icon?: string;
+
+  onChange?: any;
+
+  /**
+   * Optional options to be rendered for select input field.
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  options?: string[];
+
+  /**
+   * Optional radios to be rendered for radio input field.
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  radio?: _IRadio[];
+
+  /**
+   * The type of the input field (e.g., "text", "password").
+   * Defines the kind of data the input field expects.
+   *
+   * @type {string}
+   * @memberof Detail
+   */
+  type: string;
+
+  /**
+   * Whether the input field should be disabled.
+   * This can be used to prevent editing of certain fields.
+   *
+   * @type {boolean}
+   * @memberof Detail
+   */
+  disabled?: boolean;
+
+  /**
+   * Whether the input field should be given a resonable margin top.
+   * @type {boolean}
+   * @memberof Detail
+   */
+  mt?: boolean;
+
+  /**
+   * Optional tooltip to provide additional information about the input field.
+   * Useful for giving users hints or guidance.
+   *
+   * @type {boolean}
+   * @memberof Detail
+   */
+  tooltip?: boolean;
+
+  /**
+   * New optional property to define the group
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  group?: string; //
+
+  /**
+   * Optional errors to show to the user
+   *
+   * @type {any}
+   * @memberof Detail
+   */
+  errors?: Record<string, string[] | undefined> | null;
+}
+
 interface _IVehicleParams {
   vehicles: string;
   currentPage: number;
