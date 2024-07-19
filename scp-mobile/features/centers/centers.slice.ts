@@ -21,7 +21,6 @@ export const fetchPopularCenters = createAsyncThunk(
     try {
       const { centers = "", currentPage = 1, pageSize = 5 } = centerParams;
       const response = await popularCenters(centers, currentPage, pageSize);
-      console.log(response)
       return response;
     } catch (error) {
       throw error;
@@ -101,7 +100,7 @@ const centerSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchPopularCenters.fulfilled, (state, action) => {
-        // state.popularCenters = action.payload.data;
+        state.popularCenters = action.payload.data;
         state.isLoading = false;
         state.message = action.payload.message;
         state.error = null;
