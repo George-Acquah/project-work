@@ -61,16 +61,18 @@ const generateBookingStyles = (colorScheme: "light" | "dark") => {
     },
     duration_input: {
       width: 300, // Width of 300 pixels
-      color: colorScheme === "light"
+      color:
+        colorScheme === "light"
           ? LIGHT_THEME.contentPrimary
-          : DARK_THEME.contentPrimary,
+          : LIGHT_THEME.contentPrimary,
     },
     duration_container: {
       flexDirection: "row", // Arrange children in a row
       alignItems: "center", // Align children vertically at the center
       backgroundColor:
-        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray900, // Background color
-      paddingVertical: 10, // Vertical padding of 5px
+        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray200, // Background color
+      height: 44,
+      paddingVertical: 8, // Vertical padding of 5px
       borderRadius: 8, // Rounded corners
       marginTop: 30, // Top margin of 30px
     },
@@ -84,12 +86,17 @@ const generateBookingStyles = (colorScheme: "light" | "dark") => {
       flexDirection: "row", // Arrange children in a row
       alignItems: "center", // Align children vertically at the center
       backgroundColor:
-        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray900, // Background color
-      paddingVertical: 5, // Vertical padding of 5px
+        colorScheme === "light" ? SHARED_COLORS.gray100 : SHARED_COLORS.gray200, // Background color
+      paddingVertical: 2, // Vertical padding of 5px
       borderRadius: 8, // Rounded corners
       marginHorizontal: 5, // Horizontal margin of 5px
     },
   });
 };
 
-export { generateBookingStyles };
+const inputContainerBg = {
+  lightColor: SHARED_COLORS.gray100,
+  darkColor: SHARED_COLORS.gray200,
+};
+
+export { generateBookingStyles, inputContainerBg };

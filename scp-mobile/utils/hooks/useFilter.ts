@@ -41,7 +41,8 @@ const useCenterFilter = () => {
     }, [center_type])
   );
 
-const select_data = useMemo(() => {
+  const select_data = useMemo(() => {
+    console.log(center_type);
   switch (center_type) {
     case Center_Filter.AVAILABLE:
       return selectAvailableCenters;
