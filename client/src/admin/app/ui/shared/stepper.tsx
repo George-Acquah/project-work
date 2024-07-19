@@ -5,6 +5,7 @@ import useCustomSearchParams from "@/hooks/search-params.hook";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import { StepBtn } from "./buttons";
 
+
 export const StepperBtns = ({ steps }: { steps: string[] }) => {
   const { handleSetParams, modalValue } = useCustomSearchParams("FORM_STEP");
   const current = parseInt(modalValue ?? "");
