@@ -1,19 +1,26 @@
 import { FONTS } from "@/constants/fonts";
 import { Link } from "expo-router";
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import Button from "./button";
 
 interface _IStepBtn {
   href?: string;
-  onClick?: () => any;
+  onPress?: (() => any) |( (param: any) => void);
   type: "back" | "next" | "cancel" | "submit";
   text?: string;
   pending?: boolean;
 }
 
-export function StepBtn({ onClick, type, href, text, pending= false }: _IStepBtn) {
+export function StepBtn({
+  onPress,
+  type,
+  href,
+  text,
+  pending = false,
+}: _IStepBtn) {
   return (
-    <div className="mt-6 transition-all duration-300">
+    <View style={{ marginTop: 24 }}>
+      {/* // className="mt-6 transition-all duration-300"> */}
       {type === "cancel" && href ? (
         <Link
           href={href}
@@ -28,29 +35,35 @@ export function StepBtn({ onClick, type, href, text, pending= false }: _IStepBtn
             },
           ]}
         >
-          <Text style={[ FONTS.pr2]}>{type}</Text>
+          <Text style={[FONTS.pr2]}>{type}</Text>
         </Link>
       ) : (
         <Button
-            aria-disabled={pending}
-            style={{ borderRadius: 8, height: 36 }}
+          aria-disabled={pending}
+          style={{ borderRadius: 8, height: 36 }}
           size="sm"
           // color={
           //   type === "submit" ? "green" : type === "back" ? "gray" : "blue"
           // }
           // type={type === "submit" ? "submit" : "button"}
-          onPress={type === "submit" ? undefined : onClick}
+          onPress={onPress}
         >
           {pending ? (
-            <div className="flex items-center justify-between capitalize">
-              <p className="">{text}...</p>
-              <ActivityIndicator size={'small'} color="white" />
-            </div>
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ textTransform: "capitalize" }}>{text}...</Text>
+              <ActivityIndicator size={"small"} color="white" />
+            </View>
           ) : (
-            `${type}`
+            <Text style={{ textTransform: "capitalize" }}>{type}</Text>
           )}
         </Button>
       )}
-    </div>
+    </View>
   );
 }

@@ -1,11 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import {
-  gradientDark,
-  textColor,
-} from "../ui/themes";
+import { gradientDark, textColor } from "../ui/themes";
 
-export const HR = ({ height = 'h-px' }: { height?: string}) => (
+export const HR = ({ height = "h-px" }: { height?: string }) => (
   <div
     className={`${height} w-full bg-gradient-to-r from-transparent to-transparent ${gradientDark}`}
   />
@@ -42,6 +39,7 @@ const AuthenticationLayout = ({ children }: _IChildren) => {
 };
 
 const LoginFooter = () => {
+  const year = new Date().getFullYear();
   return (
     <footer className={`mt-auto text-center text-gray-500 ${textColor} py-4`}>
       <div className="flex justify-around items-center">
@@ -56,7 +54,8 @@ const LoginFooter = () => {
         </div>
       </div>
       <p className="font-light">
-        &copy; 2023 Smart Car Parking Admin. All rights reserved.
+        &copy;
+        {` ${year} Smart Car Parking Admin. All rights reserved.`}
       </p>
     </footer>
   );

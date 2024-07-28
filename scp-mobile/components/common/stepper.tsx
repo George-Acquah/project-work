@@ -1,52 +1,49 @@
-import { Fragment } from "react";
-import { Text, View } from "react-native";
+import React, { Fragment } from "react";
+import { Text, View, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import useCustomSearchParams from "@/utils/hooks/use-search-params.hook";
 import { StepBtn } from "./action-buttons";
 
-export const HR = ({ height = 20 }: { height?: number }) => (
-  <View style={[{ height: height, width: "100%", backgroundColor: "gray" }]} />
+interface _IStepperBtns {
+  steps: string[];
+  handleSubmit?: (param: any) => void;
+  handleNext?: () => void;
+  handleBack?: () => void;
+}
+
+interface HRProps {
+  height?: number;
+}
+
+export const HR = ({ height = 1 }: HRProps) => (
+  <View style={[styles.hrContainer, { height }]}>
+    <View style={styles.transparentPart} />
+    <View style={styles.greenishPart} />
+    <View style={styles.transparentPart} />
+  </View>
 );
 
-export const StepperBtns = ({ steps }: { steps: string[] }) => {
-  
-  const { handleSetParams, modalValue } = useCustomSearchParams("FORM_STEP");
-  const current = parseInt(modalValue ?? "");
-
-  const handleNext = () => {
-    if (current < steps.length - 1) {
-      handleSetParams(true, (current + 1).toString());
-    }
-  };
-
-  const handleBack = () => {
-    if (current > 0) {
-      handleSetParams(true, (current - 1).toString());
-    }
-  };
+export const StepperBtns = ({
+  steps,
+  handleBack,
+  handleNext,
+  handleSubmit,
+}: _IStepperBtns) => {
+  const { modalValue } = useCustomSearchParams("FORM_STEP");
+  const current = parseInt(modalValue) || 0;
 
   return (
-    <View
-      style={[
-        {
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          padding: 16,
-        },
-      ]}
-      // className="transition-all duration-300 space-x-4  p-4"
-    >
+    <View style={styles.buttonContainer}>
       <StepBtn
         href={current === 0 ? "g" : undefined}
         type={current === 0 ? "cancel" : "back"}
-        onClick={current === 0 ? undefined : handleBack}
+        onPress={current === 0 ? undefined : handleBack}
       />
       <StepBtn
         type={current === steps.length - 1 ? "submit" : "next"}
-        onClick={current === steps.length - 1 ? undefined : handleNext}
+        onPress={current === steps.length - 1 ? handleSubmit : handleNext}
         text={current === steps.length - 1 ? "Sending" : undefined}
       />
     </View>
@@ -55,65 +52,97 @@ export const StepperBtns = ({ steps }: { steps: string[] }) => {
 
 const Stepper = ({ steps }: { steps: string[] }) => {
   const { modalValue } = useCustomSearchParams("FORM_STEP");
-  const current = parseInt(modalValue ?? "");
+  const current = parseInt(modalValue) || 1;
   const colorScheme = useColorScheme();
 
   const renderStepIcons = () => (
-    <View
-      style={{
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-        paddingHorizontal: 4,
-        paddingVertical: 16,
-      }}
-    >
+    <View style={styles.iconContainer}>
       {steps.map((step, index) => (
         <Fragment key={index}>
           <View
             style={[
-              {
-                width: 24,
-                height: 24,
-                padding: 4,
-                borderRadius: 30,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              },
+              styles.stepIcon,
               current === index
-                ? { backgroundColor: LIGHT_THEME.primary500 }
-                : { borderWidth: 8, borderColor: LIGHT_THEME.primary700 },
+                ? styles.activeStepIcon
+                : styles.inactiveStepIcon,
             ]}
-            // className={` transition-all duration-300 ${
-            //   current === index
-            //     ? "bg-blue-500 text-white "
-            //     : "border-2 border-blue-700 dark:border-blue-500"
-            // }`}
           >
             {current > index ? (
               <MaterialIcons
                 name="check"
-                style={[{ width: 24, height: 24 }]}
-                color={colorScheme === 'light' ? SHARED_COLORS.gray900 : 'white'}
-                // className="w-6 h-6 text-gray-900 dark:text-white font-extrabold"
+                style={styles.checkIcon}
+                color={
+                  colorScheme === "light" ? SHARED_COLORS.gray900 : "white"
+                }
               />
             ) : (
-              <Text style={{ padding: 8, textAlign: 'center'}}>{index + 1}</Text>
+              <Text style={styles.stepText}>{index + 1}</Text>
             )}
           </View>
-          {index !== steps.length - 1 && <HR height={16} />}
+          {index !== steps.length - 1 && <HR height={1.5} />}
         </Fragment>
       ))}
     </View>
   );
 
   return (
-    <View>
+    <View style={{ flex: 1, padding: 16 }}>
       {renderStepIcons()}
-      {/* {renderStepBtns()} */}
     </View>
   );
 };
 
 export default Stepper;
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: 16,
+  },
+  iconContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 16,
+  },
+  stepIcon: {
+    width:24, // Increased width for better visibility
+    height: 24, // Increased height for better visibility
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 8,
+  },
+  activeStepIcon: {
+    backgroundColor: LIGHT_THEME.primary800,
+    color: "white",
+  },
+  inactiveStepIcon: {
+    borderWidth: 2,
+    borderColor: LIGHT_THEME.primary400,
+  },
+  checkIcon: {
+    fontSize: 24,
+    color: "gray",
+  },
+  stepText: {
+    fontSize: 18,
+    color: "black",
+  },
+  hrContainer: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+  },
+  transparentPart: {
+    flex: 1,
+    backgroundColor: "transparent",
+  },
+  greenishPart: {
+    flex: 1,
+    backgroundColor: "green",
+    opacity: 0.5,
+  },
+});

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 
-export default async function Layout({ children }: _IChildren) {
+export default async function SettingsPage() {
   const session = await auth();
   const user = session?.user;
 

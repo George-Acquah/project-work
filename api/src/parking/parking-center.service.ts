@@ -11,6 +11,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import mongoose, { Model, Types } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
+import {
+  FETCH_POPULAR_CENTERS_AGGREGATION,
+  setPopularParkingCenterFields
+} from 'src/shared/constants/centers.constants';
 import { SORT } from 'src/shared/enums/general.enum';
 import { CenterTypes } from 'src/shared/enums/slots.enum';
 import {
@@ -203,43 +207,67 @@ export class ParkingCenterService {
     return sanitizeCenters(populatedCenters);
   }
 
-  async getPopularParkingCenters(
-    query = '',
-    currentPage: number,
-    limit: number
-  ): Promise<_IParkingCenter[]> {
-    try {
-      const popular_centers = await this.aggregationService.deepAggregate<
-        _IDbSlotReservation,
-        any
-      >(this.slotReservationModel, currentPage, limit, SORT.DESCENDING);
+  async getPopularParkingCenters(query = '', currentPage = 1, items = 10) {
+    const { project_fields, lookups, unwind_fields } =
+      FETCH_POPULAR_CENTERS_AGGREGATION;
 
-      const populatedCenters = await Promise.all(
-        popular_centers.map(async (center) => {
-          return await this.populateCentersFields<_IDbParkingCenter>(
-            center.popular_centers,
-            this.center_populate_fields,
-            'slot_images slot_data'
-          );
-        })
-      );
-
-      return sanitizeCenters(populatedCenters);
-    } catch (error) {
-      console.error('Error fetching popular parking centers:', error);
-    }
+    return this.aggregationService.dynamicDocumentsPipeline(
+      this.parkingCenterModel,
+      false,
+      project_fields,
+      {},
+      lookups,
+      unwind_fields,
+      ['slots'],
+      currentPage,
+      items,
+      (doc: any) => ({
+        ...doc,
+        availableSlotsCount: doc.slots.filter((slot) => slot.isAvailable).length
+      }),
+      [],
+      [],
+      setPopularParkingCenterFields
+    );
   }
 
-  // async getNearbyCenters(
-  //   latitude: number,
-  //   longitude: number
-  // ): Promise<ParkingCenter[]> {
-  //   // Implement logic to retrieve nearby centers based on geographical proximity
-  // }
+  async getNearbySlots(
+    latitude: number,
+    longitude: number,
+    radius: number,
+    currentPage = 1,
+    items = 10
+  ) {
+    const matcher = {
+      'center_address.location': {
+        $geoWithin: {
+          $centerSphere: [[longitude, latitude], radius / 6378.1]
+        }
+      }
+    };
 
-  // async getAvailableCenters(): Promise<ParkingCenter[]> {
-  //   // Implement logic to retrieve available centers with available slots
-  // }
+    const { project_fields, lookups, unwind_fields } =
+      FETCH_POPULAR_CENTERS_AGGREGATION;
+
+    return this.aggregationService.dynamicDocumentsPipeline(
+      this.parkingCenterModel,
+      false,
+      project_fields,
+      {},
+      lookups,
+      unwind_fields,
+      ['slots'],
+      currentPage,
+      items,
+      (doc: any) => ({
+        ...doc,
+        availableSlotsCount: doc.slots.filter((slot) => slot.isAvailable).length
+      }),
+      [],
+      [],
+      setPopularParkingCenterFields
+    );
+  }
 
   async getAvailableParkingCenters(
     query = '',
@@ -475,28 +503,28 @@ export class ParkingCenterService {
   }
 
   //Aggregation
-  async getSingleParkingCenterByAggregatiom(id: string): Promise<_IParkingCenter> {
+  async getSingleParkingCenterByAggregatiom(
+    id: string
+  ): Promise<_IParkingCenter> {
     try {
-            const lookups: _ILookup[] = [
-              {
-                from: 'slots',
-                as: 'slots',
-                foreignField: 'center_id'
-              },
-              {
-                from: 'centerimages',
-                as: 'center_images',
-                foreignField: 'center_id'
-              },
-              {
-                from: 'centeraddresses',
-                as: 'center_address',
-                foreignField: 'center_id'
-              }
-            ];
-            const unwind_fields = [
-              'center_address'
-            ] as (keyof _IDbParkingCenter)[];
+      const lookups: _ILookup[] = [
+        {
+          from: 'slots',
+          as: 'slots',
+          foreignField: 'center_id'
+        },
+        {
+          from: 'centerimages',
+          as: 'center_images',
+          foreignField: 'center_id'
+        },
+        {
+          from: 'centeraddresses',
+          as: 'center_address',
+          foreignField: 'center_id'
+        }
+      ];
+      const unwind_fields = ['center_address'] as (keyof _IDbParkingCenter)[];
       const parkingCenter =
         await this.aggregationService.dynamicDocumentsPipeline<
           _IDbParkingCenter,

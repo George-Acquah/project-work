@@ -21,6 +21,7 @@ export const fetchPopularCenters = createAsyncThunk(
     try {
       const { centers = "", currentPage = 1, pageSize = 5 } = centerParams;
       const response = await popularCenters(centers, currentPage, pageSize);
+      console.log(response);
       return response;
     } catch (error) {
       throw error;

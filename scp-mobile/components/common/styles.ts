@@ -162,4 +162,22 @@ const generatePaginationStyles = (colorScheme: "light" | "dark") => {
   });
 };
 
-export { generateStyles, generatePaginationStyles };
+const generateStepperStyles = (colorScheme: 'light' | 'dark') => {
+  return StyleSheet.create({
+    hrContainer: {
+      flexDirection: "row",
+      width: "100%",
+    },
+    transparentPart: {
+      flex: 1,
+      backgroundColor: "transparent",
+    },
+    greenishPart: {
+      flex: 1,
+      backgroundColor: "green",
+      opacity: 0.5,
+    },
+  });
+}
+
+export { generateStyles, generatePaginationStyles, generateStepperStyles };
