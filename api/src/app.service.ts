@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getHello(number_plate: string): boolean {
+    console.log(number_plate);
+    return true;
   }
 }
