@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(@Query('centers') number_plate: string): boolean {
+  getHello(@Query('number_plate') number_plate: string): boolean {
     return this.appService.getHello(number_plate);
   }
 }
