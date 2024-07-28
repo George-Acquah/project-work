@@ -27,22 +27,6 @@ export class CenterAddress {
     required: true
   })
   center_id: ParkingCenter;
-
-  @Prop({
-    type: {
-      type: { type: String },
-      coordinates: { type: [Number], required: true }
-    },
-    required: true
-  })
-  location: {
-    type: {
-      type: string;
-      enum: ['Point'];
-      required: true;
-    };
-    coordinates: [number, number];
-  };
 }
 
 export const CenterAddressSchema = SchemaFactory.createForClass(CenterAddress);
@@ -53,16 +37,3 @@ CenterAddressSchema.index({ location: '2dsphere' });
 // Pre-save hook to set the location field
 
 // Pre-update hook to set the location field
-CenterAddressSchema.pre<CenterAddressDocument>(
-  'findOneAndUpdate',
-  function (next) {
-    const update = this.getChanges() as any;
-    if (update.latitude !== undefined && update.longitude !== undefined) {
-      update.location = {
-        type: 'Point',
-        coordinates: [update.longitude, update.latitude] // [longitude, latitude]
-      };
-    }
-    next();
-  }
-);
