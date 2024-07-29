@@ -14,6 +14,7 @@ import mongoose, {
 import { CREATE_PIPELINE, SORT } from './shared/enums/general.enum';
 import { _ILookup } from './shared/interfaces/responses.interface';
 import { _IUpdatedUserRes } from './shared/interfaces/users.interface';
+import { _IDbSlotReservation } from './shared/interfaces/slot.interface';
 
 @Injectable()
 export class AggregationService {
@@ -668,5 +669,30 @@ export class AggregationService {
     } catch (error) {
       throw new Error(`Error fetching filtered documents: ${error.message}`);
     }
+  }
+
+  //Number Plate Aggregation
+  async checkIfNumberPlateExistsAggregation(
+    model: Model<_IDbSlotReservation>,
+    numberPlate: string
+  ): Promise<boolean> {
+    const pipeline: PipelineStage[] = [
+      {
+        $match: {
+          number_plate: numberPlate
+        }
+      },
+      {
+        $limit: 1 // Limit to 1 document for efficiency
+      },
+      {
+        $project: {
+          _id: 1 // Optionally project only the _id field
+        }
+      }
+    ];
+
+    const result = await model.aggregate(pipeline).exec();
+    return result.length > 0;
   }
 }

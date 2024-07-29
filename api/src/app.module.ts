@@ -1,7 +1,6 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ArduinoModule } from './arduino/arduino.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { ParkingModule } from './parking/parking.module';
@@ -11,25 +10,24 @@ import { VehiclesModule } from './vehicles/vehicles.module';
 import { StorageService } from './storage/storage.service';
 import { ImagesModule } from './images/images.module';
 import { MailModule } from './mail/mail.module';
+import { NumberPlateModule } from './number-plate/number-plate.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     RootMongooseModule,
-    ArduinoModule,
     AuthModule,
     ParkingModule,
     UsersModule,
     VehiclesModule,
     ImagesModule,
-    MailModule
+    MailModule,
+    NumberPlateModule
   ],
   controllers: [AppController],
   providers: [AppService, StorageService]
 })
 export class AppModule {
-  constructor() {
-    const logger = new Logger();
-    logger.log('App Module Connected and running.');
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
 }

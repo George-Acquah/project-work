@@ -78,7 +78,7 @@ import { UploadMiddleware } from 'src/shared/middlewares/uploads.middleware';
     AggregationService
   ],
   controllers: [ParkingCenterController],
-  exports: []
+  exports: [MongooseModule]
 })
 export class ParkingModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
