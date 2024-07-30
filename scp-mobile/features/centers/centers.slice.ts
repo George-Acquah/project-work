@@ -1,4 +1,5 @@
 import {
+  addCenterAddress,
   availableCenters,
   nearbyCenters,
   popularCenters,
@@ -78,6 +79,19 @@ export const testCenters = createAsyncThunk("center/testCenters", async () => {
     throw error;
   }
 });
+
+export const addCenterAddressThunk = createAsyncThunk(
+  "center/addCenterAddress",
+  async ({ data, center_id }: { data: _IAddress, center_id: string}) => {
+    try {
+      const response = await addCenterAddress(center_id, data);
+      return response
+    }
+    catch (error: any) {
+      throw error;
+    }
+  }
+)
 
 const centerSlice = createSlice({
   name: "center",
@@ -178,6 +192,15 @@ const centerSlice = createSlice({
         state.isLoading = false;
         state.message = null;
         state.error = action.error.message!;
+      })
+
+      .addCase(addCenterAddressThunk.fulfilled, (state) => { 
+        state.isLoading = false;
+
+       })
+      .addCase(addCenterAddressThunk.pending, (state) => { state.isLoading = true})
+      .addCase(addCenterAddressThunk.rejected, (state) => {
+      state.isLoading = false
       });
   },
 });

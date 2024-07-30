@@ -30,10 +30,3 @@ export class CenterAddress {
 }
 
 export const CenterAddressSchema = SchemaFactory.createForClass(CenterAddress);
-
-// Create a geospatial index on the location field
-CenterAddressSchema.index({ location: '2dsphere' });
-
-// Pre-save hook to set the location field
-
-// Pre-update hook to set the location field

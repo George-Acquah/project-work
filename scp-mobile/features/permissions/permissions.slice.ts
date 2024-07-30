@@ -4,7 +4,7 @@ import {
   createSlice,
 } from "@reduxjs/toolkit";
 import { permissionsInitialState } from "../states";
-import { RootState } from "store";
+import { RootState } from "@/store";
 import * as Location from "expo-location";
 
 export const getLocation = createAsyncThunk(
@@ -34,7 +34,7 @@ export const getLocation = createAsyncThunk(
         status,
         direction,
       };
-    } catch (error) {
+    } catch (error: any) {
       if (!error.code) {
         throw {
           message: error,
@@ -70,7 +70,7 @@ const permissionSlice = createSlice({
       .addCase(getLocation.rejected, (state, action) => {
         state.isLoading = false;
         state.message = null;
-        state.error = action.error.message;
+        state.error = action.error.message ?? '';
       });
   },
 });

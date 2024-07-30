@@ -399,15 +399,22 @@ export class ParkingCenterController {
 
   @UseGuards(ParkingCenterGuard)
   @Post(':center_id/add-address')
-  async addCenterAddress(
-    @Param('center_id') center_id: string,
-    @Body() data: _IAddCenterAddress
-  ) {
+  async addCenterAddress() {
+    // @Body() data: _IAddCenterAddress // @Param('center_id') center_id: string,
     try {
       const arg = {
-        center_id,
-        ...data
+        // center_id,
+        // ...data
+
+        city: 'Example City',
+        latitude: 6.2167,
+        longitude: -2.5833,
+        state: 'Example State',
+        country: 'Example Country',
+        center_id: '656482722cbf180fcb3aaf3d'
       };
+
+      console.log('he');
       const address = await this.parkingService.addCenterAddress(arg);
 
       return new ApiResponse(200, 'Address Added Succesfully', address);
@@ -514,6 +521,7 @@ export class ParkingCenterController {
         slot_id,
         vehicle_id,
         start_time: data.start_time,
+        start_date: data.start_date,
         reservation_duration: data.reservation_duration
       };
       const reservation = await this.slotService.reserveParkingSlot(

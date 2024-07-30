@@ -4,6 +4,7 @@ const CENTER_BASE_URL = `owner/parking-center`;
 
 export interface _IReservationParams {
   start_time: Date;
+  start_date: Date;
   reservation_duration: number;
   callbackUrl: string;
 }

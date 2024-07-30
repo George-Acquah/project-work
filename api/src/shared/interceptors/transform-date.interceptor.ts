@@ -12,8 +12,12 @@ export class TransformDateInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
 
-    if (request.body && typeof request.body.start_time === 'string') {
+    if (request.body && typeof request.body?.start_time === 'string') {
       request.body.start_time = new Date(request.body.start_time);
+    }
+
+    if (request.body && typeof request.body?.start_date === 'string') {
+      request.body.start_date = new Date(request.body.start_date);
     }
 
     return next.handle().pipe(

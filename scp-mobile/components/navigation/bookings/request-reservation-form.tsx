@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { FontAwesome } from "@expo/vector-icons";
-import { View, TextInput, Text } from "react-native";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { View, Text } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -8,7 +8,9 @@ import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import {
   selectAvailableSlotsLoading,
   selectIsAvailableSlotsError,
+  selectStartDate,
   selectStartTIme,
+  setStartDate,
   setStartTime,
 } from "@/features/reservations/reservations.slice";
 import { TabBarIcon } from "../TabBarIcon";
@@ -26,6 +28,7 @@ import ReservationSchema from "@/schemas/reservation.schema";
 import { FONTS } from "@/constants/fonts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import FormInputs from "@/components/common/input-form";
+import { convertDateToString, convertDateToTime } from "@/utils/functions/shared";
 
 interface _IReservationRequest {
   handleReservation: (data: any) => void;
@@ -38,7 +41,9 @@ const RequestReservationForm = ({
   const styles = generateBookingStyles(colorScheme);
   const dispatch = useAppDispatch();
   const [isCalendar, setIsCalendar] = useState(false);
+  const [isStartTime, setIsStartTime] = useState(false);
   const startTime = useAppSelector(selectStartTIme);
+  const startDate = useAppSelector(selectStartDate);
   const bookingLoading = useAppSelector(selectAvailableSlotsLoading);
   const bookingError = useAppSelector(selectIsAvailableSlotsError);
 
@@ -58,28 +63,41 @@ const RequestReservationForm = ({
     date: Date | undefined
   ) => {
     if (date) {
-      dispatch(setStartTime(date.toDateString()));
+      dispatch(setStartDate(date.toISOString()));
     }
     if (event.type === "dismissed" || event.type === "set") {
     }
     setIsCalendar(false);
   };
 
+const handleTimeChange = (
+  event: DateTimePickerEvent,
+  date: Date | undefined
+) => {
+  if (date) {
+    dispatch(setStartTime(date.toISOString())); // Store the full ISO string
+  }
+  if (event.type === "dismissed" || event.type === "set") {
+  }
+  setIsStartTime(false);
+};
+
+
   const renderDuration = () => (
-    <>
+    <View style={{ marginTop: 20, marginHorizontal: SIZES.base * 0.6 }}>
       {/* Phone Number */}
       <FormInputs
         ref={durationRef}
         control={control as any}
         name="duration"
-        rootContainerStyles={[]}
+        rootContainerStyles={[{ marginTop: 30}]}
         inputContainerStyles={styles.duration_container}
         applyBg={inputContainerBg}
         style={styles.duration_input}
         autoCapitalize="none"
         inputMode="numeric"
         applyFonts={false}
-        label=""
+        label="Reservation Duration"
         placeholder="Enter the duration"
         prependComponent={
           <TabBarIcon
@@ -95,48 +113,109 @@ const RequestReservationForm = ({
           />
         }
       />
-    </>
+    </View>
   );
 
   const renderDate = () => (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <View style={styles.container}>
-        <TabBarIcon
-          fontProvider={FontAwesome}
+    <>
+      <Text style={{ paddingHorizontal: SIZES.radius, color: colorScheme === 'dark' ? 'white' : 'black', }}>Start Day</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", marginTop: SIZES.base * 0.6 }}>
+        <View style={styles.container}>
+          <TabBarIcon
+            fontProvider={FontAwesome}
+            name="calendar"
+            color={
+              colorScheme === "light"
+                ? DARK_THEME.backgroundPrimary
+                : SHARED_COLORS.gray900
+            }
+            size={20}
+            style={{ marginRight: SIZES.base }}
+            auth
+          />
+          <View nativeID="start_date" style={styles.sub_container}>
+            <Text style={{}}>{startDate}</Text>
+          </View>
+        </View>
+        <FontAwesome
+          onPress={() => setIsCalendar(true)}
+          style={{ marginLeft: 10 }}
           name="calendar"
           color={
             colorScheme === "light"
               ? DARK_THEME.backgroundPrimary
-              : SHARED_COLORS.gray900
+              : SHARED_COLORS.gray300
           }
-          size={20}
-          style={{ marginRight: SIZES.base }}
-          auth
+          size={32}
         />
-        <View nativeID="start_time" style={styles.sub_container}>
-          <Text style={{}}>
-            {startTime}
-          </Text>
-        </View>
+        {isCalendar && (
+          <DateTimePicker
+            value={new Date(startDate)}
+            mode="date"
+            onChange={handleDateChange}
+          />
+        )}
       </View>
-      <FontAwesome
-        onPress={() => setIsCalendar(true)}
-        style={{ marginLeft: 10 }}
-        name="calendar"
-        color={
-          colorScheme === "light"
-            ? DARK_THEME.backgroundPrimary
-            : SHARED_COLORS.gray300
-        }
-        size={32}
-      />
-      {isCalendar && (
-        <DateTimePicker
-          value={new Date(startTime)}
-          onChange={handleDateChange}
+    </>
+  );
+
+  const renderTime = () => (
+    <>
+      <Text
+        style={{
+          paddingHorizontal: SIZES.radius,
+          marginTop: 20,
+          color: colorScheme === "dark" ? "white" : "black",
+        }}
+      >
+        Start Time
+      </Text>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+
+          marginTop: SIZES.base * 0.6,
+        }}
+      >
+        <View style={styles.container}>
+          <TabBarIcon
+            fontProvider={AntDesign}
+            name="clockcircle"
+            color={
+              colorScheme === "light"
+                ? DARK_THEME.backgroundPrimary
+                : SHARED_COLORS.gray900
+            }
+            size={20}
+            style={{ marginRight: SIZES.base }}
+            auth
+          />
+          <View nativeID="start_time" style={styles.sub_container}>
+            <Text style={{}}>{convertDateToTime(startTime)}</Text>
+          </View>
+        </View>
+        <AntDesign
+          onPress={() => setIsStartTime(true)} // Change this to setIsStartTime
+          style={{ marginLeft: 10 }}
+          name="clockcircle"
+          color={
+            colorScheme === "light"
+              ? DARK_THEME.backgroundPrimary
+              : SHARED_COLORS.gray300
+          }
+          size={32}
         />
-      )}
-    </View>
+        {isStartTime && (
+          <DateTimePicker
+            value={new Date(startTime)}
+            mode="time"
+            display="default"
+            onChange={handleTimeChange}
+          />
+        )}
+      </View>
+    </>
   );
 
   const renderFooter = () => (
@@ -169,6 +248,7 @@ const RequestReservationForm = ({
         }}
       >
         {renderDate()}
+        {renderTime()}
         {renderDuration()}
       </KeyboardAwareScrollView>
       {renderFooter()}
@@ -177,49 +257,3 @@ const RequestReservationForm = ({
 };
 
 export default RequestReservationForm;
-
-
-// <Controller
-//   control={control as any}
-//   name="duration"
-//   render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
-//     <>
-//       <View style={[styles.duration_container]}>
-//         <TabBarIcon
-//           fontProvider={FontAwesome}
-//           name="hourglass-1"
-//           size={20}
-//           color={
-//             colorScheme === "light"
-//               ? DARK_THEME.backgroundPrimary
-//               : SHARED_COLORS.gray900
-//           }
-//           style={{ marginRight: SIZES.base }}
-//           auth
-//         />
-//         <TextInput
-//           onChangeText={onChange}
-//           value={value}
-//           onBlur={onBlur}
-//           nativeID="duration"
-//           autoCapitalize="none"
-//           inputMode="numeric"
-//           style={styles.duration_input}
-//           placeholderTextColor={
-//             colorScheme === "light"
-//               ? SHARED_COLORS.gray600
-//               : DARK_THEME.contentInverseSecondary
-//           }
-//           placeholder="Enter the duration"
-//         />
-//       </View>
-
-//       {/* Error Renders */}
-//       {error && (
-//         <Text style={[{ ...FONTS.l3, marginTop: 10 }]} {...text_colors.error}>
-//           {error.message}
-//         </Text>
-//       )}
-//     </>
-//   )}
-// />;

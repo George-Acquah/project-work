@@ -47,6 +47,7 @@ import {
   sanitizeSlotImages,
   sanitizeSlots
 } from 'src/shared/utils/slots.utils';
+import { VehiclesService } from 'src/vehicles/vehicles.service';
 
 export interface _ITest {
   _id: string;
@@ -65,7 +66,8 @@ export class SlotService {
     private slotAddressModel: Model<_IDbSlotAddress>,
     @InjectModel(SlotReservation.name)
     private slotReservationModel: Model<_IDbSlotReservation>,
-    private readonly aggregationService: AggregationService
+    private readonly aggregationService: AggregationService,
+    private readonly vehicleService: VehiclesService
   ) {}
 
   async findAvailableSlots(
@@ -141,7 +143,8 @@ export class SlotService {
     slot: _IDbSlot,
     duration: number,
     start_time: Date,
-    vehicle_id: string
+    vehicle_id: string,
+    number_plate: string
   ): Promise<_IDbSlotReservation> {
     try {
       const endTime = new Date(start_time.getTime() + duration * 60000); // Calculate end time
@@ -151,6 +154,7 @@ export class SlotService {
         slot_id: slot._id,
         vehicle_id,
         start_time,
+        number_plate,
         end_time: endTime,
         time_of_reservation: new Date(),
         duration_of_reservation: duration,
@@ -406,32 +410,43 @@ export class SlotService {
     const { center_id, slot_id, vehicle_id, start_time, reservation_duration } =
       reservationDto;
 
-    const selectedSlot = await this.slotModel
-      .findOne({ _id: slot_id, center_id })
-      .exec();
-    if (!selectedSlot) {
-      throw new NotFoundException('This slot does not exist');
+    try {
+      const selectedSlot = await this.slotModel
+        .findOne({ _id: slot_id, center_id })
+        .exec();
+      if (!selectedSlot) {
+        throw new NotFoundException('This slot does not exist');
+      }
+
+      const numberPlate = await this.vehicleService.getLicensePlate(vehicle_id);
+
+      if (!numberPlate) {
+        throw new NotFoundException('This vehicle does not exist');
+      }
+
+      selectedSlot.isAvailable = false; // Update slot availability
+      await selectedSlot.save();
+
+      const reservation = await this.createReservation(
+        selectedSlot,
+        reservation_duration,
+        start_time,
+        vehicle_id,
+        numberPlate
+      );
+
+      // Return reservation details
+      return {
+        reservationId: reservation._id,
+        slotId: selectedSlot._id,
+        start_time: reservation.start_time,
+        end_time: reservation.end_time,
+        cost_of_reservation: reservation.cost_of_reservation,
+        free_waiting_time: reservation.wait_time
+      };
+    } catch (error) {
+      throw error;
     }
-
-    selectedSlot.isAvailable = false; // Update slot availability
-    await selectedSlot.save();
-
-    const reservation = await this.createReservation(
-      selectedSlot,
-      reservation_duration,
-      start_time,
-      vehicle_id
-    );
-
-    // Return reservation details
-    return {
-      reservationId: reservation._id,
-      slotId: selectedSlot._id,
-      start_time: reservation.start_time,
-      end_time: reservation.end_time,
-      cost_of_reservation: reservation.cost_of_reservation,
-      free_waiting_time: reservation.wait_time
-    };
   }
 
   async getAllReservations(query?: string, page = 1, limit = 5) {

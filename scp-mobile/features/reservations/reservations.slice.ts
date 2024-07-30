@@ -21,9 +21,10 @@ export const fetchAvailableSlots = createAsyncThunk(
   "reservation/availableSlots",
   async (params: _IFetchAvailableSlots) => {
     try {
-      const { start_time, reservation_duration, center_id, pageSize, callbackUrl } = params;
+      const { start_time, reservation_duration, center_id, pageSize, callbackUrl, start_date } = params;
       return await RequestReservation(center_id, pageSize, {
         start_time,
+        start_date,
         reservation_duration,
         callbackUrl
       });
@@ -38,6 +39,7 @@ export const slotReservation = createAsyncThunk(
     try {
       const {
         start_time,
+        start_date,
         reservation_duration,
         center_id,
         slot_id,
@@ -46,6 +48,7 @@ export const slotReservation = createAsyncThunk(
       } = params;
       return await reserveSlot(center_id, slot_id, vehicle_id, {
         start_time,
+        start_date,
         reservation_duration,
         callbackUrl
       });
@@ -62,6 +65,9 @@ const reservationSlice = createSlice({
     setStartTime: (state, action: PayloadAction<string>) => {
       state.start_time = action.payload;
     },
+    setStartDate: (state, action: PayloadAction<string>) => {
+      state.start_date = action.payload
+    },
     setDuration: (state, action: PayloadAction<number>) => {
       state.duration = action.payload;
     },
@@ -69,7 +75,7 @@ const reservationSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchAvailableSlots.fulfilled, (state, action) => {
-        console.log(action.payload.data.documents)
+        console.log(action.payload.data.documents);
         state.isLoading = false;
         state.error = null;
         state.message = action.payload.message;
@@ -105,7 +111,7 @@ const reservationSlice = createSlice({
   },
 });
 
-export const { setDuration, setStartTime } = reservationSlice.actions;
+export const { setDuration, setStartTime, setStartDate } = reservationSlice.actions;
 
 export const selectAvailableSlots = (state: RootState) =>
   state.reservation.availableSlots;
@@ -117,6 +123,10 @@ export const selectMemoedAvailableSlots = createSelector(
 
 export const selectStartTIme = (state: RootState) =>
   state.reservation.start_time;
+
+export const selectStartDate = (state: RootState) =>
+  state.reservation.start_date;
+
 export const selectDuration = (state: RootState) => state.reservation.duration;
 
 export const selectAvailableSlotsLoading = (state: RootState) =>

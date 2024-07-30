@@ -36,6 +36,7 @@ import { ownerOptionsData } from "@/constants/owner";
 import { TouchableOpacity } from "react-native";
 import {
   fetchAvailableSlots,
+  selectStartDate,
   selectStartTIme,
   setDuration,
 } from "@/features/reservations/reservations.slice";
@@ -70,10 +71,11 @@ const ParkingCenterDetails = () => {
   const error = useAppSelector(selectCenterError);
   const center = useAppSelector(selectFetchedCenter);
   const startTime = useAppSelector(selectStartTIme);
+  const startDate = useAppSelector(selectStartDate);
 
   const handleReservation = async (data: any) => {
     const { duration } = data;
-    const req_href = `/parking-lots/${center?._id}/slots/reserve-slot?start_time=${startTime}&duration=${duration}`;
+    const req_href = `/parking-lots/${center?._id}/slots/reserve-slot?start_date=${startDate}&start_time=${startTime}&duration=${duration}`;
 
     const result = unwrapResult(
       await dispatch(
@@ -81,6 +83,7 @@ const ParkingCenterDetails = () => {
           center_id: center?._id ?? "",
           pageSize: 20,
           start_time: new Date(startTime),
+          start_date: new Date(startDate),
           reservation_duration: duration,
           callbackUrl: url
         })

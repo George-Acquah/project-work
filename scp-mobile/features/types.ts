@@ -81,6 +81,7 @@ interface _IResrvations extends _IRootState {
   reservation_loading: boolean;
   reservation_error: string | null;
   start_time: string;
+  start_date: string;
   duration: number;
 }
 

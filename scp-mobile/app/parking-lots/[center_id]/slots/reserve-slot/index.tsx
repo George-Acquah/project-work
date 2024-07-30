@@ -11,13 +11,11 @@ import {
   testSlots,
 } from "@/features/slots/parking-slots.slice";
 import Button from "@/components/common/button";
-import { unwrapResult } from "@reduxjs/toolkit";
-import { slotReservation } from "@/features/reservations/reservations.slice";
 import { ids } from "@/constants/root";
 import RendererHOC from "@/components/common/renderer.hoc";
 import SlotMap from "@/components/navigation/centers/slot-map";
 import { ThemedView } from "@/components/common/ThemedView";
-import { bg_colors, text_colors } from "@/components/auth/styles";
+import { text_colors } from "@/components/auth/styles";
 import { SIZES } from "@/constants/styles";
 import { FONTS } from "@/constants/fonts";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
@@ -33,12 +31,13 @@ interface _ICenterParams {
   center_id: string;
   duration: string;
   start_time: string;
+  start_date: string;
 }
 const ReserveSlotScreen = () => {
   const url = usePathname();
   //Get Params
   const params = useLocalSearchParams<_ICenterParams>();
-  const { center_id, duration, start_time } = params;
+  const { center_id, duration, start_time, start_date } = params;
 
   //Define Color Scheme
   const colorScheme = useColorScheme() ?? 'light';
@@ -59,32 +58,9 @@ const ReserveSlotScreen = () => {
     dispatch(testSlots());
   }, []);
 
-  const handleBookSlot = async (id_for_slot: string) => {
-    const start_date = new Date(start_time ?? "");
-    const reservation_duration = parseInt(duration ?? "");
-    const vehicle_id = ids.VEHICLE;
-    const slot_id = ids.SLOT;
-    const center = ids.CENTER;
-    // const result = unwrapResult(
-    //   await dispatch(
-    //     slotReservation({
-    //       center_id: center,
-    //       slot_id,
-    //       start_time: start_date,
-    //       reservation_duration,
-    //       vehicle_id,
-    //       callbackUrl: url
-    //     })
-    //   )
-    // );
-
-    // if (result && result.statusCode === 200) {
-    //   router.navigate(
-    //     `/success/?title=${"Your reservation was successful"}&description=${"You have successfully booked your slot. We look forward to having you"}&btnLabel=${"Go to home"}&route=${"/(navigations)/home"}&secBtnLabel=${"View your reservations"}&secRoute=${"/reservations"}`
-    //   );
-    // }
+  const handleBookSlot = async (slot_id: string) => {
     router.navigate(
-      `/parking-lots/${center_id}/slots/reserve-slot/confirm-reservation?start_time=${start_time}&duration=${duration}`
+      `/parking-lots/${center_id}/slots/reserve-slot/confirm-reservation?slot_id=${slot_id}&start_date=${start_date}&start_time=${start_time}&duration=${duration}`
     );
   };
 
@@ -240,6 +216,7 @@ const ReserveSlotScreen = () => {
                   style={{
                     bottom: 0,
                     right: 0,
+
                     width: "100%",
                     position: "absolute",
                   }}

@@ -18,7 +18,7 @@ const rootInitialState: _IRoots = {
   showOnboarding: true,
   viewMap: false,
   nearbyMap: true,
-  centersFilter: Center_Filter.AVAILABLE,
+  centersFilter: Center_Filter.POPULAR,
   slotsFilter: Center_Filter.AVAILABLE,
 };
 
@@ -85,6 +85,7 @@ const initialReservationState: _IResrvations = {
   reservation_loading: false,
   reservation_error: null,
   start_time: new Date().toDateString(),
+  start_date: new Date().toDateString(),
   duration: 0,
 }
 

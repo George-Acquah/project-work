@@ -20,6 +20,8 @@ export const vehicleLookups: _ILookup[] = [
   }
 ];
 
+export const licensePlateLookups: _ILookup[] = [];
+
 export const FETCH_VEHICLES_BY_ADMIN_AGGREGATION: _IAggregationFields<_IDbVehicleNew> =
   {
     lookups: vehicleLookups,
@@ -39,3 +41,10 @@ export const FETCH_VEHICLES_BY_ADMIN_AGGREGATION: _IAggregationFields<_IDbVehicl
     ],
     count_fields: []
   };
+
+export const FETCH_LICENCE_PLATE: _IAggregationFields<_IDbVehicleNew> = {
+  lookups: vehicleLookups,
+  unwind_fields: [],
+  project_fields: ['vehicle_no'],
+  count_fields: []
+};

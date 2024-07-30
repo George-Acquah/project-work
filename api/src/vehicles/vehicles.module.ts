@@ -44,7 +44,8 @@ import {
     StorageService,
     AggregationService
   ],
-  controllers: [VehiclesController]
+  controllers: [VehiclesController],
+  exports: [VehiclesService]
 })
 export class VehiclesModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

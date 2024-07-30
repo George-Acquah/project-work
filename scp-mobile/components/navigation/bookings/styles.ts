@@ -74,7 +74,7 @@ const generateBookingStyles = (colorScheme: "light" | "dark") => {
       height: 44,
       paddingVertical: 8, // Vertical padding of 5px
       borderRadius: 8, // Rounded corners
-      marginTop: 30, // Top margin of 30px
+      // marginTop: 20, // Top margin of 30px
     },
     sub_container: {
       marginVertical: 10, // Margin top and bottom of 10px

@@ -16,6 +16,7 @@ import {
   selectStartTIme,
   fetchAvailableSlots,
   setDuration,
+  selectStartDate,
 } from "@/features/reservations/reservations.slice";
 import { usePathname, useRouter } from "expo-router";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -40,6 +41,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
   const { _id, center_name, slots } = center;
   const requestReservationModalRef = useRef<BottomSheetModal>(null);
   const startTime = useAppSelector(selectStartTIme);
+  const startDate = useAppSelector(selectStartDate);
   const saved = useAppSelector(selectSavedCenter);
   const dispatch = useAppDispatch();
 
@@ -50,7 +52,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
   const handleReservation = async (data: any) => {
     const { duration } = data;
     const confirmReservationHref = ``
-    const req_href = `/parking-lots/${_id}/slots/reserve-slot?start_time=${startTime}&duration=${duration}`;
+    const req_href = `/parking-lots/${_id}/slots/reserve-slot?start_date=${startDate}&start_time=${startTime}&duration=${duration}`;
 
     const result = unwrapResult(
       await dispatch(
@@ -58,6 +60,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
           center_id: _id,
           pageSize: 20,
           start_time: new Date(startTime),
+          start_date: new Date(startDate),
           reservation_duration: duration,
           callbackUrl: url
         })

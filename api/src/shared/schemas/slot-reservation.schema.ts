@@ -14,7 +14,7 @@ export class SlotReservation {
   @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Vehicle' })
   vehicle_id: MongooseSchema.Types.ObjectId; // can contain details of customer
 
-  @Prop({ required: true, Type: String, unique: true, index: true })
+  @Prop({ required: true, Type: String, index: true })
   number_plate: string;
 
   @Prop({ type: Boolean, default: false })

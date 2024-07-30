@@ -48,6 +48,7 @@ import {
   SlotAddressSchema
 } from 'src/shared/schemas/slot-address.schema';
 import { UploadMiddleware } from 'src/shared/middlewares/uploads.middleware';
+import { VehiclesModule } from 'src/vehicles/vehicles.module';
 
 @Module({
   imports: [
@@ -67,7 +68,8 @@ import { UploadMiddleware } from 'src/shared/middlewares/uploads.middleware';
         name: ParkingReservationData.name,
         schema: ParkingReservationDataSchema
       }
-    ])
+    ]),
+    VehiclesModule
   ],
   providers: [
     ParkingsGateway,

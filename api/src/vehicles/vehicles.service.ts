@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger, NotAcceptableException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotAcceptableException,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
-import { FETCH_VEHICLES_BY_ADMIN_AGGREGATION } from 'src/shared/constants/vehicles.constants';
+import {
+  FETCH_LICENCE_PLATE,
+  FETCH_VEHICLES_BY_ADMIN_AGGREGATION
+} from 'src/shared/constants/vehicles.constants';
 import { sanitizeVehiclesFn } from 'src/shared/helpers/vehicles.sanitizers';
 import {
   _ICloudRes,
@@ -92,6 +100,41 @@ export class VehiclesService {
     );
 
     return vehicles;
+  }
+
+  async getLicensePlate(vehicle_id: string) {
+    const { lookups, project_fields, unwind_fields, count_fields } =
+      FETCH_LICENCE_PLATE;
+
+    try {
+      const licensePlate =
+        await this.aggregationService.dynamicDocumentsPipeline<
+          _IDbVehicleNew,
+          string
+        >(
+          this.vehicleModel,
+          true,
+          project_fields,
+          { _id: new mongoose.Types.ObjectId(vehicle_id) },
+          lookups,
+          unwind_fields,
+          count_fields,
+          1,
+          1,
+          (doc) => doc.vehicle_no
+        );
+
+      if (!licensePlate) {
+        throw new NotFoundException(
+          'This vehicle does not have any license plate'
+        );
+      }
+
+      console.log(licensePlate);
+      return licensePlate;
+    } catch (error) {
+      throw error;
+    }
   }
 
   // async getDriverVehicles(driver: string): Promise<_IVehicle[]> {

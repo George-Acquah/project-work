@@ -20,31 +20,34 @@ import { ThemedText } from "@/components/common/ThemedText";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { SHARED_COLORS } from "@/constants/Colors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { convertDateToString, convertDateToTime } from "@/utils/functions/shared";
 
 interface _ICenterParams {
   [key: string]: string;
   center_id: string;
+  slot_id: string;
   duration: string;
   start_time: string;
+  start_date: string;
 }
+
 const ConfirmReservationPage = () => {
   const url = usePathname();
-  //Get Params
   const params = useLocalSearchParams<_ICenterParams>();
-  console.log(params);
-  const { center_id, duration, start_time } = params;
+  const { center_id, duration, start_time, start_date, slot_id } = params;
 
-  //Define Color Scheme
+  
   const colorScheme = useColorScheme() ?? "light";
+  const styles = generateStyles(colorScheme);
 
   const dispatch = useAppDispatch();
 
-  //Selectors
   const slotId = useAppSelector(selectSelectedSlotString);
   const selectedSlot = useAppSelector(selectSelectedSlot(slotId ?? ""));
 
-  const handleBookSlot = async (id_for_slot: string) => {
-    const start_date = new Date(start_time ?? "");
+  const handleBookSlot = async () => {
+    const startDate = new Date(start_date ?? "");
+    const startTime = new Date(start_time ?? '');
     const reservation_duration = parseInt(duration ?? "");
     const vehicle_id = ids.VEHICLE;
     const slot_id = ids.SLOT;
@@ -54,7 +57,8 @@ const ConfirmReservationPage = () => {
         slotReservation({
           center_id: center,
           slot_id,
-          start_time: start_date,
+          start_time: startTime,
+          start_date: startDate,
           reservation_duration,
           vehicle_id,
           callbackUrl: url,
@@ -69,23 +73,36 @@ const ConfirmReservationPage = () => {
     }
   };
 
+  const renderDetailCard = (iconName: any, iconProvider: any, text: string) => (
+    <View style={styles.card}>
+      <TabBarIcon
+        fontProvider={iconProvider}
+        name={iconName}
+        color={colorScheme === "light" ? SHARED_COLORS.gray900 : "white"}
+        style={{ marginRight: 10 }}
+      />
+      <ThemedText style={{ ...FONTS.ps3 }} {...text_colors.title}>
+        {text}
+      </ThemedText>
+    </View>
+  );
+
   return (
-    <ThemedView style={{}}>
+    <ThemedView style={{ flex: 1 }}>
       <Entypo
         name="chevron-left"
         size={20}
         style={{
           padding: 10,
-          backgroundColor: "white",
+          color: colorScheme === "light" ? "black" : "white",
           width: 40,
           position: "absolute",
           left: 10,
           top: 35,
-          borderRadius: 30,
         }}
         onPress={() => router.back()}
       />
-      <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
+      <View style={{ paddingTop: 60, paddingHorizontal: 20, flexGrow: 1 }}>
         <ThemedText
           style={{
             marginVertical: SIZES.padding,
@@ -97,144 +114,90 @@ const ConfirmReservationPage = () => {
           Please confirm your details before proceeding
         </ThemedText>
         {selectedSlot ? (
-          <View style={{ position: "relative", flex: 1 }}>
-            <KeyboardAwareScrollView
-              enableOnAndroid={true}
-              keyboardDismissMode="on-drag"
-              keyboardShouldPersistTaps={"handled"}
-              extraScrollHeight={20}
-              contentContainerStyle={{
-                flexGrow: 1,
-                marginTop: SIZES.radius,
-              }}
-            >
-              <View
-                style={[
-                  styles.details_content,
-                  { marginVertical: SIZES.padding * 0.3 },
-                ]}
-              >
-                <TabBarIcon
-                  fontProvider={FontAwesome}
-                  name="phone"
-                  color={
-                    colorScheme === "light" ? SHARED_COLORS.gray900 : "white"
-                  }
-                  style={{ marginRight: 10 }}
-                />
-                <ThemedText
-                  style={{
-                    ...FONTS.ps3,
-                  }} //TODO
-                  {...text_colors.title}
-                >
-                  {selectedSlot.slot_name}
-                </ThemedText>
-              </View>
-              <View
-                style={[
-                  styles.details_content,
-                  { marginVertical: SIZES.padding * 0.3 },
-                ]}
-              >
-                <TabBarIcon
-                  fontProvider={FontAwesome}
-                  name="phone"
-                  color={
-                    colorScheme === "light" ? SHARED_COLORS.gray900 : "white"
-                  }
-                  style={{ marginRight: 10 }}
-                />
-                <ThemedText
-                  style={{
-                    ...FONTS.ps3,
-                  }} //TODO
-                  {...text_colors.title}
-                >
-                  {selectedSlot.type}
-                </ThemedText>
-              </View>
-              <View
-                style={[
-                  styles.details_content,
-                  { marginVertical: SIZES.padding * 0.3 },
-                ]}
-              >
-                <TabBarIcon
-                  fontProvider={FontAwesome}
-                  name="id-badge"
-                  color={
-                    colorScheme === "light" ? SHARED_COLORS.gray900 : "white"
-                  }
-                  style={{ marginRight: 10 }}
-                />
-                <ThemedText
-                  style={{
-                    ...FONTS.ps3,
-                  }} //TODO
-                  {...text_colors.title}
-                >
-                  {selectedSlot.slot_data?.total_bookings || 0}
-                </ThemedText>
-              </View>
-              <View
-                style={[
-                  styles.details_content,
-                  { marginVertical: SIZES.padding * 0.3 },
-                ]}
-              >
-                <TabBarIcon
-                  fontProvider={FontAwesome}
-                  name="phone"
-                  color={
-                    colorScheme === "light" ? SHARED_COLORS.gray900 : "white"
-                  }
-                  style={{ marginRight: 10 }}
-                />
-                <ThemedText
-                  style={{
-                    ...FONTS.ps3,
-                  }} //TODO
-                  {...text_colors.title}
-                >
-                  {selectedSlot.contact || "+233 551363571"}
-                </ThemedText>
-              </View>
-            </KeyboardAwareScrollView>
-
-            <View
-              style={{
-                bottom: 0,
-                right: 0,
-                width: "100%",
-                position: "absolute",
-              }}
-            >
-              <Button
-                title="Book Slot"
-                size="lg"
-                onPress={() => {
-                  handleBookSlot(selectedSlot._id);
-                }}
-              />
-            </View>
-          </View>
+          <KeyboardAwareScrollView
+            enableOnAndroid={true}
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps={"handled"}
+            extraScrollHeight={20}
+            contentContainerStyle={{
+              flexGrow: 1,
+              marginTop: SIZES.radius,
+            }}
+          >
+            {renderDetailCard(
+              "map-marker",
+              FontAwesome,
+              selectedSlot.slot_name
+            )}
+            {renderDetailCard("car", FontAwesome, selectedSlot.type)}
+            {renderDetailCard(
+              "calendar",
+              FontAwesome,
+              convertDateToString(start_date ?? "")
+            )}
+            {renderDetailCard(
+              "clock-o",
+              FontAwesome,
+              convertDateToTime(start_time ?? "")
+            )}
+            {renderDetailCard(
+              "hourglass-1",
+              FontAwesome,
+              `${duration} minutes`
+            )}
+            {renderDetailCard(
+              "phone",
+              FontAwesome,
+              selectedSlot.contact || "+233 551363571"
+            )}
+          </KeyboardAwareScrollView>
         ) : (
           <ThemedView>
             <ThemedText>Oops!!! A Problem Occured</ThemedText>
           </ThemedView>
         )}
       </View>
+      {selectedSlot && (
+        <View
+          style={{
+            flex: 1,
+            bottom: 0,
+            right: 0,
+            width: "100%",
+            position: "absolute",
+          }}
+        >
+          <Button
+            title="Proceed To Reserve"
+            size="lg"
+            additionalStyles={{
+              borderRadius: SIZES.radius,
+              marginBottom: SIZES.padding * 0.2,
+              marginHorizontal: SIZES.radius,
+            }}
+            onPress={() => {
+              handleBookSlot();
+            }}
+          />
+        </View>
+      )}
     </ThemedView>
   );
 };
 
-const styles = StyleSheet.create({
-  details_content: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-});
+const generateStyles = (colorScheme: 'light' | 'dark') => {
+  return StyleSheet.create({
+    card: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      padding: 10,
+      backgroundColor:
+        colorScheme === "light" ? SHARED_COLORS.gray200 : SHARED_COLORS.gray700,
+      borderRadius: SIZES.radius,
+      marginVertical: SIZES.padding * 0.3,
+    },
+  });
+};
 
 export default ConfirmReservationPage;

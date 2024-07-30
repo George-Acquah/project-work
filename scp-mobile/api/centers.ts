@@ -66,3 +66,15 @@ export async function nearbyCenters(
   };
   return callApi<_IParkingCenter[]>(config);
 }
+
+export async function addCenterAddress(
+  center_id: string,
+  data: _IAddress
+) {
+  const config: _IApiConfig = {
+    url: `${CENTER_BASE_URL}/${center_id}/add-address`,
+    method: "POST",
+    toast: true,
+  };
+  return callApi<_IParkingCenter[]>(config);
+}

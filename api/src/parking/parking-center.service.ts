@@ -414,6 +414,8 @@ export class ParkingCenterService {
 
       // Create center data in the database
       const address = await this.centerAddressModel.create(data);
+      console.log(address)
+      
 
       return sanitizeCenterAddress(address);
     } catch (error) {

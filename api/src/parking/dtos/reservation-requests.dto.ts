@@ -4,6 +4,9 @@ export class ReservationRequestDto {
   @IsDate()
   start_time: Date;
 
+  @IsDate()
+  start_date: Date;
+
   @IsNumber()
   @Min(5)
   reservation_duration: number;
@@ -16,6 +19,9 @@ export class ReservationRequestDto {
 export class SlotReservationDto {
   @IsDate()
   start_time: Date;
+
+  @IsDate()
+  start_date: Date;
 
   @IsNumber()
   @Min(5)

@@ -118,6 +118,7 @@ interface _IDbSlotReservation extends Document {
   slot_id: string; // can contain details of parking center
   vehicle_id: string; // can contain details of customer
   isValid: boolean;
+  number_plate: string;
   time_of_reservation: Date;
   wait_time: number;
   start_time: Date;
@@ -201,6 +202,7 @@ interface _IReserveSlot {
   center_id: string;
   vehicle_id: string;
   start_time: Date;
+  start_date: Date;
   reservation_duration: number;
 }
 
