@@ -23,15 +23,12 @@ import RendererHOC from "@/components/common/renderer.hoc";
 import { generateHomeStyles } from "./styles";
 import HomeSearch from "./shared/home-search";
 import useCenterFilter from "@/utils/hooks/useFilter";
-import { ThemedText } from "../common/ThemedText";
-import Button from "../common/button";
-import { SIZES } from "@/constants/styles";
 import { router } from "expo-router";
 
 export default function Home() {
   const colorScheme = useColorScheme() ?? "light";
   const styles = generateHomeStyles(colorScheme);
-  const { select_data, select_data_ids, select_error, select_loading } =
+  const { select_data, select_loading } =
     useCenterFilter();
   const dispatch = useAppDispatch();
   const desc = useAppSelector(selectOriginDescription);
