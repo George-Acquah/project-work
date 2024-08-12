@@ -13,3 +13,4 @@ export class PaymentQueryDto {
   @IsUrl()
   cancellationUrl?: string;
 }
+
