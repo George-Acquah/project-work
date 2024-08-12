@@ -4,7 +4,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type CustomerDocument = HydratedDocument<Customer>;
 
-@Schema({ _id: false, toJSON: { virtuals: true } })
+@Schema({ _id: false, toJSON: { virtuals: true }, timestamps: true })
 export class Customer {
   userType: UserType;
 
@@ -13,6 +13,10 @@ export class Customer {
   email: string;
 
   phone_number: string;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const CustomerSchema = SchemaFactory.createForClass(Customer);

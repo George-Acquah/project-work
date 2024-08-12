@@ -4,7 +4,7 @@ import { ParkingCenter } from './parking-centers.schema';
 
 export type CenterDataDocument = Document & CenterData;
 
-@Schema()
+@Schema({ timestamps: true })
 export class CenterData {
   @Prop({ type: Number, required: true, default: 0 })
   total_slots: number;
@@ -23,6 +23,12 @@ export class CenterData {
 
   @Prop({ type: Number, required: true, default: 0 })
   total_bookings: number;
+
+  @Prop({ type: Date })
+  createdAt: Date;
+
+  @Prop({ type: Date })
+  updatedAt: Date;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,

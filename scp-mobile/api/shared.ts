@@ -46,6 +46,7 @@ export async function callApi<T, D = any>(
       data: config.data,
       withCredentials: true,
     });
+    console.log(config.data);
 
     // Check if the server response indicates an error
     if (

@@ -4,7 +4,7 @@ import { fetcher } from "./data";
 import { endpoints } from "./endpoints";
 import {
   formatAdminDetails,
-  formatCentersTable,
+  // formatCentersTable,
   formatSlotsTable,
   formatusersTable,
 } from "./utils";
@@ -111,12 +111,12 @@ async function fetchFilteredParkingCenters(
   pageSize: number
 ) {
   const url = endpoints.PARKING_CENTER.GET_ALL_PARKING_CENTERS;
-  const response = await fetcher<_IParkingCenter[]>(
+  const response = await fetcher<_IFormattedCenter[]>(
     `${url}?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
     "GET",
     "no-store"
   );
-  return formatCentersTable(response.data);
+  return response.data;
 }
 
 async function fetchCenterById(centers_id: string) {
@@ -145,12 +145,12 @@ async function fetchFilteredSlots(
   pageSize: number
 ) {
   const url = endpoints.PARKING_CENTER.GET_ALL_SLOTS;
-  const response = await fetcher<_ISlot[]>(
+  const response = await fetcher<_IFormattedSlot[]>(
     `${url}?slots=${slots}&currentPage=${currentPage}&size=${pageSize}`,
     "GET",
     "no-store"
   );
-  return formatSlotsTable(response.data);
+  return response.data;
 }
 //END SLOTS
 

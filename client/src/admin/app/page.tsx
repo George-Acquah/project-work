@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { lusitana } from "./ui/font";
-import { secondaryBg, strongTextColor, textColor } from "./ui/themes";
+import { bodyBg, secondaryBg, strongTextColor, textColor } from "./ui/themes";
 import SmartCarParkingAdminLogo from "./ui/dashboard/logos";
 
 const SmartCarParkingAdminHome = () => {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div
+    <main className={`flex min-h-screen flex-col p-6 ${secondaryBg}`}>
+      {/* <div
         className={`flex justify-content items-center h-32 shrink-0 p-4 md:h-52 w-full rounded-lg ${secondaryBg} ${strongTextColor}`}
       >
         <div className="w-36 md:w-48">
@@ -16,10 +16,10 @@ const SmartCarParkingAdminHome = () => {
         <p className="uppercase text-2xl md:text-4xl ml-4">
           Smart Car Parking Admin
         </p>
-      </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
+      </div> */}
+      <div className="mt-4 flex grow flex-col gap-4 items-center xl:flex-row">
         <div
-          className={`flex flex-col justify-center gap-6 rounded-lg  px-6 py-10 md:w-2/5 md:px-20 ${secondaryBg}`}
+          className={`flex flex-col justify-center gap-6 rounded-lg  px-6 py-10 xl:w-2/5 md:px-12 lg:px-20 xl:p-16 ${bodyBg} xl:h-[530px]`}
         >
           <p
             className={`text-xl ${textColor} md:text-3xl md:leading-normal ${lusitana.className}`}
@@ -27,13 +27,13 @@ const SmartCarParkingAdminHome = () => {
             <strong className={strongTextColor}>
               Welcome to the Smart Car Parking Admin Portal.
             </strong>{" "}
-            If you are not supposed to be here,{" "}
+            <span className="">Feel lost? </span>
             <Link
               href="http://localhost:3000"
               className="text-blue-500"
               passHref
             >
-              visit our Landing Page
+              request for mobile app link.
             </Link>
             <br />
             Explore the admin portal and streamline your parking management
@@ -47,18 +47,20 @@ const SmartCarParkingAdminHome = () => {
             Log In
           </Link>
         </div>
-        <div className="flex items-center justify-center ">
+        <div className="flex items-center justify-center rounded-lg">
           <Image
-            src="/hero-desktop.png"
+            src="/admin-scp.vercel.app_dashboard_light.png"
             width={1000}
-            height={760}
+            height={560}
+            priority
             className="hidden md:block rounded-lg"
             alt="Screenshots of Dashboard project"
           />
           <Image
-            src="/hero-desktop.png"
+            src="/admin-scp.vercel.app_dashboard_mobile.png"
             width={560}
-            height={620}
+            height={820}
+            priority
             className="md:hidden"
             alt="Screenshots of Dashboard project"
           />

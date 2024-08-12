@@ -1,6 +1,6 @@
 "use client";
 
-import { lusitana } from "@/app/ui/font";
+import { inter, lusitana } from "@/app/ui/font";
 import { useFormState, useFormStatus } from "react-dom";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import Button from "../shared/button";
@@ -10,12 +10,14 @@ import {
   textColor,
   strongTextColor,
   providerBtnClass,
+  loginBtnClass,
 } from "../themes";
 import { loginDetails } from "../../lib/constants";
 import { SvgCheck, SvgGithub, SvgGoogle } from "../../lib/icons";
 import { HRWithText } from "../../auth/layout";
 import Link from "next/link";
 import CommonInput from "../shared/common-inputs";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export default function RegistrationForm() {
   const initialState: any = {
@@ -23,6 +25,7 @@ export default function RegistrationForm() {
     errors: {},
   };
   const [state, dispatch] = useFormState(authenticate, initialState);
+  const [loading, setLoading] = useState(false);
 
   return (
     <form action={dispatch} className="space-y-3">
@@ -32,18 +35,18 @@ export default function RegistrationForm() {
             className={`flex-1 rounded px-6 pb-4 pt-8 shadow-three mx-auto max-w-[500px]  ${secondaryBg} px-4 ${textColor}`}
           >
             <h1
-              className={`${lusitana.className} mb-3 text-2xl font-bold text-center ${strongTextColor}`}
+              className={` mb-3 text-2xl font-medium text-center ${strongTextColor}`}
             >
-              Create your account now
+              Request for admin role
             </h1>
             <p
-              className={`${lusitana.className} mb-11 text-base font-medium text-custom-body-color text-center`}
+              className={`${lusitana.className} mb-6 text-base font-medium text-custom-body-color text-center`}
             >
               It&apos;s totally free and super easy
             </p>
-            <GoogleButton />
-            <GithubButton />
-            <HRWithText text="Or, register with your email" />
+            {/* <GoogleButton />
+            <GithubButton /> */}
+            {/* <HRWithText text="register with your email" /> */}
             {loginDetails.map((detail) => (
               <CommonInput
                 key={`${String(detail.id)}__${detail.placeholder}`}
@@ -59,9 +62,9 @@ export default function RegistrationForm() {
               />
             ))}
             <UserConsent />
-            <LoginButton />
+            <LoginButton setLoading={setLoading} />
             <p className="text-center text-base font-medium text-custom-body-color">
-              Already using our platform?{" "}
+              Already approved as an admin?{" "}
               <Link
                 href="/auth/login"
                 className="text-blue-400 hover:underline"
@@ -76,16 +79,22 @@ export default function RegistrationForm() {
   );
 }
 
-function LoginButton() {
+function LoginButton({
+  setLoading,
+}: {
+  setLoading: Dispatch<SetStateAction<boolean>>;
+}) {
   const { pending } = useFormStatus();
+  useEffect(() => {
+    setLoading(pending);
+  }, [pending, setLoading]);
   return (
-    <Button
-      variant="default"
-      className="mb-8 w-full text-gray-50 py-6 text-xl font-thin"
+    <button
+      className={`w-full ${loginBtnClass} cursor-pointer`}
       aria-disabled={pending}
     >
-      Sign Up <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
-    </Button>
+      {pending ? "Please Wait ..." : "Request"}
+    </button>
   );
 }
 
@@ -122,7 +131,7 @@ const UserConsent = () => (
         </div>
       </div>
       <span>
-        By creating account means you agree to the
+        By requesting to be registered means you agree with the
         <a href="#0" className="text-blue-400 hover:underline">
           {" "}
           Terms and Conditions{" "}

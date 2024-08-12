@@ -45,9 +45,9 @@ export default function LoginForm() {
             >
               Login to your account as an admin.
             </p>
-            <GoogleButton />
-            <GithubButton />
-            <HRWithText text="Or, sign in with your email" />
+            {/* <GoogleButton />
+            <GithubButton /> */}
+            <HRWithText text="Sign in with your email" />
             {loginDetails.map((details) => (
               <CommonInput
                 key={details.id}

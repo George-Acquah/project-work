@@ -137,28 +137,28 @@ function formatusersTable(users: _IUser[]): _IFormattedUser[] {
   }));
 }
 
-function formatCentersTable(centers: _IParkingCenter[]): _IFormattedCenter[] {
-  return centers.map((center) => ({
-    _id: center._id,
-    image: null,
-    // image: center?.center_images ? center?.center_images[0]?._id : null,
-    center_name: center.center_name,
-    description: center.description,
-    contact: center?.contact ?? "not Implemented",
-    location: center?.location ?? "not Implemented",
-    slots: center?.slots?.length ?? 0,
-    center_type: center.type,
-    createdAt: convertDateToString(
-      (center?.createdAt as unknown as string) ?? new Date()
-    ),
-    updatedAt: convertDateToString(
-      (center?.updatedAt as unknown as string) ?? new Date()
-    ),
-    isVerified: center.isVerified ? "verified" : "not verified",
-    isAvailable: center.isAvailable ? "available" : "not available",
-    capacity: Math.ceil(Math.random() * (20 - 2 + 1) + 2),
-  }));
-}
+// function formatCentersTable(centers: _IParkingCenter[]): _IFormattedCenter[] {
+//   return centers.map((center) => ({
+//     _id: center._id,
+//     image: null,
+//     // image: center?.center_images ? center?.center_images[0]?._id : null,
+//     center_name: center.center_name,
+//     description: center.description,
+//     contact: center?.contact ?? "not Implemented",
+//     location: center?.location ?? "not Implemented",
+//     slots: center?.slots?.length ?? 0,
+//     center_type: center.type,
+//     createdAt: convertDateToString(
+//       (center?.createdAt as unknown as string) ?? new Date()
+//     ),
+//     updatedAt: convertDateToString(
+//       (center?.updatedAt as unknown as string) ?? new Date()
+//     ),
+//     isVerified: center.isVerified ? "verified" : "not verified",
+//     isAvailable: center.isAvailable ? "available" : "not available",
+//     capacity: Math.ceil(Math.random() * (20 - 2 + 1) + 2),
+//   }));
+// }
 
 // function formatVehiclesTable(vehicles: _IVehicle[]): _IFormattedVehicle[] {
 //   return vehicles.map((vehicle) => ({
@@ -292,7 +292,7 @@ export {
   getDistinctFilterUrl,
   getDistinctLatestUrl,
   formatusersTable,
-  formatCentersTable,
+  // formatCentersTable,
   // formatVehiclesTable,
   formatSlotsTable,
   formatAdminDetails,

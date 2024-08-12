@@ -10,7 +10,8 @@ export type UserDocument = HydratedDocument<User>;
 @Schema({
   discriminatorKey: 'userType',
   toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toObject: { virtuals: true },
+  timestamps: true // Automatically add createdAt and updatedAt fields
 })
 export class User extends Document {
   @Prop({ required: true, unique: true })
@@ -24,6 +25,12 @@ export class User extends Document {
 
   @Prop({ type: String, required: true, enum: [Customer.name, ParkOwner.name] })
   userType: UserType;
+
+  @Prop({ type: Date })
+  createdAt: Date;
+
+  @Prop({ type: Date })
+  updatedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

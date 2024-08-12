@@ -9,11 +9,18 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Document, Model } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
 import {
+  FETCH_SLOTS_AGGREGATION,
+  setPopularParkingCenterFields,
+  slotsFilterFields
+} from 'src/shared/constants/centers.constants';
+import { createFilterConditions } from 'src/shared/constants/global.constants';
+import {
   FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION,
   setReservationFields
 } from 'src/shared/constants/reservations.constants';
 import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
 import { SlotTypes } from 'src/shared/enums/slots.enum';
+import { sanitizeSlotsFn } from 'src/shared/helpers/centers.sanitizers';
 import { sanitizeReservationsFn } from 'src/shared/helpers/reservations.sanitizers';
 import {
   _ICloudRes,
@@ -357,6 +364,37 @@ export class SlotService {
       throw new Error(error.message || 'Could not find slots');
     }
   }
+
+  async getAllSlotsNew(query = '', currentPage: number, items: number) {
+    const conditions = createFilterConditions<_IDbSlot>(
+      slotsFilterFields,
+      query
+    );
+    const {
+      project_fields,
+      lookups,
+      unwind_fields,
+      deepLookups,
+      deep_unwind_fields
+    } = FETCH_SLOTS_AGGREGATION;
+
+    return this.aggregationService.dynamicDocumentsPipeline(
+      this.slotModel,
+      false,
+      project_fields,
+      conditions,
+      lookups,
+      unwind_fields,
+      [],
+      currentPage,
+      items,
+      sanitizeSlotsFn,
+      deepLookups,
+      deep_unwind_fields
+      // setPopularParkingCenterFields
+    );
+  }
+
   async getSlotDetails(centerId: string, slotId: string): Promise<_ISlot> {
     try {
       const slot = await this.slotModel

@@ -29,3 +29,24 @@ export function IsPhoneNumber(validationOptions?: ValidationOptions) {
     });
   };
 }
+
+export function IsE164PhoneNumber(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      name: 'isE164PhoneNumber',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          // Check if the phone number is in E164 format
+          const isE164 = /^\+?[1-9]\d{1,14}$/.test(value);
+          return isE164;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return 'Phone number must be in valid E164 format';
+        }
+      }
+    });
+  };
+}

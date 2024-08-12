@@ -18,8 +18,10 @@ interface _IMailRecipient {
 }
 
 interface _IPaymentConfig {
-  path: string;
-  url: string;
+  // path: string;
+  hubtelBaseUrl: string;
+  clientId: string;
+  clientSecret: string;
 }
 
 interface _IGCPStorage {

@@ -6,7 +6,7 @@ export type SlotReservationDocument = HydratedDocument<SlotReservation>;
 export type ParkingReservationDataDocument =
   HydratedDocument<ParkingReservationData>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class SlotReservation {
   @Prop({ required: true, type: MongooseSchema.Types.ObjectId, ref: 'Slot' })
   slot_id: MongooseSchema.Types.ObjectId; // can contain details of parking center
@@ -37,6 +37,12 @@ export class SlotReservation {
 
   @Prop({ type: Number, default: 0 })
   cost_of_reservation: number;
+
+  @Prop({ type: Date })
+  createdAt: Date;
+
+  @Prop({ type: Date })
+  updatedAt: Date;
 }
 
 export const SlotReservationSchema =

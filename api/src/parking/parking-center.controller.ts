@@ -63,11 +63,10 @@ export class ParkingCenterController {
   @Get()
   async getAllParkingCenters(
     @Query('centers') query: string,
-    @Query('currentPage') currentPage: number,
-    @Query('size') size: number
+    @Query('currentPage', new ParseIntPipe()) currentPage,
+    @Query('size', new ParseIntPipe()) size
   ) {
     try {
-      this.logger.log(`All Parking Centers`);
       const centers = await this.parkingService.getAllParkingCenters(
         query,
         currentPage,
@@ -147,12 +146,17 @@ export class ParkingCenterController {
   @Get('slots')
   async getAllSlots(
     @Query('slots') query: string,
-    @Query('currentPage') currentPage: number,
-    @Query('size') size: number
+    @Query('currentPage', new ParseIntPipe()) currentPage: number,
+    @Query('size', new ParseIntPipe()) size: number
   ) {
     try {
       this.logger.log(`All Slots`, query, currentPage, size);
-      const slots = await this.slotService.getAllSlots();
+      const slots = await this.slotService.getAllSlotsNew(
+        query,
+        currentPage,
+        size
+      );
+      console.log(slots);
       return new ApiResponse(200, 'Fetched Slots successfully', slots);
     } catch (error) {
       this.logger.error(`Error getting all slots: ${error.message}`);

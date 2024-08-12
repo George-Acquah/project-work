@@ -168,6 +168,8 @@ interface _IFormattedCenter {
   image: string | null;
   isAvailable: string;
   capacity: number;
+  owner_name: string;
+  available_slots: number;
 }
 
 interface _IFormattedVehicle {
@@ -214,7 +216,7 @@ interface _IFormattedSlot {
   isVerified: string;
   isAvailable: string;
   image: string | null;
-  center_id: string;
+  // center_id: string;
   capacity: number;
   price: number;
 }

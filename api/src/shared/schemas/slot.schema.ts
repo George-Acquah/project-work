@@ -3,7 +3,7 @@ import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 import { ParkingCenter } from './parking-centers.schema';
 
 export type SlotDocument = HydratedDocument<Slot>;
-@Schema()
+@Schema({ timestamps: true })
 export class Slot {
   @Prop({ type: String, required: true })
   type: string;
@@ -16,6 +16,15 @@ export class Slot {
 
   @Prop({ type: Boolean, default: false })
   isAvailable: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  isVerified: boolean;
+
+  @Prop({ type: Date })
+  createdAt: Date;
+
+  @Prop({ type: Date })
+  updatedAt: Date;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,

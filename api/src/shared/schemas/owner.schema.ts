@@ -4,7 +4,7 @@ import { UserType } from '../enums/users.enum';
 
 export type ParkOwnerDocument = HydratedDocument<ParkOwner>;
 
-@Schema({ _id: false })
+@Schema({ _id: false, timestamps: true })
 export class ParkOwner {
   userType: UserType;
 
@@ -13,6 +13,10 @@ export class ParkOwner {
   email: string;
 
   phone_number: string;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const ParkOwnerSchema = SchemaFactory.createForClass(ParkOwner);

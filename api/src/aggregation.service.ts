@@ -577,7 +577,9 @@ export class AggregationService {
     sanitizeFn?: (doc: T) => AnyExpression,
     deeepLookup_data?: _ILookup[],
     deep_unwind_fields?: string[],
-    setFields?: Record<string, any>
+    setFields?: Record<string, any>,
+    finalLookup?: _ILookup[],
+    final_unwind_field?: string[]
   ): Promise<S> {
     try {
       if (currentPage < 1 || items < 1) {
@@ -630,6 +632,28 @@ export class AggregationService {
         });
       });
 
+      // Lookup stages
+      finalLookup?.forEach((data) => {
+        pipeline.push({
+          $lookup: {
+            from: data.from,
+            as: data.as,
+            localField: data.localField ?? '_id',
+            foreignField: data.foreignField
+          }
+        });
+      });
+
+      // Unwind stages
+      final_unwind_field?.forEach((field) => {
+        pipeline.push({
+          $unwind: {
+            path: `$${String(field)}`,
+            preserveNullAndEmptyArrays: true
+          }
+        });
+      });
+
       if (setFields) {
         pipeline.push({
           $set: setFields
@@ -657,6 +681,7 @@ export class AggregationService {
 
       // Execute pipeline
       const result = await model.aggregate(pipeline);
+      console.log(result);
 
       // Return based on the 'return_as_object' flag
       if (return_as_object) {

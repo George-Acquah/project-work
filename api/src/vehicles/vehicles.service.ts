@@ -8,9 +8,11 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
+import { createFilterConditions } from 'src/shared/constants/global.constants';
 import {
   FETCH_LICENCE_PLATE,
-  FETCH_VEHICLES_BY_ADMIN_AGGREGATION
+  FETCH_VEHICLES_BY_ADMIN_AGGREGATION,
+  vehicleFilterFields
 } from 'src/shared/constants/vehicles.constants';
 import { sanitizeVehiclesFn } from 'src/shared/helpers/vehicles.sanitizers';
 import {
@@ -83,6 +85,12 @@ export class VehiclesService {
   async getVehiclesWithVirtuals(query?: string, page = 1, limit = 5) {
     const { project_fields, lookups, unwind_fields, count_fields } =
       FETCH_VEHICLES_BY_ADMIN_AGGREGATION;
+
+    const conditions = createFilterConditions<_IDbVehicleNew>(
+      vehicleFilterFields,
+      query
+    );
+
     const vehicles = await this.aggregationService.dynamicDocumentsPipeline<
       _IDbVehicleNew,
       _IFormattedVehicle[]
@@ -90,7 +98,7 @@ export class VehiclesService {
       this.vehicleModel,
       false,
       project_fields,
-      {},
+      query ? (conditions as any) : {},
       lookups,
       unwind_fields,
       count_fields,

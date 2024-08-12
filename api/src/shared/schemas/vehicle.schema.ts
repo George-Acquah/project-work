@@ -5,7 +5,7 @@ import { VehicleTypes } from '../enums/vehicles.enum';
 
 export type VehicleDocument = HydratedDocument<Vehicle>;
 
-@Schema({ toJSON: { virtuals: true } })
+@Schema({ toJSON: { virtuals: true }, timestamps: true })
 export class Vehicle {
   @Prop({ type: String, required: true, unique: true })
   vehicle_no: string;
@@ -30,6 +30,12 @@ export class Vehicle {
 
   @Prop({ type: String, required: true })
   color: string;
+
+  @Prop({ type: Date })
+  createdAt: Date;
+
+  @Prop({ type: Date })
+  updatedAt: Date;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,

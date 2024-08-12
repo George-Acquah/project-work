@@ -13,10 +13,13 @@ interface _IDbParkingCenter extends Document {
   description: string;
   type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
   center_data: _IDbCenterData;
+  isVerified: boolean;
   center_address: _IDbCenterAddress;
   center_images: Array<_IDbCenterImage>;
   slots: Array<_IDbSlot>;
   owner: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 interface _IParkingCenter {
   _id: string;
@@ -39,6 +42,9 @@ interface _IDbSlot extends Document {
   slot_data: _IDbSlotData;
   slot_address: _IDbSlotAddress;
   center_id: string;
+  isVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 interface _ISlot {
   _id: string;

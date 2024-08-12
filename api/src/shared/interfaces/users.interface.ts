@@ -29,6 +29,7 @@ interface _IParkOwner extends Document<Types.ObjectId> {
   email: string;
   userType: UserType;
   image: _IDbUserImage;
+  phone_number: string;
   isVerified: boolean;
   readonly password: string;
   profile: _IDbProfile;

@@ -42,6 +42,14 @@ export const FETCH_VEHICLES_BY_ADMIN_AGGREGATION: _IAggregationFields<_IDbVehicl
     count_fields: []
   };
 
+export const vehicleFilterFields: (keyof _IDbVehicleNew)[] = [
+  'color',
+  'make',
+  'vehicleModel',
+  'vehicleType',
+  'vehicle_no',
+  'vehicle_registration'
+];
 export const FETCH_LICENCE_PLATE: _IAggregationFields<_IDbVehicleNew> = {
   lookups: vehicleLookups,
   unwind_fields: [],

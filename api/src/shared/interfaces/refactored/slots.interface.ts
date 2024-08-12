@@ -1,3 +1,5 @@
+import { CenterTypes, SlotTypes } from 'src/shared/enums/slots.enum';
+
 export interface _IFormattedReservation {
   [key: string]: string | number | null;
   _id: string;
@@ -14,6 +16,40 @@ export interface _IFormattedReservation {
   status: string;
 }
 
+export interface _IFormattedCenter {
+  [key: string]: string | number | null;
+  _id: string;
+  center_type: CenterTypes;
+  center_name: string;
+  description: string;
+  location: string;
+  createdAt: string;
+  updatedAt: string;
+  isVerified: string;
+  slots: number;
+  image: string | null;
+  isAvailable: string;
+  capacity: number;
+  owner_name: string;
+  available: number;
+}
+
+export interface _IFormattedSlot {
+  [key: string]: string | number | null;
+  _id: string;
+  slot_type: SlotTypes;
+  slot_name: string;
+  description: string;
+  parking_center: string;
+  location: string;
+  createdAt: string;
+  updatedAt: string;
+  isVerified: string;
+  isAvailable: string;
+  image: string | null;
+  capacity: number;
+  price: number;
+}
 export interface _IDbSlotReservationNew extends Document {
   vehicle_no: string;
 }

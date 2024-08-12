@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
-import mongoose, { AnyExpression, ClientSession, Model, Types } from 'mongoose';
+import mongoose, { ClientSession, Model, Types } from 'mongoose';
 import { CreateUserDto } from './dtos/create-users.dto';
 import { Customer } from 'src/shared/schemas/customer.schema';
 import { ParkOwner } from 'src/shared/schemas/owner.schema';
@@ -45,9 +45,12 @@ import {
 import { CREATE_PIPELINE } from 'src/shared/enums/general.enum';
 import {
   FETCH_USERS_BY_ADMIN_AGGREGATION,
-  FETCH_USERS_PROFILES_BY_USER_AGGREGATION
+  FETCH_USERS_PROFILES_BY_USER_AGGREGATION,
+  usersFilterFields
 } from 'src/shared/constants/users.constants';
 import { MailService } from 'src/mail/mail.service';
+import { createFilterConditions } from 'src/shared/constants/global.constants';
+import { UserType } from 'src/shared/enums/users.enum';
 
 @Injectable()
 export class UsersService {
@@ -408,18 +411,22 @@ export class UsersService {
   }
 
   async fetchUsers(
+    type: UserType,
     query = '',
     currentPage: number,
     items: number
   ): Promise<_IUsersTable[]> {
     try {
-      const {
-        project_fields,
-        lookups,
-        unwind_fields,
-        count_fields,
-        field_names
-      } = FETCH_USERS_BY_ADMIN_AGGREGATION;
+      const { project_fields, lookups, unwind_fields, count_fields } =
+        FETCH_USERS_BY_ADMIN_AGGREGATION;
+
+      const conditions = createFilterConditions<_TUser>(
+        usersFilterFields,
+        query,
+        'userType',
+        type
+      );
+      console.log(conditions);
       const users = await this.aggregationService.dynamicDocumentsPipeline<
         _TUser,
         _IUsersTable[]
@@ -427,7 +434,7 @@ export class UsersService {
         this.userModel,
         false,
         project_fields,
-        {},
+        conditions as any,
         lookups,
         unwind_fields,
         count_fields,

@@ -14,7 +14,8 @@ import {
   Put,
   Query,
   UploadedFiles,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { DbUserType, UserType } from 'src/shared/enums/users.enum';
@@ -31,6 +32,7 @@ import { Connection } from 'mongoose';
 import { UpdateUserDetailsDto } from './dtos/update-user.dto';
 import { InjectConnection } from '@nestjs/mongoose';
 import { _IUsersTable } from 'src/shared/interfaces/refactored/user.interface';
+import { TransformUserTypeInterceptor } from 'src/shared/interceptors/user-type.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -43,13 +45,16 @@ export class UsersController {
   ) {}
 
   @Get()
+  @UseInterceptors(TransformUserTypeInterceptor)
   async getFilteredUsers(
     @Query('users') query: string,
     @Query('currentPage', new ParseIntPipe()) currentPage,
-    @Query('size', new ParseIntPipe()) size
+    @Query('size', new ParseIntPipe()) size,
+    @Query('type') type: UserType
   ): Promise<ApiResponse<_IUsersTable[]>> {
     try {
       const filteredUsers = await this.usersService.fetchUsers(
+        type,
         query,
         currentPage,
         size

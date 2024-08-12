@@ -26,11 +26,26 @@ const deepReservationsLookup: _ILookup[] = [
   },
   {
     from: 'users',
-    as: 'driver',
+    as: 'vehicle_driver',
     foreignField: '_id',
+    localField: 'vehicle.driver'
+  },
+  {
+    from: 'profiles',
+    as: 'driver_profile',
+    foreignField: 'user',
     localField: 'vehicle.driver'
   }
 ];
+
+// const finalReservationsLookup: _ILookup[] = [
+//   {
+//     from: 'profiles',
+//     as: 'profile',
+//     foreignField: 'user',
+//     localField: 'vehicle_driver._id'
+//   }
+// ];
 
 export const setReservationFields = {
   slot_name: '$slot.slot_name',
@@ -42,7 +57,9 @@ export const FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION: _IAggregationFields<_IDbSl
     lookups: reservationsLookup,
     deepLookups: deepReservationsLookup,
     unwind_fields: ['slot', 'vehicle' as unknown as any],
-    deep_unwind_fields: ['driver'],
+    deep_unwind_fields: ['vehicle_driver', 'driver_profile'],
+    // finalLookups: finalReservationsLookup,
+    // final_unwind_fields: ['profile'],
     project_fields: [
       'cost_of_reservation',
       'duration_of_reservation',
@@ -50,7 +67,10 @@ export const FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION: _IAggregationFields<_IDbSl
       'start_time',
       'time_of_reservation',
       'wait_time',
-      'driver',
+      // 'driver',
+      // 'vehicle_driver',
+      'driver_profile',
+      'vehicle',
       'slot_name',
       'vehicle_no',
       'slot_image' as unknown as any

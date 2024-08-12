@@ -67,10 +67,11 @@ const ConfirmReservationPage = () => {
     );
 
     if (result && result.statusCode === 200) {
-      router.navigate(
-        `/success/?title=${"Your reservation was successful"}&description=${"You have successfully booked your slot. We look forward to having you"}&btnLabel=${"Go to home"}&route=${"/(navigations)/home"}&secBtnLabel=${"View your reservations"}&secRoute=${"/reservations"}`
-      );
-    }
+      // router.navigate(
+      //   `/success/?title=${"Your reservation was successful"}&description=${"You have successfully booked your slot. We look forward to having you"}&btnLabel=${"Go to home"}&route=${"/(navigations)/home"}&secBtnLabel=${"View your reservations"}&secRoute=${"/reservations"}`
+      // );
+      router.navigate('/make-payment')
+      }
   };
 
   const renderDetailCard = (iconName: any, iconProvider: any, text: string) => (

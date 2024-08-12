@@ -11,18 +11,22 @@ import { StorageService } from './storage/storage.service';
 import { ImagesModule } from './images/images.module';
 import { MailModule } from './mail/mail.module';
 import { NumberPlateModule } from './number-plate/number-plate.module';
+import { RootHttpModule } from './shared/modules/http.module';
+import { PaymentsModule } from './payment/payment.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     RootMongooseModule,
+    RootHttpModule,
     AuthModule,
     ParkingModule,
     UsersModule,
     VehiclesModule,
     ImagesModule,
     MailModule,
-    NumberPlateModule
+    NumberPlateModule,
+    PaymentsModule
   ],
   controllers: [AppController],
   providers: [AppService, StorageService]

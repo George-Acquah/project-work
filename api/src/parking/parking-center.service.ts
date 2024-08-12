@@ -12,11 +12,14 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import mongoose, { Model, Types } from 'mongoose';
 import { AggregationService } from 'src/aggregation.service';
 import {
+  centersFilterFields,
   FETCH_POPULAR_CENTERS_AGGREGATION,
   setPopularParkingCenterFields
 } from 'src/shared/constants/centers.constants';
+import { createFilterConditions } from 'src/shared/constants/global.constants';
 import { SORT } from 'src/shared/enums/general.enum';
 import { CenterTypes } from 'src/shared/enums/slots.enum';
+import { sanitizeCentersFn } from 'src/shared/helpers/centers.sanitizers';
 import {
   _ICloudRes,
   _IDbCenterImage,
@@ -186,25 +189,28 @@ export class ParkingCenterService {
     currentPage: number,
     items: number
   ): Promise<_IParkingCenter[]> {
-    const fieldNames = ['center_name', 'type'];
-    const parkingCenters = await this.aggregationService.fetchFilteredDocuments(
-      this.parkingCenterModel,
-      fieldNames,
-      query,
-      currentPage,
-      items
+    const conditions = createFilterConditions<_IDbParkingCenter>(
+      centersFilterFields,
+      query
     );
-    const populatedCenters = await Promise.all(
-      parkingCenters.map(async (center) => {
-        return await this.populateCentersFields<_IDbParkingCenter>(
-          center,
-          this.center_populate_fields,
-          'slot_images slot_data'
-        );
-      })
-    );
+        const { project_fields, lookups, unwind_fields, deepLookups, deep_unwind_fields } =
+          FETCH_POPULAR_CENTERS_AGGREGATION;
 
-    return sanitizeCenters(populatedCenters);
+        return this.aggregationService.dynamicDocumentsPipeline(
+          this.parkingCenterModel,
+          false,
+          project_fields,
+          conditions,
+          lookups,
+          unwind_fields,
+          ['slots'],
+          currentPage,
+          items,
+          sanitizeCentersFn,
+          deepLookups,
+          deep_unwind_fields,
+          setPopularParkingCenterFields
+        );
   }
 
   async getPopularParkingCenters(query = '', currentPage = 1, items = 10) {

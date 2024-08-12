@@ -58,6 +58,14 @@ const FETCH_USERS_PROFILES_BY_USER_AGGREGATION: _IAggregationFields<_TUser> = {
   field_names: ['email', 'userType', 'profile.first_name', 'profile.last_name'] // Add more fields as needed
 };
 
+export const usersFilterFields: (keyof _TUser)[] = [
+  'email',
+  'userType',
+  'phone_number',
+  'profile.first_name' as any,
+  'profile.last_name'
+];
+
 export {
   FETCH_USERS_BY_ADMIN_AGGREGATION,
   FETCH_USERS_PROFILES_BY_USER_AGGREGATION

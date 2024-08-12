@@ -5,7 +5,7 @@ import { CenterTypes } from '../enums/slots.enum';
 
 export type ParkingCenterDocument = HydratedDocument<ParkingCenter>;
 
-@Schema()
+@Schema({ timestamps: true })
 export class ParkingCenter {
   @Prop({ type: String, required: true, unique: true })
   center_name: string;
@@ -13,8 +13,17 @@ export class ParkingCenter {
   @Prop({ type: String, required: true })
   description: string;
 
+  @Prop({ type: Boolean, required: true, default: false })
+  isVerified: boolean;
+
   @Prop({ type: String, enum: Object.values(CenterTypes), required: true })
   type: CenterTypes;
+
+  @Prop({ type: Date })
+  createdAt: Date;
+
+  @Prop({ type: Date })
+  updatedAt: Date;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
