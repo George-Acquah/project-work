@@ -22,6 +22,11 @@ interface _IPaymentConfig {
   hubtelBaseUrl: string;
   clientId: string;
   clientSecret: string;
+  merchantAccountNumber: string;
+  callbackUrl: string;
+  returnUrl?: string;
+  cancellationUrl?: string;
+
 }
 
 interface _IGCPStorage {

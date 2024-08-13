@@ -1,30 +1,39 @@
-import { Controller, Post, Query, Body, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Query, Body, UseInterceptors, Param } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { RequestMoneyDto } from './dto/request-money.dto';
-import { PaymentQueryDto } from './dto/payment-query.dto';
+import { IRequestPaymentDto, PaymentCallbackResponseDto, RequestMoneyDto } from './dto/request-money.dto';
 import { PhoneNumberInterceptor } from 'src/shared/interceptors/phone-number.interceptor';
 
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentService: PaymentService) {}
 
-  @Post('request-money')
+
+  @Post('initiate-payment')
   @UseInterceptors(PhoneNumberInterceptor)
-  async requestMoney(
-    @Body() requestMoneyDto: RequestMoneyDto,
-    @Query() query: PaymentQueryDto
+  async initiatePayment(
+    @Body() requestMoneyDto: IRequestPaymentDto,
   ) {
-    console.log(requestMoneyDto, query);
-    return this.paymentService.requestMoney(
-      requestMoneyDto.mobileNumber,
-      requestMoneyDto.amount,
-      requestMoneyDto.title,
-      requestMoneyDto.description,
-      requestMoneyDto.clientReference,
-      query.callbackUrl,
-      query.returnUrl,
-      query.cancellationUrl,
-      requestMoneyDto.logo
+
+    return this.paymentService.InitiateHubtelPayment(
+     {
+      amount: requestMoneyDto.amount,
+      description: requestMoneyDto.description,
+      clientReference: requestMoneyDto.clientReference,
+      customerMobileNumber: requestMoneyDto.customerMobileNumber
+     }
+    );
+  }
+
+  @Post('callback/:clientReference')
+  @UseInterceptors(PhoneNumberInterceptor)
+  async paymentCallback(
+    @Body() paymentCallbackDto: PaymentCallbackResponseDto,
+    @Param('clientReference') clientReference: string
+  ) {
+
+    return this.paymentService.PaymentCallback(
+      paymentCallbackDto,
+      clientReference
     );
   }
 }
