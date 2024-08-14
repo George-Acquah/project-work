@@ -69,8 +69,8 @@ export class InternalApiResponse<T> {
 
 export class PaymentResponseDataDto {
   @IsNotEmpty()
-  @IsString()
-  paylinkId: string;
+  @IsUrl()
+  checkoutUrl: string;
 
   @IsNotEmpty()
   @IsString()
@@ -78,24 +78,18 @@ export class PaymentResponseDataDto {
 
   @IsNotEmpty()
   @IsUrl()
-  paylinkUrl: string;
+  checkoutDirectUrl: string;
 
   @IsNotEmpty()
-  @IsInt()
-  expiresAt: number;
-}
-
-export class PaymentResponseDto {
-  @IsNotEmpty()
+  @IsString()
+  checkoutId: string;
+ 
   @IsString()
   message: string;
+}
 
-  @IsNotEmpty()
-  @IsString()
-  code: string;
+export class PaymentResponseDto extends PaymentResponseDataDto {
 
-  @IsNotEmpty()
-  data: PaymentResponseDataDto;
 }
 
 export class AuthCredentialDto {
@@ -169,6 +163,11 @@ export class CheckoutRequestDto {
   @IsNotEmpty()
   @IsString()
   customerId: string;
+}
+export class CheckoutResponseDto {
+  checkoutUrl: string;
+
+  checkoutDirectUrl: string;
 }
 
 export class ComputerSlotAmountRequestDto {

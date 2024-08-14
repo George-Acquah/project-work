@@ -4,7 +4,7 @@ import { lastValueFrom,firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { PAYMENT_KEY } from 'src/shared/configs/constants.config';
 import { _IPaymentConfig } from 'src/shared/configs/types.config';
-import { AuthCredentialDto, CheckoutRequestDto, ComputerSlotAmountRequestDto, ComputerSlotAmountResponseDto, CreatTransactionDto, InternalApiResponse, IRequestPaymentDto, PaymentCallbackResponseDto, PaymentResponseDto, RequestOptionDto } from './dto/request-money.dto';
+import { AuthCredentialDto, CheckoutRequestDto, CheckoutResponseDto, ComputerSlotAmountRequestDto, ComputerSlotAmountResponseDto, CreatTransactionDto, InternalApiResponse, IRequestPaymentDto, PaymentCallbackResponseDto, PaymentResponseDto, RequestOptionDto } from './dto/request-money.dto';
 import { AxiosResponse } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -78,7 +78,7 @@ export class PaymentService {
   }
 
 
-  public async Checkout(payload:CheckoutRequestDto):Promise<InternalApiResponse<PaymentResponseDto>>
+  public async Checkout(payload:CheckoutRequestDto):Promise<InternalApiResponse<CheckoutResponseDto>>
   {
     try{
 
@@ -89,7 +89,7 @@ export class PaymentService {
       const slotAmountResponse = await this.ComputeSlotAmountToPay(slotData);
 
       if(!slotAmountResponse.ok){
-        return new InternalApiResponse<any>(false, null, "Failed to compute slot amount");
+        return new InternalApiResponse<CheckoutResponseDto>(false, null, "Failed to compute slot amount");
       }
 
       const slotAmount = slotAmountResponse.data?.amount;
@@ -106,7 +106,7 @@ export class PaymentService {
 
       const initiatePaymentResponse = await this.InitiateHubtelPayment(initiatePaymentPayload);
       if(!initiatePaymentResponse.ok){
-        return new InternalApiResponse<any>(false, null, "Failed to initiate payment");
+        return new InternalApiResponse<CheckoutResponseDto>(false, null, "Failed to initiate payment");
       }
 
       //Todo: Create a transaction payload 
@@ -125,8 +125,13 @@ export class PaymentService {
       //Todo: Save the transaction to db;
 
 
+      console.log("initiatePaymentResponse",initiatePaymentResponse.data)
       //Return the paylink to the user to initiate payment;
-      return new InternalApiResponse<any>(true, initiatePaymentResponse.data, "Payment initiated successfully");
+      const checkoutRes:CheckoutResponseDto = {
+        checkoutDirectUrl:initiatePaymentResponse.data?.checkoutDirectUrl,
+        checkoutUrl:initiatePaymentResponse.data?.checkoutUrl,
+      }
+      return new InternalApiResponse<CheckoutResponseDto>(true, checkoutRes, "Payment initiated successfully");
 
     }
     catch(error){
