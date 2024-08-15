@@ -695,8 +695,7 @@ export class AggregationService {
       throw new Error(`Error fetching filtered documents: ${error.message}`);
     }
   }
-
-  //Number Plate Aggregation
+  // Number Plate Aggregation
   async checkIfNumberPlateExistsAggregation(
     model: Model<_IDbSlotReservation>,
     numberPlate: string
@@ -712,12 +711,15 @@ export class AggregationService {
       },
       {
         $project: {
-          _id: 1 // Optionally project only the _id field
+          _id: 1 // Project only the _id field
         }
       }
     ];
 
     const result = await model.aggregate(pipeline).exec();
+    console.log(result);
+
+    // Check if the result contains at least one document
     return result.length > 0;
   }
 }

@@ -243,45 +243,6 @@ export class ParkingCenterController {
   }
 
   @UseGuards(ParkingCenterGuard)
-  @Post('add-slot/:center_id')
-  async addSlot(
-    @UploadedFiles(
-      new ParseFilePipe({
-        validators: [
-          // ... Set of file validator instances here
-          new MaxFileSizeValidator({ maxSize: 2000 * 1024 })
-        ]
-      })
-    )
-    files: Express.Multer.File[],
-    @Body() data: AddSlotDto,
-    @Param() param: { center_id: string }
-  ) {
-    try {
-      const { center_id } = param;
-      const slotId = await this.slotService.addSlot(center_id, data);
-
-      if (!slotId) {
-        return new ApiResponse(500, 'An error has occured', {});
-      }
-
-      const images = await this.uploadService.uploadFilesToDrive(files);
-      if (images.length < 1) {
-        return new ApiResponse(400, 'No images were uploaded.', {});
-      }
-
-      const imageRes = await this.slotService.addSlotImages(images, slotId);
-      return new ApiResponse(200, 'Added slot to center successfully', {
-        slotId,
-        imageRes
-      });
-    } catch (error) {
-      this.logger.error(`Error adding slot: ${error.message}`);
-      throw error;
-    }
-  }
-
-  @UseGuards(ParkingCenterGuard)
   @Put('update-slot')
   async updateSlot(@Body() data: any) {
     try {
@@ -397,6 +358,71 @@ export class ParkingCenterController {
       return new ApiResponse(200, 'Center images added successfully', {});
     } catch (error) {
       this.logger.error(`Error adding center image: ${error.message}`);
+      throw error;
+    }
+  }
+
+  @UseGuards(ParkingCenterGuard)
+  @Post(':center_id/add-slot')
+  async addSlot(
+    // @Body() data: AddSlotDto,
+    @Param() param: { center_id: string }
+  ) {
+    try {
+      async function addSlotsToAllCenters() {
+        const centers = [
+          {
+            _id: '66bd77e7f5c9311faadc7137',
+            center_name: 'test'
+          },
+          {
+            _id: '66bd787bf5c9311faadc7142',
+            center_name: 'The miners'
+          },
+          {
+            _id: '66bd78baf5c9311faadc714d',
+            center_name: 'Acc'
+          },
+          {
+            _id: '66bd78e7f5c9311faadc715f',
+            center_name: 'Kt'
+          },
+          {
+            _id: '66bd7923f5c9311faadc716a',
+            center_name: 'Golden Hill'
+          }
+        ];
+
+        const slotsToAdd = [{ count: 3 }, { count: 5 }, { count: 8 }];
+
+        for (const center of centers) {
+          for (const { count } of slotsToAdd) {
+            const slots = Array.from({ length: count }, (_, index) => ({
+              slot_name: `${center.center_name}_Slot_${index + 1}`,
+              description: `Slot ${index + 1} for ${center.center_name}`
+            }));
+
+            await this.slotService.addSlots(center._id, slots);
+          }
+        }
+
+        console.log('Slots added to all centers');
+      }
+
+      addSlotsToAllCenters();
+
+      // const { center_id } = param;
+      // const slotId = await this.slotService.addSlot(center_id, data);
+
+      // if (!slotId) {
+      //   return new ApiResponse(500, 'An error has occured', {});
+      // }
+      // return new ApiResponse(200, 'Added slot to center successfully', {
+      //   slotId
+      // });
+      return new ApiResponse(200, 'Slots added to all centers', {});
+    } catch (error) {
+      this.logger.error(`Error adding slot: ${error.message}`);
       throw error;
     }
   }

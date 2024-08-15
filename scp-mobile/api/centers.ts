@@ -78,3 +78,13 @@ export async function addCenterAddress(
   };
   return callApi<_IParkingCenter[]>(config);
 }
+
+export async function addCenter(data: { center_name: string; description: string }) {
+  const config: _IApiConfig = {
+    url: `${CENTER_BASE_URL}`,
+    method: "POST",
+    data: data,
+    toast: true,
+  };
+  return callApi<_IParkingCenter>(config);
+}

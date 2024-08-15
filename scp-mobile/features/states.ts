@@ -1,5 +1,5 @@
 import { tabData } from "@/constants/root";
-import { _IAuthState, _IBookingState, _ICenters, _IErrorState, _IMapState, _IPermission, _IResrvations, _IRootState, _IRoots, _ISessionState, _ISlots, _IToastState, _IVehicles } from "./types";
+import { _IAuthState, _IBookingState, _ICenters, _IErrorState, _IFormState, _IMapState, _IPermission, _IResrvations, _IRootState, _IRoots, _ISessionState, _ISlots, _IToastState, _IVehicles } from "./types";
 import { Center_Filter } from "@/utils/enums/global.enum";
 
 const rootState: _IRootState = {
@@ -114,6 +114,30 @@ const errorInitialState: _IErrorState = {
   description: undefined,
 };
 
+const formInitialState: _IFormState = {
+  ...rootInitialState,
+  vehicle: {
+    make: "",
+    model: "",
+    year: "",
+    vin: "",
+    color: "",
+    type: "",
+  },
+  vehicleInsurance: {
+      policyNumber: '',
+  insurer: '',
+  startDate: new Date().toDateString(),
+  endDate: new Date().toDateString(),
+  premiumAmount: ''
+  },
+  vehicleRegistration: {
+       registrationNumber: '',
+ registrationDate: new Date().toDateString(),
+ expiryDate: new Date().toDateString(),
+  }
+};
+
 export {
   authInitialState,
   bookingsInitialState,
@@ -126,5 +150,6 @@ export {
   rootInitialState,
   sessionInitialState,
   toastInitialState,
-  errorInitialState
+  errorInitialState,
+  formInitialState
 };
