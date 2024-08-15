@@ -33,13 +33,11 @@ export class PaymentService {
     method: '',
     headers: {
       'Content-Type': 'application/json'
-      'Content-Type': 'application/json'
     },
     auth: {
       password: '',
       username: ''
     },
-    data: {}
     data: {}
   };
 
@@ -56,27 +54,13 @@ export class PaymentService {
       returnUrl,
       cancellationUrl
     } = this.configService.get<_IPaymentConfig>(PAYMENT_KEY);
-    const {
-      hubtelBaseUrl,
-      clientId,
-      clientSecret,
-      merchantAccountNumber,
-      callbackUrl,
-      returnUrl,
-      cancellationUrl
-    } = this.configService.get<_IPaymentConfig>(PAYMENT_KEY);
 
     this._requestPaymentUrl = `${hubtelBaseUrl}/items/initiate`;
     this._authCredendtial = {
       password: clientSecret,
       username: clientId
     };
-      username: clientId
-    };
     this._merchantAccountNumber = merchantAccountNumber;
-    this._callbackUrl = callbackUrl;
-    this._returnUrl = returnUrl;
-    this._cancellationUrl = cancellationUrl;
     this._callbackUrl = callbackUrl;
     this._returnUrl = returnUrl;
     this._cancellationUrl = cancellationUrl;
@@ -92,13 +76,10 @@ export class PaymentService {
         description: params?.description,
         callbackUrl: `${this._callbackUrl}/${params?.clientReference}`,
         cancellationUrl: this._cancellationUrl,
-        cancellationUrl: this._cancellationUrl,
         returnUrl: this._returnUrl,
         merchantAccountNumber: this._merchantAccountNumber,
         customerMobileNumber: params?.customerMobileNumber
-        customerMobileNumber: params?.customerMobileNumber
       };
-
 
       this.Options.url = `${this._requestPaymentUrl}`;
       this.Options.method = 'POST';
@@ -107,13 +88,6 @@ export class PaymentService {
 
       const response: AxiosResponse<any> = await firstValueFrom(
         this.httpService.request(this.Options)
-      const response: AxiosResponse<any> = await firstValueFrom(
-        this.httpService.request(this.Options)
-      );
-      return new InternalApiResponse<PaymentResponseDto>(
-        true,
-        response?.data?.data,
-        response?.data?.message
       );
       return new InternalApiResponse<PaymentResponseDto>(
         true,
