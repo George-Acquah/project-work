@@ -49,7 +49,7 @@ export class IRequestPaymentDto {
   @IsNotEmpty()
   clientReference?: string;
 
-   @IsNotEmpty()
+  @IsNotEmpty()
   customerMobileNumber?: string;
 }
 
@@ -83,14 +83,12 @@ export class PaymentResponseDataDto {
   @IsNotEmpty()
   @IsString()
   checkoutId: string;
- 
+
   @IsString()
   message: string;
 }
 
-export class PaymentResponseDto extends PaymentResponseDataDto {
-
-}
+export class PaymentResponseDto extends PaymentResponseDataDto {}
 
 export class AuthCredentialDto {
   @IsNotEmpty()
@@ -146,7 +144,6 @@ export class PaymentCallbackResponseDto {
   Data: PaymentCallbackDataDto;
 }
 
-
 export class CheckoutRequestDto {
   @IsNotEmpty()
   @IsString()
@@ -191,7 +188,6 @@ export class ComputerSlotAmountResponseDto {
 
   @IsDecimal()
   amount: number;
-
 }
 
 export class CreatTransactionDto {
@@ -227,5 +223,5 @@ export class CreatTransactionDto {
   @IsString()
   status: string;
 
-  metaData?:any;
+  metaData?: any;
 }
