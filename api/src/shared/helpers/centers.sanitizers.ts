@@ -36,7 +36,7 @@ export function sanitizeCentersFn(
     owner_name,
     contact: owner_contact,
     location:
-      `${(center?.center_address.city, center?.center_address.state)}` ??
+      `${(center?.center_address?.city, center?.center_address?.state)}` ??
       'no location',
     slots: center.slots_count,
     available: availableSlotsCount,
@@ -87,7 +87,7 @@ export function sanitizeSlotsFn(
       'no location',
     // slots: slot.slots_count,
     // available: availableSlotsCount,
-    slot_type: slot.type,
+    slot_type: slot?.type,
     parking_center: center_name,
     createdAt: convertDateToString(
       slot?.createdAt?.toDateString() ?? new Date().toDateString()
