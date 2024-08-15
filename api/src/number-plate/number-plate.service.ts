@@ -15,12 +15,15 @@ export class NumberPlateService {
   ) {}
   verifyNumberPlate(number_plate: string): boolean {
     console.log(number_plate);
-    const aggregation =
+    const verifiedPlate =
       this.aggregationService.checkIfNumberPlateExistsAggregation(
         this.slotReservationModel,
         number_plate
       );
-    console.log(aggregation);
-    return true;
+    console.log(verifiedPlate);
+    if (verifiedPlate) {
+      return true;
+    }
+    return false;
   }
 }
