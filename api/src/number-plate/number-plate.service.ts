@@ -13,10 +13,9 @@ export class NumberPlateService {
     private slotReservationModel: Model<_IDbSlotReservation>,
     private readonly aggregationService: AggregationService
   ) {}
-  verifyNumberPlate(number_plate: string): boolean {
-    console.log(number_plate);
+  async verifyNumberPlate(number_plate: string): Promise<boolean> {
     const verifiedPlate =
-      this.aggregationService.checkIfNumberPlateExistsAggregation(
+      await this.aggregationService.checkIfNumberPlateExistsAggregation(
         this.slotReservationModel,
         number_plate
       );

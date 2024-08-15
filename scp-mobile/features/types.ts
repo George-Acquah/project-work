@@ -90,7 +90,7 @@ interface _IMapState {
   destination: _IDestination | null;
   travelTimeInformation: string | null;
   selected: _ITestCenters | null;
-  // mapRef: React.MutableRefObject<BottomSheetModal>;
+  // map: React.MutableObject<BottomSheetModal>;
 }
 interface _ISessionState {
   showModal: boolean;
@@ -104,4 +104,32 @@ interface _IErrorState {
   description: undefined | string;
 }
 
-export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots, _ISessionState, _IToastState, _IErrorState };
+export interface _IVehicle {
+  make: string;
+  model: string;
+  year: string;
+  vin: string;
+  color: string;
+  type: string;
+}
+
+export interface _IVehicleInsurance {
+  policyNumber: string;
+  insurer: string;
+  startDate: string;
+  endDate: string;
+  premiumAmount: string;
+}
+
+export interface _IVReg {
+   registrationNumber: string;
+ registrationDate: string;
+ expiryDate: string;
+}
+interface _IFormState extends _IRootState {
+  vehicle: _IVehicle;
+  vehicleInsurance: _IVehicleInsurance;
+  vehicleRegistration: _IVReg;
+}
+
+export { _IAuthState, _IBookingState, _IMapState, _ICenters, _IRootState, _IPermission, _ISlots, _IResrvations, _IVehicles, _IRoots, _ISessionState, _IToastState, _IErrorState, _IFormState };

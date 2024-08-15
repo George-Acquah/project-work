@@ -11,7 +11,8 @@ import vehiclesSlice from "@/features/vehicles/vehicles.slice";
 import sessionSlice from "./features/session/session.slice";
 import toastSlice from "./features/toast/toast.slice";
 import errorSlice from "./features/error/error.slice";
-import { _IAuthState, _IBookingState, _ICenters, _IErrorState, _IMapState, _IPermission, _IResrvations, _IRoots, _ISessionState, _ISlots, _IToastState, _IVehicles } from "./features/types";
+import { _IAuthState, _IBookingState, _ICenters, _IErrorState, _IFormState, _IMapState, _IPermission, _IResrvations, _IRoots, _ISessionState, _ISlots, _IToastState, _IVehicles } from "./features/types";
+import formsSlice from "./features/forms/forms.slice";
 
 export interface RootState {
   auth: _IAuthState;
@@ -26,6 +27,7 @@ export interface RootState {
   session: _ISessionState;
   toast: _IToastState;
   error: _IErrorState;
+  form: _IFormState
 }
 
 const appReducer = combineReducers({
@@ -41,6 +43,7 @@ const appReducer = combineReducers({
   session: sessionSlice,
   toast: toastSlice,
   error: errorSlice,
+  form: formsSlice,
 });
 
 const rootReducer: Reducer = (state: RootState, action: UnknownAction) => {

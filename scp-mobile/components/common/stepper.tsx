@@ -20,7 +20,7 @@ interface HRProps {
 export const HR = ({ height = 1 }: HRProps) => (
   <View style={[styles.hrContainer, { height }]}>
     <View style={styles.transparentPart} />
-    <View style={styles.greenishPart} />
+    <View style={{}} />
     <View style={styles.transparentPart} />
   </View>
 );
@@ -52,7 +52,7 @@ export const StepperBtns = ({
 
 const Stepper = ({ steps }: { steps: string[] }) => {
   const { modalValue } = useCustomSearchParams("FORM_STEP");
-  const current = parseInt(modalValue) || 1;
+  const current = parseInt(modalValue) || 0;
   const colorScheme = useColorScheme();
 
   const renderStepIcons = () => (
@@ -72,21 +72,29 @@ const Stepper = ({ steps }: { steps: string[] }) => {
                 name="check"
                 style={styles.checkIcon}
                 color={
-                  colorScheme === "light" ? SHARED_COLORS.gray900 : "white"
+                  colorScheme === "light" ? LIGHT_THEME.primary800 : "white"
                 }
               />
             ) : (
-              <Text style={styles.stepText}>{index + 1}</Text>
+              <Text
+                style={[
+                  styles.stepText,
+                  current === index
+                    ? { color: SHARED_COLORS.gray50 }
+                    : { color: SHARED_COLORS.gray900 },
+                ]}
+              >
+                {index + 1}
+              </Text>
             )}
           </View>
-          {index !== steps.length - 1 && <HR height={1.5} />}
         </Fragment>
       ))}
     </View>
   );
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
+    <View style={{ flex: 1, paddingVertical: 16 }}>
       {renderStepIcons()}
     </View>
   );
@@ -111,25 +119,23 @@ const styles = StyleSheet.create({
     width:24, // Increased width for better visibility
     height: 24, // Increased height for better visibility
     borderRadius: 20,
+    display: 'flex',
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 8,
+    // marginHorizontal: 8,
   },
   activeStepIcon: {
     backgroundColor: LIGHT_THEME.primary800,
-    color: "white",
   },
   inactiveStepIcon: {
     borderWidth: 2,
     borderColor: LIGHT_THEME.primary400,
   },
   checkIcon: {
-    fontSize: 24,
-    color: "gray",
+    fontSize: 20,
   },
   stepText: {
     fontSize: 18,
-    color: "black",
   },
   hrContainer: {
     flexDirection: "row",
@@ -139,10 +145,5 @@ const styles = StyleSheet.create({
   transparentPart: {
     flex: 1,
     backgroundColor: "transparent",
-  },
-  greenishPart: {
-    flex: 1,
-    backgroundColor: "green",
-    opacity: 0.5,
   },
 });

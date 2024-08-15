@@ -20,7 +20,6 @@ export function StepBtn({
 }: _IStepBtn) {
   return (
     <View style={{ marginTop: 24 }}>
-      {/* // className="mt-6 transition-all duration-300"> */}
       {type === "cancel" && href ? (
         <Link
           href={href}
@@ -42,6 +41,10 @@ export function StepBtn({
           aria-disabled={pending}
           style={{ borderRadius: 8, height: 36 }}
           size="sm"
+          additionalStyles={{
+            backgroundColor:
+              type === "submit" ? "green" : type === "back" ? "gray" : "blue",
+          }}
           // color={
           //   type === "submit" ? "green" : type === "back" ? "gray" : "blue"
           // }

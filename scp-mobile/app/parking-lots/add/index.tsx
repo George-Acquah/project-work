@@ -1,9 +1,9 @@
 import AddParkingCenterForm from "@/components/navigation/centers/add-centers-form";
-import ParkingCenterForm from "@/components/parking/center-forms"
+import ParkingCenterForm from "@/components/navigation/centers/center-form";
 
 const AddParkingCenterPage = () => {
   return (
-    <AddParkingCenterForm actionType="add" />
+    <ParkingCenterForm />
   )
 }
 

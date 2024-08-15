@@ -15,4 +15,43 @@ const ParkingCenterSchema = z.object({
   }),
 });
 
+// Define the schema
+const vehicleSchema = z.object({
+  make: z
+    .string()
+    .min(1, { message: "Make is required" })
+    .max(50, { message: "Make should not exceed 50 characters" }),
+  model: z
+    .string()
+    .min(1, { message: "Model is required" })
+    .max(50, { message: "Model should not exceed 50 characters" }),
+  year: z
+    .string()
+    .regex(/^\d{4}$/, { message: "Year should be a 4-digit number" })
+    .refine(
+      (year) => {
+        const currentYear = new Date().getFullYear();
+        return parseInt(year) >= 1886 && parseInt(year) <= currentYear;
+      },
+      {
+        message: "Year should be between 1886 and the current year",
+      }
+    ),
+  vin: z
+    .string()
+    .length(17, { message: "VIN must be exactly 17 characters long" }),
+  color: z
+    .string()
+    .min(1, { message: "Color is required" })
+    .max(30, { message: "Color should not exceed 30 characters" }),
+  type: z
+    .string()
+    .min(1, { message: "Type is required" })
+    .max(30, { message: "Type should not exceed 30 characters" }),
+});
+
+// Export the schema
+export { vehicleSchema };
+
+
 export default ParkingCenterSchema;

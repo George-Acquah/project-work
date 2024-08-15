@@ -10,7 +10,9 @@ export class NumberPlateController {
   @Get('verify')
   @UseGuards(ApiKeyGuard)
   @Throttle({ default: { limit: 1, ttl: 60 } }) // 1 request per 60 seconds
-  verifyNumberPlate(@Query('number_plate') number_plate: string): boolean {
-    return this.numberPlateService.verifyNumberPlate(number_plate);
+  async verifyNumberPlate(
+    @Query('number_plate') number_plate: string
+  ): Promise<boolean> {
+    return await this.numberPlateService.verifyNumberPlate(number_plate);
   }
 }

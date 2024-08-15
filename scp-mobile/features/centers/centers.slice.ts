@@ -1,4 +1,5 @@
 import {
+  addCenter,
   addCenterAddress,
   availableCenters,
   nearbyCenters,
@@ -93,6 +94,18 @@ export const addCenterAddressThunk = createAsyncThunk(
   }
 )
 
+export const addCenterThunk = createAsyncThunk(
+  "center/addCenter",
+  async (data: { center_name: string; description: string }) => {
+    try {
+      const response = await addCenter(data);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
 const centerSlice = createSlice({
   name: "center",
   initialState: centersInitialState,
@@ -161,6 +174,18 @@ const centerSlice = createSlice({
         state.availableMessage = null;
         state.availableError = action.error.message!;
       })
+      .addCase(addCenterThunk.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.message = action.payload.message;
+      })
+      .addCase(addCenterThunk.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addCenterThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.message = null;
+        state.error = action.error.message!;
+      })
 
       .addCase(fetchSingleCenter.fulfilled, (state, action) => {
         state.fetchedCenter = action.payload.data;
@@ -194,13 +219,14 @@ const centerSlice = createSlice({
         state.error = action.error.message!;
       })
 
-      .addCase(addCenterAddressThunk.fulfilled, (state) => { 
+      .addCase(addCenterAddressThunk.fulfilled, (state) => {
         state.isLoading = false;
-
-       })
-      .addCase(addCenterAddressThunk.pending, (state) => { state.isLoading = true})
+      })
+      .addCase(addCenterAddressThunk.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(addCenterAddressThunk.rejected, (state) => {
-      state.isLoading = false
+        state.isLoading = false;
       });
   },
 });
@@ -253,5 +279,7 @@ export const selectAvailableCenterLoading = (state: RootState) =>
   state.center.availableLoading;
 export const selectAvailableCenterError = (state: RootState) =>
   state.center.availableError;
+
+export const selectCenterMessage = (state: RootState) => state.center.message;
 
 export default centerSlice.reducer;
