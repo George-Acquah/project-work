@@ -85,39 +85,33 @@ export class SlotService {
     size = 5
   ) {
     try {
-      const endTime = new Date(startTime.getTime() + duration * 60000); // Calculate end time
-      const lookups: _ILookup[] = [
-        {
-          from: 'slotdatas',
-          as: 'slot_data',
-          foreignField: 'slot_id'
-        },
-        {
-          from: 'slotimages',
-          as: 'slot_images',
-          foreignField: 'slot_id'
-        },
-        {
-          from: 'slotaddresses',
-          as: 'slot_address',
-          foreignField: 'slot_id'
-        }
-      ];
-      const unwind_fields = ['slot_data', 'slot_address'];
+      const conditions = createFilterConditions<_IDbSlot>(
+        slotsFilterFields,
+        ''
+      );
+      const {
+        project_fields,
+        lookups,
+        unwind_fields,
+        deepLookups,
+        deep_unwind_fields
+      } = FETCH_SLOTS_AGGREGATION;
 
-      const availableSlots =
-        await this.aggregationService.availableDocumentsPipeline<_IDbSlot>(
-          this.slotModel,
-          lookups,
-          unwind_fields,
-          startTime,
-          endTime,
-          currentPage,
-          size,
-          { isAvailable: false }
-        );
-
-      return availableSlots;
+      return this.aggregationService.dynamicDocumentsPipeline(
+        this.slotModel,
+        false,
+        project_fields,
+        conditions,
+        lookups,
+        unwind_fields,
+        [],
+        currentPage,
+        size,
+        sanitizeSlotsFn,
+        deepLookups,
+        deep_unwind_fields
+        // setPopularParkingCenterFields
+      );
     } catch (error) {
       throw new Error(error.message || 'Error finding available slots');
     }
@@ -563,6 +557,10 @@ export class SlotService {
 
   async addSlotsToAllCenters() {
     const centers = [
+      {
+        _id: '66bd77e7f5c9311faadc7137',
+        center_name: 'test'
+      },
       {
         _id: '66bd787bf5c9311faadc7142',
         center_name: 'The miners'

@@ -8,7 +8,6 @@ import {
   selectNearbySlotLoading,
   selectSelectedSlot,
   selectSelectedSlotString,
-  testSlots,
 } from "@/features/slots/parking-slots.slice";
 import Button from "@/components/common/button";
 import { ids } from "@/constants/root";
@@ -33,6 +32,11 @@ interface _ICenterParams {
   start_time: string;
   start_date: string;
 }
+interface _ISearchParams extends SearchParamsKeys {
+  slots: string;
+  page: string;
+  size: string;
+}
 const ReserveSlotScreen = () => {
   const url = usePathname();
   //Get Params
@@ -43,7 +47,7 @@ const ReserveSlotScreen = () => {
   const colorScheme = useColorScheme() ?? 'light';
 
   //Get select_data from useSlotFilter
-  const { select_data } = useSlotFilter();
+  const { select_data, dispatch_data } = useSlotFilter();
 
   const dispatch = useAppDispatch();
 
@@ -54,8 +58,21 @@ const ReserveSlotScreen = () => {
   const selectedSlot = useAppSelector(selectSelectedSlot(slotId ?? ""));
   const slots = useAppSelector(select_data);
 
+    const searchParams = useLocalSearchParams<_ISearchParams>();
+
+    //TODO Avoiding making use effect run elsewhere when center_type is changed elsewhere
+
+    const slotsQuery = searchParams?.slots || "";
+    const currentPage = Number(searchParams?.page) || 1;
+    const pageSize = Number(searchParams?.size) || 5;
+    const fetch_data = dispatch_data({
+      slots: slotsQuery,
+      currentPage,
+      pageSize,
+    });
+
   useEffect(() => {
-    dispatch(testSlots());
+    dispatch(fetch_data);
   }, []);
 
   const handleBookSlot = async (slot_id: string) => {

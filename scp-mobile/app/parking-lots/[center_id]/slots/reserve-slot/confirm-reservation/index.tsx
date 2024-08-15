@@ -34,7 +34,7 @@ interface _ICenterParams {
 const ConfirmReservationPage = () => {
   const url = usePathname();
   const params = useLocalSearchParams<_ICenterParams>();
-  const { center_id, duration, start_time, start_date, slot_id } = params;
+  const { center_id: centerId, duration, start_time, start_date, slot_id: slotid } = params;
 
   
   const colorScheme = useColorScheme() ?? "light";
@@ -50,8 +50,8 @@ const ConfirmReservationPage = () => {
     const startTime = new Date(start_time ?? '');
     const reservation_duration = parseInt(duration ?? "");
     const vehicle_id = ids.VEHICLE;
-    const slot_id = ids.SLOT;
-    const center = ids.CENTER;
+    const slot_id = slotId!;
+    const center = centerId!;
     const result = unwrapResult(
       await dispatch(
         slotReservation({

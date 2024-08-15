@@ -14,9 +14,7 @@ export function sanitizeReservationsFn(
   // reservation: any
 ): _IFormattedReservation {
   // Extract first image's filename if available
-  const image = reservation?.slot_image
-    ? reservation.slot_image[0].file_id
-    : null;
+  const image = reservation?.slot_image[0]?.file_id ?? null;
   // console.log(reservation?.vehicle as unknown as any);
   console.log(reservation?.driver_profile);
   const driver_name = reservation?.driver_profile
@@ -29,7 +27,7 @@ export function sanitizeReservationsFn(
     image: image,
     slot_name: reservation.slot_name ?? 'Unknown',
     driver_name,
-    vehicle_no: reservation.vehicle_no ?? '',
+    vehicle_no: reservation?.vehicle_no ?? 'not set',
     wait_time: reservation.wait_time,
     time_reserved: convertDateToString(
       reservation.time_of_reservation.toDateString() ??
