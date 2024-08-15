@@ -369,47 +369,7 @@ export class ParkingCenterController {
     @Param() param: { center_id: string }
   ) {
     try {
-      async function addSlotsToAllCenters() {
-        const centers = [
-          {
-            _id: '66bd77e7f5c9311faadc7137',
-            center_name: 'test'
-          },
-          {
-            _id: '66bd787bf5c9311faadc7142',
-            center_name: 'The miners'
-          },
-          {
-            _id: '66bd78baf5c9311faadc714d',
-            center_name: 'Acc'
-          },
-          {
-            _id: '66bd78e7f5c9311faadc715f',
-            center_name: 'Kt'
-          },
-          {
-            _id: '66bd7923f5c9311faadc716a',
-            center_name: 'Golden Hill'
-          }
-        ];
-
-        const slotsToAdd = [{ count: 3 }, { count: 5 }, { count: 8 }];
-
-        for (const center of centers) {
-          for (const { count } of slotsToAdd) {
-            const slots = Array.from({ length: count }, (_, index) => ({
-              slot_name: `${center.center_name}_Slot_${index + 1}`,
-              description: `Slot ${index + 1} for ${center.center_name}`
-            }));
-
-            await this.slotService.addSlots(center._id, slots);
-          }
-        }
-
-        console.log('Slots added to all centers');
-      }
-
-      addSlotsToAllCenters();
+      await this.slotService.addSlotsToAllCenters();
 
       // const { center_id } = param;
       // const slotId = await this.slotService.addSlot(center_id, data);
