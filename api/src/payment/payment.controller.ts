@@ -1,6 +1,6 @@
 import { Controller, Post, Query, Body, UseInterceptors, Param } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { IRequestPaymentDto, PaymentCallbackResponseDto, RequestMoneyDto } from './dto/request-money.dto';
+import { CheckoutRequestDto, PaymentCallbackResponseDto, RequestMoneyDto } from './dto/request-money.dto';
 import { PhoneNumberInterceptor } from 'src/shared/interceptors/phone-number.interceptor';
 
 @Controller('payments')
@@ -11,15 +11,15 @@ export class PaymentsController {
   @Post('initiate-payment')
   @UseInterceptors(PhoneNumberInterceptor)
   async initiatePayment(
-    @Body() requestMoneyDto: IRequestPaymentDto,
+    @Body() checkoutRequest: CheckoutRequestDto,
   ) {
 
-    return this.paymentService.InitiateHubtelPayment(
+    return this.paymentService.Checkout(
      {
-      amount: requestMoneyDto.amount,
-      description: requestMoneyDto.description,
-      clientReference: requestMoneyDto.clientReference,
-      customerMobileNumber: requestMoneyDto.customerMobileNumber
+      customerMobileNumber: checkoutRequest.customerMobileNumber,
+      centerId: checkoutRequest.centerId,
+      customerId: checkoutRequest.customerId,
+      slotId: checkoutRequest.slotId,
      }
     );
   }
@@ -31,7 +31,7 @@ export class PaymentsController {
     @Param('clientReference') clientReference: string
   ) {
 
-    return this.paymentService.PaymentCallback(
+    return this.paymentService.HandlePaymentCallback(
       paymentCallbackDto,
       clientReference
     );

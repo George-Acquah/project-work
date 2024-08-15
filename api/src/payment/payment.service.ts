@@ -4,8 +4,9 @@ import { lastValueFrom,firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { PAYMENT_KEY } from 'src/shared/configs/constants.config';
 import { _IPaymentConfig } from 'src/shared/configs/types.config';
-import { AuthCredentialDto, InternalApiResponse, IRequestPaymentDto, PaymentCallbackResponseDto, PaymentResponseDto, RequestOptionDto } from './dto/request-money.dto';
+import { AuthCredentialDto, CheckoutRequestDto, CheckoutResponseDto, ComputerSlotAmountRequestDto, ComputerSlotAmountResponseDto, CreatTransactionDto, InternalApiResponse, IRequestPaymentDto, PaymentCallbackResponseDto, PaymentResponseDto, RequestOptionDto } from './dto/request-money.dto';
 import { AxiosResponse } from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class PaymentService {
@@ -46,7 +47,7 @@ export class PaymentService {
     this._cancellationUrl = cancellationUrl
   }
 
-  public async InitiateHubtelPayment(params: IRequestPaymentDto): Promise<InternalApiResponse<PaymentResponseDto>> {
+  protected async InitiateHubtelPayment(params: IRequestPaymentDto): Promise<InternalApiResponse<PaymentResponseDto>> {
     try {
       const Payload = {
         clientReference: params?.clientReference,
@@ -71,23 +72,124 @@ export class PaymentService {
       );
       return new InternalApiResponse<PaymentResponseDto>(true, response?.data?.data, response?.data?.message);
     } catch (error) {
-      return new InternalApiResponse<PaymentResponseDto>(false, undefined, JSON.stringify(error));
+      console.log(error,"Failed to initiate payment")
+      return new InternalApiResponse<PaymentResponseDto>(false, undefined, "Failed to initiate payment");
     }
   }
 
 
-  public async PaymentCallback(params: PaymentCallbackResponseDto, clientReference:string): Promise<InternalApiResponse<any>> {
-
+  public async Checkout(payload:CheckoutRequestDto):Promise<InternalApiResponse<CheckoutResponseDto>>
+  {
     try{
-      //todo: process payment callback
 
-      console.log("callback response",JSON.stringify(params))
+      //Todo: validate slot information
 
-      return new InternalApiResponse<any>(true, null, "Payment processed successfully");
+      //Todo: compute slot amount to pay
+      const slotData:ComputerSlotAmountRequestDto = {centerId:payload.centerId,slotId:payload.slotId};
+      const slotAmountResponse = await this.ComputeSlotAmountToPay(slotData);
+
+      if(!slotAmountResponse.ok){
+        return new InternalApiResponse<CheckoutResponseDto>(false, null, "Failed to compute slot amount");
+      }
+
+      const slotAmount = slotAmountResponse.data?.amount;
+      const clientReference = uuidv4(); // Generate a UUID
+
+      //Todo: initiate payment
+      const paymentDescription = `Payment for slot ${payload.slotId} at center ${payload.centerId}`;
+      const initiatePaymentPayload: IRequestPaymentDto ={
+        amount:slotAmount,
+        clientReference:clientReference,
+        description:paymentDescription,
+        customerMobileNumber:payload.customerMobileNumber
+      } 
+
+      const initiatePaymentResponse = await this.InitiateHubtelPayment(initiatePaymentPayload);
+      if(!initiatePaymentResponse.ok){
+        return new InternalApiResponse<CheckoutResponseDto>(false, null, "Failed to initiate payment");
+      }
+
+      //Todo: Create a transaction payload 
+      var transactionPayload:CreatTransactionDto ={
+        amount:slotAmount,
+        clientReference:clientReference,
+        description:paymentDescription,
+        customerMobileNumber:payload.customerMobileNumber,
+        centerId:payload.centerId,
+        slotId:payload.slotId,
+        customerId:payload.customerId,
+        status:"PENDING",
+        metaData:initiatePaymentResponse.data
+      }
+      
+      //Todo: Save the transaction to db;
+
+
+      console.log("initiatePaymentResponse",initiatePaymentResponse.data)
+      //Return the paylink to the user to initiate payment;
+      const checkoutRes:CheckoutResponseDto = {
+        checkoutDirectUrl:initiatePaymentResponse.data?.checkoutDirectUrl,
+        checkoutUrl:initiatePaymentResponse.data?.checkoutUrl,
+      }
+      return new InternalApiResponse<CheckoutResponseDto>(true, checkoutRes, "Payment initiated successfully");
+
     }
-    catch (error) {
-      return new InternalApiResponse<any>(false, null, "Failed to process callback");
+    catch(error){
+      return new InternalApiResponse<any>(false, null, "Failed to process payment");
+
+    }
+  }
+
+  private async ComputeSlotAmountToPay(payload:ComputerSlotAmountRequestDto):Promise<InternalApiResponse<ComputerSlotAmountResponseDto>>
+  {
+    try{
+
+      //Todo: fetch slot information from db
+
+      //Todo: compute slot amount to pay
+
+      const slotAmount = 1;
+      const slotAmountResponse:ComputerSlotAmountResponseDto = {
+        slotId:payload.slotId,
+        centerId:payload.centerId,
+        amount:slotAmount
+      }
+
+      return new InternalApiResponse<ComputerSlotAmountResponseDto>(true, slotAmountResponse, "Slot amount computed successfully");
+
+    }
+    catch(error){
+      return new InternalApiResponse<any>(false, null, "Failed to compute slot amount");
+
+    }
+  }
+
+  public async HandlePaymentCallback(params: PaymentCallbackResponseDto, clientReference:string): Promise<InternalApiResponse<any>> {
+    try {
+      console.log("callback response",JSON.stringify(params))
+      //Todo: Fetch transaction by the client reference and end the process if it does not exist
+
+      //Todo: Check if the transaction has been processed before. End the process if the status is not pending
+
+      //Todo: 
+      if(params.ResponseCode !== "0000"){
+        //Todo: Update transaction status to Failed
+
+        return new InternalApiResponse<any>(true);
+      }
+
+      //Todo: Update transaction status to success
+
+      //Todo: Assign the space to the user because payment is successful.
+
+
+      return new InternalApiResponse<any>(true);
+      
+    } catch (error) {
+      return new InternalApiResponse<any>(true);
+      
     }
 
   }
+
 }

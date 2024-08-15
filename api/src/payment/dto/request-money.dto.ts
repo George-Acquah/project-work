@@ -5,7 +5,8 @@ import {
   IsOptional,
   IsUrl,
   IsInt,
-  IsObject
+  IsObject,
+  IsDecimal
 } from 'class-validator';
 import { IsE164PhoneNumber } from 'src/shared/validators/phone-number.validator';
 
@@ -68,8 +69,8 @@ export class InternalApiResponse<T> {
 
 export class PaymentResponseDataDto {
   @IsNotEmpty()
-  @IsString()
-  paylinkId: string;
+  @IsUrl()
+  checkoutUrl: string;
 
   @IsNotEmpty()
   @IsString()
@@ -77,24 +78,18 @@ export class PaymentResponseDataDto {
 
   @IsNotEmpty()
   @IsUrl()
-  paylinkUrl: string;
+  checkoutDirectUrl: string;
 
   @IsNotEmpty()
-  @IsInt()
-  expiresAt: number;
-}
-
-export class PaymentResponseDto {
-  @IsNotEmpty()
+  @IsString()
+  checkoutId: string;
+ 
   @IsString()
   message: string;
+}
 
-  @IsNotEmpty()
-  @IsString()
-  code: string;
+export class PaymentResponseDto extends PaymentResponseDataDto {
 
-  @IsNotEmpty()
-  data: PaymentResponseDataDto;
 }
 
 export class AuthCredentialDto {
@@ -149,4 +144,88 @@ export class PaymentCallbackResponseDto {
   ResponseCode: string;
   Status: string;
   Data: PaymentCallbackDataDto;
+}
+
+
+export class CheckoutRequestDto {
+  @IsNotEmpty()
+  @IsString()
+  slotId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  centerId: string;
+
+  @IsNotEmpty()
+  @IsE164PhoneNumber()
+  customerMobileNumber: string;
+
+  @IsNotEmpty()
+  @IsString()
+  customerId: string;
+}
+export class CheckoutResponseDto {
+  checkoutUrl: string;
+
+  checkoutDirectUrl: string;
+}
+
+export class ComputerSlotAmountRequestDto {
+  @IsNotEmpty()
+  @IsString()
+  slotId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  centerId: string;
+}
+
+export class ComputerSlotAmountResponseDto {
+  @IsNotEmpty()
+  @IsString()
+  slotId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  centerId: string;
+
+  @IsDecimal()
+  amount: number;
+
+}
+
+export class CreatTransactionDto {
+  @IsNotEmpty()
+  @IsString()
+  clientReference: string;
+
+  @IsNotEmpty()
+  @IsString()
+  customerMobileNumber: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  amount: number;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
+  slotId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  centerId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  customerId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  status: string;
+
+  metaData?:any;
 }
