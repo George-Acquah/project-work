@@ -12,7 +12,8 @@ const ExploreScreen = () => {
 
   useEffect(() => {
     const seedSlots = async () => {
-      await axiosInstance.post("owner/parking-center/66bd77e7f5c9311faadc7137/add-slot");
+      const result = await axiosInstance.post("owner/parking-center/66bd77e7f5c9311faadc7137/add-slot");
+      
     }
     seedSlots();
   },[])

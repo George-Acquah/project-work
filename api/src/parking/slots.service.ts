@@ -564,10 +564,6 @@ export class SlotService {
   async addSlotsToAllCenters() {
     const centers = [
       {
-        _id: '66bd77e7f5c9311faadc7137',
-        center_name: 'test'
-      },
-      {
         _id: '66bd787bf5c9311faadc7142',
         center_name: 'The miners'
       },
@@ -588,6 +584,8 @@ export class SlotService {
     const slotsToAdd = [{ count: 3 }, { count: 5 }, { count: 8 }];
 
     for (const center of centers) {
+      const slotPromises = [];
+
       for (const { count } of slotsToAdd) {
         for (let index = 0; index < count; index++) {
           const slotData = {
@@ -595,9 +593,13 @@ export class SlotService {
             description: `Slot ${index + 1} for ${center.center_name}`
           };
 
-          await this.addSlot(center._id, slotData);
+          // Add each slot creation promise to the array
+          slotPromises.push(this.addSlot(center._id, slotData));
         }
       }
+
+      // Wait for all slots to be added for the current center
+      await Promise.all(slotPromises);
     }
 
     console.log('Slots added to all centers');

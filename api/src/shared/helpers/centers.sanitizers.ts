@@ -16,7 +16,7 @@ export function sanitizeCentersFn(
   // center: any
 ): _IFormattedCenter {
   // Extract first image's filename if available
-  const image = center?.center_images ? center.center_images[0].file_id : null;
+  const image = center?.center_images[0]?.file_id ?? null;
   const owner_contact = center?.center_owner
     ? center?.center_owner?.phone_number
     : 'no contact';
@@ -65,7 +65,7 @@ export function sanitizeSlotsFn(
   // slot: any
 ): _IFormattedSlot {
   // Extract first image's filename if available
-  const image = slot?.slot_images ? slot.slot_images[0].file_id : null;
+  const image = slot?.slot_images[0]?.file_id ?? null;
   const owner_contact = slot?.slot_owner
     ? slot?.slot_owner?.phone_number
     : 'no contact';

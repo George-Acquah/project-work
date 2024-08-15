@@ -551,6 +551,7 @@ export class AggregationService {
         { $match: { _id: newDoc._id } },
         { $project: project }
       ]);
+      console.log(pipeline);
 
       if (sanitizeFn) {
         // Sanitize and return the document
