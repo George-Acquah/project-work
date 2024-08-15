@@ -81,6 +81,7 @@ const ReserveSlotScreen = () => {
     );
   };
 
+  console.log(slots);
   return (
     <RendererHOC loading={loading} error={error}>
       {slots && slots.length > 0 ? (

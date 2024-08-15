@@ -77,13 +77,8 @@ export class SlotService {
     private readonly vehicleService: VehiclesService
   ) {}
 
-  async findAvailableSlots(
-    center_id: string,
-    startTime: Date,
-    duration: number,
-    currentPage = 1,
-    size = 5
-  ) {
+  async findAvailableSlots() {
+    // size = 5 // currentPage = 1, // duration: number, // startTime: Date, // center_id: string,
     try {
       const conditions = createFilterConditions<_IDbSlot>(
         slotsFilterFields,
@@ -105,8 +100,8 @@ export class SlotService {
         lookups,
         unwind_fields,
         [],
-        currentPage,
-        size,
+        1,
+        5,
         sanitizeSlotsFn,
         deepLookups,
         deep_unwind_fields

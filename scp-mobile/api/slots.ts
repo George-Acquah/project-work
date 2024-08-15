@@ -1,7 +1,7 @@
 import { BASE_URL } from "./root";
 import { callApi } from "./shared";
 
-const CENTER_BASE_URL = `${BASE_URL}/owner/parking-center/slots`;
+const CENTER_BASE_URL = `${BASE_URL}owner/parking-center/slots`;
 
 export async function filteredSlots(
   centers: string = "",
@@ -63,3 +63,4 @@ export async function availableSlots(
 
   return callApi<_ISlot[]>(config);
 }
+

@@ -438,24 +438,22 @@ export class ParkingCenterController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post(':center_id/available-slots')
-  @UseInterceptors(TransformDateInterceptor)
-  async requestReservation(
-    @Param('center_id') centerId: string,
-    @Query('currentPage', new ParseIntPipe()) currentPage,
-    @Query('size', new ParseIntPipe()) size,
-    @Body() data: ReservationRequestDto
-  ) {
+  // @UseGuards(JwtAuthGuard)
+  @Get(':center_id/available-slots')
+  // @UseInterceptors(TransformDateInterceptor)
+  async requestReservation() {
+    // @Body() data: ReservationRequestDto // @Query('size', new ParseIntPipe()) size, // @Query('currentPage', new ParseIntPipe()) currentPage, // @Param('center_id') centerId: string,
     try {
-      const { start_time, reservation_duration } = data;
-      const slotsWithPages = await this.slotService.findAvailableSlots(
-        centerId,
-        start_time,
-        reservation_duration,
-        currentPage,
-        size
-      );
+      // const { start_time, reservation_duration } = data;
+      const slotsWithPages = await this.slotService
+        .findAvailableSlots
+        // 'centerId',
+        // start_time,
+        // reservation_duration,
+        // 2,
+        // siz5
+        ();
+      console.log(slotsWithPages);
       // const totalPages = await this.slotService.fetchSlotsPage(centerId, size);
       return new ApiResponse(200, 'Fetched Available Slots', slotsWithPages);
     } catch (error) {
