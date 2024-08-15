@@ -8,10 +8,7 @@ export function sanitizeVehiclesFn(
   vehicle: _IDbVehicleNew
 ): _IFormattedVehicle {
   // Extract first image's filename if available
-  const image =
-    vehicle.vehicle_images.length > 0
-      ? vehicle.vehicle_images[0].filename
-      : null;
+  const image = vehicle?.vehicle_images[0]?.filename ?? null;
 
   // Check if the vehicle has insurance documents
   const hasInsurance = vehicle.vehicle_insurance.length > 0;
@@ -24,16 +21,15 @@ export function sanitizeVehiclesFn(
     _id: vehicle._id.toString() as string,
     image: image,
     vehicle_no: vehicle.vehicle_no as string,
-    registration_number: latestRegistration
-      ? (latestRegistration.registrationNumber as string)
-      : ('' as string),
+    registration_number: latestRegistration?.registrationNumber ?? '',
     description: `Vehicle ${vehicle.vehicle_no}`,
     registration_date: convertDateToString(
-      latestRegistration.registrationDate.toDateString() ??
+      latestRegistration?.registrationDate?.toDateString() ??
         new Date().toDateString()
     ),
     expiry_date: convertDateToString(
-      latestRegistration.expiryDate.toDateString() ?? new Date().toDateString()
+      latestRegistration?.expiryDate?.toDateString() ??
+        new Date().toDateString()
     ),
     last_updated: convertDateToString(new Date().toDateString()), // Assuming current date as last updated for this example
     has_insurance: hasInsurance ? 'insured' : 'not insured',

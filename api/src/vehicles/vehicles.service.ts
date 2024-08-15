@@ -36,6 +36,7 @@ import { VehicleInsurance } from 'src/shared/schemas/vehicle-insurance.schema';
 import { VehicleRegistration } from 'src/shared/schemas/vehicle-registration.schema';
 import { Vehicle } from 'src/shared/schemas/vehicle.schema';
 import { StorageService } from 'src/storage/storage.service';
+import { CreateVehicleDto } from './dtos/add-vehicle.dto';
 
 @Injectable()
 export class VehiclesService {
@@ -180,6 +181,20 @@ export class VehiclesService {
       return savedImages as unknown as _IDbVehicleImage[];
     } catch (error) {
       throw new Error('An Error Occurred while saving Images');
+    }
+  }
+
+  async createVehicle(data: CreateVehicleDto): Promise<_IDbVehicleNew> {
+    try {
+      const newVehicle = new this.vehicleModel({
+        ...data,
+        isVerified: false, // default value
+        hasSlot: false // default value
+      });
+      await newVehicle.save();
+      return newVehicle;
+    } catch (error) {
+      throw new Error('Failed to create vehicle: ' + error.message);
     }
   }
 

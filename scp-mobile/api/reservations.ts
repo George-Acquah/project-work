@@ -19,7 +19,7 @@ export async function RequestReservation(
   pageSize: number = 20, 
   params: _IReservationParams,
 ) {
-  const req_url = `${CENTER_BASE_URL}/${"656482722cbf180fcb3aaf3d"}/available-slots`;
+  const req_url = `${CENTER_BASE_URL}/${center_id}/available-slots`;
   const config: _IApiConfig<typeof params> = {
     url: `${req_url}?currentPage=${1}&size=${pageSize}`,
     method: "POST",

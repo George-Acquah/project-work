@@ -75,17 +75,17 @@ const ParkingCenterDetails = () => {
 
   const handleReservation = async (data: any) => {
     const { duration } = data;
-    const req_href = `/parking-lots/${center?._id}/slots/reserve-slot?start_date=${startDate}&start_time=${startTime}&duration=${duration}`;
+    const req_href = `/parking-lots/${center_id}/slots/reserve-slot?start_date=${startDate}&start_time=${startTime}&duration=${duration}`;
 
     const result = unwrapResult(
       await dispatch(
         fetchAvailableSlots({
-          center_id: center?._id ?? "",
+          center_id: center_id ?? "",
           pageSize: 20,
           start_time: new Date(startTime),
           start_date: new Date(startDate),
           reservation_duration: duration,
-          callbackUrl: url
+          callbackUrl: url,
         })
       )
     );
@@ -104,7 +104,7 @@ const ParkingCenterDetails = () => {
   //Fetch Center using center_id in useEffect
   useEffect(() => {
     console.log(center_id);
-    dispatch(fetchSingleCenter(ids.CENTER));
+    dispatch(fetchSingleCenter(center_id!));
   }, []);
 
   // Helper function to count available slots

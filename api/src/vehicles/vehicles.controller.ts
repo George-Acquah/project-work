@@ -11,13 +11,14 @@ import {
   UploadedFiles,
   UseGuards
 } from '@nestjs/common';
-import { AddVehicleDto } from './dtos/add-vehicle.dto';
+import { AddVehicleDto, CreateVehicleDto } from './dtos/add-vehicle.dto';
 import { VehiclesService } from './vehicles.service';
 import { User } from 'src/shared/decorators/user.decorator';
 import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
 import { VehicleAuthGuard } from 'src/shared/guards/vehicles.guard';
 import { UploadService } from 'src/storage/uploads.service';
 import { ApiResponse } from 'src/shared/services/api-responses';
+import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 
 @Controller('customer/vehicle')
 export class VehiclesController {
@@ -44,6 +45,17 @@ export class VehiclesController {
     } catch (error) {
       console.log(error);
       return new ApiResponse(error.statusCode || 501, error.message, {});
+    }
+  }
+
+  @UseGuards(JwtAuthGuard) // Use appropriate guard if needed
+  @Post('create')
+  async createVehicle(@Body() createVehicleDto: CreateVehicleDto) {
+    try {
+      const vehicle = await this.vehicleService.createVehicle(createVehicleDto);
+      return new ApiResponse(201, 'Vehicle created successfully', vehicle);
+    } catch (error) {
+      return new ApiResponse(500, error.message, {});
     }
   }
 

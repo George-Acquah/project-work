@@ -68,15 +68,6 @@ export const fetchSingleCenter = createAsyncThunk(
   }
 );
 
-export const testSlots = createAsyncThunk("center/testSlots", async () => {
-  try {
-    const response = await fetchData<_ISlot[]>(slots, 500);
-
-    return response;
-  } catch (error) {
-    throw error;
-  }
-});
 
 const slotsSlice = createSlice({
   name: "center",
@@ -162,22 +153,6 @@ const slotsSlice = createSlice({
         state.message = null;
         state.error = action.error.message!;
       })
-
-      .addCase(testSlots.fulfilled, (state, action) => {
-        state.nearbySlot = action.payload;
-        state.nearbyLoading = false;
-        state.message = "Success";
-        state.error = null;
-      })
-      .addCase(testSlots.pending, (state) => {
-        state.nearbyLoading = true;
-        state.error = null;
-      })
-      .addCase(testSlots.rejected, (state, action) => {
-        state.nearbyLoading = false;
-        state.message = null;
-        state.error = action.error.message!;
-      });
   },
 });
 
