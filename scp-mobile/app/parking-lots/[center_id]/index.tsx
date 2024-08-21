@@ -58,8 +58,6 @@ const ParkingCenterDetails = () => {
 
   //fetch user role using useRoles hook
   const { role, loading: role_loading } = useRoles();
-  console.log("role: ", role);
-  console.log(role_loading);
 
   //Refs
   const addOptionsRef = useRef<BottomSheet>(null);

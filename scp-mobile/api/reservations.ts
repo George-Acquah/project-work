@@ -10,7 +10,7 @@ export interface _IReservationParams {
 }
 
 interface _IRequestReservationResponse {
-  documents: _ISlot[];
+  documents: any[];
   totalPages: number;
 }
 // :center_id/slots/:slot_id/reserve-slot
@@ -21,9 +21,9 @@ export async function RequestReservation(
 ) {
   const req_url = `${CENTER_BASE_URL}/${center_id}/available-slots`;
   const config: _IApiConfig<typeof params> = {
-    url: `${req_url}?currentPage=${1}&size=${pageSize}`,
-    method: "POST",
-    data: params,
+    url: `${req_url}`,
+    method: "GET",
+    // data: params,
     callbackUrl: params.callbackUrl
   };
 
