@@ -63,7 +63,7 @@ const ErrorModal = () => {
               {description}
             </Text>
           )}
-          <Button title={button_label ?? "Go to Login"} onPress={handleClose} />
+          <Button title={button_label ?? "Close"} onPress={handleClose} />
         </View>
       </View>
     </Modal>

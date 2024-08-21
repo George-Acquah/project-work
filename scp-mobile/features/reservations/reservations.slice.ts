@@ -22,12 +22,13 @@ export const fetchAvailableSlots = createAsyncThunk(
   async (params: _IFetchAvailableSlots) => {
     try {
       const { start_time, reservation_duration, center_id, pageSize, callbackUrl, start_date } = params;
-      return await RequestReservation(center_id, pageSize, {
+      const result =  await RequestReservation(center_id, pageSize, {
         start_time,
         start_date,
         reservation_duration,
         callbackUrl
       });
+      return result;
     } catch (error) {
       throw error;
     }
