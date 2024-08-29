@@ -16,7 +16,6 @@ import { inter } from "@/app/ui/font";
 import { Suspense } from "react";
 import { ChartSkeleton } from "@/app/ui/shared/skeletons";
 
-// Define TypeScript interfaces for data
 interface KpiData {
   totalSlots: number;
   occupiedSlots: number;
@@ -71,17 +70,53 @@ const fetchData = async (): Promise<DashboardData> => {
       centers: [
         { date: "2024-01-01", value: 5 },
         { date: "2024-01-02", value: 6 },
-        // more data points...
+        { date: "2024-01-03", value: 7 },
+        { date: "2024-01-04", value: 5 },
+        { date: "2024-01-05", value: 8 },
+        { date: "2024-01-06", value: 9 },
+        { date: "2024-01-07", value: 6 },
+        { date: "2024-01-08", value: 7 },
+        { date: "2024-01-09", value: 10 },
+        { date: "2024-01-10", value: 5 },
+        { date: "2024-01-11", value: 6 },
+        { date: "2024-01-12", value: 8 },
+        { date: "2024-01-13", value: 7 },
+        { date: "2024-01-14", value: 9 },
+        { date: "2024-01-15", value: 10 },
       ],
       vehicles: [
         { date: "2024-01-01", value: 20 },
         { date: "2024-01-02", value: 25 },
-        // more data points...
+        { date: "2024-01-03", value: 22 },
+        { date: "2024-01-04", value: 28 },
+        { date: "2024-01-05", value: 24 },
+        { date: "2024-01-06", value: 30 },
+        { date: "2024-01-07", value: 26 },
+        { date: "2024-01-08", value: 29 },
+        { date: "2024-01-09", value: 23 },
+        { date: "2024-01-10", value: 27 },
+        { date: "2024-01-11", value: 31 },
+        { date: "2024-01-12", value: 29 },
+        { date: "2024-01-13", value: 26 },
+        { date: "2024-01-14", value: 32 },
+        { date: "2024-01-15", value: 28 },
       ],
       slots: [
         { date: "2024-01-01", value: 50 },
         { date: "2024-01-02", value: 48 },
-        // more data points...
+        { date: "2024-01-03", value: 47 },
+        { date: "2024-01-04", value: 49 },
+        { date: "2024-01-05", value: 46 },
+        { date: "2024-01-06", value: 45 },
+        { date: "2024-01-07", value: 47 },
+        { date: "2024-01-08", value: 48 },
+        { date: "2024-01-09", value: 46 },
+        { date: "2024-01-10", value: 49 },
+        { date: "2024-01-11", value: 50 },
+        { date: "2024-01-12", value: 44 },
+        { date: "2024-01-13", value: 45 },
+        { date: "2024-01-14", value: 48 },
+        { date: "2024-01-15", value: 47 },
       ],
     },
     details: [
