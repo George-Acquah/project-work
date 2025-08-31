@@ -4,10 +4,11 @@ import {
   IsNumber,
   IsOptional,
   IsUrl,
-  IsInt,
   IsObject,
-  IsDecimal
+  IsDecimal,
+  IsEnum
 } from 'class-validator';
+import { PAYMENT_STATUS } from 'src/shared/enums/general.enum';
 import { IsE164PhoneNumber } from 'src/shared/validators/phone-number.validator';
 
 export class RequestMoneyDto {
@@ -154,6 +155,10 @@ export class CheckoutRequestDto {
   centerId: string;
 
   @IsNotEmpty()
+  @IsString()
+  reservationId: string;
+
+  @IsNotEmpty()
   @IsE164PhoneNumber()
   customerMobileNumber: string;
 
@@ -209,19 +214,11 @@ export class CreatTransactionDto {
 
   @IsNotEmpty()
   @IsString()
-  slotId: string;
+  reservationId: string;
 
   @IsNotEmpty()
-  @IsString()
-  centerId: string;
+  @IsEnum(PAYMENT_STATUS)
+  status: PAYMENT_STATUS;
 
-  @IsNotEmpty()
-  @IsString()
-  customerId: string;
-
-  @IsNotEmpty()
-  @IsString()
-  status: string;
-
-  metaData?: any;
+  // metaData?: any;
 }

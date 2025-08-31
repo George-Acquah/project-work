@@ -126,9 +126,15 @@ axiosInstance.interceptors.response.use(
     if (!error.response) {
       const errorMessage = error.message.includes("timeout")
         ? "Network timeout. Please try again."
-        : "Network error. Please check your internet connection.";
+        : "Network error.";
 
-      store.dispatch(showErrorModal({ message: errorMessage, button_label: 'Go to Login'}));
+      store.dispatch(
+        showErrorModal({
+          message: errorMessage,
+          button_label: "Close",
+          description: "Please check your internet connection.",
+        })
+      );
 
       return Promise.reject({ message: errorMessage });
     }

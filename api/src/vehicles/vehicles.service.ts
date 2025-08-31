@@ -111,7 +111,7 @@ export class VehiclesService {
     return vehicles;
   }
 
-  async getLicensePlate(vehicle_id: string) {
+  async getLicensePlate(vehicle_no: string) {
     const { lookups, project_fields, unwind_fields, count_fields } =
       FETCH_LICENCE_PLATE;
 
@@ -124,13 +124,13 @@ export class VehiclesService {
           this.vehicleModel,
           true,
           project_fields,
-          { _id: new mongoose.Types.ObjectId(vehicle_id) },
+          { vehicle_no },
           lookups,
           unwind_fields,
           count_fields,
           1,
           1,
-          (doc) => doc.vehicle_no
+          (doc) => doc._id
         );
 
       if (!licensePlate) {
@@ -146,16 +146,39 @@ export class VehiclesService {
     }
   }
 
-  // async getDriverVehicles(driver: string): Promise<_IVehicle[]> {
-  //   try {
-  //     const vehicles = await this.vehicleModel
-  //       .find({ driver })
-  //       .populate('images');
-  //     return sanitizeVehicles(vehicles);
-  //   } catch (error) {
-  //     throw new Error(error.message);
-  //   }
-  // }
+  async getDriverVehicles(driver: string) {
+    try {
+      const { project_fields, lookups, unwind_fields, count_fields } =
+        FETCH_VEHICLES_BY_ADMIN_AGGREGATION;
+
+      const conditions = createFilterConditions<_IDbVehicleNew>(
+        vehicleFilterFields,
+        '',
+        'driver',
+        new mongoose.Types.ObjectId(driver)
+      );
+
+      const vehicles = await this.aggregationService.dynamicDocumentsPipeline<
+        _IDbVehicleNew,
+        _IFormattedVehicle[]
+      >(
+        this.vehicleModel,
+        false,
+        project_fields,
+        conditions,
+        lookups,
+        unwind_fields,
+        count_fields,
+        1,
+        5,
+        sanitizeVehiclesFn
+      );
+
+      return vehicles;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 
   // async getSingleVehicle(id: string): Promise<_IVehicle> {
   //   try {

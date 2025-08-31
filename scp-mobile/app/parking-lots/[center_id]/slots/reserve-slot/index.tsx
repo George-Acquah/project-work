@@ -1,16 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
-import { router, useLocalSearchParams, usePathname } from "expo-router";
-import { FontAwesome, Entypo } from "@expo/vector-icons";
-import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
-import {
-  selectNearbySlotError,
-  selectNearbySlotLoading,
-  selectSelectedSlot,
-  selectSelectedSlotString,
-} from "@/features/slots/parking-slots.slice";
+import { View, StyleSheet } from "react-native";
+import React from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { FontAwesome, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { useAppSelector } from "@/utils/hooks/useRedux";
 import Button from "@/components/common/button";
-import { ids } from "@/constants/root";
 import RendererHOC from "@/components/common/renderer.hoc";
 import SlotMap from "@/components/navigation/centers/slot-map";
 import { ThemedView } from "@/components/common/ThemedView";
@@ -20,10 +13,17 @@ import { FONTS } from "@/constants/fonts";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { ThemedText } from "@/components/common/ThemedText";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
-import { SHARED_COLORS } from "@/constants/Colors";
+import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import NoItemFound from "@/components/common/no-item";
-import { useSlotFilter } from "@/utils/hooks/useFilter";
+import {
+  selectAvailableSlots,
+  selectAvailableSlotsLoading,
+  selectIsAvailableSlotsError,
+  selectSelectedAvailableSlot,
+  selectSelectedAvailableSlotString,
+} from "@/features/reservations/reservations.slice";
+import useScreenLoading from "@/utils/hooks/use-screen-loading";
 
 interface _ICenterParams {
   [key: string]: string;
@@ -32,48 +32,23 @@ interface _ICenterParams {
   start_time: string;
   start_date: string;
 }
-interface _ISearchParams extends SearchParamsKeys {
-  slots: string;
-  page: string;
-  size: string;
-}
 const ReserveSlotScreen = () => {
-  const url = usePathname();
   //Get Params
   const params = useLocalSearchParams<_ICenterParams>();
   const { center_id, duration, start_time, start_date } = params;
 
   //Define Color Scheme
-  const colorScheme = useColorScheme() ?? 'light';
-
-  //Get select_data from useSlotFilter
-  const { select_data, dispatch_data } = useSlotFilter();
-
-  const dispatch = useAppDispatch();
+  const colorScheme = useColorScheme() ?? "light";
 
   //Selectors
-  const loading = useAppSelector(selectNearbySlotLoading);
-  const error = useAppSelector(selectNearbySlotError);
-  const slotId = useAppSelector(selectSelectedSlotString);
-  const selectedSlot = useAppSelector(selectSelectedSlot(slotId ?? ""));
-  const slots = useAppSelector(select_data);
-
-    const searchParams = useLocalSearchParams<_ISearchParams>();
-
-    //TODO Avoiding making use effect run elsewhere when center_type is changed elsewhere
-
-    const slotsQuery = searchParams?.slots || "";
-    const currentPage = Number(searchParams?.page) || 1;
-    const pageSize = Number(searchParams?.size) || 5;
-    const fetch_data = dispatch_data({
-      slots: slotsQuery,
-      currentPage,
-      pageSize,
-    });
-
-  useEffect(() => {
-    dispatch(fetch_data);
-  }, []);
+  const loading = useAppSelector(selectAvailableSlotsLoading);
+  const { screenLoading } = useScreenLoading();
+  const error = useAppSelector(selectIsAvailableSlotsError);
+  const slotId = useAppSelector(selectSelectedAvailableSlotString);
+  const selectedSlot = useAppSelector(
+    selectSelectedAvailableSlot(slotId ?? "")
+  );
+  const slots = useAppSelector(selectAvailableSlots);
 
   const handleBookSlot = async (slot_id: string) => {
     router.navigate(
@@ -81,9 +56,8 @@ const ReserveSlotScreen = () => {
     );
   };
 
-  console.log(slots);
   return (
-    <RendererHOC loading={loading} error={error}>
+    <RendererHOC loading={loading || screenLoading} error={error}>
       {slots && slots.length > 0 ? (
         <ThemedView style={{ height: "100%" }}>
           <View style={{ height: "50%", position: "relative" }}>
@@ -103,9 +77,7 @@ const ReserveSlotScreen = () => {
               onPress={() => router.back()}
             />
           </View>
-          <View
-            style={{ height: "50%", paddingTop: 20, paddingHorizontal: 20 }}
-          >
+          <View style={{ height: "50%", paddingHorizontal: 20 }}>
             <ThemedText
               style={{
                 marginVertical: SIZES.padding,
@@ -123,9 +95,10 @@ const ReserveSlotScreen = () => {
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps={"handled"}
                   extraScrollHeight={20}
+                  showsVerticalScrollIndicator={false}
                   contentContainerStyle={{
                     flexGrow: 1,
-                    marginTop: SIZES.radius,
+                    paddingBottom: SIZES.radius * 4.8,
                   }}
                 >
                   <View
@@ -135,8 +108,8 @@ const ReserveSlotScreen = () => {
                     ]}
                   >
                     <TabBarIcon
-                      fontProvider={FontAwesome}
-                      name="phone"
+                      fontProvider={MaterialIcons}
+                      name="local-parking"
                       color={
                         colorScheme === "light"
                           ? SHARED_COLORS.gray900
@@ -161,7 +134,7 @@ const ReserveSlotScreen = () => {
                   >
                     <TabBarIcon
                       fontProvider={FontAwesome}
-                      name="phone"
+                      name="map-marker"
                       color={
                         colorScheme === "light"
                           ? SHARED_COLORS.gray900
@@ -175,7 +148,57 @@ const ReserveSlotScreen = () => {
                       }} //TODO
                       {...text_colors.title}
                     >
-                      {selectedSlot.type}
+                      {selectedSlot.location}
+                    </ThemedText>
+                  </View>
+                  <View
+                    style={[
+                      styles.details_content,
+                      { marginVertical: SIZES.padding * 0.3 },
+                    ]}
+                  >
+                    <TabBarIcon
+                      fontProvider={FontAwesome}
+                      name="car"
+                      color={
+                        colorScheme === "light"
+                          ? SHARED_COLORS.gray900
+                          : "white"
+                      }
+                      style={{ marginRight: 10 }}
+                    />
+                    <ThemedText
+                      style={{
+                        ...FONTS.ps3,
+                      }} //TODO
+                      {...text_colors.title}
+                    >
+                      {selectedSlot.slot_type}
+                    </ThemedText>
+                  </View>
+                  <View
+                    style={[
+                      styles.details_content,
+                      { marginVertical: SIZES.padding * 0.3 },
+                    ]}
+                  >
+                    <TabBarIcon
+                      fontProvider={FontAwesome}
+                      name="dollar"
+                      color={
+                        colorScheme === "light"
+                          ? SHARED_COLORS.gray900
+                          : "white"
+                      }
+                      style={{ marginRight: 10 }}
+                    />
+                    <ThemedText
+                      style={{
+                        ...FONTS.ps3,
+                      }} //TODO
+                      {...text_colors.title}
+                    >
+                      {`GHc ${selectedSlot.price}`}
                     </ThemedText>
                   </View>
                   <View
@@ -200,7 +223,7 @@ const ReserveSlotScreen = () => {
                       }} //TODO
                       {...text_colors.title}
                     >
-                      {selectedSlot.slot_data?.total_bookings || 0}
+                      {0}
                     </ThemedText>
                   </View>
                   <View
@@ -225,7 +248,32 @@ const ReserveSlotScreen = () => {
                       }} //TODO
                       {...text_colors.title}
                     >
-                      {selectedSlot.contact || "+233 551363571"}
+                      {selectedSlot.owner_contact || "+233 551363571"}
+                    </ThemedText>
+                  </View>
+                  <View
+                    style={[
+                      styles.details_content,
+                      { marginVertical: SIZES.padding * 0.3 },
+                    ]}
+                  >
+                    <TabBarIcon
+                      fontProvider={FontAwesome}
+                      name="calendar"
+                      color={
+                        colorScheme === "light"
+                          ? SHARED_COLORS.gray900
+                          : "white"
+                      }
+                      style={{ marginRight: 10 }}
+                    />
+                    <ThemedText
+                      style={{
+                        ...FONTS.ps3,
+                      }} //TODO
+                      {...text_colors.title}
+                    >
+                      {selectedSlot.createdAt}
                     </ThemedText>
                   </View>
                 </KeyboardAwareScrollView>
@@ -240,12 +288,28 @@ const ReserveSlotScreen = () => {
                   }}
                 >
                   <Button
-                    title="Book Slot"
-                    size="lg"
+                    additionalStyles={{
+                      borderRadius: SIZES.radius * 1.8,
+                      marginTop: SIZES.padding,
+                    }}
+                    type="opacity"
                     onPress={() => {
                       handleBookSlot(selectedSlot._id);
                     }}
-                  />
+                  >
+                    <RendererHOC
+                      loading={false}
+                      error={null}
+                      color={LIGHT_THEME.backgroundPrimary}
+                    >
+                      <ThemedText
+                        style={{ ...FONTS.pr1 }}
+                        {...text_colors.main_title}
+                      >
+                        Book Slot
+                      </ThemedText>
+                    </RendererHOC>
+                  </Button>
                 </View>
               </View>
             )}

@@ -16,11 +16,11 @@ const LoadingComponent = ({
       style={[
         StyleSheet.absoluteFill,
         {
-          // flex: 1,
           justifyContent: "center",
           alignItems: "center",
           padding: pad ? 4 : 0,
-          backgroundColor: "rgba(0,0,0,0.4)",
+          backgroundColor: undefined,
+          // backgroundColor: "rgba(0,0,0,0.4)",
         },
         styles,
       ]}

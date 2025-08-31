@@ -80,7 +80,7 @@ import { VehiclesModule } from 'src/vehicles/vehicles.module';
     AggregationService
   ],
   controllers: [ParkingCenterController],
-  exports: [MongooseModule]
+  exports: [MongooseModule, SlotService]
 })
 export class ParkingModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

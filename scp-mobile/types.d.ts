@@ -50,7 +50,7 @@ interface _ICenterAddress extends _IAddress {
   center_id: string;
 }
 
-interface _ICenterData { 
+interface _ICenterData {
   _id: string;
   total_daily_bookings: number;
   total_weekly_bookings: number;
@@ -240,22 +240,27 @@ interface _ILogin extends _IRegisterResponse {
   _id: string;
 }
 
+interface _IAddressDb {
+  latitude: number;
+  longitude: number;
+}
+
 interface _IParkingCenter {
   _id: string;
   center_name: string;
   description: string;
-  type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
-  center_data: _ICenterData | null;
-  center_address: _ICenterAddress | null;
+  owner_name: string;
+  contact: string;
+  center_type: CenterTypes; // to be changed into enum depending on slot spaces and total slots
+  location: string;
+  address: _IAddressDb;
   createdAt: Date;
   updatedAt: Date;
-  contact: string;
-  // location: _IDestination;
   isAvailable: boolean;
   isVerified: boolean;
-  center_images: Array<_IParkingCenterImage>;
-  slots: Array<_ISlot>;
-  owner: string;
+  image: string;
+  slots: number;
+  available: number;
 }
 
 interface _IParkingCenterImage extends _Image {
@@ -328,6 +333,24 @@ interface _ISlotReservation {
   free_waiting_time: number;
 }
 
+interface _IFormattedAvSlot {
+  [key: string]: string | number | null | _IAddressDb;
+  _id: string;
+  slot_type: SlotTypes;
+  slot_name: string;
+  description: string;
+  center_name: string;
+  location: string;
+  createdAt: string;
+  address: _IAddressDb | null;
+  updatedAt: string;
+  isVerified: string;
+  image: string | null;
+  owner_contact: string;
+  owner_name: string;
+  price: number;
+}
+
 interface _ITestCenters {
   _id: string;
   owner: string;
@@ -366,11 +389,16 @@ interface _ITokens {
 
 interface _IVehicle {
   _id: string;
+  image: null | string;
   vehicle_no: string;
-  isVerified: boolean;
-  hasSlot: boolean;
-  images: Array<_TVehicleImage>;
-  driver: string;
+  registration_number: string;
+  description: string;
+  registration_date: string;
+  expiry_date: string;
+  last_updated: string;
+  has_insurance: string;
+  has_reservation: string;
+  isVerified: string;
 }
 
 interface _IVerifyUser {
@@ -398,7 +426,7 @@ interface _IUser {
   centers: any[];
 }
 
-type _TUserType = 'Customer' | 'ParkOwner';
+type _TUserType = "Customer" | "ParkOwner";
 
 interface _Image {
   _id: string;

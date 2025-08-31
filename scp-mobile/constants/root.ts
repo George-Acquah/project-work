@@ -3,7 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 const APP_NAME = "Smart Car Parking";
 const TOKEN_KEY = "jwt";
 const USER_KEY = "logged_user";
-const EXP = 'exp-t'
+const EXP = 'exp-t';
+const RESERVATION = 'res-t';
 
 const ids = {
   VEHICLE: "656117b8bc100d9f24baed06",
@@ -15,6 +16,7 @@ const keys = {
   USER_KEY,
   TOKEN_KEY,
   EXP,
+  RESERVATION
 }
 const AXIOS_ERRORS = {
   NETWORK_ERROR: "Network Error",
@@ -46,7 +48,7 @@ const tipsData: _ITipsData[] = [
   },
 ];
 
-const tabData = ["Upcoming", "History", "Faourite"];
+const tabData = ["Upcoming", "History", "Favorite"];
 
 
 interface _ISearch extends SearchParamsKeys {

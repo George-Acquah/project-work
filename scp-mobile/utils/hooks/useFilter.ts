@@ -127,7 +127,7 @@ export const useSlotFilter = () => {
   const select_data = useMemo(() => {
     switch (slot_type) {
       case Center_Filter.AVAILABLE:
-        return selectNearbySlots;
+        return selectAvailableSlots;
       case Center_Filter.POPULAR:
         return selectPopularSlots;
       case Center_Filter.NEARBY:

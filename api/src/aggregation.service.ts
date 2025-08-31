@@ -575,12 +575,13 @@ export class AggregationService {
     countFields?: string[], // New parameter to specify fields to count
     currentPage = 1,
     items = 10,
-    sanitizeFn?: (doc: T) => AnyExpression,
+    sanitizeFn?: (doc: T, sec?: any) => AnyExpression,
     deeepLookup_data?: _ILookup[],
     deep_unwind_fields?: string[],
     setFields?: Record<string, any>,
     finalLookup?: _ILookup[],
-    final_unwind_field?: string[]
+    final_unwind_field?: string[],
+    secParam?: any
   ): Promise<S> {
     try {
       if (currentPage < 1 || items < 1) {
@@ -682,14 +683,18 @@ export class AggregationService {
 
       // Execute pipeline
       const result = await model.aggregate(pipeline);
-      console.log(result);
 
       // Return based on the 'return_as_object' flag
       if (return_as_object) {
-        return sanitizeFn ? (sanitizeFn(result[0]) as unknown as S) : result[0];
+        if (result.length === 0) {
+          return undefined; // or handle this case appropriately
+        }
+        return sanitizeFn
+          ? (sanitizeFn(result[0], secParam) as unknown as S)
+          : result[0];
       } else {
         return sanitizeFn
-          ? (result.map((item) => sanitizeFn(item)) as unknown as S)
+          ? (result.map((item) => sanitizeFn(item, secParam)) as unknown as S)
           : (result as unknown as S);
       }
     } catch (error) {

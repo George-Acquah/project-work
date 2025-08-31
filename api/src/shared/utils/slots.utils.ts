@@ -138,14 +138,13 @@ function sanitizeSlotData(data: _IDbSlotData): _ISlotData {
 }
 
 function sanitizeSlotAddress(address: _IDbSlotAddress): _ISlotAddress {
-  const { _id, city, latitude, longitude, state, country, slot_id } = address;
+  const { _id, city, location, state, country, slot_id } = address;
 
   return {
     _id: _id.toString() as string,
     slot_id,
     city,
-    latitude,
-    longitude,
+    location,
     state,
     country
   };
@@ -176,14 +175,13 @@ function sanitizeCenterData(data: _IDbCenterData): _ICenterData {
 }
 
 function sanitizeCenterAddress(address: _IDbCenterAddress): _ICenterAddress {
-  const { _id, city, latitude, longitude, state, country, center_id } = address;
+  const { _id, city, location, state, country, center_id } = address;
 
   return {
     _id: _id.toString() as string,
     center_id,
     city,
-    latitude,
-    longitude,
+    location,
     state,
     country
   };

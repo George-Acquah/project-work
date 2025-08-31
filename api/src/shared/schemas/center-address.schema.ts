@@ -1,6 +1,7 @@
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ParkingCenter } from './parking-centers.schema';
+import { _IAddressDb } from '../interfaces/refactored/addresses.interface';
 
 export type CenterAddressDocument = Document & CenterAddress;
 
@@ -9,11 +10,14 @@ export class CenterAddress {
   @Prop({ type: String, required: true })
   city: string;
 
-  @Prop({ type: Number, required: true })
-  latitude: number;
+  // @Prop({ type: Number, required: true })
+  // latitude: number;
 
-  @Prop({ type: Number, required: true })
-  longitude: number;
+  // @Prop({ type: Number, required: true })
+  // longitude: number;
+
+  @Prop({ type: Object })
+  location: _IAddressDb;
 
   @Prop({ type: String })
   state: string;

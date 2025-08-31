@@ -5,6 +5,7 @@ import {
   _IParkingCenterImage,
   _ISlotImage
 } from './images.interface';
+import { _IAddressDb } from './refactored/addresses.interface';
 import { _IVehicle } from './vehicles.interface';
 import { Document } from 'mongoose';
 
@@ -38,6 +39,7 @@ interface _IDbSlot extends Document {
   description: string;
   type: SlotTypes; // to be changed to enum depending on slot space;
   slot_images: Array<_IDbSlotImage>;
+  minutePrice: number;
   isAvailable: boolean;
   slot_data: _IDbSlotData;
   slot_address: _IDbSlotAddress;
@@ -98,8 +100,9 @@ interface _ICenterData {
 
 export interface _IAddress {
   city: string;
-  latitude: number;
-  longitude: number;
+  // latitude: number;
+  // longitude: number;
+  location: _IAddressDb;
   state: string;
   country: string;
 }
@@ -206,7 +209,7 @@ interface _IAddSlotAddress extends _IAddress {
 interface _IReserveSlot {
   slot_id: string;
   center_id: string;
-  vehicle_id: string;
+  vehicle_no: string;
   start_time: Date;
   start_date: Date;
   reservation_duration: number;

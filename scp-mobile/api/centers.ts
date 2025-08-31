@@ -9,7 +9,7 @@ export async function filteredCenters(
 ) {
   // const { centers, currentPage, pageSize } = params;
   const config: _IApiConfig = {
-    url: `${CENTER_BASE_URL}?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
+    url: `${CENTER_BASE_URL}?centers=${centers}&currentPage=${currentPage}&items=${pageSize}`,
     method: "GET",
   };
 
@@ -22,7 +22,7 @@ export async function availableCenters(
   pageSize: number
 ) {
   const config: _IApiConfig = {
-    url: `${CENTER_BASE_URL}/available?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
+    url: `${CENTER_BASE_URL}/available?centers=${centers}&currentPage=${currentPage}&items=${pageSize}`,
     method: "GET",
     toast: true
   };
@@ -47,7 +47,7 @@ export async function popularCenters(
   pageSize: number
 ) {
   const config: _IApiConfig = {
-    url: `${CENTER_BASE_URL}/popular?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
+    url: `${CENTER_BASE_URL}/popular?centers=${centers}&currentPage=${currentPage}&items=${pageSize}`,
     method: "GET",
     toast: true,
   };

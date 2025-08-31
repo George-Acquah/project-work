@@ -220,13 +220,23 @@ const handleTimeChange = (
 
   const renderFooter = () => (
     <View style={{ marginBottom: SIZES.padding, paddingHorizontal: 20 }}>
-      <Button onPress={handleSubmit(handleReservation)}>
+      <Button
+        additionalStyles={{
+          borderRadius: SIZES.radius * 1.8,
+          marginTop: SIZES.padding,
+        }}
+        additionalTextStyles={{
+          color: SHARED_COLORS.gray50,
+        }}
+        type="opacity"
+        onPress={handleSubmit(handleReservation)}
+      >
         <RendererHOC
           loading={bookingLoading}
           error={null}
           color={LIGHT_THEME.backgroundPrimary}
         >
-          <ThemedText style={{ ...FONTS.ps1 }} {...text_colors.title}>
+          <ThemedText style={{ ...FONTS.pr1 }} {...text_colors.main_title}>
             Request Reservation
           </ThemedText>
         </RendererHOC>

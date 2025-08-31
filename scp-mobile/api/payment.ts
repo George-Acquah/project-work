@@ -1,29 +1,20 @@
-// import { callApi } from "./shared";
+import axiosInstance, { BASE_URL } from "./root";
+import axios from "axios";
 
-// const PAYMENT_BASE_URL = `payments`;
-// export const requestMoney = async ({
+const PAYMENT_BASE_URL = `payments`;
+// export const initiatePayment = async ({
 //   mobileNumber,
-//   amount,
-//   title,
-//   description,
-//   clientReference,
-//   callbackUrl,
-//   returnUrl,
-//   cancellationUrl,
-//   logo,
-// }: any) => {
-//       const url = `${PAYMENT_BASE_URL}/request-money?callBackUrl=${callbackUrl}&returnUrl=${returnUrl}&cancellationUrl=${cancellationUrl}`;
 
+// }: any) => {
+//       const url = `${PAYMENT_BASE_URL}/initiate-payment`;
 //       const config: _IApiConfig<any> = {
 //         url: url,
 //         method: "POST",
 //         data: {
-//           mobileNumber,
-//           amount,
-//           title,
-//           description,
-//           clientReference,
-//           logo,
+//           customerMobileNumber: mobileNumber,
+//           centerId: "cid",
+//           customerId: "cuid",
+//           slotId: "slid",
 //         },
 //       };
 
@@ -31,39 +22,25 @@
 // };
 
 
-import axios from "axios";
 
-export const requestMoney = async ({
-  mobileNumber,
-  amount,
-  title,
-  description,
-  clientReference,
-  callbackUrl,
-  returnUrl,
-  cancellationUrl,
-  logo,
-}: any) => {
+
+export const initiatePayment = async ({ mobileNumber }: any) => {
   try {
-    console.log(callbackUrl);
-    const response = await axios.post(
-      `http://192.168.43.215:8080/payments/request-money?callbackUrl=${callbackUrl}&returnUrl=${returnUrl}&cancellationUrl=${cancellationUrl}`, // Replace with your backend URL
-      {
-        mobileNumber,
-        amount,
-        title,
-        description,
-        clientReference,
-        logo,
+    const response = await axiosInstance<{ checkoutDirectUrl: string; checkoutUrl: string; message: string; ok: boolean}>({
+      url: `${BASE_URL}${PAYMENT_BASE_URL}/initiate-payment`,
+      method: "POST",
+      data: {
+        customerMobileNumber: mobileNumber,
+        centerId: "cid",
+        customerId: "cuid",
+        slotId: "slid",
       },
-    );
+      withCredentials: true,
+    });
 
     return response.data; // Handle the response as needed
   } catch (error: any) {
-    console.error(
-      "Error requesting money:",
-      error
-    );
+    console.error("Error requesting money:", error);
     throw error;
   }
 };

@@ -48,7 +48,7 @@ export class VehiclesController {
     }
   }
 
-  @UseGuards(JwtAuthGuard) // Use appropriate guard if needed
+  @UseGuards(VehicleAuthGuard) // Use appropriate guard if needed
   @Post('create')
   async createVehicle(@Body() createVehicleDto: CreateVehicleDto) {
     try {
@@ -59,16 +59,16 @@ export class VehiclesController {
     }
   }
 
-  // @UseGuards(VehicleAuthGuard)
-  // @Get('driver')
-  // async getVehiclesOfDriver(@User() driver: _ISanitizedCustomer) {
-  //   try {
-  //     const vehicles = await this.vehicleService.getDriverVehicles(driver._id);
-  //     return new ApiResponse(200, 'Fetched vehicles Successfully', vehicles);
-  //   } catch (error) {
-  //     return new ApiResponse(error.statusCode, error.message, {});
-  //   }
-  // }
+  @UseGuards(VehicleAuthGuard)
+  @Get('driver')
+  async getVehiclesOfDriver(@User() driver: _ISanitizedCustomer) {
+    try {
+      const vehicles = await this.vehicleService.getDriverVehicles(driver._id);
+      return new ApiResponse(200, 'Fetched vehicles Successfully', vehicles);
+    } catch (error) {
+      return new ApiResponse(error.statusCode, error.message, {});
+    }
+  }
 
   // @UseGuards(VehicleAuthGuard)
   // @Get(':id')

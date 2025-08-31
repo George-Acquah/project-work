@@ -35,6 +35,7 @@ import { TransactionService } from 'src/transaction.service';
 import {
   _INewProfile,
   _IRegisterResponse,
+  _ISafeUser,
   _IUsersTable
 } from 'src/shared/interfaces/refactored/user.interface';
 import {
@@ -187,34 +188,27 @@ export class UsersService {
       if (await bcrypt.compare(password, user.password)) {
         return sanitizeUser(user);
       } else {
-        // Passwords don't match, throw UnauthorizedException
         throw new NotAcceptableException('Incorrect password');
       }
     } catch (error) {
-      // Entity not found or other error occurred, throw appropriate error
       throw new Error(error.message);
     }
   }
 
   /* used by  modules to search user by email */
-  async findUser(email: string): Promise<_TUser> {
+  async findUser(email: string): Promise<_ISafeUser> {
     try {
-      const user = await this.userModel
-        .findOne({ email })
-        .populate({
-          path: 'image profile vehicles centers',
-          strictPopulate: false,
-          populate: {
-            path: 'images center_images',
-            strictPopulate: false
-          }
-        })
-        .exec();
+      const user = await this.userModel.findOne({ email }).exec();
 
       if (!user) {
         throw new NotFoundException(`User with email ${email} does not exist.`);
       } else {
-        return user;
+        return {
+          _id: user._id.toString(),
+          email: user.email,
+          phone_number: user?.phone_number ?? 'No Phone',
+          userType: user.userType
+        };
       }
     } catch (error) {
       throw new Error(error.message);

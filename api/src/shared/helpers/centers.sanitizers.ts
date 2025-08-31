@@ -1,4 +1,5 @@
 import {
+  _IFormattedAvSlot,
   _IFormattedCenter,
   _IFormattedSlot
 } from '../interfaces/refactored/slots.interface';
@@ -16,6 +17,10 @@ export function sanitizeCentersFn(
   // center: any
 ): _IFormattedCenter {
   // Extract first image's filename if available
+  if (!center) {
+    console.error('Sanitizer received undefined or null center');
+    return {} as _IFormattedCenter; // or handle this case appropriately
+  }
   const image = center?.center_images[0]?.file_id ?? null;
   const owner_contact = center?.center_owner
     ? center?.center_owner?.phone_number
@@ -35,8 +40,9 @@ export function sanitizeCentersFn(
     description: center.description,
     owner_name,
     contact: owner_contact,
+    address: center?.center_address?.location ?? null,
     location:
-      `${(center?.center_address?.city, center?.center_address?.state)}` ??
+      `${center?.center_address?.city}, ${center?.center_address?.state}` ??
       'no location',
     slots: center.slots_count,
     available: availableSlotsCount,
@@ -99,6 +105,55 @@ export function sanitizeSlotsFn(
     isAvailable: slot.isAvailable ? 'available' : 'not available',
     capacity: 0,
     price: 12
+  };
+
+  return formattedslot;
+}
+
+export function sanitizeAvailableSlotsFn(
+  slot: _IDbSlot & {
+    // slots_count: number;
+    slot_owner?: _IParkOwner;
+    center?: _IDbParkingCenter;
+    owner_profile: _INewProfile;
+  },
+  secParam: number
+): _IFormattedAvSlot {
+  // Extract first image's filename if available
+  const image = slot?.slot_images[0]?.file_id ?? null;
+  const owner_contact = slot?.slot_owner
+    ? slot?.slot_owner?.phone_number
+    : 'no contact';
+  const owner_name =
+    slot?.owner_profile &&
+    `${slot?.owner_profile?.first_name ?? 'No'} ${
+      slot?.owner_profile?.last_name ?? 'Name'
+    }`;
+  const center_name = slot?.center ? slot?.center?.center_name : 'no name';
+
+  // Format the vehicle object according to _IFormattedVehicle interface
+  const formattedslot: _IFormattedAvSlot = {
+    _id: slot._id.toString() as string,
+    image: image,
+    slot_name: slot.slot_name,
+    description: slot.description,
+    owner_name,
+    owner_contact,
+    address: slot?.slot_address?.location ?? null,
+    location:
+      `${slot?.slot_address?.city}, ${slot?.slot_address?.state}` ??
+      'no location',
+    slot_type: slot?.type,
+    center_name,
+    createdAt: convertDateToString(
+      slot?.createdAt?.toDateString() ?? new Date().toDateString()
+    ),
+    updatedAt: convertDateToString(
+      slot?.updatedAt?.toDateString() ?? new Date().toDateString()
+    ),
+    isVerified: slot.isVerified ? 'verified' : 'not verified',
+    capacity: 0,
+    price: (slot?.minutePrice ?? 0) * secParam
   };
 
   return formattedslot;

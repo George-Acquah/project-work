@@ -6,9 +6,8 @@ import {
 } from "@reduxjs/toolkit";
 import { slotsInitialState } from "../states";
 import { RootState } from "@/store";
-import { fetchData } from "../bookings/bookings.slice";
-import { slots } from "@/constants/data";
 import {
+  availableSlots,
   filteredSlots,
   nearbySlots,
   popularSlots,
@@ -46,7 +45,7 @@ export const fetchAvailableSlots = createAsyncThunk(
   async (slotParams: _ISlotParams) => {
     try {
       const { slots = "", currentPage = 1, pageSize = 5 } = slotParams;
-      const response = await filteredSlots(slots, currentPage, pageSize);
+      const response = await availableSlots(slots, currentPage, pageSize);
 
       return response;
     } catch (error) {
@@ -188,6 +187,7 @@ export const selectSelectedSlot = (id: string) =>
   createSelector(
     [selectNearbySlots, selectAvailableSlots, selectPopularSlots],
     (slots) => {
+      console.log(slots);
       return slots.find((slot) => slot._id === id);
     }
   );

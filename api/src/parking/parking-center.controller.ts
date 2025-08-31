@@ -19,7 +19,7 @@ import { SlotService } from './slots.service';
 import { ApiResponse } from 'src/shared/services/api-responses';
 import { User } from 'src/shared/decorators/user.decorator';
 import { _ISanitizedCustomer } from 'src/shared/interfaces/users.interface';
-import { AddCenterDto, AddSlotDto } from './dtos/add-center.dto';
+import { AddCenterDto } from './dtos/add-center.dto';
 import { ParkingCenterGuard } from 'src/shared/guards/centers.guard';
 import { UploadService } from 'src/storage/uploads.service';
 import { ReservationRequestDto } from './dtos/reservation-requests.dto';
@@ -31,6 +31,8 @@ import {
 import { JwtAuthGuard } from 'src/shared/guards/Jwt.guard';
 import { TransformDateInterceptor } from 'src/shared/interceptors/transform-date.interceptor';
 import { CreateSlotAddressDto } from './dtos/create-slot-address.dto';
+import { VehicleAuthGuard } from 'src/shared/guards/vehicles.guard';
+import { _ISafeUser } from 'src/shared/interfaces/refactored/user.interface';
 
 @Controller('owner/parking-center')
 export class ParkingCenterController {
@@ -64,7 +66,7 @@ export class ParkingCenterController {
   async getAllParkingCenters(
     @Query('centers') query: string,
     @Query('currentPage', new ParseIntPipe()) currentPage,
-    @Query('size', new ParseIntPipe()) size
+    @Query('items', new ParseIntPipe()) size
   ) {
     try {
       const centers = await this.parkingService.getAllParkingCenters(
@@ -82,11 +84,10 @@ export class ParkingCenterController {
   @Get('available')
   async getAvailableParkingCenters(
     @Query('centers') query: string,
-    @Query('currentPage') currentPage: string,
-    @Query('size') size: string
+    @Query('currentPage', new ParseIntPipe()) currentPage,
+    @Query('items', new ParseIntPipe()) size
   ) {
     try {
-      this.logger.log(`All Parking Centers`);
       const centers = await this.parkingService.getAvailableParkingCenters(
         query,
         parseInt(currentPage),
@@ -104,15 +105,17 @@ export class ParkingCenterController {
   @Get('popular')
   async getPopularParkingCenters(
     @Query('centers') query: string,
-    @Query('currentPage') currentPage: string,
-    @Query('size') size: string
+    @Query('currentPage', new ParseIntPipe()) currentPage,
+    @Query('items', new ParseIntPipe()) size
   ) {
     try {
+      console.log(size);
       const centers = await this.parkingService.getPopularParkingCenters(
         query,
-        parseInt(currentPage),
-        parseInt(size)
+        currentPage,
+        size
       );
+      console.log(centers);
       return new ApiResponse(200, 'Fetched Popular Parking Centers', centers);
     } catch (error) {
       this.logger.error(
@@ -125,8 +128,8 @@ export class ParkingCenterController {
   @Get('nearby')
   async getNearbyParkingCenters(
     @Query('centers') query: string,
-    @Query('currentPage') currentPage: string,
-    @Query('size') size: string
+    @Query('currentPage', new ParseIntPipe()) currentPage,
+    @Query('items', new ParseIntPipe()) size
   ) {
     try {
       const centers = await this.parkingService.getPopularParkingCenters(
@@ -147,16 +150,14 @@ export class ParkingCenterController {
   async getAllSlots(
     @Query('slots') query: string,
     @Query('currentPage', new ParseIntPipe()) currentPage: number,
-    @Query('size', new ParseIntPipe()) size: number
+    @Query('items', new ParseIntPipe()) size: number
   ) {
     try {
-      this.logger.log(`All Slots`, query, currentPage, size);
       const slots = await this.slotService.getAllSlotsNew(
         query,
         currentPage,
         size
       );
-      console.log(slots);
       return new ApiResponse(200, 'Fetched Slots successfully', slots);
     } catch (error) {
       this.logger.error(`Error getting all slots: ${error.message}`);
@@ -168,7 +169,7 @@ export class ParkingCenterController {
   async getAllReservations(
     @Query('reservations') query: string,
     @Query('currentPage', new ParseIntPipe()) currentPage,
-    @Query('size', new ParseIntPipe()) size
+    @Query('items', new ParseIntPipe()) size
   ) {
     try {
       const reservations = await this.slotService.getAllReservations(
@@ -313,6 +314,7 @@ export class ParkingCenterController {
     try {
       const center =
         await this.parkingService.getSingleParkingCenterByAggregatiom(centerId);
+      console.log(center);
       return new ApiResponse(200, 'Fetched Center Successfully', center);
     } catch (error) {
       this.logger.error(`Error getting parking center: ${error.message}`);
@@ -369,6 +371,7 @@ export class ParkingCenterController {
     @Param() param: { center_id: string }
   ) {
     try {
+      console.log(param);
       await this.slotService.addSlotsToAllCenters();
 
       // const { center_id } = param;
@@ -397,8 +400,10 @@ export class ParkingCenterController {
         // ...data
 
         city: 'Example City',
-        latitude: 6.2167,
-        longitude: -2.5833,
+        location: {
+          latitude: 6.2167,
+          longitude: -2.5833
+        },
         state: 'Example State',
         country: 'Example Country',
         center_id: '656482722cbf180fcb3aaf3d'
@@ -438,22 +443,24 @@ export class ParkingCenterController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
-  @Get(':center_id/available-slots')
-  // @UseInterceptors(TransformDateInterceptor)
-  async requestReservation() {
-    // @Body() data: ReservationRequestDto // @Query('size', new ParseIntPipe()) size, // @Query('currentPage', new ParseIntPipe()) currentPage, // @Param('center_id') centerId: string,
+  @UseGuards(JwtAuthGuard)
+  @Post(':center_id/available-slots')
+  @UseInterceptors(TransformDateInterceptor)
+  async requestReservation(
+    @Body() data: ReservationRequestDto,
+    @Query('items', new ParseIntPipe()) size: number,
+    @Query('currentPage', new ParseIntPipe()) currentPage: number,
+    @Param('center_id') centerId: string
+  ) {
     try {
-      // const { start_time, reservation_duration } = data;
-      const slotsWithPages = await this.slotService
-        .findAvailableSlots
-        // 'centerId',
-        // start_time,
-        // reservation_duration,
-        // 2,
-        // siz5
-        ();
-      console.log(slotsWithPages);
+      const { start_time, reservation_duration } = data;
+      const slotsWithPages = await this.slotService.findAvailableSlots(
+        centerId,
+        start_time,
+        reservation_duration,
+        size,
+        currentPage
+      );
       // const totalPages = await this.slotService.fetchSlotsPage(centerId, size);
       return new ApiResponse(200, 'Fetched Available Slots', slotsWithPages);
     } catch (error) {
@@ -476,50 +483,60 @@ export class ParkingCenterController {
     }
   }
 
-  @Get(':center_id/slots/:slot_id')
-  async getSlotDetails(
-    @Param('center_id') centerId: string,
-    @Param('slot_id') slotId: string
-  ) {
-    try {
-      this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
-      const slot = await this.slotService.getSlotDetails(centerId, slotId);
-      return new ApiResponse(200, 'Fetched Slot Successfully', slot);
-    } catch (error) {
-      this.logger.error(`Error getting slot details: ${error.message}`);
-      return new ApiResponse(error.statusCode || 501, error.message, {});
-    }
-  }
+  // @Get(':center_id/slots/:slot_id')
+  // async getSlotDetails(
+  //   @Param('center_id') centerId: string,
+  //   @Param('slot_id') slotId: string
+  // ) {
+  //   try {
+  //     this.logger.error(`Get Slot Images: ${centerId} ${slotId}`);
+  //     const slot = await this.slotService.getSlotDetails(centerId, slotId);
+  //     return new ApiResponse(200, 'Fetched Slot Successfully', slot);
+  //   } catch (error) {
+  //     this.logger.error(`Error getting slot details: ${error.message}`);
+  //     return new ApiResponse(error.statusCode || 501, error.message, {});
+  //   }
+  // }
 
-  @UseGuards(ParkingCenterGuard)
+  @UseGuards(VehicleAuthGuard)
   @UseInterceptors(TransformDateInterceptor)
   @Post(':center_id/slots/:slot_id/reserve-slot')
   async reserveSlot(
     @Param('center_id') center_id: string,
     @Param('slot_id') slot_id: string,
-    @Query('vehicle_id') vehicle_id: string,
-    @Body() data: ReservationRequestDto
+    @Query('vehicle_no') vehicle_no: string,
+    @Body() data: ReservationRequestDto,
+    @User() driver: _ISafeUser
   ) {
     try {
       this.logger.warn(
-        `Get Slot Images: ${center_id} ${slot_id} ${vehicle_id}`
+        `Get Slot Images: ${center_id} ${slot_id} ${vehicle_no}`
       );
+      console.log(driver);
       const reservation_data: _IReserveSlot = {
         center_id,
         slot_id,
-        vehicle_id,
+        vehicle_no,
         start_time: data.start_time,
-        start_date: data.start_date,
+        start_date: data.start_time,
         reservation_duration: data.reservation_duration
       };
       const reservation = await this.slotService.reserveParkingSlot(
         reservation_data
       );
-      return new ApiResponse(
-        200,
-        'You have successfully reserved this slot',
-        reservation
-      );
+
+      if (!reservation) {
+        throw new Error();
+      }
+
+      const reservationToken = await this.slotService.generateToken({
+        customerMobileNumber: driver.phone_number,
+        reservation_id: reservation.reservationId
+      });
+      return new ApiResponse(200, 'You have successfully reserved this slot', {
+        reservation,
+        reservationToken
+      });
     } catch (error) {
       this.logger.error(`Error getting slot bookings: ${error.message}`);
       return new ApiResponse(error.statusCode || 501, error.message, {});
@@ -535,8 +552,26 @@ export class ParkingCenterController {
   ) {
     try {
       this.logger.error(`Add slot address: ${center_id} ${slot_id}`);
+      const {
+        city,
+        center_name,
+        country,
+        latitude,
+        longitude,
+        state,
+        description
+      } = data;
 
-      const response = await this.slotService.createSlotAddress(slot_id, data);
+      console.log(center_name, description);
+      const response = await this.slotService.createSlotAddress(slot_id, {
+        city,
+        country,
+        state,
+        location: {
+          latitude,
+          longitude
+        }
+      });
       this.logger.warn(response);
 
       return new ApiResponse(

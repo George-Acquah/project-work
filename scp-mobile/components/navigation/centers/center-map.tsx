@@ -9,19 +9,22 @@ const CenterMap = () => {
   const parkingCenters = useAppSelector(select_data);
   const centerIds = useAppSelector(select_data_ids);
 
-  useEffect(() => {
-    if (parkingCenters.length > 0) {
-      const coordinates = parkingCenters.map((center) => ({
-        latitude: center.center_address?.latitude ?? 0,
-        longitude: center.center_address?.longitude ?? 0,
-      }));
-      const edgePadding = { top: 100, right: 100, bottom: 100, left: 100 }; // Adjust padding as needed
-      mapRef.current?.fitToCoordinates(coordinates, {
-        edgePadding,
-        animated: true,
-      });
-    }
-  }, [centerIds]);
+useEffect(() => {
+  if (parkingCenters.length > 0) {
+    const coordinates = parkingCenters.map((center) => {
+      return {
+        latitude: center?.address?.latitude ?? 0,
+        longitude: center?.address?.longitude ?? 0,
+      };
+    });
+
+    const edgePadding = { top: 100, right: 90, bottom: 100, left: 90 };
+    mapRef.current?.fitToCoordinates(coordinates, {
+      edgePadding,
+      animated: true,
+    });
+  }
+}, [centerIds]);
 
   return (
     <MapView
@@ -29,10 +32,10 @@ const CenterMap = () => {
       style={{ flex: 1 }}
       mapType="mutedStandard"
       initialRegion={{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0432,
+        latitude: parkingCenters[0]?.address?.latitude ?? 0,
+        longitude: parkingCenters[0]?.address?.longitude ?? 0,
+        latitudeDelta: 0.7,
+        longitudeDelta: 0.7,
       }}
     >
       {/* Display markers for all parking centers */}
@@ -40,11 +43,11 @@ const CenterMap = () => {
         <Marker
           key={index}
           coordinate={{
-            latitude: center.center_address?.latitude ?? 0,
-            longitude: center.center_address?.longitude ?? 0,
+            latitude: center?.address?.latitude ?? 0,
+            longitude: center?.address?.longitude ?? 0,
           }}
           title={center.center_name}
-          description={center.center_address?.state}
+          description={center?.location}
         />
       ))}
     </MapView>

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
-import { _TRequestWithAuth } from 'src/shared/interfaces/custom-request.interface';
+import { _TRequestWithReservationAuth } from 'src/shared/interfaces/custom-request.interface';
 import { extractToken } from 'src/shared/utils/global.utils';
 import { _IReservationPayload } from 'src/shared/interfaces/jwt_payload.interface';
 import { AuthService } from '../auth.service';
@@ -15,12 +15,11 @@ export class ReservationsStrategy extends PassportStrategy(
   constructor(private authService: AuthService) {
     super({
       ignoreExpiration: false,
-      secretOrKey: 'random-secret',
-      jwtFromRequest: (request: _TRequestWithAuth) => {
+      secretOrKey: process.env.RESERVATION_KEY,
+      jwtFromRequest: (request: _TRequestWithReservationAuth) => {
         if (request.headers.authorization) {
           return extractToken('Reservation', request.headers.authorization);
         }
-
         return undefined;
       }
     });

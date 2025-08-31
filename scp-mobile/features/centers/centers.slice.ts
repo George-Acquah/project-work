@@ -14,8 +14,6 @@ import {
 } from "@reduxjs/toolkit";
 import { centersInitialState } from "../states";
 import { RootState } from "@/store";
-import { fetchData } from "../bookings/bookings.slice";
-import { centers } from "@/constants/data";
 
 export const fetchPopularCenters = createAsyncThunk(
   "center/fetchPopularCenters",
@@ -23,7 +21,6 @@ export const fetchPopularCenters = createAsyncThunk(
     try {
       const { centers = "", currentPage = 1, pageSize = 5 } = centerParams;
       const response = await popularCenters(centers, currentPage, pageSize);
-      console.log(response);
       return response;
     } catch (error) {
       throw error;
@@ -70,16 +67,6 @@ export const fetchSingleCenter = createAsyncThunk(
     }
   }
 );
-
-export const testCenters = createAsyncThunk("center/testCenters", async () => {
-  try {
-    const response = await fetchData<_IParkingCenter[]>(centers, 500);
-
-    return response;
-  } catch (error) {
-    throw error;
-  }
-});
 
 export const addCenterAddressThunk = createAsyncThunk(
   "center/addCenterAddress",
@@ -144,7 +131,7 @@ const centerSlice = createSlice({
       })
 
       .addCase(fetchNearbyCenters.fulfilled, (state, action) => {
-        // state.nearbyCenters = action.payload.data;
+        state.nearbyCenters = action.payload.data;
         state.nearbyLoading = false;
         state.nearbyMessage = action.payload.message;
         state.nearbyError = null;
@@ -160,7 +147,7 @@ const centerSlice = createSlice({
       })
 
       .addCase(fetchAvailableCenters.fulfilled, (state, action) => {
-        // state.availableCenters = action.payload.data;
+        state.availableCenters = action.payload.data;
         state.availableLoading = false;
         state.availableMessage = action.payload.message;
         state.availableError = null;
@@ -202,23 +189,6 @@ const centerSlice = createSlice({
         state.message = null;
         state.error = action.error.message!;
       })
-
-      .addCase(testCenters.fulfilled, (state, action) => {
-        state.popularCenters = action.payload;
-        state.isLoading = false;
-        state.message = "Success";
-        state.error = null;
-      })
-      .addCase(testCenters.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(testCenters.rejected, (state, action) => {
-        state.isLoading = false;
-        state.message = null;
-        state.error = action.error.message!;
-      })
-
       .addCase(addCenterAddressThunk.fulfilled, (state) => {
         state.isLoading = false;
       })

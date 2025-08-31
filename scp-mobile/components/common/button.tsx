@@ -69,7 +69,6 @@ const Button = React.forwardRef<Ref, _IButton>(
         default:
           colorStyle = button_styles.defaultButton;
       }
-
       return [colorStyle, sizes[size], additionalStyles && additionalStyles]; // Merge styles
     }, [variant, size, additionalStyles]);
 

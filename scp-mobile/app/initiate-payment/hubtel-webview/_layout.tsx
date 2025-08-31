@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-const SuccessLayout = () => {
+const HubtelWebviewLayout = () => {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
@@ -8,4 +8,4 @@ const SuccessLayout = () => {
   );
 };
 
-export default SuccessLayout;
+export default HubtelWebviewLayout;

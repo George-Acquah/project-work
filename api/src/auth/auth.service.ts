@@ -8,13 +8,10 @@ import { sign, verify } from 'jsonwebtoken';
 import { _TSanitizedUser } from 'src/shared/interfaces/users.interface';
 import { UsersService } from 'src/users/users.service';
 import { LoginUserDto } from 'src/users/dtos/login-users.dtos';
-import { compare } from 'bcrypt';
 import {
   appendRandomTextAndLength,
-  getExpirationTime,
-  sanitizeUser
+  getExpirationTime
 } from 'src/shared/utils/users.utils';
-import { sanitizeLoginUserFn } from 'src/shared/helpers/users.sanitizers';
 
 @Injectable()
 export class AuthService {
@@ -33,18 +30,6 @@ export class AuthService {
       user_id: tokenPayload.user_id,
       userType: tokenPayload.userType
     };
-  }
-
-  async validateUser(email: string, password: string) {
-    const user = await this.userService.findUser(email);
-    //Compare password from user to password in DB
-    const isValidPassword = await compare(password, user.password);
-
-    if (user && isValidPassword) {
-      return sanitizeLoginUserFn(user);
-    }
-
-    throw new Error('Wrong Password');
   }
 
   async refreshToken(user: _TSanitizedUser) {
@@ -84,8 +69,7 @@ export class AuthService {
   }
 
   async login(dto: LoginUserDto) {
-    const { email, password } = dto;
-    const user = await this.validateUser(email, password);
+    const user = await this.userService.findByLogin(dto);
 
     const payload: _IPayload = {
       user_id: user._id?.toString() ?? '',
@@ -132,8 +116,6 @@ export class AuthService {
   }
 
   async verifyUser(payload: _IPayload) {
-    const user = await this.findByPayload(payload);
-
-    return sanitizeUser(user);
+    return await this.findByPayload(payload);
   }
 }

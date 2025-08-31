@@ -5,13 +5,13 @@ import {
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
+  WebSocketServer
 } from '@nestjs/websockets';
 import { Namespace } from 'socket.io';
 import { _TSocketWithAuth } from 'src/shared/interfaces/custom-request.interface';
 
 @WebSocketGateway({
-  namespace: 'parkings',
+  namespace: 'parkings'
 })
 export class ParkingsGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -28,7 +28,7 @@ export class ParkingsGateway
     const sockets = this.io.sockets;
 
     this.logger.debug(
-      `Socket Connected with slot ID: ${client.slot_id}, vehicle ID: ${client.vehicle_id}, reservation ID: ${client.reservation_id}`,
+      `Socket Connected with mobile number, : ${client.reservation.customerMobileNumber}, reservation ID: ${client.reservation.reservation_id}`
     );
 
     this.logger.log(`WS Client connected with id: ${client.id}`);
@@ -41,7 +41,7 @@ export class ParkingsGateway
     const sockets = this.io.sockets;
 
     this.logger.debug(
-      `Socket Connected with slot ID: ${client.slot_id}, vehicle ID: ${client.vehicle_id}, reservation ID: ${client.reservation_id}`,
+      `Socket Connected with mobile number, : ${client.reservation.customerMobileNumber}, reservation ID: ${client.reservation.reservation_id}`
     );
 
     this.logger.log(`WS Client disconnected with id: ${client.id}`);

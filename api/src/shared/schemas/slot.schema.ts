@@ -17,6 +17,9 @@ export class Slot {
   @Prop({ type: Boolean, default: false })
   isAvailable: boolean;
 
+  @Prop({ type: Number, default: 0 })
+  minutePrice: number;
+
   @Prop({ type: Boolean, default: false })
   isVerified: boolean;
 

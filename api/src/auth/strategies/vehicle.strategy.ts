@@ -1,10 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { _IPayload } from 'src/shared/interfaces/jwt_payload.interface';
 import { AuthService } from '../auth.service';
-import { ApiResponse } from 'src/shared/services/api-responses';
 import { UserType } from 'src/shared/enums/users.enum';
 import { strategies } from 'src/shared/constants/auth.constants';
 
@@ -29,18 +32,16 @@ export class VehicleStrategy extends PassportStrategy(
   }
 
   async validate(payload: _IPayload) {
-    const user = await this.authService.verifyUser(payload);
+    const driver = await this.authService.verifyUser(payload);
 
-    if (!user) {
-      throw new ApiResponse(402, 'User does not exist', {});
+    if (!driver) {
+      throw new NotFoundException();
     }
 
-    if (user.userType !== UserType.CUSTOMER) {
-      throw new UnauthorizedException(
-        'Only drivers or customers are allowed to add vehicles'
-      );
+    if (driver.userType !== UserType.CUSTOMER) {
+      throw new UnauthorizedException('Only drivers or customers are allowed');
     }
 
-    return user;
+    return driver;
   }
 }

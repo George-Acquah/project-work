@@ -1,4 +1,3 @@
-// components/Loading.js
 import React from "react";
 import "@/app/ui/test.css";
 

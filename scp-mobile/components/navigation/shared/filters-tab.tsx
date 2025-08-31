@@ -11,7 +11,7 @@ import { Center_Filter } from "@/utils/enums/global.enum";
 
 const data = [Center_Filter.AVAILABLE, Center_Filter.NEARBY, Center_Filter.POPULAR];
 //TODO receive data as props to have dynamic filtering
-const FiltersTab = ({px, py, textColor}: {py?: number, px?: number, textColor?: { lightColor: string, darkColor: string}}) => {
+const FiltersTab = ({px, py, textColor, gap}: {py?: number, px?: number, gap?: number, textColor?: { lightColor: string, darkColor: string}}) => {
   const colorScheme = useColorScheme() ?? 'light';
   const center_type = useAppSelector(selectCentersFilter);
   const dispatch = useAppDispatch();
@@ -47,7 +47,7 @@ const FiltersTab = ({px, py, textColor}: {py?: number, px?: number, textColor?: 
         );
       }}
       keyExtractor={(item) => item}
-      contentContainerStyle={{ columnGap: SIZES.xLarge }}
+      contentContainerStyle={{ columnGap: gap ?? SIZES.xLarge }}
       horizontal
       showsHorizontalScrollIndicator={false}
     />

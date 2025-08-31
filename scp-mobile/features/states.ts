@@ -60,7 +60,8 @@ const centersInitialState: _ICenters = {
 
 const vehiclesInitialState: _IVehicles = {
   ...rootState,
-  vehicles: []
+  vehicles: [],
+  selectedVehicle: null
 };
 
 const slotsInitialState: _ISlots = {
@@ -80,6 +81,7 @@ const initialReservationState: _IResrvations = {
   ...rootState,
   availableSlots: [],
   reservations: [],
+  selectedAvailableSlot: null,
   totalPages: null,
   reservedSlot: null,
   reservation_loading: false,

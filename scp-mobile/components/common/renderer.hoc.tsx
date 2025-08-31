@@ -1,8 +1,8 @@
-import { Text } from "react-native";
 import LoadingComponent from "../skeletons/loading";
 import { DARK_THEME, LIGHT_THEME } from "@/constants/Colors";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import React from "react";
+import ErrorComponent from "./error";
 
 interface _IRenderer {
   loading: boolean;
@@ -11,6 +11,8 @@ interface _IRenderer {
   loadingComponent?: React.ReactNode;
   color?: string;
   pad?: boolean;
+  size?: "xs" | "sm" | "md" | "lg";
+  onRetry?: () => void; // Add onRetry prop
 }
 
 const RendererHOC = ({
@@ -20,8 +22,11 @@ const RendererHOC = ({
   loadingComponent,
   color,
   pad,
+  size = 'lg',
+  onRetry, // Destructure onRetry
 }: _IRenderer) => {
   const colorScheme = useColorScheme();
+
   if (loading) {
     return (
       <>
@@ -46,19 +51,10 @@ const RendererHOC = ({
 
   if (error) {
     return (
-      <Text
-        style={{
-          color: color
-            ? color
-            : colorScheme === "light"
-            ? LIGHT_THEME.contentPrimary
-            : DARK_THEME.contentPrimary,
-        }}
-      >
-        Something Went Wrong
-      </Text>
+      <ErrorComponent title={error ?? undefined} onRetry={onRetry} size={ size} /> // Pass onRetry to ErrorComponent
     );
   }
+
   return <>{!loading && !error && <>{children}</>}</>;
 };
 

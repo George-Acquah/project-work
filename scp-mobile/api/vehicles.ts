@@ -1,7 +1,7 @@
 import { BASE_URL } from "./root";
 import { callApi } from "./shared";
 
-const VEHICLE_BASE_URL = `${BASE_URL}/customer/vehicle`;
+const VEHICLE_BASE_URL = `${BASE_URL}customer/vehicle`;
 
 export async function allVehicles(
   vehicles: string = "",
@@ -11,6 +11,15 @@ export async function allVehicles(
   // const { centers, currentPage, pageSize } = params;
   const config: _IApiConfig = {
     url: `${VEHICLE_BASE_URL}?vehicles=${vehicles}&currentPage=${currentPage}&size=${pageSize}`,
+    method: "GET",
+  };
+
+  return callApi<_IVehicle[]>(config);
+}
+
+export async function usersVehicles() {
+  const config: _IApiConfig = {
+    url: `${VEHICLE_BASE_URL}/driver`,
     method: "GET",
   };
 

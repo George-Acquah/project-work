@@ -52,6 +52,11 @@ export const setReservationFields = {
   vehicle_no: '$vehicle.vehicle_no'
 };
 
+export const setReservationPaymentFields = {
+  driver: '$vehicle.driver',
+  center: '$slot.center_id'
+};
+
 export const FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION: _IAggregationFields<_IDbSlotReservation> =
   {
     lookups: reservationsLookup,
@@ -74,6 +79,21 @@ export const FETCH_RESERVATIONS_BY_ADMIN_AGGREGATION: _IAggregationFields<_IDbSl
       'slot_name',
       'vehicle_no',
       'slot_image' as unknown as any
+    ],
+    count_fields: []
+  };
+
+export const FETCH_RESERVATIONS_FOR_PAYMENT: _IAggregationFields<_IDbSlotReservation> =
+  {
+    lookups: reservationsLookup,
+    unwind_fields: ['vehicle', 'slot' as unknown as any],
+    project_fields: [
+      'cost_of_reservation',
+      'duration_of_reservation',
+      'slot_id',
+      'number_plate',
+      'center',
+      'driver' as unknown as any
     ],
     count_fields: []
   };

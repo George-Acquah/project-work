@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
-import { setSelectedSlot } from "@/features/slots/parking-slots.slice";
 import { useSlotFilter } from "@/utils/hooks/useFilter";
+import { setSelectedAvailableSlot } from "@/features/reservations/reservations.slice";
 
 const SlotMap = () => {
   const dispatch = useAppDispatch();
@@ -11,19 +11,22 @@ const SlotMap = () => {
   const slots = useAppSelector(select_data);
   const slotIds = useAppSelector(select_data_ids);
 
-  useEffect(() => {
-    if (slots.length > 0) {
-      const coordinates = slots.map((slot) => ({
-        latitude: slot.slot_address?.latitude ?? 0,
-        longitude: slot.slot_address?.longitude ?? 0,
-      }));
-      const edgePadding = { top: 100, right: 100, bottom: 100, left: 100 }; // Adjust padding as needed
-      mapRef.current?.fitToCoordinates(coordinates, {
-        edgePadding,
-        animated: true,
-      });
-    }
-  }, [slotIds]);
+useEffect(() => {
+  if (slots.length > 0) {
+    const coordinates = slots.map((slot) => {
+      return {
+        latitude: slot?.address?.latitude ?? 0,
+        longitude: slot?.address?.longitude ?? 0,
+      };
+    });
+
+    const edgePadding = { top: 100, right: 90, bottom: 100, left: 90 };
+    mapRef.current?.fitToCoordinates(coordinates, {
+      edgePadding,
+      animated: true,
+    });
+  }
+}, [slotIds]);
 
   return (
     <MapView
@@ -31,24 +34,24 @@ const SlotMap = () => {
       style={{ flex: 1 }}
       mapType="mutedStandard"
       initialRegion={{
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0432,
+        latitude: slots[0]?.address?.latitude ?? 0,
+        longitude: slots[0]?.address?.longitude ?? 0,
+        latitudeDelta: 0.7,
+        longitudeDelta: 0.7,
       }}
     >
-      {/* Display markers for all parking centers */}
+      {/* Display markers for all slots */}
       {slots.map((slot, index) => (
         <Marker
           key={index}
           coordinate={{
-            latitude: slot.slot_address?.latitude ?? 0,
-            longitude: slot.slot_address?.longitude ?? 0,
+            latitude: slot?.address?.latitude ?? 0,
+            longitude: slot?.address?.longitude ?? 0,
           }}
           title={slot.slot_name}
-          description={slot.slot_address?.state}
+          description={slot.location}
           onPress={() => {
-            dispatch(setSelectedSlot(slot._id));
+            dispatch(setSelectedAvailableSlot(slot._id));
           }}
         />
       ))}

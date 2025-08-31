@@ -5,8 +5,10 @@ export const IMAGES = {
 
 const success = require("../assets/icons/success.png");
 const empty = require("../assets/images/empty.png");
+const error = require("../assets/images/error.png");
 
 export default {
   success,
   empty,
+  error
 };

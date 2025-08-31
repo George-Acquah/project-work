@@ -4,8 +4,8 @@ export class ReservationRequestDto {
   @IsDate()
   start_time: Date;
 
-  @IsDate()
-  start_date: Date;
+  // @IsDate()
+  // start_date: Date;
 
   @IsNumber()
   @Min(5)

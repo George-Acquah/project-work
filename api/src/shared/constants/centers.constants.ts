@@ -37,12 +37,6 @@ export const slotsLookup: _ILookup[] = [
     foreignField: '_id'
   },
   {
-    from: 'slotimages',
-    as: 'slot_images',
-    localField: '_id',
-    foreignField: 'slot_id'
-  },
-  {
     from: 'slotdata',
     as: 'slot_data',
     localField: '_id',
@@ -59,15 +53,21 @@ export const slotsLookup: _ILookup[] = [
 const deepSlotsLookup: _ILookup[] = [
   {
     from: 'users',
-    as: 'center_owner',
+    as: 'slot_owner',
     foreignField: '_id',
-    localField: 'owner'
+    localField: 'center.owner'
+  },
+  {
+    from: 'centerimages',
+    as: 'slot_images',
+    foreignField: 'center_id',
+    localField: 'center._id'
   },
   {
     from: 'profiles',
     as: 'owner_profile',
     foreignField: 'user',
-    localField: 'owner'
+    localField: 'center.owner'
   }
 ];
 
@@ -91,6 +91,12 @@ export const setReservationFields = {
   vehicle_no: '$vehicle.vehicle_no'
 };
 
+export const setSlotForReservationFields = {
+  image: {
+    $arrayElemAt: ['$slot_images.file_id', 0]
+  }
+};
+
 export const setPopularParkingCenterFields = {
   availableSlotsCount: {
     $size: {
@@ -105,22 +111,36 @@ export const setPopularParkingCenterFields = {
 
 export const FETCH_SLOTS_AGGREGATION: _IAggregationFields<_IDbSlot> = {
   lookups: slotsLookup,
-  // deepLookups: deepParkingCentersLookup,
+  deepLookups: deepSlotsLookup,
   unwind_fields: ['slot_address', 'slot_data', 'center' as unknown as any],
-  // deep_unwind_fields: ['slot_owner', 'owner_profile'],
+  deep_unwind_fields: ['slot_owner', 'owner_profile'],
   project_fields: [
     'slot_name',
     'description',
     'type',
-    // 'owner',
     'slot_address',
+    'isVerified',
+    'minutePrice',
+    'isAvailable',
     'slot_data',
     'center',
-    'slot_images' as unknown as any
-    // 'slots',
-    // 'owner_profile',
-    // 'slot_owner' as unknown as any
+    'slot_images' as unknown as any,
+    'owner_profile',
+    'slot_owner'
   ],
+  count_fields: []
+};
+
+export const FETCH_SLOTS_FOR_RESERVATION: _IAggregationFields<_IDbSlot> = {
+  lookups: [
+    {
+      from: 'centerimages',
+      localField: 'center_id',
+      foreignField: 'center_id',
+      as: 'slot_images'
+    }
+  ],
+  project_fields: ['image', 'minutePrice' as unknown as any],
   count_fields: []
 };
 
@@ -134,8 +154,8 @@ export const FETCH_POPULAR_CENTERS_AGGREGATION: _IAggregationFields<_IDbParkingC
       'center_name',
       'description',
       'type',
-      // 'owner',
       'center_address',
+      'isVerified',
       'center_data',
       'center_images',
       'slots',

@@ -54,9 +54,8 @@ const createTokenmiddleware =
     try {
       const payload: _IReservationPayload = jwtService.verify(token);
 
-      socket.vehicle_id = payload.vehicle_id;
-      socket.slot_id = payload.slot_id;
-      socket.reservation_id = payload.sub.reservation_id;
+      socket.reservation.customerMobileNumber = payload.customerMobileNumber;
+      socket.reservation.reservation_id = payload.sub.reservation_id;
 
       next();
     } catch {

@@ -82,9 +82,6 @@ const BookingsComponent = () => {
   };
   return (
     <View style={{ flex: 1 }}>
-      <ThemedText {...text_colors.title}>
-        Bookings Component, {selectedTab}
-      </ThemedText>
       <TopTabs tabData={tabData} />
       <RendererHOC loading={bookingsLoading} error={null}>
         <>

@@ -3,14 +3,17 @@ import { _IDbUserImage } from '../images.interface';
 import { _IDbVehicle } from '../vehicles.interface';
 import { _IParkingCenter } from '../slot.interface';
 
-export interface _INewCommonUser {
+export interface _ISafeUser {
   _id: string;
   email: string;
   userType: UserType;
+  phone_number: string;
+}
+
+export interface _INewCommonUser extends _ISafeUser {
+  isVerified: boolean;
   createdAt: string;
   updatedAt: string;
-  isVerified: boolean;
-  phone_number: string;
 }
 
 export interface _IRegisterResponse {

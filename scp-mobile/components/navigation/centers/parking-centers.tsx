@@ -4,9 +4,7 @@ import { ThemedView as View } from "@/components/common/ThemedView";
 import { ThemedText as Text } from "@/components/common/ThemedText";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
-import {
-  testCenters,
-} from "@/features/centers/centers.slice";
+
 import { collpaseMap, selectViewMap, showMap } from "@/features/root.slice";
 import { useLocalSearchParams } from "expo-router";
 import CenterMap from "./center-map";
@@ -28,7 +26,7 @@ const ParkingCenters = () => {
     const error = useAppSelector(select_error);
 
   useEffect(() => {
-    dispatch(testCenters());
+    // dispatch(testCenters());
   }, [currentPage, center_type ]);
 
   const success = !isLoading && !error;
@@ -41,7 +39,6 @@ const ParkingCenters = () => {
       >
         <Text
           style={{
-            // fontSize: SIZES.large,
             textTransform: "capitalize",
             ...FONTS.ps3,
           }}

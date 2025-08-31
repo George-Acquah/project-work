@@ -1,3 +1,4 @@
+import { _IReservationResponse } from "@/api/reservations";
 import { Center_Filter } from "@/utils/enums/global.enum";
 
 interface _IRootState {
@@ -60,12 +61,13 @@ interface _ICenters extends _IRootState {
 
 interface _IVehicles extends _IRootState {
   vehicles: _IVehicle[];
+  selectedVehicle: string | null;
 }
 interface _ISlots extends _IRootState {
-  popularSlots: _ISlot[];
-  nearbySlot: _ISlot[];
-  availableSlots: _ISlot[];
-  fetchedSlot: _ISlot | null;
+  popularSlots: _IFormattedAvSlot[];
+  nearbySlot: _IFormattedAvSlot[];
+  availableSlots: _IFormattedAvSlot[];
+  fetchedSlot: _IFormattedAvSlot | null;
   selectedSlot: string | null;
   savedSlot: number | null;
   nearbyLoading: boolean;
@@ -75,9 +77,10 @@ interface _ISlots extends _IRootState {
 
 interface _IResrvations extends _IRootState {
   reservations: _ISlotReservation[];
-  availableSlots: _ISlot[];
+  availableSlots: _IFormattedAvSlot[];
+  selectedAvailableSlot: string | null;
   totalPages: number | null;
-  reservedSlot: _ISlotReservation | null;
+  reservedSlot: _IReservationResponse | null;
   reservation_loading: boolean;
   reservation_error: string | null;
   start_time: string;
@@ -104,7 +107,7 @@ interface _IErrorState {
   description: undefined | string;
 }
 
-export interface _IVehicle {
+export interface _IVehicleN {
   make: string;
   model: string;
   year: string;
@@ -127,7 +130,7 @@ export interface _IVReg {
  expiryDate: string;
 }
 interface _IFormState extends _IRootState {
-  vehicle: _IVehicle;
+  vehicle: _IVehicleN;
   vehicleInsurance: _IVehicleInsurance;
   vehicleRegistration: _IVReg;
 }

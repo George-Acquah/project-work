@@ -36,14 +36,15 @@ const generateErrorModalStyles = (colorScheme: "light" | "dark") => {
     },
     modalContent: {
       width: 320,
-      padding: 20,
+      paddingHorizontal: 20,
+      paddingVertical: 10,
       backgroundColor:
         colorScheme === "light" ? SHARED_COLORS.gray200 : SHARED_COLORS.gray700,
-      borderRadius: 10,
+      borderRadius: 4,
       alignItems: "center",
     },
     errorMessage: {
-      marginBottom: 20,
+      marginBottom: 4,
       // fontSize: 16,
       textAlign: "center",
     },

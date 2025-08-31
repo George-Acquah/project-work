@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { lastValueFrom, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { PAYMENT_KEY } from 'src/shared/configs/constants.config';
 import { _IPaymentConfig } from 'src/shared/configs/types.config';
@@ -19,6 +19,12 @@ import {
 } from './dto/request-money.dto';
 import { AxiosResponse } from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { InjectModel } from '@nestjs/mongoose';
+import { Transaction } from 'src/shared/schemas/transaction.schema';
+import { Model } from 'mongoose';
+import { _IDbPayment } from 'src/shared/interfaces/payments.interface';
+import { PAYMENT_STATUS } from 'src/shared/enums/general.enum';
+import { SlotService } from 'src/parking/slots.service';
 
 @Injectable()
 export class PaymentService {
@@ -43,7 +49,9 @@ export class PaymentService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    @InjectModel(Transaction.name) private transactionModel: Model<_IDbPayment>,
+    private readonly slotService: SlotService
   ) {
     const {
       hubtelBaseUrl,
@@ -105,17 +113,19 @@ export class PaymentService {
   }
 
   public async Checkout(
-    payload: CheckoutRequestDto
+    payload: CheckoutRequestDto & { cost: number }
   ): Promise<InternalApiResponse<CheckoutResponseDto>> {
     try {
       //Todo: validate slot information
 
-      //Todo: compute slot amount to pay
       const slotData: ComputerSlotAmountRequestDto = {
         centerId: payload.centerId,
         slotId: payload.slotId
       };
-      const slotAmountResponse = await this.ComputeSlotAmountToPay(slotData);
+      const slotAmountResponse = await this.ComputeSlotAmountToPay({
+        ...slotData,
+        amount: payload.cost
+      });
 
       if (!slotAmountResponse.ok) {
         return new InternalApiResponse<CheckoutResponseDto>(
@@ -128,7 +138,6 @@ export class PaymentService {
       const slotAmount = slotAmountResponse.data?.amount;
       const clientReference = uuidv4(); // Generate a UUID
 
-      //Todo: initiate payment
       const paymentDescription = `Payment for slot ${payload.slotId} at center ${payload.centerId}`;
       const initiatePaymentPayload: IRequestPaymentDto = {
         amount: slotAmount,
@@ -148,20 +157,18 @@ export class PaymentService {
         );
       }
 
-      //Todo: Create a transaction payload
       const transactionPayload: CreatTransactionDto = {
         amount: slotAmount,
         clientReference: clientReference,
         description: paymentDescription,
         customerMobileNumber: payload.customerMobileNumber,
-        centerId: payload.centerId,
-        slotId: payload.slotId,
-        customerId: payload.customerId,
-        status: 'PENDING',
-        metaData: initiatePaymentResponse.data
+        reservationId: payload.reservationId,
+        status: PAYMENT_STATUS.PENDING
+        // metaData: initiatePaymentResponse.data
       };
+      console.log(transactionPayload);
 
-      //Todo: Save the transaction to db;
+      await this.transactionModel.create(transactionPayload);
 
       console.log('initiatePaymentResponse', initiatePaymentResponse.data);
       //Return the paylink to the user to initiate payment;
@@ -184,14 +191,14 @@ export class PaymentService {
   }
 
   private async ComputeSlotAmountToPay(
-    payload: ComputerSlotAmountRequestDto
+    payload: ComputerSlotAmountRequestDto & { amount: number }
   ): Promise<InternalApiResponse<ComputerSlotAmountResponseDto>> {
     try {
       //Todo: fetch slot information from db
 
       //Todo: compute slot amount to pay
 
-      const slotAmount = 1;
+      const slotAmount = payload.amount;
       const slotAmountResponse: ComputerSlotAmountResponseDto = {
         slotId: payload.slotId,
         centerId: payload.centerId,
@@ -217,23 +224,39 @@ export class PaymentService {
     clientReference: string
   ): Promise<InternalApiResponse<any>> {
     try {
-      console.log('callback response', JSON.stringify(params));
+      console.log('callback response', JSON.stringify(params), clientReference);
       //Todo: Fetch transaction by the client reference and end the process if it does not exist
+      const transaction = await this.transactionModel.findOne({
+        clientReference
+      });
 
       //Todo: Check if the transaction has been processed before. End the process if the status is not pending
-
-      //Todo:
-      if (params.ResponseCode !== '0000') {
-        //Todo: Update transaction status to Failed
-
+      if (transaction.status !== PAYMENT_STATUS.PENDING) {
         return new InternalApiResponse<any>(true);
       }
 
+      if (params.ResponseCode !== '0000') {
+        transaction.status = PAYMENT_STATUS.FAILED;
+        await transaction.save();
+
+        await this.slotService.deleteSlotReservation(transaction.reservationId);
+
+        return new InternalApiResponse<any>(
+          true,
+          null,
+          'Payment Failed. Your reservation has been cancelled'
+        );
+      }
+
       //Todo: Update transaction status to success
+      transaction.status = PAYMENT_STATUS.SUCCESS;
+      await this.slotService.setReservationToTrue(transaction.reservationId);
 
-      //Todo: Assign the space to the user because payment is successful.
-
-      return new InternalApiResponse<any>(true);
+      return new InternalApiResponse<any>(
+        true,
+        { amount: params.Data.Amount },
+        'You slot reservation is complete'
+      );
     } catch (error) {
       return new InternalApiResponse<any>(true);
     }

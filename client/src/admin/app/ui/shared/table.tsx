@@ -29,8 +29,6 @@ const TableImage = ({ src, desc }: { src: string; desc: string }) => (
       className="rounded-full object-cover pos__center"
       src={src}
       sizes="32px"
-      // height={28}
-      // width={28}
       fill
       alt={desc ?? "user's avatar"}
     />
@@ -74,7 +72,7 @@ const renderCell = (
     default:
       const additionalClassName =
         typeof item[column] === "number" ? "text-center " : "";
-      return <Text className={additionalClassName}>{item[column]}</Text>;
+      return <Text className={`${additionalClassName} text-base text-black font-mono font-semibold`}>{item[column]}</Text>;
   }
 };
 

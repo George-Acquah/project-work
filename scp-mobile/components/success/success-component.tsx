@@ -84,7 +84,7 @@ const SuccessComponent = ({
       )}
       <Button
         additionalStyles={{
-          borderRadius: SIZES.radius,
+          borderRadius: SIZES.radius * 2,
           marginTop: SIZES.padding,
           marginBottom: SIZES.padding,
         }}

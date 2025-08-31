@@ -1,6 +1,7 @@
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Slot } from './slot.schema';
+import { _IAddressDb } from '../interfaces/refactored/addresses.interface';
 
 export type SlotAddressDocument = Document & SlotAddress;
 
@@ -9,11 +10,8 @@ export class SlotAddress {
   @Prop({ type: String, required: true })
   city: string;
 
-  @Prop({ type: Number, required: true })
-  latitude: number;
-
-  @Prop({ type: Number, required: true })
-  longitude: number;
+  @Prop({ type: Object })
+  location: _IAddressDb;
 
   @Prop({ type: String })
   state: string;

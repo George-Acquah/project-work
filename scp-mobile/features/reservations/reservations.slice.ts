@@ -6,6 +6,9 @@ import {
   reserveSlot,
 } from "@/api/reservations";
 import { RootState } from "@/store";
+import axiosInstance from "@/api/root";
+import { save } from "@/utils/functions/storage";
+import { keys } from "@/constants/root";
 
 interface _IFetchAvailableSlots extends _IReservationParams {
   center_id: string;
@@ -15,7 +18,7 @@ interface _IFetchAvailableSlots extends _IReservationParams {
 interface _IReserveSlot extends _IReservationParams {
   center_id: string;
   slot_id: string;
-  vehicle_id: string;
+  vehicle_no: string;
 }
 export const fetchAvailableSlots = createAsyncThunk(
   "reservation/availableSlots",
@@ -44,10 +47,10 @@ export const slotReservation = createAsyncThunk(
         reservation_duration,
         center_id,
         slot_id,
-        vehicle_id,
+        vehicle_no,
         callbackUrl
       } = params;
-      return await reserveSlot(center_id, slot_id, vehicle_id, {
+      return await reserveSlot(center_id, slot_id, vehicle_no, {
         start_time,
         start_date,
         reservation_duration,
@@ -67,21 +70,22 @@ const reservationSlice = createSlice({
       state.start_time = action.payload;
     },
     setStartDate: (state, action: PayloadAction<string>) => {
-      state.start_date = action.payload
+      state.start_date = action.payload;
     },
     setDuration: (state, action: PayloadAction<number>) => {
       state.duration = action.payload;
+    },
+    setSelectedAvailableSlot: (state, action: PayloadAction<string>) => {
+      state.selectedAvailableSlot = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAvailableSlots.fulfilled, (state, action) => {
-        console.log(action.payload.data.documents);
         state.isLoading = false;
         state.error = null;
         state.message = action.payload.message;
-        state.availableSlots = action.payload.data.documents;
-        state.totalPages = action.payload.data.totalPages;
+        state.availableSlots = action.payload.data;
       })
       .addCase(fetchAvailableSlots.pending, (state) => {
         state.isLoading = true;
@@ -97,7 +101,15 @@ const reservationSlice = createSlice({
         state.reservation_loading = false;
         state.reservation_error = null;
         state.message = action.payload.message;
-        state.reservedSlot = action.payload.data;
+        state.reservedSlot = action.payload.data.reservation;
+
+        // // Update default authorization header using Axios
+        // axiosInstance.defaults.headers.common[
+        //   "Authorization"
+        // ] = `Reservation ${action.payload.data.token}`;
+
+        // Save updated tokens to storage
+        save<string>(keys.RESERVATION, action.payload.data.reservationToken);
       })
       .addCase(slotReservation.pending, (state) => {
         state.reservation_loading = true;
@@ -112,7 +124,8 @@ const reservationSlice = createSlice({
   },
 });
 
-export const { setDuration, setStartTime, setStartDate } = reservationSlice.actions;
+export const { setDuration, setStartTime, setStartDate, setSelectedAvailableSlot } =
+  reservationSlice.actions;
 
 export const selectAvailableSlots = (state: RootState) =>
   state.reservation.availableSlots;
@@ -121,6 +134,19 @@ export const selectMemoedAvailableSlots = createSelector(
   [selectAvailableSlots],
   (availableSlots) => availableSlots.map((slot) => slot._id)
 );
+
+export const selectSelectedAvailableSlotString = (state: RootState) =>
+  state.reservation.selectedAvailableSlot;
+
+export const selectSelectedAvailableSlot = (id: string) =>
+  createSelector(
+    [selectAvailableSlots],
+    (slots) => {
+      return slots.find((slot) => slot._id === id);
+    }
+  );
+
+
 
 export const selectStartTIme = (state: RootState) =>
   state.reservation.start_time;

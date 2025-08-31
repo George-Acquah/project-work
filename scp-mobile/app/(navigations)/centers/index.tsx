@@ -19,6 +19,7 @@ import { UserType } from "@/utils/enums/global.enum";
 import { SafeAreaView } from "react-native-safe-area-context";
 import useScreenLoading from "@/utils/hooks/use-screen-loading";
 import RendererHOC from "@/components/common/renderer.hoc";
+import { SIZES } from "@/constants/styles";
 
 interface _ISearchParams extends SearchParamsKeys {
   centers: string;
@@ -34,12 +35,13 @@ const background_colors = {
 
 //TODO Implement additional filtering
 const ParkingCentersScreen = () => {
-  const { dispatch_data, select_loading, select_data, center_type } =
+  const { dispatch_data, select_loading, select_data, center_type, select_error } =
     useCenterFilter();
   const colorScheme = useColorScheme() ?? "light";
   const searchParams = useLocalSearchParams<_ISearchParams>();
   const data = useAppSelector(select_data);
   const loading = useAppSelector(select_loading);
+  const error = useAppSelector(select_error);
 
   const dispatch = useAppDispatch();
 
@@ -55,7 +57,10 @@ const ParkingCentersScreen = () => {
   useEffect(() => {
     dispatch(fetch_data);
   }, [center, pageSize, center_type]);
-  console.log('centers: ', data);
+
+    const handleRetry = () => {
+      dispatch(fetch_data); // Retry the data fetching
+    };
 
   return (
     <RendererHOC loading={screenLoading} error={null}>
@@ -82,7 +87,7 @@ const ParkingCentersScreen = () => {
         </View>
 
         <View style={{ marginTop: 20 }}>
-          <FiltersTab />
+          <FiltersTab px={10} py={2} gap={SIZES.small}/>
         </View>
 
         <View
@@ -94,9 +99,13 @@ const ParkingCentersScreen = () => {
         />
 
         <View style={styles.scrollViewContainer}>
-          <RendererHOC loading={loading} error={null}>
+          <RendererHOC
+            loading={loading}
+            error={error}
+            size="md"
+            onRetry={handleRetry}
+          >
             <ScrollView
-              // style={{ paddingTop: 20 }}
               showsVerticalScrollIndicator={false}
             >
               {data && (

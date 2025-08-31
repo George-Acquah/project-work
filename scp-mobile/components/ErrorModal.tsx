@@ -1,15 +1,14 @@
-import { SHARED_COLORS } from "@/constants/Colors";
+import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import { FONTS } from "@/constants/fonts";
 import { SIZES } from "@/constants/styles";
 import { hideErrorModal, selectErrorButtonLabel, selectErrorDescription, selectErrorMessage, selectErrorVisible } from "@/features/error/error.slice";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { View, Modal } from "react-native";
+import { View, Modal, Button, TouchableOpacity } from "react-native";
 import { ThemedText as Text } from "./common/ThemedText";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { generateErrorModalStyles } from "./styles";
-import Button from "./common/button";
 import { text_colors } from "@/components/auth/styles";
 
 
@@ -38,9 +37,9 @@ const ErrorModal = () => {
         <View style={styles.modalContent}>
           <AntDesign
             name="closecircle"
-            size={54}
+            size={44}
             color={SHARED_COLORS.negative400}
-            style={{ marginVertical: SIZES.padding * 0.4 }}
+            style={{ marginVertical: SIZES.padding * 0.1 }}
           />
           <Text
             style={[styles.errorMessage, { ...FONTS.h3 }]}
@@ -63,7 +62,20 @@ const ErrorModal = () => {
               {description}
             </Text>
           )}
-          <Button title={button_label ?? "Close"} onPress={handleClose} />
+          <TouchableOpacity
+            onPress={handleClose}
+            style={{
+              borderRadius: 4,
+              marginTop: SIZES.padding * 0.1,
+              backgroundColor: LIGHT_THEME.primary700,
+              paddingHorizontal: 20,
+              paddingVertical: 8
+            }}
+          >
+            <Text style={{ ...FONTS.pr2 }} {...text_colors.main_title}>
+              {button_label ?? "Close"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>

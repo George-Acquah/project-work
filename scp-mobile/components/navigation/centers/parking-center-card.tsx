@@ -1,11 +1,12 @@
 import {
   Text,
   View,
-  Image,
+
   TouchableOpacity,
   StyleSheet,
   Pressable,
 } from "react-native";
+import { Image } from "expo-image";
 import { AntDesign, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
 import {
@@ -29,6 +30,7 @@ import CustomBottomSheetModal from "@/components/common/custom-bottom-sheet-moda
 import { MotiView } from "moti";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import RequestReservationForm from "../bookings/request-reservation-form";
+import { BASE_URL } from "@/api/root";
 interface _ICenterCard {
   center: _IParkingCenter; //To be Changes later
   index: number;
@@ -48,6 +50,9 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
   const router = useRouter();
 
   const href = `/parking-lots/${_id}` as any;
+
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   const handleReservation = async (data: any) => {
     const { duration } = data;
@@ -95,8 +100,12 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
           onPress={() => requestReservationModalRef?.current?.present()}
         />
         <Image
-          source={{ uri: "https://randomuser.me/api/portraits/men/1.jpg" }}
+          source={`${BASE_URL}images/${center.image}`}
+          key={`${center._id}-${index}`}
           style={[styles.image, { width: width ? width : 220 }]}
+          placeholder={{ blurhash }}
+          contentFit="cover"
+          transition={1000}
         />
       </View>
       <Pressable onPress={() => router.push(href)} style={styles.infoContainer}>
@@ -112,9 +121,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
         <View style={styles.myJustify}>
           <View style={styles.detailsRow}>
             <TabBarIcon fontProvider={Entypo} name="location" size={16} />
-            <Text style={styles.distanceText}>
-              {center.center_address?.state ?? 20} mi
-            </Text>
+            <Text style={styles.distanceText}>{center.location}</Text>
           </View>
           <View style={styles.detailsRow}>
             <TabBarIcon
@@ -122,7 +129,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
               name="no-crash"
               size={16}
             />
-            <Text style={styles.distanceText}>{slots.length}</Text>
+            <Text style={styles.distanceText}>{slots}</Text>
           </View>
         </View>
       </Pressable>
@@ -131,7 +138,7 @@ const ParkingCentersCard = ({ center, index, width }: _ICenterCard) => {
       <CustomBottomSheetModal
         points={["85%", "90%"]}
         index={1}
-        pressBehavior={'none'}
+        pressBehavior={"none"}
         bg={
           colorScheme === "light"
             ? SHARED_COLORS.gray300

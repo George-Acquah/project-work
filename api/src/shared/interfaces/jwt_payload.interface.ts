@@ -12,17 +12,18 @@ interface _IPayload {
 type _TJwtPayload = JwtPayload & _IPayload;
 
 interface _IReservationPayload {
-  slot_id: string;
-  vehicle_id: string;
+  customerMobileNumber: string;
   sub: {
     reservation_id: string;
   };
 }
 
-interface _IReservationsPayloadRequest {
-  slot_id: string;
-  vehicle_id: string;
+export interface _ISafeReservation {
+  customerMobileNumber: string;
   reservation_id: string;
+}
+interface _IReservationsPayloadRequest {
+  reservation: _ISafeReservation;
 }
 
 interface _ITokens {

@@ -14,6 +14,12 @@ enum CREATE_PIPELINE {
   SLOT = 'slot'
 }
 
+enum PAYMENT_STATUS {
+  PENDING = 'PENDING',
+  FAILED = 'FAILED',
+  SUCCESS = 'SUCCESS'
+}
+
 enum AddressConstraints {
   CONTACTNO_MAXLENGTH = 'Max supported length of contact is 10',
   CONTACTNO_MAXVALUE = 10,
@@ -67,5 +73,6 @@ export {
   SlotConstraints,
   VehicleConstraints,
   SORT,
-  CREATE_PIPELINE
+  CREATE_PIPELINE,
+  PAYMENT_STATUS
 };

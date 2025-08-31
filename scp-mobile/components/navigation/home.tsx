@@ -7,6 +7,7 @@ import {
   View,
   StyleSheet
 } from "react-native";
+import { Image } from 'expo-image'
 import MapView, { Marker, Callout } from "react-native-maps";
 import { Ionicons } from "@expo/vector-icons";
 import { useAppDispatch, useAppSelector } from "@/utils/hooks/useRedux";
@@ -15,7 +16,7 @@ import {
   selectCurrentLocation,
   selectOriginDescription,
 } from "@/features/permissions/permissions.slice";
-import { SHARED_COLORS } from "@/constants/Colors";
+import { LIGHT_THEME, SHARED_COLORS } from "@/constants/Colors";
 import FiltersTab from "@/components/navigation/shared/filters-tab";
 import SearchBox from "@/components/navigation/shared/search-box";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
@@ -24,38 +25,39 @@ import { generateHomeStyles } from "./styles";
 import HomeSearch from "./shared/home-search";
 import useCenterFilter from "@/utils/hooks/useFilter";
 import { router } from "expo-router";
+import { BASE_URL } from "@/api/root";
 
 export default function Home() {
   const colorScheme = useColorScheme() ?? "light";
   const styles = generateHomeStyles(colorScheme);
   const { select_data, select_loading } =
     useCenterFilter();
-  const dispatch = useAppDispatch();
-  const desc = useAppSelector(selectOriginDescription);
   const mapRef = useRef<MapView>(null);
   const [showFilters, setShowFilters] = useState(false);
   const currentLocation = useAppSelector(selectCurrentLocation);
   const centers = useAppSelector(select_data);
   const loading = useAppSelector(select_loading);
 
-  useEffect(() => {
-    dispatch(getLocation());
-  }, [desc, dispatch]);
+useEffect(() => {
+  if (centers.length > 0) {
+    const coordinates = centers.map((center) => {
+      return {
+        latitude: center?.address?.latitude ?? 0,
+        longitude: center?.address?.longitude ?? 0,
+      };
+    });
 
-  useEffect(() => {
-    if (centers.length > 0) {
-      const coordinates = centers.map((center) => ({
-        latitude: center.center_address?.latitude ?? 0,
-        longitude: center.center_address?.longitude ?? 0,
-      }));
+    const edgePadding = { top: 100, right: 90, bottom: 100, left: 90 };
+    mapRef.current?.fitToCoordinates(coordinates, {
+      edgePadding,
+      animated: true,
+    });
+  }
+}, [centers]);
+  
+    const blurhash =
+      "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
-      const edgePadding = { top: 100, right: 100, bottom: 100, left: 100 };
-      mapRef.current?.fitToCoordinates(coordinates, {
-        edgePadding,
-        animated: true,
-      });
-    }
-  }, [centers]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <RendererHOC loading={loading} error={null}>
@@ -66,38 +68,46 @@ export default function Home() {
             initialRegion={{
               latitude: currentLocation?.location.lat ?? 6.2167,
               longitude: currentLocation?.location.lng ?? -2.5833,
-              latitudeDelta: 0.9,
-              longitudeDelta: 0.9,
+              latitudeDelta: 0.7,
+              longitudeDelta: 0.7,
             }}
           >
-            {centers.map((center, index) => (
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: center.center_address?.latitude ?? 0,
-                  longitude: center.center_address?.longitude ?? 0,
-                }}
-                onCalloutPress={() =>
-                  router.push(`/parking-lots/${center._id}`)
-                }
-              >
-                <Callout>
-                  <View style={customStyles.calloutContainer}>
-                    <Text style={customStyles.calloutTitle}>
-                      {center.center_name}
-                    </Text>
-                    <Text style={customStyles.calloutDescription}>
-                      {center.center_address?.state}
-                    </Text>
-                    <TouchableOpacity
-                      style={customStyles.calloutButton}
-                    >
-                      <Text style={{ color: "white" }}>See More</Text>
-                    </TouchableOpacity>
-                  </View>
-                </Callout>
-              </Marker>
-            ))}
+            {centers.map((center, index) => {
+              return (
+                <Marker
+                  key={`${center._id}_${index}`}
+                  coordinate={{
+                    latitude: center?.address?.latitude ?? 0,
+                    longitude: center?.address?.longitude ?? 0,
+                  }}
+                  onCalloutPress={() =>
+                    router.push(`/parking-lots/${center._id}`)
+                  }
+                >
+                  <Callout>
+                    <View style={customStyles.calloutContainer}>
+                      <Image
+                        source={`${BASE_URL}images/${center.image}`}
+                        key={`${center._id}-${index}`}
+                        style={[customStyles.image, { width: 120 }]}
+                        placeholder={{ blurhash }}
+                        contentFit="cover"
+                        transition={1000}
+                      />
+                      <Text style={customStyles.calloutTitle}>
+                        {center.center_name}
+                      </Text>
+                      <Text style={customStyles.calloutDescription}>
+                        {center?.location}
+                      </Text>
+                      <TouchableOpacity style={customStyles.calloutButton}>
+                        <Text style={{ color: "white" }}>Request Slot</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </Callout>
+                </Marker>
+              );
+            })}
           </MapView>
 
           {showFilters ? (
@@ -143,12 +153,17 @@ const customStyles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: 'center'
+    justifyContent: "center",
+    // height: 180
   },
   calloutTitle: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+  },
+  image: {
+    height: 70,
+    resizeMode: "cover",
   },
   calloutDescription: {
     fontSize: 14,
@@ -156,8 +171,8 @@ const customStyles = StyleSheet.create({
     marginBottom: 10,
   },
   calloutButton: {
-    backgroundColor: SHARED_COLORS.gray800,
-    borderRadius: 5,
+    backgroundColor: LIGHT_THEME.primary800,
+    borderRadius: 50,
     padding: 10,
     alignItems: "center",
   },

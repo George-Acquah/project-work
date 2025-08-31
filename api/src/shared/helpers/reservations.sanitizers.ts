@@ -1,5 +1,8 @@
 import { _ISlotImage } from '../interfaces/images.interface';
-import { _IFormattedReservation } from '../interfaces/refactored/slots.interface';
+import {
+  _IFormattedReservation,
+  _IPaymentReservation
+} from '../interfaces/refactored/slots.interface';
 import { _INewProfile } from '../interfaces/refactored/user.interface';
 import { _IDbSlotReservation } from '../interfaces/slot.interface';
 import { convertDateToString } from '../utils/global.utils';
@@ -16,7 +19,6 @@ export function sanitizeReservationsFn(
   // Extract first image's filename if available
   const image = reservation?.slot_image[0]?.file_id ?? null;
   // console.log(reservation?.vehicle as unknown as any);
-  console.log(reservation?.driver_profile);
   const driver_name = reservation?.driver_profile
     ? `${reservation?.driver_profile?.first_name} ${reservation?.driver_profile?.last_name}`
     : 'no name';
@@ -42,6 +44,34 @@ export function sanitizeReservationsFn(
     duration: reservation.duration_of_reservation,
     cost: reservation.cost_of_reservation,
     status: reservation.isValid ? 'set' : 'not set'
+  };
+
+  return formattedReservation;
+}
+
+export function sanitizeReservationsPaymentFn(
+  reservation: _IDbSlotReservation & {
+    driver: any;
+    center: any;
+  }
+  // reservation: any
+): _IPaymentReservation {
+  // Format the vehicle object according to _IFormattedVehicle interface
+  const customerId =
+    typeof reservation?.driver !== 'string'
+      ? (reservation?.driver.toString() as unknown as string)
+      : reservation?.driver;
+  const centerId =
+    typeof reservation?.center !== 'string'
+      ? (reservation?.center.toString() as unknown as string)
+      : reservation?.center;
+  const formattedReservation = {
+    _id: reservation._id.toString() as string,
+    vehicle_no: reservation?.number_plate,
+    cost: reservation.cost_of_reservation,
+    customerId,
+    centerId,
+    slotId: reservation.slot_id.toString()
   };
 
   return formattedReservation;

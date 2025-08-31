@@ -1,4 +1,4 @@
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Types } from 'mongoose';
 
 // Construct conditions for each field name
 export const createFilterConditions = <T>(
@@ -21,15 +21,24 @@ export const createFilterConditions = <T>(
   });
 
   const specificCondition = () => {
+    // Check if the filter is for _id and if the value is a valid ObjectId
+    if (Types.ObjectId.isValid(specificValue)) {
+      return {
+        [specificFilter]: new Types.ObjectId(specificValue) // Convert to ObjectId
+      };
+    }
+
+    // Check if the value is numeric
     if (!isNaN(Number(specificValue))) {
       return {
         [specificFilter]: Number(specificValue)
       };
-    } else {
-      return {
-        [specificFilter]: { $regex: specificValue, $options: 'i' }
-      };
     }
+
+    // Default to a case-insensitive regex match for strings
+    return {
+      [specificFilter]: { $regex: specificValue, $options: 'i' }
+    };
   };
 
   if (query) {

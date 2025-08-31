@@ -3,13 +3,13 @@ import {
   ExecutionContext,
   ForbiddenException,
   Injectable,
-  Logger,
+  Logger
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
 import { _IReservationPayload } from '../interfaces/jwt_payload.interface';
-import { _TRequestWithAuth } from '../interfaces/custom-request.interface';
 import { extractToken } from '../utils/global.utils';
+import { Request } from 'express';
 
 @Injectable()
 export class ReservationsAuthGuard implements CanActivate {
@@ -17,25 +17,28 @@ export class ReservationsAuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
   canActivate(
-    context: ExecutionContext,
+    context: ExecutionContext
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request: _TRequestWithAuth = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
     const reservationAccessToken = extractToken(
       'Reservation',
-      request.headers.authorization,
+      request.headers.authorization
     );
-
-    this.logger.log(reservationAccessToken);
     try {
       const payload = this.jwtService.verify<_IReservationPayload>(
         reservationAccessToken,
+        {
+          secret: process.env.RESERVATION_KEY
+        }
       );
-      request.slot_id = payload.slot_id;
-      request.vehicle_id = payload.vehicle_id;
-      request.reservation_id = payload.sub.reservation_id;
-
+      // Initialize request.reservation if it doesn't exist
+      if (!request.reservation) {
+        request.reservation = {} as any;
+      }
+      request.reservation.customerMobileNumber = payload.customerMobileNumber;
+      request.reservation.reservation_id = payload.sub.reservation_id;
       return true;
-    } catch {
+    } catch (error: any) {
       throw new ForbiddenException('Invalid Access Token');
     }
   }

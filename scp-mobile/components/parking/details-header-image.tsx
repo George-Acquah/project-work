@@ -1,7 +1,8 @@
 import { ThemedView } from "../common/ThemedView";
 import { useColorScheme } from "@/utils/hooks/useColorScheme";
 import { generateCenterDetailsImageStyles } from "./style";
-import { FlatList, Image } from "react-native";
+import { FlatList, View } from "react-native";
+import { Image } from "expo-image";
 import { IMAGES } from "@/constants/images";
 import Button from "../common/button";
 import { SHARED_COLORS } from "@/constants/Colors";
@@ -14,42 +15,44 @@ import ImageSkeleton from "../skeletons/centers/images";
 
 interface _ICenterHeaderImage {
   center_images?: string[];
+  galleryOption?: boolean;
 }
 
 interface _ImageLoadingState {
   [key: string]: boolean;
 }
 
-const CenterDetailsHeaderImage = ({ center_images }: _ICenterHeaderImage) => {
-  const [loading, setLoading] = useState(true); // State to track loading status
-   const [imageLoading, setImageLoading] = useState<_ImageLoadingState>({});
+const blurhash =
+  "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
+const CenterDetailsHeaderImage = ({
+  center_images,
+  galleryOption,
+}: _ICenterHeaderImage) => {
+  const [imageLoading, setImageLoading] = useState<_ImageLoadingState>({});
   const fallback_data = [IMAGES.first];
   const colorScheme = useColorScheme() ?? "light";
   const styles = generateCenterDetailsImageStyles(colorScheme);
 
   const renderItem = ({ item, index }: { item: string; index: number }) => {
-    const isLoading = imageLoading[item] ?? true;
-
     return (
-      <RendererHOC
-        loading={isLoading}
-        error={null}
-        loadingComponent={<ImageSkeleton width={width} height={400} />}
-      >
-        <Image
-          key={`${item}-${index}`}
-          source={{ uri: `${BASE_URL}images/${item}` }}
-          width={width}
-          height={400}
-          style={isLoading ? { display: "none" } : {}}
-          onLoadStart={() =>
-            setImageLoading((prev) => ({ ...prev, [item]: true }))
-          }
-          onLoadEnd={() =>
-            setImageLoading((prev) => ({ ...prev, [item]: false }))
-          }
-        />
-      </RendererHOC>
+      <Image
+        key={`${item}-${index}`}
+        source={`${BASE_URL}images/${item}`}
+        style={{ width, height: 400 }}
+        placeholder={{ blurhash }}
+        contentFit="cover"
+        transition={1000}
+        onLoadStart={() => {
+          setImageLoading((prev) => ({ ...prev, [item]: true }));
+        }}
+        onLoadEnd={() => {
+          setImageLoading((prev) => ({ ...prev, [item]: false }));
+        }}
+        onError={(error) => {
+          setImageLoading((prev) => ({ ...prev, [item]: false }));
+        }}
+      />
     );
   };
 
@@ -62,16 +65,19 @@ const CenterDetailsHeaderImage = ({ center_images }: _ICenterHeaderImage) => {
         keyExtractor={(item) => item}
         showsHorizontalScrollIndicator={false}
       />
-      <Button additionalStyles={[styles.imageButton]}>
-        <Entypo
-          name="images"
-          color="white"
-          size={20}
-          onPress={() => {
-            // galleryOptionsRef.current?.expand(); // Open the bottom sheet modal
-          }}
-        />
-      </Button>
+
+      { galleryOption && 
+        <Button additionalStyles={[styles.imageButton]}>
+          <Entypo
+            name="images"
+            color="white"
+            size={20}
+            onPress={() => {
+              // galleryOptionsRef.current?.expand(); // Open the bottom sheet modal
+            }}
+          />
+        </Button>
+      }
     </ThemedView>
   );
 };

@@ -23,7 +23,7 @@ export async function singleSlot(centers_id: string) {
     method: "GET",
   };
 
-  return callApi<_ISlot>(config);
+  return callApi<_IFormattedAvSlot>(config);
 }
 
 export async function popularSlots(
@@ -35,7 +35,7 @@ export async function popularSlots(
     url: `${CENTER_BASE_URL}/popular?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
     method: "GET",
   };
-  return callApi<_ISlot[]>(config);
+  return callApi<_IFormattedAvSlot[]>(config);
 }
 
 
@@ -48,7 +48,7 @@ export async function nearbySlots(
     url: `${CENTER_BASE_URL}/nearby?centers=${centers}&currentPage=${currentPage}&size=${pageSize}`,
     method: "GET",
   };
-  return callApi<_ISlot[]>(config);
+  return callApi<_IFormattedAvSlot[]>(config);
 }
 
 export async function availableSlots(
@@ -61,6 +61,6 @@ export async function availableSlots(
     method: "GET",
   };
 
-  return callApi<_ISlot[]>(config);
+  return callApi<_IFormattedAvSlot[]>(config);
 }
 
